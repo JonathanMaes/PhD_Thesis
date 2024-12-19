@@ -1,0 +1,162 @@
+\chapter{List of constants and symbols}  % TODO END: put all symbols in this list
+\section*{List of constants}
+\begin{longtable}[l]{p{60pt} p{150pt} p{200pt}}
+	$e$&electron charge&$1.6022\times 10^{-19}$\,C\\
+	% $\gamma$&gyromagnetic ratio&$1.76086\times 10^{11}$\,rad/Ts\\
+	% $\gamma_0$&$\mu_0\gamma$&$2.21\times\,10^5$\,m/As\\
+	$k_\mathrm{B}$&Boltzmann constant&$1.3087\times 10^{-23}$\,J/K\\
+	$\mu_0$&vacuum permeability&$4\pi\times 10^{-7}$\,Tm/A\\
+	% $\mu_\mathrm{B}$&Bohr magneton&$9.274\times 10^{-24}$\,Am$^2$\\
+\end{longtable}
+
+\section*{List of symbols}
+\subsection*{Mathematical operators}
+\begin{longtable}[l]{p{60pt} p{350pt}}
+	$\langle \cdot \rangle$ & Spatial average over the ASI \\
+	$\langle \cdot \cdot \rangle$ & Correlation over the ASI \\
+	% $\overline{a}$& time average\\
+	%$\av{a b}$& correlation\\
+	%$\sav{a}$&spatial average over computational domain\\
+	%$\dot{a}$&time derivative\\
+	$K()$ & Complete elliptic integral of the first kind \\
+	$\sigma()$ & Standard deviation for variable sampled from Gaussian distribution \\
+	$\norm{\vc{a}}$ & Vector norm\\
+	&\\
+\end{longtable}
+
+\subsection*{Roman symbols}
+\begin{longtable}[l]{p{60pt} p{350pt}}
+	$a$ & Semi-major axis ($l/2$) \\
+	&\\
+
+	$b$ & Semi-minor axis ($w/2$) \\
+	$\vb{B}_\mathrm{ext}$ & External magnetic field \\
+	&\\
+
+	$d$ & Effective distance between north and south poles of a magnet in the dumbbell approximation \\
+	&\\
+
+	$E$ & Energy \\
+	$E_\mathrm{B}$ & Energy barrier due to shape anisotropy \\ % TODO: what to do with E_B^c? Make a new global rule that (something)^c is critical? Should change T_c then
+	$\widetilde{E_\mathrm{B}}$ & Effective energy barrier \\
+	$E_\mathrm{Exch}$ & Exchange energy\\
+	$E_\mathrm{MS}$ & Magnetostatic interaction energy \\
+	$E_\mathrm{Z}$ & Zeeman energy\\
+	$E_\perp$ & Energy of a magnet when pointing \ang{90} counterclockwise from its current state \\
+	$\Delta E$ & Switching energy \\
+	&\\
+
+	$\mathcal{I}$ & Geometrical factor used for second-order correction on magnetostatic interaction \\
+	&\\
+
+	$J$ & Exchange coupling constant \\
+	&\\
+
+	$\vb{K}_i$ & Demagnetization kernel for a magnet $i$ \\
+	$K_u$ & Uniaxial shape anisotropy \\
+	&\\
+
+	$l$ & Length of elliptical magnet ($2a$) \\
+	$L_x$ & Number of cells in the simulation along the x-direction \\
+	$L_y$ & Number of cells in the simulation along the y-direction \\
+	&\\
+
+	$M$ & Average magnetization of ASI \\
+	$M_\parallel$ & Average magnetization of ASI along the direction of the external field $\vb{B}_\mathrm{ext}$ \\
+	$\vb{M}$ & Magnetisation \\
+	$M_\mathrm{sat}$ & Saturation magnetization \\
+	&\\
+
+	$N$ & Number of magnets in the ASI \\ % TODO: add N_x and N_y?
+	$\mathcal{N}_i$ & Nearest neighbors of magnet $i$ \\
+	&\\
+
+	$q$ & Magnetic charge \\
+	$Q$ & Maximum allowed change in switching probability for two simultaneously sampled magnets \\
+	&\\
+
+	$\vb{r}_i$ & Position of magnet $i$ \\
+	$r_{ij}$ & Distance between magnets $i$ and $j$ \\
+	$\vb{r}_{ij}$ & Distance vector between magnets $i$ and $j$ \\
+	% TODO: R_x and R_y? Are grid-select algorithm symbols so might not be very useful to mention.
+	&\\
+
+	$s_i$ & State of the macrospin along the easy axis ($\pm 1$) \\ % TODO: better wording
+	$\langle S_i S_{i+1} \rangle$ & Nearest-neighbor correlation \\
+	&\\
+
+	$t$ & Time \\
+	$\Delta t$ & Random switching time interval of a single magnet \\
+	$T$ & Temperature \\
+	$T_c$ & Critical temperature (Ising model) \\
+	&\\
+
+	$\vb{u}_i$ & Uniaxial anisotropy axis of magnet $i$ \\
+	&\\
+
+	$V$ & Volume \\
+	&\\
+
+	$w$ & Width of elliptical magnet ($2b$) \\
+	&\\
+\end{longtable}
+
+\subsection*{Greek symbols}
+\begin{longtable}[l]{p{60pt} p{350pt}}
+	% $\alpha$&Gilbert damping parameter\\
+	% &\\
+
+	% $\beta$&$=\frac{KV}{k_\mathrm{B} T}$, anisotropy energy with respect to thermal energy\\
+	% &\\
+
+	% $\gamma$& gyromagnetic ratio\\
+	% $\gamma_0$& $\mu_0\gamma$\\
+	% $\Gamma_{XY}$&coviariance between stochastic variables $X$ and $Y$\\
+	% &\\
+
+	$\delta$ & Relative magnetostatic/exchange coupling \\
+	&\\
+
+	% $\eta$& viscosity\\
+	% &\\
+
+	$\theta$ & In-plane magnetization angle measured clockwise from the easy axis $\vb{u}$ \\
+	&\\
+
+	% $\kappa$& windowing weighting factor\\
+	% &\\
+
+	% $\lambda$&index parameter to denote a single event or realization of a stochastic variable\\
+	% &\\
+
+
+	$\mu_i$ & Size of magnetic moment of magnet $i$ \\
+	$\vb{\mu}_i$ & Total magnetic moment vector of magnet $i$ \\
+	&\\
+
+	
+	$\nu$ & Switching rate \\
+	$\nu_0$ & Attempt frequency \\
+	&\\
+
+	$\rho$ & Perpendicular magnetization factor \\
+	&\\
+
+	% $\sigma$&standard deviation in the lognormal distribution\\
+	% $\sigma_X$&standard deviation of the stochastic variable $X$\\
+	% $\sigma_X^2$&second central moment of stochastic variable $X$, variance\\
+	% &\\
+
+	% $\tau_0$& $\frac{1}{2\nu_0}$\\
+	% $\tau_\mathrm{B}$& Brownian fluctuation time constant\\
+	% $\tau_\mathrm{eff}$& effective fluctuation time constant\\
+	% $\tau_\mathrm{ex}$& timescale of the experiment\\
+	% $\tau_\mathrm{N}$& N\'eel fluctuation time constant\\
+	% &\\
+
+	$\phi$ & Angle of the effective field w.r.t. easy axis $\vb{u}$ \\
+	&\\
+
+	$\chi$ & Uniformly distributed random variable in $(0, 1]$ \\
+	&\\
+\end{longtable}

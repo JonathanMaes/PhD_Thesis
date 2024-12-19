@@ -1,0 +1,67 @@
+\chapter{Hotspice}\label{ch:Hotspice}
+% \glijbaantje{It's not a bug, it's a feature.}{Someone}
+
+Material from this chapter has also been published in: \\
+\begin{adjustwidth}{2em}{2em} % TODO END: update once published.
+    J.~Maes, D.~De~Gusem, I.~Lateur, J.~Leliaert, A.~Kurenkov, and B.~Van~Waeyenberge.
+    \newblock The design, verification, and applications of Hotspice: a Monte Carlo simulator for artificial spin ice.
+    \newblock \emph{ArXiV}, arXiv:\penalty0 2409.05580, 2024.
+\end{adjustwidth}
+
+% TODO: this is placeholder text to test some commands.
+Hotspice is written in Python 3.10, and can choose to calculate on either the CPU or GPU.
+CuPy v11.4~\cite{CuPy} is used for GPU-accelerated array manipulation, otherwise NumPy and SciPy are used for the CPU.
+When writing code for the GPU, it is important to keep the \href{https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html}{Cuda best practices} in mind.
+Unfortunately, I only found this page after one year of Hotspice development *shrug*.
+Another Python package for parallel programming is the \python{cuNumeric} package by Nvidia, which is also designed to be a drop-in \python{numpy} replacement but supports multiple GPUs, which can be useful for very large simulations that do not fit into the memory of a single GPU.
+There is also the \code{nvc++} compiler but this is for Cython code. \par
+
+\section{Model}
+
+\cite{Hotspice}
+
+\xfig[1.0]{2_Hotspice/ASIs.pdf}{\label{fig:2:ASIs}Predefined artificial spin ice (ASI) lattices available in \hotspice{}. The unit cell of each lattice is delineated by a central grey rectangle. The red indicator defines the lattice parameter $a$. In the Ising approximation, the magnetization of in-plane magnets (left) aligns along the major axis of the depicted ellipses. Out-of-plane magnets (right) are illustrated as circles.}\\
+
+\section{Energy calculation}
+\subsection{Energy terms}
+\subsection{Finite-size correction for magnetostatic energy}
+\subsubsection{Second-order correction for dipoles}
+\subsubsection{Dumbbell model}
+\subsubsection{Comparison}
+\subsection{Effective energy barrier}
+\subsubsection{Intrinsic barrier from shape anisotropy}
+\subsubsection{Mean-barrier approximation} % and relevant choices with discontinuities
+\subsubsection{Asymmetric barrier}
+\subsubsection{Exact solution} % OOP only
+
+\section{Dynamics}
+\subsection{N\'eel relaxation: temporal evolution}
+\subsection{Metropolis-Hastings: sampling equilibrium states}
+% TODO: decide whether to talk about nomenclature details etc. here, or in the introduction.
+\subsection{Other Monte Carlo algorithms} % Not implemented, explain why Wolff could be useful but why it's not in Hotspice
+
+\section{Implementation details}
+\subsection{API} % Structure of Hotspice, explain all modules
+\subsubsection{ASI}
+\subsubsection{RC}
+\subsection{Performance} % Several factors impacting performance, explain by using that one graph
+\subsubsection{GPU vs. CPU}
+\subsubsection{Kernels} % If not yet explained in detail earlier, talk about the perpendicular kernel etc. here
+\paragraph{Numerical error with cut-off kernel}
+\subsubsection{Multi-switching in Metropolis-Hastings}
+\paragraph{Minimal distance between sampled magnets} % Derive equation
+\paragraph{Poisson disc}
+\paragraph{Grid-select}
+\paragraph{Hybrid grid-poisson}
+\subsubsection{RNG} % Little to no impact iirc, can be omitted probably
+\subsection{Advantages and disadvantages of this approach} % Hindsight is 20/20
+\subsubsection{Grid}
+\subsubsection{Input/output RC}
+
+\section{Verification} % See paper
+\subsection{Hexagon}
+\subsection{Non-interacting spin ensemble}
+\subsection{Exchange-coupled OOP square system}
+\subsubsection{Critical slowing down}
+\subsection{Exchange- and magnetostatically-coupled OOP square system}
+\subsection{Square-to-pinwheel transition angle}

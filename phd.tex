@@ -1,0 +1,210 @@
+\documentclass[11pt,a4paper,oneside]{book}
+
+%%%% PACKAGES WITH OPTIONS
+\usepackage[english]{babel} % Language-specific hyphenation/splitting
+\usepackage[small,bf,centerlast]{caption}[=v1] % Customize appearance of fig/table captions
+\usepackage[Sonny]{fncychap} % Styles for chapter headers: Bjarne, Bjornstrup, Conny, Glenn, Lenny, Rejne and Sonny
+\usepackage[T1]{fontenc} % Improved font encoding for better output, especially for accented characters
+% \usepackage[inner=2.5cm,outer=2.5cm,vmargin=2.5cm]{geometry} % Set page margins
+\usepackage[final]{graphicx} % Handles inclusion of images
+\usepackage[latin1]{inputenc} % Support for Latin-1 encoding (UTF-8 is generally preferred)
+\usepackage[square,sort&compress,numbers]{natbib} % For formatted bibliographies with numeric citation styles
+\usepackage[final]{pdfpages} % Inclusion of external PDF files
+\usepackage{setspace} % Controls line spacing; "onehalfspacing" adds readability
+\usepackage[separate-uncertainty=true]{siunitx} % Fancy display of SI units, can show uncertainty (e.g. \SI{1.54(6)}{\tesla} --> 1.54 ± 0.06 T)
+\usepackage[dvipsnames]{xcolor} % Advanced color handling with named colors
+
+%%%% PACKAGES WITHOUT OPTIONS
+\usepackage{a4wide} % Adjusts margins for A4 paper (could conflict with "geometry")
+%\usepackage{alphalph,cite} % Alphabetic-style labels
+\usepackage{amsmath} % Advanced math formatting and features
+\usepackage{amssymb} % Additional math symbols
+\usepackage{backref} % Adds backreferences from bibliography to citing pages
+\usepackage{bm} % Bold math symbols
+\usepackage{cancel} % Strikethrough diagonal in math mode
+\usepackage{changepage} % Enables adjustable margins within the document
+\usepackage{color} % Basic color support (often superseded by "xcolor")
+\usepackage{hyperref} % Creates hyperlinks and metadata in PDFs
+\usepackage{listings} % Formats code snippets for programming examples
+\usepackage{lmodern} % Modern font family with better scalability and appearance
+\usepackage{longtable} % Tables that can span multiple pages
+\usepackage{lscape} % Rotate content to landscape orientation
+\usepackage{makeidx} % Creates an index for the document
+\usepackage{mdframed} % Creates framed content with custom styles
+\usepackage{microtype} % Enhances typographic appearance (e.g., kerning and justification)
+\usepackage{nonfloat} % Prevents floating figures/tables for specific environments
+\usepackage{pagecolor} % Sets background color of pages
+\usepackage{physics} % Simplifies common physics expressions and notation
+\usepackage{soul} % For text decoration, e.g., underline (\ul{}), strikethrough (\st{}), highlighting...
+% \usepackage{subcaption} % Subfigure captions
+\usepackage{tikz}
+\usepackage{titlesec} % Customizes the format and spacing of section titles (e.g. \setcounter{secnumdepth} to make subsubsections numbered in chapters)
+\usepackage{tocbibind} % Adds bibliography and table of contents to ToC
+\usepackage{tocloft} % Customizes the layout of the table of contents
+\usepackage{xfrac} % For diagonal fractions in text mode with \sfrac{}{}
+\usepackage{xspace} % Automatically manages spaces after commands
+\usepackage{xurl} % Better URL handling with line breaks
+
+%%%% PACKAGES THAT MUST BE LOADED AFTER OTHERS
+\usepackage[capitalise]{cleveref} % [Requires "hyperref"] Intelligent cross-referencing
+\usepackage[all]{hypcap} % [Requires "hyperref"] Ensures links to figures focus on the image, not the caption
+
+
+%%%% PACKAGES SETUP COMMANDS
+\graphicspath{{fig/}} % Package "graphicx"
+\sisetup{ % Package "siunitx"
+   detect-weight=true
+}
+%\usephysicsmodule{ab,ab.legacy} % Package "physics2": needs to load modules explicitly to avoid namespace conflicts
+\newcommand{\phdtitle}{Modelling of Reservoir Computing in Perpendicular-Anisotropy Artificial Spin Ice}
+\newcommand{\phdauthor}{Jonathan Maes}
+\hypersetup{ % Package "hyperref": configures options for hyperlinks, bookmarks, and metadata in PDFs.
+   plainpages=false,
+   colorlinks=true,
+   citecolor=gray,
+   linkcolor=black,
+   filecolor=black,
+   urlcolor=blue!60!black,
+   bookmarks=true,
+   pdftitle={\phdtitle},
+   pdfauthor={\phdauthor}
+}
+% \captionsetup{ % Package "caption": adjusts the appearance and formatting of captions.
+%    width=.85\columnwidth,
+%    %format=hang, % 'Figure n' in front of whole caption
+%    labelsep=endash,
+%    justification=centerlast,
+%    labelfont={bf}
+% }
+\mdfsetup{ % Package "mdframed": margins, padding, and spacing for custom-framed environments.
+   skipabove=\topskip,
+   skipbelow=\topskip
+}
+\setstcolor{red} % Package "soul": set color for text highlighting or strikethrough effects.
+\titleformat{\paragraph}[hang]{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}{0pt}{3.25ex plus 1ex minus .2ex}{0.5em}
+\newcolumntype{P}[1]{>{\RaggedRight\arraybackslash}p{#1}} % Package "array" & "ragged2e"
+\setcounter{secnumdepth}{3} % For "titlesec" package (secnumdepth): adjusts the depth for numbered sections and subsections.
+\setcounter{tocdepth}{1} % No excessive table of contents!
+\raggedbottom
+
+
+\setlength{\headheight}{13.6pt} 
+
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhf[HL]{\nouppercase{{\textsf{\jonathan}}}}  % Links in header het hoofdstuk,
+\fancyhf[HR]{\textsf\textbf{{\thepage}}} 						% Rechts het paginanummer.
+
+
+%%%% CODE HIGHLIGHTING
+\definecolor{Code}{rgb}{0,0,0} 
+\definecolor{Decorators}{rgb}{0.5,0.5,0.5} 
+\definecolor{Numbers}{rgb}{0.5,0,0} 
+\definecolor{MatchingBrackets}{rgb}{0.25,0.5,0.5} 
+\definecolor{Keywords}{rgb}{0,0,1} 
+\definecolor{self}{rgb}{0,0,0} 
+\definecolor{Strings}{rgb}{0,0.63,0} 
+\definecolor{Comments}{rgb}{0,0.63,0} 
+\definecolor{Backquotes}{rgb}{0,0,0} 
+\definecolor{Classname}{rgb}{0,0,0} 
+\definecolor{FunctionName}{rgb}{0,0,0} 
+\definecolor{Operators}{rgb}{0,0,0} 
+\definecolor{Background}{rgb}{0.98,0.98,0.98} 
+\lstset{
+   language=Python,
+   breakatwhitespace=false,
+   breaklines=true,
+   numbers=left, 
+   numberstyle=\footnotesize, 
+   numbersep=1em, 
+   xleftmargin=1em, 
+   framextopmargin=2em, 
+   framexbottommargin=2em, 
+   showspaces=false, 
+   showtabs=false, 
+   showstringspaces=false, 
+   frame=l, 
+   tabsize=4,
+   basicstyle=\ttfamily\small\setstretch{1}, 
+   backgroundcolor=\color{Background},
+   commentstyle=\color{Comments}\slshape,
+   stringstyle=\color{Strings},
+   keywordstyle={\color{Keywords}\bfseries}, 
+   keywordstyle={[2]\color{Decorators}\slshape}, 
+   emph={self}, 
+   emphstyle={\color{self}\slshape}
+}
+
+\makeindex
+\input{commands}
+\input{hyphenation}
+
+%% for b5
+%\makeatletter
+%\setlength{\oddsidemargin}{7.029mm}
+%\setlength{\evensidemargin}{7.029mm}
+%\addtolength{\evensidemargin}{21.5mm}
+%\setlength{\textheight}{20cm}
+%\setlength{\abovecaptionskip}{4pt}
+%\makeatother
+
+
+
+\begin{document}
+\hypersetup{breaklinks=true}
+\setlength{\parindent}{0cm}
+
+\frontmatter
+\newcommand{\jonathan}{\leftmark}
+
+\input{phdtitlepage}
+\input{phdtitlepageback}
+\input{phdacknowledgements}
+
+%%%% TABLE OF CONTENTS (on one page)
+\begingroup
+\makeatletter
+% Redefine the \chapter* header macro to remove vertical space
+\def\@makeschapterhead#1{%
+%\vspace*{50\p@}% Remove the vertical space
+{\parindent \z@ \raggedright
+\normalfont
+\interlinepenalty\@M
+\Huge \bfseries  #1\par\nobreak
+\vskip 40\p@
+   }}
+\makeatother
+
+\fontsize{12pt}{15pt}\selectfont
+\tableofcontents
+\fontsize{12pt}{14pt}\selectfont
+\endgroup
+
+\renewcommand{\baselinestretch}{1.1} 	  % De interlinie afstand wat vergroten.
+\small\normalsize                        % Nodig om de baselinestretch goed te krijgen.
+
+\mainmatter
+
+\input{phdpreface_nl}\cleardoublepage
+\input{phdpreface_en}\cleardoublepage
+\input{1_Introduction}\cleardoublepage
+\input{2_Hotspice}\cleardoublepage
+\input{3_Applications}\cleardoublepage
+\input{4_Conclusion}\cleardoublepage
+
+\addtocontents{toc}{\protect\setcounter{tocdepth}{0}}
+\appendix
+
+\backmatter
+\bibliographystyle{bib/unsrtnat2}
+\bibliography{bib/bibliography.bib}\cleardoublepage
+
+\input{symbols}\cleardoublepage
+\input{abbrev}\cleardoublepage
+%\printindex\clearpage
+\input{publications}
+
+\end{document}

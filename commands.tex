@@ -1,0 +1,286 @@
+% \definecolor{figcolor}{HTML}{F2F2FF}
+\definecolor{figcolor}{HTML}{EEEEEE}
+\definecolor{ugentblue}{RGB}{10,30,96}
+
+\newcommand{\colorcode}{(Color code on page \pageref{colorcode}.)\xspace}
+
+\newcommand{\jonathanskip}{\smallskip}
+\newcommand{\idx}[1]{\emph{#1}\index{#1}\label{#1}\label{#1s}} 					%%no xspace
+\newcommand{\indexlabel}[1]{\index{#1}\label{#1}}
+%%\newcommand{\xlabel}[1]{#1\index{#1}\label{#1}}
+
+%\newcommand{\debug}[1]{}
+%\newcommand{\debug}[1]{{\tiny{(\pageref{#1})}}\normalsize}
+
+\newcommand{\xref}[1]{\hyperref[#1]{#1}\xspace}
+\newcommand{\xrefs}[2]{\hyperref[#2]{#1#2}\xspace} %% meervoud etc, add {s}
+\newcommand{\link}[2]{\hyperref[#1]{#2}\xspace}
+\newcommand{\crefSubFigRef}[2]{\crefformat{figure}{fig.~##2##1{#2}##3}%
+  \cref{#1}\crefformat{figure}{fig.~##2##1##3}}
+\newcommand{\Py}{\xref{permalloy}}
+%%vector
+% \newcommand{\vc}[1]{\textbf{#1}}
+\newcommand{\vc}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\sub}[1]{\ensuremath{_{\mathrm{#1}}}}
+\newcommand{\super}[1]{\ensuremath{^{\mathrm{#1}}}}
+\newcommand{\av}[1]{\langle #1 \rangle}
+\newcommand{\sav}[1]{\langle\hspace{-0.4mm}\langle #1 \rangle\hspace{-0.4mm}\rangle}
+%\newcommand{\sav}[1]{\left<\hspace{-0.4mm}\left< #1 \right>\hspace{-0.4mm}\right>}
+\newcommand{\tpar}[1]{\frac{\partial #1}{\partial t}}%partial derivative to time
+\newcommand{\tder}[1]{\frac{\mathrm{d} #1}{\mathrm{dt}}}%full derivative to time
+
+% \newcommand{\abs}[1]{\ensuremath{\left| #1 \right|}\xspace}
+\newcommand{\diff}[2]{\frac{\partial #1}{\partial #2}}			    %% derivative
+\newcommand{\dispdiff}[2]{{\partial #1}/{\partial #2}}			    %% derivative
+\newcommand{\difff}[2]{\frac{\partial^2 #1}{\partial #2^2}}			%% second derivative
+\newcommand{\ddt}[1]{\ensuremath{\partial #1 / \partial t}}
+%\newcommand{\d}{\ensuremath{\mathrm{d}}}
+\newcommand{\ddiff}[2]{\frac{\d #1}{\d #2}}
+\newcommand{\lapl}{\ensuremath{{\Delta}}}
+\newcommand{\eqdef}{\stackrel{\small{\mathrm{def}}}{=}}
+\newcommand{\inprod}{\cdot}
+\renewcommand{\quote}[1]{``#1''}
+\newcommand{\etal}{\textit{et al.}\xspace}
+\newcommand{\code}[1]{\textsf{#1}}
+\newcommand{\shell}[1]{{\texttt{#1}}\smallskip\\}
+\newcommand{\python}[1]{\lstinline{#1}}
+
+%\newcommand{\class}[1]{\code{\hyperref[code#1]{#1}}} %final version
+%\newcommand{\file}[1]{\code{\hyperref[code#1]{#1.java}}} %final version
+\newcommand{\class}[1]{\code{#1}\index{#1.java}\xspace}
+\newcommand{\file}[1]{\code{#1.java}\index{#1.java}\xspace} %debug version
+\newcommand{\hide}[1]{}
+
+\newcommand{\glijbaantje}[2]{\vspace{-0.5cm}\begin{flushright}{\textit{#1}\\--- #2\\}\vspace{0.5cm}\end{flushright}}
+\newcommand{\publicatie}[1]{Material from this chapter has also been published in \cite{#1}.}
+
+\newcommand{\oommf}{\textsc{Oommf}\xspace}
+\newcommand{\hotspice}{\textsc{Hotspice}\xspace}
+\newcommand{\mumax}{\xref{MuMax3}}
+
+\newcommand{\eqn}[1]{equation \ref{#1}\xspace}
+\newcommand{\secateur}[1]{section \ref{#1} (page \pageref{#1})\xspace}
+\newcommand{\figuur}[1]{figure \ref{#1} (page \pageref{#1})\xspace}
+\newcommand{\Figuur}[1]{Figure \ref{#1} (page \pageref{#1})\xspace}
+
+%\newcommand{\xline}{\includegraphics[width=\textwidth]{line} \\ }
+%\renewcommand{\colorbox}[2]{\parbox{\textwidth}{\xline \\ \mbox{#2} \\ \xline}}
+
+
+\newcommand{\kolommen}[2]{
+\begin{minipage}{0.445\textwidth}
+#1
+\end{minipage}
+\begin{minipage}{0.445\textwidth}
+#2
+\end{minipage}
+\smallskip
+}
+
+\newcommand{\xtable}[3][nolabel]{
+	\jonathanskip
+\colorbox{figcolor}{%%%%%%%%%%%
+	\begin{minipage}{0.95\linewidth}
+  		\centering
+  		\textsf{\tabcaption{#2\label{#1}}}
+  		{\sf
+		#3
+}
+	\end{minipage}
+}%%%%%%%%%
+\smallskip
+}
+
+
+\newcommand{\smallfig}[3]{
+\smallskip
+\begin{center}
+\includegraphics[width=#1\linewidth]{#2}\footnotesize{\\\textsf{(#3)}}
+\end{center}
+\smallskip
+}
+
+
+\newcommand{\makeshiftfig}[2]{
+	\jonathanskip
+	\colorbox{figcolor}{
+	\begin{minipage}{\linewidth}
+  		\centering
+  		
+			#1
+		
+  		\textsf{\figcaption{#2}}
+  	
+	\end{minipage}
+	}
+	\jonathanskip
+}
+
+
+\newcommand{\xfig}[3][1]{
+    \jonathanskip
+    \begin{tikzpicture}
+        \node[rounded corners=10pt, fill=figcolor, inner sep=10pt] (figbox) {
+            \begin{minipage}{0.955\linewidth}
+                \centering
+                \includegraphics[width=#1\textwidth]{#2}
+                \textsf{\figcaption{#3\label{#2}}}
+            \end{minipage}
+        };
+    \end{tikzpicture}
+    \jonathanskip\vspace{0.05cm}
+}
+
+\newcommand{\sidefig}[3][1]{
+	\jonathanskip
+	\colorbox{figcolor}{
+	\begin{minipage}[c]{0.5\textwidth}
+  		\centering
+  		\includegraphics[width=#1\textwidth]{#2}
+	\end{minipage}
+	\begin{minipage}[c]{0.455\linewidth}
+	 \textsf{\figcaption{#3\label{#2}}}
+	\end{minipage}
+	}
+	\jonathanskip\vspace{0.05cm}
+}
+
+\newcommand{\sidefigbig}[3][1]{
+	\jonathanskip
+	\colorbox{figcolor}{
+	\begin{minipage}[c]{0.65\textwidth}
+  		\centering
+  		\includegraphics[width=#1\textwidth]{#2}
+	\end{minipage}
+	\begin{minipage}[c]{0.325\linewidth}
+	 \textsf{\figcaption{#3\label{#2}}}
+	\end{minipage}
+	}
+	\jonathanskip\vspace{0.05cm}
+}
+
+\newcommand{\sidefigr}[3][1]{
+	\jonathanskip
+	\colorbox{figcolor}{
+	\begin{minipage}[c]{0.455\linewidth}
+	 \textsf{\figcaption{#3\label{#2}}}
+	\end{minipage}
+	\begin{minipage}[c]{0.5\textwidth}
+  		\centering
+  		\includegraphics[width=#1\textwidth]{#2}
+	\end{minipage}
+	}
+	\jonathanskip\vspace{0.05cm}
+}
+
+%5 args: name1,  name2, shortcaption1, shortcaption2, langcaption1+2
+\newcommand{\xfigs}[6][0.45]{
+	\jonathanskip
+\colorbox{figcolor}{
+	\begin{minipage}{0.94\linewidth}
+  		\centering
+		\begin{tabular}{cc}
+		\small\parbox[c]{0.48\linewidth}{\textsf{\textbf{(a)} #3}} & \small\parbox[c]{0.48\linewidth}{\textsf{\textbf{(b)} #5}}\normalsize\\
+		\includegraphics[width=#1\linewidth]{#2} & \includegraphics[width=#1\linewidth]{#4}\\
+		\end{tabular}
+		\textsf{\figcaption{#6\label{#2}}}
+  	
+	\end{minipage}
+	}
+\jonathanskip\vspace{0.05cm}
+}
+
+\newcommand{\xfigssmallbig}[6][unused]{
+	\jonathanskip
+\colorbox{figcolor}{
+	\begin{minipage}{0.955\linewidth}
+  		\centering
+		\begin{tabular}{cc}
+		\small\parbox[c]{0.32\linewidth}{\textsf{\textbf{(a)} #3}} & \small\parbox[c]{0.62\linewidth}{\textsf{\textbf{(b)} #5}}\normalsize\\
+		\includegraphics[width=0.3\linewidth]{#2} & \includegraphics[width=0.6\linewidth]{#4}\\
+		\end{tabular}
+		\textsf{\figcaption{#6\label{#2}}}
+  	
+	\end{minipage}
+	
+}\jonathanskip\vspace{0.05cm}}
+
+\newcommand{\xfigssize}[8][unused]{
+	\jonathanskip
+\colorbox{figcolor}{
+	\begin{minipage}{0.955\linewidth}
+  		\centering
+		\begin{tabular}{cc}
+		\small\parbox[c]{#7\linewidth}{\textsf{\textbf{(a)} #3}} & \small\parbox[c]{#8\linewidth}{\textsf{\textbf{(b)} #5}}\normalsize\\
+		\includegraphics[width=#7\linewidth]{#2} & \includegraphics[width=#8\linewidth]{#4}\\
+		\end{tabular}
+		\textsf{\figcaption{#6\label{#2}}}
+  	
+	\end{minipage}
+	
+}\jonathanskip\vspace{0.05cm}}
+
+\newcommand{\xfigss}[8][0.45\textwidth]{
+	%\\[\intextsep]
+	\jonathanskip
+	\colorbox{figcolor}{
+	\begin{minipage}{\linewidth}
+  		\centering
+		\begin{tabular}{ccc}
+		\small\parbox{0.3\linewidth}{\textsf{\textbf{(a)} #3}} & \parbox{0.3\linewidth}{\textsf{\textbf{(b)} #5}} & \parbox{0.3\linewidth}{\textsf{\textbf{(c)} #7}}\normalsize \\
+		\includegraphics[width=0.3\linewidth]{#2} & \includegraphics[width=0.3\linewidth]{#4}& \includegraphics[width=0.3\linewidth]{#6}\\
+		\end{tabular}
+		\textsf{\figcaption{#8\label{#2}}}
+  	
+	\end{minipage}
+	}
+	\jonathanskip\vspace{0.05cm}
+}
+
+\newcommand{\xfigsss}[9]{
+	%\\[\intextsep]
+	\jonathanskip
+\colorbox{figcolor}{
+	\begin{minipage}{0.95\linewidth}
+  		\centering
+		\begin{tabular}{cccc}
+		\small\parbox{0.23\linewidth}{\textsf{\textbf{(a)} #2}} & \small\parbox{0.23\linewidth}{\textsf{\textbf{(b)} #4}} & \small\parbox{0.23\linewidth}{\textsf{\textbf{(c)} #6}} & \small\parbox{0.23\linewidth}{\textsf{\textbf{(d)} #8}} \normalsize\\
+		\includegraphics[width=0.23\linewidth]{#1} & \includegraphics[width=0.23\linewidth]{#3} & \includegraphics[width=0.23\linewidth]{#5}& \includegraphics[width=0.23\linewidth]{#7}\\
+		\end{tabular}
+		
+		\textsf{\figcaption{#9\label{#1}}}
+	\end{minipage}
+	}
+	\jonathanskip\vspace{0.05cm}
+}
+
+\newcommand{\moviefour}[5]{
+	%\\[\intextsep]
+	\jonathanskip
+\colorbox{figcolor}{
+	\begin{minipage}{0.95\linewidth}
+  		\centering
+			\includegraphics[width=0.21\linewidth]{#1} \hspace{0.1cm} \includegraphics[width=0.21\linewidth]{#2} \hspace{0.1cm} \includegraphics[width=0.21\linewidth]{#3} \hspace{0.1cm} \includegraphics[width=0.21\linewidth]{#4} \hspace{0.1cm}
+		%\vspace{-1cm}
+		\textsf{\figcaption{#5\label{#1}}}
+	\end{minipage}
+	}
+	\jonathanskip\vspace{0.05cm}
+}
+
+
+\newcommand{\gridfour}[6]{
+	%\\[\intextsep]
+	\jonathanskip
+\colorbox{figcolor}{
+	\begin{minipage}{#6\linewidth}
+  		\centering
+			\includegraphics[width=0.46\linewidth]{#1} \hspace{0.1cm} \includegraphics[width=0.46\linewidth]{#2} \hspace{0.1cm}\\ \includegraphics[width=0.46\linewidth]{#3} \hspace{0.1cm} \includegraphics[width=0.46\linewidth]{#4} \hspace{0.1cm} 
+		
+		\textsf{\figcaption{#5\label{#1}}}
+	\end{minipage}
+	}
+	\jonathanskip\vspace{0.05cm}
+}
+
+\newcommand{\cols}[2]{\parbox{0.5\linewidth}{#1}\parbox{0.5\linewidth}{#2}}

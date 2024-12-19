@@ -1,0 +1,46 @@
+\chapter{Applications}\label{ch:Applications}
+%\glijbaantje{Quote}{Person}
+
+Our main focus will be on out-of-plane systems. First, however, we will rather briefly discuss several in-plane cases.
+
+\section{In-plane systems}
+\subsection{Pinwheel reversal}
+\subsection{Kagome reversal}
+\subsection{RC by clocking in Pinwheel ASI}
+
+\section{Out-of-plane systems}
+\subsection{Characteristics of OOP ASI}
+\subsubsection{Motivation} % Input and output
+\subsubsection{Fabrication} % Co/Pt multilayer, energy contributions
+\subsubsection{Characteristics} % Ground state is AFM etc.
+
+\subsection{RC in frozen OOP square ASI}
+\subsubsection{Considerations for devising an appropriate input scheme}
+\paragraph{Global field can not work} % Start with schemes that are not appropriate
+\paragraph{AFM field can work}
+\paragraph{Input encoding} % Binary vs. byte etc. Sigmoid thingy?
+\subsubsection{Two-step input scheme: clocking} % With importance of E_B_std
+
+\subsection{RC in thermally active OOP square ASI}
+\subsubsection{Concept} % Lessons learnt from frozen ASI
+\paragraph{Input and output torques: representation in Hotspice}
+\paragraph{Readout method}
+\subsubsection{Logarithmic relaxation}
+\paragraph{Relaxation}
+\paragraph{Fitted values for logarithmic behavior}
+\paragraph{Exchange-coupled system} % Could be omitted if not sufficiently worked out
+\subsubsection{Fitting MFM images}
+\paragraph{Bayesian optimization}
+\paragraph{Results} % E_B etc.
+\subsubsection{RC: signal transformation}
+\paragraph{Motivation} % Why do signal transformation? (scalar, nonlinear, memory...)
+\paragraph{Baseline}
+\paragraph{Parameter dependencies}
+\subparagraph{Field magnitude}
+\subparagraph{Frequency}
+\subparagraph{Gradient}
+\subparagraph{System size and readout resolution}
+\subparagraph{Exchange/no exchange}
+\subparagraph{Transformation}
+\paragraph{Bayesian optimization: Mackey-Glass}
+\paragraph{Reflecting on results} % Is the performance decent? Compare to literature. MSE is not an ideal parameter, should use something that accounts more for the general shape.
