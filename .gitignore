@@ -1,1 +1,6 @@
 /build
+/fig_source/**/*.pdf
+/fig_source/**/*.png
+/fig_source/**/*.svg
+/fig_source/**/*.json
+/fig_source/**/__pycache__
