@@ -4,3 +4,15 @@
 /fig_source/**/*.svg
 /fig_source/**/*.json
 /fig_source/**/__pycache__
+*.aux
+*.bbl
+*.blg
+*.brf
+*.idx
+*.ilg
+*.ind
+*.log
+*.out
+*.pdf
+*.synctex.gz
+*.toc
