@@ -20,19 +20,24 @@
     \vspace{1em}
 \end{adjustwidth}
 
-To assess the potential of \xref{Reservoir Computing} in (perpendicular-anisotropy) \xref{Artificial Spin Ice}, i.e. the central goal of this thesis, simulations will be required to efficiently explore the impact of system parameters on performance. Nanomagnetic systems are often simulated using micromagnetic codes, such as the finite-difference-based \mumax~\cite{mumax3} and \oommf~\cite{OOMMF} or the finite-element-based \nmag~\cite{Nmag}, which capture the magnetization dynamics of individual nanomagnets in great detail. However, the time between successive switches of a nanomagnet is not necessarily similar to the timescale of micromagnetics: when the simulated time extends beyond several microseconds, simulating even a modest number of magnets -- on the order of several dozen -- becomes computationally unfeasible~\cite{leo2021chiral}. \par % Q: is it ok to just copy sentences from my paper?
+To assess the potential of \xref{Reservoir Computing} in (perpendicular-anisotropy) \xref{Artificial Spin Ice}, simulations must be performed to efficiently explore the impact of system parameters on performance.
+Nanomagnetic systems are often simulated using micromagnetic codes, such as the finite-difference-based \mumax~\cite{mumax3} and \oommf~\cite{OOMMF} or the finite-element-based \nmag~\cite{Nmag}, which capture the magnetization dynamics of individual nanomagnets in great detail. \par
 
-% TODO: this is placeholder text to test some commands.
-Hotspice is written in Python 3.10, and can choose to calculate on either the CPU or GPU.
-CuPy v11.4~\cite{CuPy} is used for GPU-accelerated array manipulation, otherwise NumPy and SciPy are used for the CPU.
-When writing code for the GPU, it is important to keep the \href{https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html}{Cuda best practices} in mind.
-Unfortunately, I only found this page after one year of Hotspice development *shrug*.
-Another Python package for parallel programming is the \python{cuNumeric} package by Nvidia, which is also designed to be a drop-in \python{numpy} replacement but supports multiple GPUs, which can be useful for very large simulations that do not fit into the memory of a single GPU.
-There is also the \code{nvc++} compiler but this is for Cython code. \par
+However, the time between successive switches of a nanomagnet is not necessarily similar to the timescale of micromagnetics: when the simulated time extends beyond several microseconds, simulating even a modest number of magnets -- on the order of several dozen -- becomes computationally unfeasible~\cite{leo2021chiral}. % Q: is it ok to just copy sentences or even paragraphs from my paper?
+Furthermore, the determination of RC metrics requires applying many input bits to the system to get a statistically valid result, thereby requiring an even greater number of switches.
+It is clear that micromagnetic simulations are therefore ill-suited for our intended purposes. \par
+
+To address these limitations, specialized ASI simulation tools have been developed, such as the flatspin simulator~\cite{flatspin}, which implements deterministic spin flipping via a Stoner-Wohlfarth model~\cite{StonerWohlfarth2008}.
+Using such higher-level approximations enables the study of collective behavior in much larger systems and over far longer timescales than is feasible with micromagnetic codes, though at the cost that the internal magnetization structure of individual nanomagnets is no longer simulated in detail.
+Additionally, Monte Carlo methods are often used to simulate spin ices, including ASI, but these are typically specialized to a select few lattice geometries and often only account for nearest-neighbor interactions, whose strength is often arbitrarily set or calculated separately using micromagnetic codes.~\cite{MeltingASI,sklenar2019field,gilbert2014emergent,zhang2013crystallites} \par % REFS: 'gilbert2014emergent': MC sims based on a vertex model and interacting magnetic charges. 'zhang2013crystallites': uses monopoles and NN couplings to model kagome ASI with Metropolis and loop update. 'moller2006artificial': bit broader using dipolar interaction, though seemingly still only for nearest neighbors. 'mengotti2011kagome' use a full dipole model with Ewald summation for PBC. 'lou2023competing': dipole model for half-occupation IP Ising. 'sendetskyi2019continuous': dipole model for square ASI. 'EngineeringRelaxationComputation': KMC on dipole model, seemingly for square arrays. 'sklenar2019field': NN interactions calculated by mumax on quadrupole lattice. 'MeltingASI': 16-vertex ice model
+
+Our goal was to blend these two approaches, resulting in \hotspice{}: a versatile Monte Carlo simulator meant to capture ASI physics with minimal arbitrary parameters, allowing various lattice configurations to be evaluated.
+This software approximates each single-domain nanomagnet as a single Ising spin, associating energies with its various states and accounting for the magnetostatic interaction between all magnets.
+In this chapter, we discuss several model variants to assess their accuracy in simulating the behavior of ASI.
+These variants differ in their calculation of the magnetostatic interactions, the use of symmetric versus asymmetric energy barriers, and their choice of update algorithms.
+A summary of the most important aspects of \hotspice is given in~\cite{MAES-24}, some of which will be repeated in this chapter while further detailing several aspects of the implementation and related considerations.
 
 \section{Model}
-
-\cite{Hotspice}
 
 \xfig[1.0]{2_Hotspice/ASIs.pdf}{\label{fig:2:ASIs}Predefined artificial spin ice (ASI) lattices available in \hotspice{}. The unit cell of each lattice is delineated by a central grey rectangle. The red indicator defines the lattice parameter $a$. In the Ising approximation, the magnetization of in-plane magnets (left) aligns along the major axis of the depicted ellipses. Out-of-plane magnets (right) are illustrated as circles.}\\
 
@@ -55,6 +60,13 @@ There is also the \code{nvc++} compiler but this is for Cython code. \par
 \subsection{Other Monte Carlo algorithms} % Not implemented, explain why Wolff could be useful but why it's not in Hotspice
 
 \section{Implementation details}
+% TODO: this is placeholder text.
+Hotspice is written in Python 3.10, and can choose to calculate on either the CPU or GPU.
+CuPy v11.4~\cite{CuPy} is used for GPU-accelerated array manipulation, otherwise NumPy and SciPy are used for the CPU.
+When writing code for the GPU, it is important to keep the \href{https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html}{Cuda best practices} in mind.
+Unfortunately, I only found this page after one year of Hotspice development *shrug*.
+Another Python package for parallel programming is the \python{cuNumeric} package by Nvidia, which is also designed to be a drop-in \python{numpy} replacement but supports multiple GPUs, which can be useful for very large simulations that do not fit into the memory of a single GPU.
+There is also the \code{nvc++} compiler but this is for Cython code. \par
 \subsection{API} % Structure of Hotspice, explain all modules
 \subsubsection{ASI}
 \subsubsection{RC}
