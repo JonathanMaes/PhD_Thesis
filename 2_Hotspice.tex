@@ -16,6 +16,8 @@
     \vspace{1em}
 \end{adjustwidth}
 
+To assess the potential of \xref{Reservoir Computing} in (perpendicular-anisotropy) \xref{Artificial Spin Ice}, i.e. the central goal of this thesis, simulations will be required to efficiently explore the impact of system parameters on performance. Nanomagnetic systems are often simulated using micromagnetic codes, such as the finite-difference-based \mumax~\cite{mumax3} and \oommf~\cite{OOMMF} or the finite-element-based \nmag~\cite{Nmag}, which capture the magnetization dynamics of individual nanomagnets in great detail. However, the time between successive switches of a nanomagnet is not necessarily similar to the timescale of micromagnetics: when the simulated time extends beyond several microseconds, simulating even a modest number of magnets -- on the order of several dozen -- becomes computationally unfeasible~\cite{leo2021chiral}. \par % Q: is it ok to just copy sentences from my paper?
+
 % TODO: this is placeholder text to test some commands.
 Hotspice is written in Python 3.10, and can choose to calculate on either the CPU or GPU.
 CuPy v11.4~\cite{CuPy} is used for GPU-accelerated array manipulation, otherwise NumPy and SciPy are used for the CPU.
