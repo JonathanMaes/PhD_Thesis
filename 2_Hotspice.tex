@@ -82,14 +82,18 @@ Some other relations exist between the lattices in the figure: the magnets of th
 
 \section{Implementation details}\label{sec:2:Implementation}
 % TODO: this is placeholder text.
-Hotspice is written in Python 3.10, and can choose to calculate on either the CPU or GPU.
-CuPy v11.4~\cite{CuPy} is used for GPU-accelerated array manipulation, otherwise NumPy and SciPy are used for the CPU.
-When writing code for the GPU, it is important to keep the \href{https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html}{Cuda best practices} in mind.
-Unfortunately, I only found this page after one year of Hotspice development *shrug*.
-Another Python package for parallel programming is the \python{cuNumeric} package by Nvidia, which is also designed to be a drop-in \python{numpy} replacement but supports multiple GPUs, which can be useful for very large simulations that do not fit into the memory of a single GPU.
-There is also the \code{nvc++} compiler but this is for Cython code. \par
-\subsection{API} % Structure of Hotspice, explain all modules
+Hotspice is written as a Python 3.10 module.
+It can calculate on either the CPU or GPU, though this choice must be made before the \hotspice module is loaded in a Python script.
+CuPy v11.4~\cite{CuPy} is used for GPU-accelerated array manipulation, otherwise NumPy and SciPy are used for calculations on the CPU. \par
+\subsection{API} % Structure of Hotspice, explain all modules (core, ASI, energies, (config? with GPU), io, experiments, gui and mostly deprecated plottools, utils but only those relevant to users)
 \subsubsection{ASI}
+Several ASIs are defined in the \python{hotspice.ASI} module.
+All of these take two positional arguments: \python{hotspice.ASI.<ASI_name>(a, n, **kwargs)}.
+The first argument is the lattice parameter, as defined in~\cref{fig:2:ASIs}.
+The second argument is the size of the underlying grid (one can also specify \python{nx} and \python{ny} separately).
+For the predefined lattices in the \python{hotspice.ASI} module, these two parameters are enough information to create a rudimentary ASI.
+To create a custom ASI, one should inherit from the \python{hotspice.ASI.IP_ASI} or \python{hotspice.ASI.OOP_ASI} classes.
+
 \subsubsection{RC}
 \subsection{Performance} % Several factors impacting performance, explain by using that one graph
 \subsubsection{GPU vs. CPU}
