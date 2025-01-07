@@ -17,6 +17,7 @@
 \newcommand{\link}[2]{\hyperref[#1]{#2}\xspace}
 \newcommand{\crefSubFigRef}[2]{\crefformat{figure}{fig.~##2##1{#2}##3}%
   \cref{#1}\crefformat{figure}{fig.~##2##1##3}}
+\newcommand{\ccite}[1]{Ref.~\cite{#1}} % Ref. [1] instead of [1]
 \newcommand{\Py}{\xref{permalloy}}
 %%vector
 % \newcommand{\vc}[1]{\textbf{#1}}
@@ -39,6 +40,7 @@
 \newcommand{\lapl}{\ensuremath{{\Delta}}}
 \newcommand{\eqdef}{\stackrel{\small{\mathrm{def}}}{=}}
 \newcommand{\inprod}{\cdot}
+\newcommand{\bcdot}{\boldsymbol{\cdot}}
 \renewcommand{\quote}[1]{``#1''}
 \newcommand{\etal}{\textit{et al.}\xspace}
 \newcommand{\code}[1]{\textsf{#1}}
@@ -120,7 +122,7 @@
 
 
 \newcommand{\xfig}[3][1]{
-    \jonathanskip
+    \jonathanskip\vspace{1em}
     \begin{tikzpicture}
         \node[rounded corners=10pt, fill=figcolor, inner sep=10pt] (figbox) {
             \begin{minipage}{0.955\linewidth}
