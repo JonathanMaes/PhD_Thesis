@@ -82,29 +82,35 @@ The remaining four IP and four OOP lattices are also related: the magnets in the
 
 \section{Energy calculation}
 \subsection{Energy terms}
-Three energy contributions are implemented in \hotspice, supporting both open and periodic boundary conditions (PBC).\footnote{
+Three energy contributions have been implemented in \hotspice, supporting both open and periodic boundary conditions (PBC).\footnote{
 	Users can implement more energy contributions by inheriting from the \python{hotspice.Energy} class and implementing the \python{abstractmethod}s, taking care to correctly account for open or periodic BC when necessary.
 }
-The first is the \textit{magnetostatic interaction energy} between magnets $i$ and $j$
-\begin{equation}
-	E_{\mathrm{MS},i,j} = \frac{\mu_0}{4 \pi} \ab(\frac{\vc{\mu}_i \bcdot \vc{\mu}_j}{\abs{\vc{r}_{ij}}^3} - \frac{3(\vc{\mu}_i \bcdot \vc{r}_{ij}) (\vc{\mu}_j \bcdot \vc{r}_{ij})}{\abs{\vc{r}_{ij}}^5}) \mathrm{,}
-	\label{eq:E_MS}
-\end{equation}
-with $\mu_0$ the vacuum permeability and $\vc{r}_{ij} = \vc{r}_i - \vc{r}_j$ the vector connecting the two magnetic dipoles $\vc{\mu}_i$ and $\vc{\mu}_j$.
-By default, this is the only interaction considered by \hotspice when an ASI is created, to avoid unnecessary calculations.
-Any other energy contributions must explicitly be added to an ASI when it is created; see \cref{sec:2:API_energies}. \par
-Secondly, the \textit{Zeeman energy} of an external field $\vc{B}_\mathrm{ext}$ interacting with magnet $i$
-\begin{equation}
-	E_{\mathrm{Z},i} = -\vc{\mu}_i \bcdot \vc{B}_\mathrm{ext} \mathrm{,} \label{eq:E_Z}
-\end{equation}
-is often needed when simulating ASI, as it provides a simple means to interact with the system, which is indispensable for RC purposes. \par
-Finally, there is the \textit{exchange coupling energy} between nearest neighbours (NN) $i$ and $j$
-\begin{equation}
-	E_{\mathrm{exch},i,j} = J \frac{\vc{\mu}_i \bcdot \vc{\mu}_j}{\mu_i \mu_j} \mathrm{,} \label{eq:Eexch}
-\end{equation}
-with $J$ the exchange coupling constant.
-This interaction is rarely present in ASI, but can be relevant in e.g. interconnected ASI -- whether by design or due to limited lithographic accuracy.
-We will encounter an example of the latter in \cref{sec:3:OOP:MFM}. \\\par
+\begin{enumerate}
+	\item The \textit{magnetostatic interaction energy} between magnets $i$ and $j$
+	\begin{equation}
+		E_{\mathrm{MS},i,j} = \frac{\mu_0}{4 \pi} \ab(\frac{\vc{\mu}_i \bcdot \vc{\mu}_j}{\abs{\vc{r}_{ij}}^3} - \frac{3(\vc{\mu}_i \bcdot \vc{r}_{ij}) (\vc{\mu}_j \bcdot \vc{r}_{ij})}{\abs{\vc{r}_{ij}}^5}) \mathrm{,}
+		\label{eq:E_MS}
+	\end{equation}
+	with $\mu_0$ the vacuum permeability and $\vc{r}_{ij} = \vc{r}_i - \vc{r}_j$ the vector connecting the two magnetic dipoles $\vc{\mu}_i$ and $\vc{\mu}_j$. \par
+	By default, this is the only interaction considered by \hotspice when an ASI is created.
+	Any other energy contributions must explicitly be added to an ASI; see \cref{sec:2:API_energies}.
+	This avoids wasting calculations on energies not relevant to the simulation.
+	
+	\item The \textit{Zeeman energy} of an external field $\vc{B}_\mathrm{ext}$ interacting with magnet $i$
+	\begin{equation}
+		E_{\mathrm{Z},i} = -\vc{\mu}_i \bcdot \vc{B}_\mathrm{ext} \mathrm{,} \label{eq:E_Z}
+	\end{equation}
+	where $\vc{B}_\mathrm{ext}$ can be set for each magnet individually. \par
+	This energy contribution provides the primary means for the outside world to interact with the system, and is therefore indispensable for reservoir computing purposes. Even if input is provided through other means than an external field, this energy contribution can often still be used by considering an effective field instead.
+	
+	\item The \textit{exchange coupling energy} between nearest neighbours (NN) $i$ and $j$
+	\begin{equation}
+		E_{\mathrm{exch},i,j} = J \frac{\vc{\mu}_i \bcdot \vc{\mu}_j}{\mu_i \mu_j} \mathrm{,} \label{eq:Eexch}
+	\end{equation}
+	with $J$ the exchange coupling constant, which is constant throughout the ASI. \par
+	This interaction is rarely present in ASI, but can be relevant in e.g. interconnected ASI -- whether by design or due to limited lithographic accuracy.
+	We will encounter an example of the latter in \cref{sec:3:OOP:MFM}.
+\end{enumerate}
 
 The combined \textit{interaction energy} $E_i$ of a single magnet $i$ with its environment is then given by
 \begin{equation}
