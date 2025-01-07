@@ -32,43 +32,52 @@
 To assess the potential of \xref{Reservoir Computing} in (perpendicular-anisotropy) \xref{Artificial Spin Ice}, as is the main topic of this thesis, a simulation framework is needed that allows efficient exploration of the impact that various system parameters and input methods have on the reservoir performance. \\\par
 
 Nanomagnetic systems are often simulated using micromagnetic codes, such as the finite-difference-based \mumax~\cite{mumax3} and \oommf~\cite{OOMMF} or the finite-element-based \nmag~\cite{Nmag}, which capture the magnetization dynamics of individual nanomagnets in great detail. \par
-However, the time between successive switches of a nanomagnet is not necessarily similar to the timescale of micromagnetics. Furthermore, determining RC metrics requires applying many input cycles -- on the order of 100 for the task-agnostic metrics -- to get a statistically valid result. In this timeframe, many switches occur. When the simulated time extends beyond several microseconds, simulating even a modest number of magnets -- on the order of several dozen -- becomes computationally unfeasible~\cite{leo2021chiral}. It is clear that micromagnetic simulations are therefore too detailed for our intended purposes. \\\par
+However, the time between successive switches of a nanomagnet is not necessarily similar to the timescale of micromagnetics.
+Furthermore, determining RC metrics requires applying many input cycles -- on the order of 100 for the task-agnostic metrics -- to get a statistically valid result.
+In this timeframe, many switches occur.
+When the simulated time extends beyond several microseconds, as is typically the case, simulating even a modest number of magnets -- on the order of several dozen -- becomes computationally unfeasible~\cite{leo2021chiral}. \\\par
 
-To address these limitations, specialized ASI simulation tools have been developed, such as the flatspin simulator~\cite{flatspin}, which implements deterministic spin flipping via a Stoner-Wohlfarth model~\cite{StonerWohlfarth2008}.
-Using such higher-level approximations enables the study of collective behaviour in much larger systems and over far longer timescales than is feasible with micromagnetic codes, though at the cost that the internal magnetization structure of individual nanomagnets is no longer simulated in detail.
+To address these limitations, specialized ASI simulation tools have been developed.
+An example of this is the flatspin simulator~\cite{flatspin}, which implements deterministic spin flipping via a Stoner-Wohlfarth model~\cite{StonerWohlfarth2008}.
+Using such higher-level approximations enables the study of collective behaviour in much larger systems and over far longer timescales than is feasible with micromagnetic codes, though at the cost of no longer simulating the internal magnetization structure of individual nanomagnets in detail.
 Additionally, Monte Carlo methods are often used to simulate spin ices, including ASI, but these are typically specialized to a select few lattice geometries and often only account for nearest-neighbour interactions, whose strength is often arbitrarily set or calculated separately using micromagnetic codes.~\cite{MeltingASI,sklenar2019field,gilbert2014emergent,zhang2013crystallites} \\\par % REFS: 'gilbert2014emergent': MC sims based on a vertex model and interacting magnetic charges. 'zhang2013crystallites': uses monopoles and NN couplings to model kagome ASI with Metropolis and loop update. 'moller2006artificial': bit broader using dipolar interaction, though seemingly still only for nearest neighbors. 'mengotti2011kagome' use a full dipole model with Ewald summation for PBC. 'lou2023competing': dipole model for half-occupation IP Ising. 'sendetskyi2019continuous': dipole model for square ASI. 'EngineeringRelaxationComputation': KMC on dipole model, seemingly for square arrays. 'sklenar2019field': NN interactions calculated by mumax on quadrupole lattice. 'MeltingASI': 16-vertex ice model
 
-Our goal was to blend these two approaches, resulting in \hotspice: a versatile Monte Carlo simulator meant to capture ASI physics with minimal arbitrary parameters, allowing various lattice configurations to be evaluated.
-This software approximates each single-domain nanomagnet as a single Ising spin, associating energies with its various states and accounting for the magnetostatic interaction between all magnets.
-In this chapter, we discuss several model variants to assess their accuracy in simulating the behaviour of ASI.
-These variants differ in their calculation of the magnetostatic interactions, the use of symmetric versus asymmetric energy barriers, and their choice of update algorithms. \\\par
+Our goal was to blend these two approaches, resulting in \hotspice: a versatile Monte Carlo simulator meant to capture ASI physics with minimal arbitrary parameters, allowing various lattice configurations to be evaluated. \par
+This software approximates each single-domain nanomagnet as a single Ising spin, associating energies with the various ASI states by accounting for the magnetostatic interaction between all magnets.
+\hotspice supports both in-plane (IP) and out-of-plane (OOP) ASI, which may contain thousands of magnets. Simulations can span arbitrary timescales, as determined by the switching time of magnets in the system. \\\par
 
-A summary of the most important aspects of \hotspice is given in~\cite{MAES-24}, some of which will be repeated in this chapter while further detailing several aspects of the implementation and related considerations.
+In this chapter, we discuss several model variants that have been implemented, and assess their accuracy in simulating the behaviour of ASI.
+These variants differ in their calculation of the magnetostatic interactions, the use of symmetric versus asymmetric energy barriers, and their choice of update algorithm. \\\par
 
 \section{Model}
-Because the magnetization in a nanomagnet prefers to align along the fixed easy axis of its geometry, it is natural to use an Ising-like approximation where the position $\vb{r}_i$, axis $\vb{u}_i$, and size of magnetic moment\footnote{
-	The size of the magnetic moment $\mu_i$ corresponds to the total ground state magnetic moment $\abs{\int_{\Omega_i} \vb{M}(\vb{r})d\vb{r}}$, with $\Omega_i$ the shape of magnet $i$ and $\vb{M}(\vb{r})$ its magnetization in the twofold degenerate ground state. Due to edge relaxation effects, this value is slightly smaller than $M_\mathrm{sat} V_i$.
-} $\mu_i$ of each magnet are fixed, allowing the magnets to only switch between the `up' and `down' states.
-Thus, the total magnetic moment vector of magnet $i$ can be expressed as $\vb{\mu}_i = s_i \mu_i \vb{u}_i$, where $s_i = \pm 1$ and $\abs{\vb{u}_i} = 1$. \par
-
-The switching rate between these states is determined by the temperature $T$ and the effective energy barrier $\widetilde{E_\mathrm{B}}$ separating them.
-A canonical ensemble is used where magnets are considered in contact with a heat bath of temperature $T_i$.
+In single-domain IP nanomagnets, the magnetisation prefers to align along the fixed easy axis of the geometry, while for OOP magnets a strong interfacial anisotropy causes a preferential orientation along the $z$-axis.
+Either way, in simulation it is natural to use an Ising-like approximation for such single-domain magnets, where the position $\vc{r}_i$, axis $\vc{u}_i$, and size of the magnetic moment\footnote{
+	The size of the magnetic moment $\mu_i$ corresponds to the total ground state magnetic moment $\abs{\int_{\Omega_i} \vc{M}(\vc{r})d\vc{r}}$, with $\Omega_i$ the shape of magnet $i$ and $\vc{M}(\vc{r})$ its magnetisation in the twofold degenerate ground state. Due to edge relaxation effects, this value is slightly smaller than $M_\mathrm{sat} V_i$.
+} $\mu_i$ of each magnet $i$ are fixed, allowing the magnets to only switch between the `up' ($\uparrow$) and `down' ($\downarrow$) states.
+Thus, the total magnetic moment vector of magnet $i$ can be expressed as
+\begin{equation}
+	\vc{\mu}_i = s_i \mu_i \vc{u}_i \mathrm{,}
+\end{equation}
+where $s_i = \pm 1$ and $\abs{\vc{u}_i} = 1$. \par
+The switching rate between these two states is determined by the temperature $T$ and the effective energy barrier $\widetilde{E_\mathrm{B}}$ separating them.
+%A canonical ensemble is used where magnets are considered in contact with a heat bath of temperature $T_i$. % TODO: mention this or not?
 For an isolated nanomagnet, the energy barrier $E_\mathrm{B} = K_\mathrm{u} V$\footnote{
 	This is valid for switching by coherent rotation. Similar to the calculation of $\mu$, edge relaxation effects may cause the effective volume to be slightly smaller.
 } originates from its uniaxial shape anisotropy $K_\mathrm{u}$.
-Interactions with other magnets or external fields modify the energy landscape, leading to an effective barrier $\widetilde{E_\mathrm{B}}$.~\cite{leo2021chiral}
-\hotspice allows each magnet to have a unique magnetic moment size $\mu_i$, temperature $T_i$ and energy barrier $E_{\mathrm{B},i}$.
+Interactions with other magnets or external fields modify the energy landscape, leading to an effective barrier $\widetilde{E_\mathrm{B}}$, which we will denote with a tilde.~\cite{leo2021chiral}
+Each magnet can have a unique magnetic moment size $\mu_i$, temperature $T_i$ and energy barrier $E_{\mathrm{B},i}$.
 This enables, for instance, modelling some of the disorder due to lithographic variations by assigning a different shape anisotropy to each magnet, typically sampled from a Gaussian distribution with mean $E_\mathrm{B}$ and standard deviation $\sigma(E_\mathrm{B})$. \\\par
 
-Due to the periodic nature of many ASI lattices, \hotspice chooses to perform the simulation on a rectilinear grid, the benefits of which will be discussed in~\cref{sec:2:Implementation}.
+Due to the periodic nature of many ASI lattices, \hotspice chooses to perform the simulation on a rectilinear grid, the benefits and details of which will be discussed in~\cref{sec:2:Implementation}.
 Each grid point may or may not contain a magnet, and the magnets must either all be of the IP type, or all OOP.
 Even though this implementation does not allow complete freedom in the placement of magnets, many popular ASI lattices can be constructed in this manner. \par
-\cref{fig:2:ASIs} showcases the 12 lattices that \hotspice provides out-of-the-box. The two variants of pinwheel and square lattices (diamond/lucky-knot and closed/open) correspond to a global \ang{45} rotation of the entire lattice, which due to the rectangular simulation area of the underlying grid results in different boundaries and a different unit cell.
-Some other relations exist between the lattices in the figure: the magnets of the OOP lattices (i)-(l) are positioned at the vertices where magnets meet in the respective IP lattices (e)-(h), and the pinwheel lattices (a) and (b) are equal to the square lattices (c) and (d), respectively, but with each magnet rotated \ang{45}. \\\par
 
 \xfig[1.0]{2_Hotspice/ASIs.pdf}{
-	\label{fig:2:ASIs}Predefined artificial spin ice (ASI) lattices available in \hotspice{}. The unit cell of each lattice is delineated by a central dark grey rectangle. The red indicator defines the lattice parameter $a$. In the Ising approximation, the magnetization of in-plane magnets (top) aligns along the major axis of the depicted ellipses. Out-of-plane magnets (bottom) are illustrated as circles.
+	\label{fig:2:ASIs}Predefined artificial spin ice (ASI) lattices available in \hotspice. The unit cell of each lattice is delineated by a central dark grey rectangle. The red indicator defines the lattice parameter $a$. In the Ising approximation, the magnetization of in-plane magnets (top) aligns along the major axis of the depicted ellipses. Out-of-plane magnets (bottom) are illustrated as circles.
 }
+
+\cref{fig:2:ASIs} showcases the 12 lattices that \hotspice provides out-of-the-box. The pinwheel lattices (a) and (b) are equal to the square lattices (c) and (d), respectively, but with each magnet individually rotated by \ang{45}. Both lattices have two variants (diamond/lucky-knot and closed/open), related by a global \ang{45} rotation of the entire lattice. This gives rise to different boundaries due to the Cartesian character of the underlying grid, which may alter the dynamics of the ASI. Furthermore, the unit cell for lucky-knot pinwheel and open square is more compact, resulting in faster simulation, while diamond pinwheel and closed square are more popular in literature and were therefore implemented separately. \par % TODO: more popular in literature? Examples where these are used?
+The remaining four IP and four OOP lattices are also related: the magnets in the OOP lattices (i)-(l) are positioned at the vertices where magnets meet in their respective IP counterparts (e)-(h). \\\par
 
 
 \section{Energy calculation}
