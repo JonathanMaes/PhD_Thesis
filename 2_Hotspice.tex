@@ -152,16 +152,16 @@ Hotspice is written as a Python 3.10 package and can perform simulations on eith
 The optimal hardware choice depends on the size of the ASI and the update scheme used.
 By default, \hotspice runs on the CPU using the popular NumPy and SciPy libraries.
 For GPU-accelerated array manipulation, the CuPy v11.4~\cite{CuPy} library is used. \par
-\subsection{API} % Structure of Hotspice, explain all modules (core, ASI, energies, (config? with GPU), io, experiments, gui and mostly deprecated plottools, utils but only those relevant to users)
- By default, \hotspice runs on the CPU. To run on the GPU, the environment variable \python{HOTSPICE_USE_GPU} must be set to \python{"true"} before the the \hotspice package is loaded (\python{import hotspice}) in a Python script.
+\subsection{Package structure} % Structure of Hotspice, explain all modules (core, ASI, energies, (config? with GPU), io, experiments, gui and mostly deprecated plottools, utils but only those relevant to users)
+\paragraph{\python{hotspice.config}: GPU/CPU choice}
+By default, \hotspice runs on the CPU. To run on the GPU, the environment variable \python{HOTSPICE_USE_GPU} must be set to \python{"true"} before the the \hotspice package is loaded in a Python script with \python{import hotspice}.
 \subsubsection{ASI}
-\paragraph{\python{hotspice.ASI}}
-Several ASIs are defined in the \python{hotspice.ASI} module.
-All of these take two positional arguments: \python{hotspice.ASI.<ASI_name>(a, n, **kwargs)}.
-The first argument is the lattice parameter, as defined in~\cref{fig:2:ASIs}.
+\paragraph{\python{hotspice.ASI}: predefined ASI lattices}
+This module provides two abstract classes from which all ASIs should inherit: \python{hotspice.ASI.IP_ASI} or \python{hotspice.ASI.OOP_ASI}. Various lattices are available, as previously shown in~\cref{fig:2:ASIs}.
+These all follow the same pattern: \python{hotspice.ASI.<ASI_name>(a, n, **kwargs)}, with two positional arguments.
+The first argument is the lattice parameter, as defined by the red indicator in \cref{fig:2:ASIs}.
 The second argument is the size of the underlying grid (one can also specify \python{nx} and \python{ny} separately).
 For the predefined lattices in the \python{hotspice.ASI} module, these two parameters are enough information to create a rudimentary ASI.
-To create a custom ASI, one should inherit from the \python{hotspice.ASI.IP_ASI} or \python{hotspice.ASI.OOP_ASI} classes.
 \paragraph{Energies}\label{sec:2:API_energies}
 Three predefined energy contributions are provided in the \python{hotspice.energies} module, though they can be accessed from the main \python{hotspice} namespace because they are used so often.
 The magnetostatic interaction is implemented by the \python{hotspice.DipolarEnergy} or \python{hotspice.DiMonopolarEnergy} classes, with the latter using the monopole approximation to calculate the interaction.
