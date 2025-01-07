@@ -82,6 +82,48 @@ The remaining four IP and four OOP lattices are also related: the magnets in the
 
 \section{Energy calculation}
 \subsection{Energy terms}
+Three energy contributions are implemented in \hotspice, supporting both open and periodic boundary conditions (PBC).\footnote{
+	Users can implement more energy contributions by inheriting from the \python{hotspice.Energy} class and implementing the \python{abstractmethod}s, taking care to correctly account for open or periodic BC when necessary.
+}
+The first is the \textit{magnetostatic interaction energy} between magnets $i$ and $j$
+\begin{equation}
+	E_{\mathrm{MS},i,j} = \frac{\mu_0}{4 \pi} \ab(\frac{\vc{\mu}_i \bcdot \vc{\mu}_j}{\abs{\vc{r}_{ij}}^3} - \frac{3(\vc{\mu}_i \bcdot \vc{r}_{ij}) (\vc{\mu}_j \bcdot \vc{r}_{ij})}{\abs{\vc{r}_{ij}}^5}) \mathrm{,}
+	\label{eq:E_MS}
+\end{equation}
+with $\mu_0$ the vacuum permeability and $\vc{r}_{ij} = \vc{r}_i - \vc{r}_j$ the vector connecting the two magnetic dipoles $\vc{\mu}_i$ and $\vc{\mu}_j$.
+By default, this is the only interaction considered by \hotspice when an ASI is created, to avoid unnecessary calculations.
+Any other energy contributions must explicitly be added to an ASI when it is created; see \cref{sec:2:API_energies}. \par
+Secondly, the \textit{Zeeman energy} of an external field $\vc{B}_\mathrm{ext}$ interacting with magnet $i$
+\begin{equation}
+	E_{\mathrm{Z},i} = -\vc{\mu}_i \bcdot \vc{B}_\mathrm{ext} \mathrm{,} \label{eq:E_Z}
+\end{equation}
+is often needed when simulating ASI, as it provides a simple means to interact with the system, which is indispensable for RC purposes. \par
+Finally, there is the \textit{exchange coupling energy} between nearest neighbours (NN) $i$ and $j$
+\begin{equation}
+	E_{\mathrm{exch},i,j} = J \frac{\vc{\mu}_i \bcdot \vc{\mu}_j}{\mu_i \mu_j} \mathrm{,} \label{eq:Eexch}
+\end{equation}
+with $J$ the exchange coupling constant.
+This interaction is rarely present in ASI, but can be relevant in e.g. interconnected ASI -- whether by design or due to limited lithographic accuracy.
+We will encounter an example of the latter in \cref{sec:3:OOP:MFM}. \\\par
+
+The combined \textit{interaction energy} $E_i$ of a single magnet $i$ with its environment is then given by
+\begin{equation}
+	E_i = E_{\mathrm{Z},i} + \sum_j E_{\mathrm{MS},i,j} + \sum_{j \in \mathcal{N}_i} E_{\mathrm{exch},i,j} \mathrm{,}
+	\label{eq:E}
+\end{equation}
+where $\mathcal{N}_i$ is the collection of nearest neighbours of magnet $i$.
+Which magnets are included in this collection depends on the ASI lattice and which site of the unit cell magnet $i$ is in, and can be defined separately for each ASI lattice. \par
+Note that all terms in \cref{eq:E} simply change sign when magnet $i$ switches ($\vc{\mu}_i \rightarrow -\vc{\mu}_i$).
+The magnetostatic self-energy is not present in \cref{eq:E} because it only contributes a constant offset and does not change when the magnet switches.
+As such, $E_i$ represents the total interaction energy of a magnet with its `neighbours',\footnote{
+	In this context, a `neighbour' of a magnet can be interpreted more broadly as all magnets it interacts with through a particular energy contribution. For example, the magnetostatic interaction considers all magnets to be `neigbours', unless the user has explicitly set a maximum interaction distance.
+} and therefore the change in energy of the whole ASI when magnet $i$ switches is simply $\Delta E_{i,1\rightarrow2} = -2 E_i$.
+This is called the \textit{switching energy}, and we will later see (\cref{sec:2:Dynamics}) that it takes a central place in the algorithms used for simulating dynamics.
+It is therefore very advantageous to have such a simple method of calculating the switching energy. \par
+When the simulation is initialized, the energy contributions are calculated for every magnet.
+Each magnet therefore has a value for each of the terms in \cref{eq:E} stored in memory.
+Whenever a magnet switches, the energies of its `neighbours' are updated appropriately, which constitutes a major part of the calculation effort required for every step in the simulation.
+
 \subsection{Finite-size correction for magnetostatic energy}
 \subsubsection{Second-order correction for dipoles}
 \subsubsection{Dumbbell model}
@@ -92,7 +134,7 @@ The remaining four IP and four OOP lattices are also related: the magnets in the
 \subsubsection{Asymmetric barrier}
 \subsubsection{Exact solution} % OOP only
 
-\section{Dynamics}
+\section{Dynamics}\label{sec:2:Dynamics}
 \subsection{N\'eel relaxation: temporal evolution}
 \subsection{Metropolis-Hastings: sampling equilibrium states}
 % TODO: decide whether to talk about nomenclature details etc. here, or in the introduction.
