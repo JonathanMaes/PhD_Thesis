@@ -92,7 +92,8 @@ Three energy contributions have been implemented in \hotspice, supporting both o
 		\label{eq:E_MS}
 	\end{equation}
 	with $\mu_0$ the vacuum permeability and $\vc{r}_{ij} = \vc{r}_i - \vc{r}_j$ the vector connecting the two magnetic dipoles $\vc{\mu}_i$ and $\vc{\mu}_j$. \par
-	By default, this is the only interaction considered by \hotspice when an ASI is created.
+	This is the main interaction dictating how nanomagnets influence each other, causing the typical properties of the various ASI lattices, e.g. superferromagnetism in the pinwheel lattice~\cite{li2018pinwheel}.
+	Because of its importance, this is the only interaction \hotspice considers by default when an ASI is created.
 	Any other energy contributions must explicitly be added to an ASI; see \cref{sec:2:API_energies}.
 	This avoids wasting calculations on energies not relevant to the simulation.
 	
