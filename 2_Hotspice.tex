@@ -149,6 +149,103 @@ Whenever a magnet switches, the energies of its `neighbours' are updated appropr
 \subsection{Other Monte Carlo algorithms} % Not implemented, explain why Wolff could be useful but why it's not in Hotspice
 
 \section{Implementation}\label{sec:2:Implementation}
+Now that the physics underlying the simulator have been extensively discussed, we turn our attention to the implementation in software. \par
+First, we discuss why we chose to implement the ASI on an underlying rectilinear grid, and explain how the \textit{`kernel'} -- the lookup table for the magnetostatic interaction -- was implemented.
+We then take a look at the performance of \hotspice and how it has improved since its initial version due to improvements to the kernel.
+One particular performance-enhancing feature is examined in more detail: the possibility to select multiple magnets at once in the Metropolis-Hastings algorithm.
+Finally, we briefly discuss the structure of the package and the functionality included in the various submodules, and finish with a small discussion of things that could have been done better.
+
+\subsection{Grid}
+\hotspice{} represents an ASI as a rectilinear grid of non-uniform unit cells, with magnets positioned at selected grid points.
+This choice was made based on a trade-off; calculation efficiency against the freedom to place magnets arbitrarily.
+We opted to prioritise efficiency and accept the geometrical restriction, as most ASI research focuses on periodic lattices.
+Despite the seemingly restrictive nature of the rectilinear grid,~\cref{fig:2:ASIs} illustrates its versatility in forming various periodic lattices, with only the Cairo lattices requiring grid non-uniformity.
+As a bonus, real-time visualisation is simple and efficient for a rectilinear grid, as the underlying matrix can directly be cast to a pixel image. \par
+By leveraging the unit cell concept in periodic lattices and the efficient indexation of a rectilinear grid in computer memory, several aspects of the calculation can be performed more efficiently than for free-form ASI. The unit cell of each lattice in~\cref{fig:2:ASIs} is depicted as a grey rectangle. Although non-rectilinear unit cells with fewer magnets could be identified for some lattices, \hotspice{} does not consider these to reduce complexity and to maintain a clear connection to the underlying rectilinear grid of the ASI implementation.
+
+\subsection{Kernels}\label{sec:2:Kernels}
+\subsubsection{Perpendicular kernel} % If not yet explained in detail earlier, talk about the perpendicular kernel etc. here
+\subsubsection{Numerical error with cut-off kernel} % TODO
+A performance improvement presents itself by cutting off the magnetostatic kernel at a certain distance.
+Due to the underlying grid, the most natural way of achieving this is to simply reduce the size of the kernel from $2L-1 \times 2L-1$ to a smaller $2K-1 \times 2K-1$ central region. \par % Note that the size has to remain odd for the convolution to still place the magnet in the center.
+However, this will result in inaccurate interaction energies being stored.
+When multiple magnets switch, this error will accumulate.
+Luckily, the error introduced in this manner is bounded from above: whenever a magnet switches back, the error its original switch introduced is cancelled (barring some remaining floating-point error).
+
+\subsection{Performance} % Several factors impacting performance, explain by using that one graph
+% TODO: update this introductory text, because now this section comes after the explanation of the kernels.
+The performance of \hotspice has been improved throughout development in various ways.
+The number of magnets in the ASI has a major impact on performance, and is often the determining factor as to whether calculation on the GPU or CPU will result in a faster simulation.
+Throughout the development of \hotspice, calculation on the GPU was made possible and the efficiency of calculating the magnetostatic interaction was improved drastically.
+
+We start with a summarizing table of these various improvements, and explain them in more detail in the following sections.
+Two tables are shown: one for the initialisation time, and one for the time it takes to perform 5000 switches.
+The initialisation encompasses the calculation of the initial energy $E_i$ of all magnets, and lookup tables we call `kernels' (see~\cref{sec:2:Kernels}) which serve to reduce the amount of calculations required for every switch.
+
+This test was benchmarked on an NVIDIA GeForce RTX 3080 Laptop GPU; displayed simulation times serve an illustrative purpose. For other GPU models, absolute values may vary significantly, while relative values within the tables should remain mostly similar.
+
+% Q: should we talk about L or N? I would prefer L because we talk about 2D indexation, so L makes this clearer.
+\xtable[tab:2:perf_init]{\textbf{Initialization time} for various simulation sizes $L$ (i.e. $L \times L$ magnets). `Mem' indicates excessive memory consumption, `?' means a simulation of that size takes prohibitively long ($\gtrsim \SI{1000}{\second}$).}{
+	\begin{tabular}{r|c|c|c|c|c|c}
+		Simulation size $L$ & 50 & 100 & 150 & 200 & 400 & 1000 \\
+		\hline \hline
+		CPU | \makecell{Full interaction kernel} & 0.5s & 6.8s & 34.0s & Mem & Mem & Mem \\
+		\hline
+		GPU | \makecell{Full interaction kernel} & 2.2s & 5.4s & 11.9s & Mem & Mem & Mem \\
+		\hline
+		GPU | \makecell{Recalculate after each switch} & 1.0s & 3.4s & 7.6s & 14.5s & 91.6s & ? \\
+		\hline
+		GPU | \makecell{Precalculated unitcell-kernel} & 2.4s & 4.6s & 9.7s & 16.3s & 66.2s & 730.4s \\
+		\hline \hline
+		GPU | \makecell{Final version\\(convolution initialization)} & 1.0s & 1.0s & 1.0s & 1.0s & 1.6s & 23.9s \\
+		\hline
+		CPU | \makecell{Final version\\(convolution initialization)} & 0.014s & 0.2s & 1.0s & 3.2s & 53.1s & ? \\
+		\hline
+	\end{tabular}
+}
+
+\xtable[tab:2:perf_switch]{\textbf{5000 switches time} for various simulation sizes $L$ (i.e. $L \times L$ magnets). `Mem' indicates excessive memory consumption, `?' means a simulation of that size takes prohibitively long ($\gtrsim \SI{1000}{\second}$).}{
+	\begin{tabular}{r|c|c|c|c|c|c}
+		Simulation size $L$ & 50 & 100 & 150 & 200 & 400 & 1000 \\
+		\hline \hline
+		CPU | \makecell{Full interaction kernel} & 9.4s & 217.6s & ? & Mem & Mem & Mem \\
+		\hline
+		GPU | \makecell{Full interaction kernel} & 5.0s & 13.6s & 51.8s & Mem & Mem & Mem \\
+		\hline
+		GPU | \makecell{Recalculate after each switch} & 7.1s & 7.2s & 8.2s & 9.0s & 13.0s & ? \\
+		\hline
+		GPU | \makecell{Precalculated unitcell-kernel} & 7.8s & 7.9s & 8.3s & 8.9s & 11.8s & 36.9s \\
+		\hline \hline
+		GPU | \makecell{Final version\\(2D indexation)} & 6.8s & 7.0s & 7.2s & 7.6s & 10.2s & 35.9s \\
+		\hline
+		CPU | \makecell{Final version\\(2D indexation)} & 0.56s & 1.3s & 2.5s & 4.3s & 41s & ? \\
+		\hline
+	\end{tabular}
+}
+
+\paragraph{From CPU to GPU}
+Originally, \hotspice was written to calculate on CPU only.
+This caused the simulation time to rise dramatically as the system size grew (e.g. first row in \cref{tab:2:perf_switch}).
+For early versions of \hotspice with an unoptimized kernel, this made it impractical to simulate systems larger than $50 \times 50$ magnets.
+By simply switching to GPU-based calculations using the \python{CuPy} library, this upper limit was increased significantly. The limiting factor instead became memory consumption of the unoptimized kernel. \par
+% TODO: explain the unoptimized kernel here, and only explain the optimized kernel in the 'kernels' section.
+After various kernel improvements, as detailed in~\cref{sec:2:Kernels}, the upper limit for feasible calculation time was increased to $L \approx 1000$ for GPU and $L \approx 400$ for CPU, with GPU outperforming CPU for $L \gtrapprox 300$ (last two rows of \cref{tab:2:perf_switch}).
+The same goes for the initialisation time (\cref{tab:2:perf_init}), where the GPU already outperforms CPU starting at $L > 150$.
+
+For small systems, the GPU still maintains the advantage when using the Metropolis-Hastings algorithm, due to the ability to perform multiple switches in that system and the speed at which such convolutions can be calculated on GPU.
+
+\paragraph{Kernel improvements}
+\paragraph{RNG}
+Another factor which may contribute to the performance is the Random Number Generator (RNG).
+Both update algorithms rely on generating a large amount of random numbers to select the next magnet(s) to switch. % TODO: talk a bit about XORWOW etc. and how it actually doesn't really impact performance
+
+\subsection{Multi-switching in Metropolis-Hastings}
+\subsubsection{Minimal distance between sampled magnets} % Derive equation
+\subsubsection{Selection algorithms}
+\paragraph{Poisson disc}
+\paragraph{Grid-select}
+\paragraph{Hybrid grid-poisson}
+
 \subsection{Package structure} % Structure of Hotspice, explain all modules (core, ASI, energies, (config? with GPU), io, experiments, gui and mostly deprecated plottools, utils but only those relevant to users)
 Hotspice is written as a Python 3.10 package and can perform simulations on either the CPU or GPU.
 The optimal hardware choice depends on the size of the ASI and the update scheme used.
@@ -172,63 +269,7 @@ When relevant, the user has to explicitly add a \python{ZeemanEnergy} or \python
 It is possible to set longer-range exchange interactions (next-nearest neighbour etc.) by manually setting the \python{local_interaction} field of an \python{ExchangeEnergy} object.
 % TODO: create a custom "API" environment that we can put near all the different parts of the model to show code outside the main text?
 \subsubsection{RC}
-\subsection{Performance} % Several factors impacting performance, explain by using that one graph
-The performance of \hotspice has been improved throughout development in various ways. As previously mentioned, the size of the ASI is the main factor determining whether calculation on the GPU or CPU will result in a faster simulation.
-
-We will start with a summarizing table of these various improvements, and explain them in more detail in the following sections.
-Two tables are shown: one for the initialisation time, and one for the time it takes to perform 5000 switches.
-The initialisation encompasses the calculation of the initial energy $E_i$ of all magnets, and lookup tables we call `kernels' (see~\cref{sec:2:Kernels}) which serve to reduce the amount of calculations required for every switch.
-
-This test was benchmarked on an NVIDIA GeForce RTX 3080 Laptop GPU; displayed simulation times serve an illustrative purpose. For other GPU models, absolute values may vary significantly, while relative values within the tables should remain mostly similar.
-
-\xtable[tab:2:perf_init]{\textbf{Initialization time} for various simulation sizes $L$ (i.e. $L \times L$ cells). `Mem' indicates that the size $L$ requires too much memory, while `?' means it takes over \SI{1000}{\second}.}{
-	\begin{tabular}{r|c|c|c|c|c|c}
-		Simulation size $L$ & 50 & 100 & 150 & 200 & 400 & 1000 \\
-		\hline \hline
-		\makecell{Pure NumPy, full kernel\\ \python{Dipolar_interaction}} & 0.5s & 6.8s & 34.0s & Mem & Mem & Mem \\
-		\hline
-		\makecell{CuPy, full kernel\\ \python{Dipolar_interaction}} & 2.2s & 5.4s & 11.9s & Mem & Mem & Mem \\
-		\hline
-		\makecell{CuPy, re-calculating\\single-switch update} & 1.0s & 3.4s & 7.6s & 14.5s & 91.6s & ? \\
-		\hline
-		\makecell{CuPy, precalculating\\for a unit cell (1D index)} & 2.4s & 4.6s & 9.7s & 16.3s & 66.2s & 730.4s \\
-		\hline \hline
-		\makecell{CuPy, 2D indexing and\\convolution initialization} & 1.0s & 1.0s & 1.0s & 1.0s & 1.6s & 23.9s \\
-		\hline
-		\makecell{NumPy, 2D indexing and\\convolution initialization} & 0.014s & 0.2s & 1.0s & 3.2s & 53.1s & ? \\
-		\hline
-	\end{tabular}
-}
-
-\xtable[tab:2:perf_switch]{\textbf{5000 switches time} for various simulation sizes $L$ (i.e. $L \times L$ cells). `Mem' indicates that the size $L$ requires too much memory, while `?' means it takes over \SI{1000}{\second}.}{
-	\begin{tabular}{r|c|c|c|c|c|c}
-		Simulation size $L$ & 50 & 100 & 150 & 200 & 400 & 1000 \\
-		\hline \hline
-		\makecell{Pure NumPy, old kernel\\ \python{Dipolar_interaction}} & 9.4s & 217.6s & \makecell{I don't even\\ wanna know} & Mem & Mem & Mem \\
-		\hline
-		\makecell{CuPy, old kernel\\ \python{Dipolar_interaction}} & 5.0s & 13.6s & 51.8s & Mem & Mem & Mem \\
-		\hline
-		\makecell{CuPy, re-calculating\\single-switch update} & 7.1s & 7.2s & 8.2s & 9.0s & 13.0s & ? \\
-		\hline
-		\makecell{CuPy, precalculating\\for a unit cell (1D index)} & 7.8s & 7.9s & 8.3s & 8.9s & 11.8s & 36.9s \\
-		\hline \hline
-		\makecell{CuPy, 2D indexing and\\convolution initialization} & 6.8s & 7.0s & 7.2s & 7.6s & 10.2s & 35.9s \\
-		\hline
-		\makecell{NumPy, 2D indexing and\\convolution initialization} & 0.56s & 1.3s & 2.475s & 4.238s & 41s & ? \\
-		\hline
-	\end{tabular}
-}
-
-\subsubsection{GPU vs. CPU}
-\subsubsection{Kernels}\label{sec:2:Kernels} % If not yet explained in detail earlier, talk about the perpendicular kernel etc. here
-\paragraph{Numerical error with cut-off kernel}
-\subsubsection{Multi-switching in Metropolis-Hastings}
-\paragraph{Minimal distance between sampled magnets} % Derive equation
-\paragraph{Poisson disc}
-\paragraph{Grid-select}
-\paragraph{Hybrid grid-poisson}
-\subsubsection{RNG} % Little to no impact iirc, can be omitted probably
-\subsection{Advantages and disadvantages of this approach} % Hindsight is 20/20
+\subsection{Advantages and disadvantages of the \hotspice approach} % Hindsight is 20/20
 \subsubsection{Grid}
 \subsubsection{Input/output RC}
 
