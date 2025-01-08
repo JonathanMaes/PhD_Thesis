@@ -51,7 +51,7 @@ These variants differ in their calculation of the magnetostatic interactions, th
 
 \section{Model}
 In single-domain IP nanomagnets, the magnetisation prefers to align along the fixed easy axis of the geometry, while for OOP magnets a strong interfacial anisotropy causes a preferential orientation along the $z$-axis.
-Either way, in simulation it is natural to use an Ising-like approximation for such single-domain magnets, where the position $\vc{r}_i$, axis $\vc{u}_i$, and size of the magnetic moment\footnote{
+Either way, for simulations it is natural to use an Ising-like approximation for such single-domain magnets, where the position $\vc{r}_i$, axis $\vc{u}_i$, and size of the magnetic moment\footnote{
 	The size of the magnetic moment $\mu_i$ corresponds to the total ground state magnetic moment $\abs{\int_{\Omega_i} \vc{M}(\vc{r})d\vc{r}}$, with $\Omega_i$ the shape of magnet $i$ and $\vc{M}(\vc{r})$ its magnetisation in the twofold degenerate ground state. Due to edge relaxation effects, this value is slightly smaller than $M_\mathrm{sat} V_i$.
 } $\mu_i$ of each magnet $i$ are fixed, allowing the magnets to only switch between the `up' ($\uparrow$) and `down' ($\downarrow$) states.
 Thus, the total magnetic moment vector of magnet $i$ can be expressed as
@@ -120,15 +120,15 @@ The combined \textit{interaction energy} $E_i$ of a single magnet $i$ with its e
 	\label{eq:E}
 \end{equation}
 where $\mathcal{N}_i$ is the collection of nearest neighbours of magnet $i$.
-Which magnets are included in this collection depends on the ASI lattice and which site of the unit cell magnet $i$ is in, and can be defined separately for each ASI lattice. \par
+Which magnets are included in this collection depends on the ASI lattice and which site of the unit cell magnet $i$ is in, and can be defined separately for each ASI lattice. \\\par
 Note that all terms in \cref{eq:E} simply change sign when magnet $i$ switches ($\vc{\mu}_i \rightarrow -\vc{\mu}_i$).
 The magnetostatic self-energy is not present in \cref{eq:E} because it only contributes a constant offset and does not change when the magnet switches.
 As such, $E_i$ represents the total interaction energy of a magnet with its `neighbours',\footnote{
 	In this context, a `neighbour' of a magnet can be interpreted more broadly as all magnets it interacts with through a particular energy contribution. For example, the magnetostatic interaction considers all magnets to be `neigbours', unless the user has explicitly set a maximum interaction distance.
 } and therefore the change in energy of the whole ASI when magnet $i$ switches is simply $\Delta E_{i,1\rightarrow2} = -2 E_i$.
-This is called the \textit{switching energy}, and we will later see (\cref{sec:2:Dynamics}) that it takes a central place in the algorithms used for simulating dynamics.
+This is called the \textit{switching energy}, and we will later see (\cref{sec:2:Dynamics}) that it takes a central role in the algorithms used for simulating system dynamics.
 It is therefore very advantageous to have such a simple method of calculating the switching energy. \par
-When the simulation is initialized, the energy contributions are calculated for every magnet.
+When the simulation is initialized, the energy contributions are calculated for all magnets.
 Each magnet therefore has a value for each of the terms in \cref{eq:E} stored in memory.
 Whenever a magnet switches, the energies of its `neighbours' are updated appropriately, which constitutes a major part of the calculation effort required for every step in the simulation.
 
@@ -148,8 +148,7 @@ Whenever a magnet switches, the energies of its `neighbours' are updated appropr
 % TODO: decide whether to talk about nomenclature details etc. here, or in the introduction.
 \subsection{Other Monte Carlo algorithms} % Not implemented, explain why Wolff could be useful but why it's not in Hotspice
 
-\section{Implementation details}\label{sec:2:Implementation}
-% TODO: this is placeholder text.
+\section{Implementation}\label{sec:2:Implementation}
 Hotspice is written as a Python 3.10 package and can perform simulations on either the CPU or GPU.
 The optimal hardware choice depends on the size of the ASI and the update scheme used.
 By default, \hotspice runs on the CPU using the popular NumPy and SciPy libraries.
