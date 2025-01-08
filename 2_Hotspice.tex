@@ -173,8 +173,54 @@ It is possible to set longer-range exchange interactions (next-nearest neighbour
 % TODO: create a custom "API" environment that we can put near all the different parts of the model to show code outside the main text?
 \subsubsection{RC}
 \subsection{Performance} % Several factors impacting performance, explain by using that one graph
+The performance of \hotspice has been improved throughout development in various ways. As previously mentioned, the size of the ASI is the main factor determining whether calculation on the GPU or CPU will result in a faster simulation.
+
+We will start with a summarizing table of these various improvements, and explain them in more detail in the following sections.
+Two tables are shown: one for the initialisation time, and one for the time it takes to perform 5000 switches.
+The initialisation encompasses the calculation of the initial energy $E_i$ of all magnets, and lookup tables we call `kernels' (see~\cref{sec:2:Kernels}) which serve to reduce the amount of calculations required for every switch.
+
+This test was benchmarked on an NVIDIA GeForce RTX 3080 Laptop GPU; displayed simulation times serve an illustrative purpose. For other GPU models, absolute values may vary significantly, while relative values within the tables should remain mostly similar.
+
+\xtable[tab:2:perf_init]{\textbf{Initialization time} for various simulation sizes $L$ (i.e. $L \times L$ cells). `Mem' indicates that the size $L$ requires too much memory, while `?' means it takes over \SI{1000}{\second}.}{
+	\begin{tabular}{r|c|c|c|c|c|c}
+		Simulation size $L$ & 50 & 100 & 150 & 200 & 400 & 1000 \\
+		\hline \hline
+		\makecell{Pure NumPy, full kernel\\ \python{Dipolar_interaction}} & 0.5s & 6.8s & 34.0s & Mem & Mem & Mem \\
+		\hline
+		\makecell{CuPy, full kernel\\ \python{Dipolar_interaction}} & 2.2s & 5.4s & 11.9s & Mem & Mem & Mem \\
+		\hline
+		\makecell{CuPy, re-calculating\\single-switch update} & 1.0s & 3.4s & 7.6s & 14.5s & 91.6s & ? \\
+		\hline
+		\makecell{CuPy, precalculating\\for a unit cell (1D index)} & 2.4s & 4.6s & 9.7s & 16.3s & 66.2s & 730.4s \\
+		\hline \hline
+		\makecell{CuPy, 2D indexing and\\convolution initialization} & 1.0s & 1.0s & 1.0s & 1.0s & 1.6s & 23.9s \\
+		\hline
+		\makecell{NumPy, 2D indexing and\\convolution initialization} & 0.014s & 0.2s & 1.0s & 3.2s & 53.1s & ? \\
+		\hline
+	\end{tabular}
+}
+
+\xtable[tab:2:perf_switch]{\textbf{5000 switches time} for various simulation sizes $L$ (i.e. $L \times L$ cells). `Mem' indicates that the size $L$ requires too much memory, while `?' means it takes over \SI{1000}{\second}.}{
+	\begin{tabular}{r|c|c|c|c|c|c}
+		Simulation size $L$ & 50 & 100 & 150 & 200 & 400 & 1000 \\
+		\hline \hline
+		\makecell{Pure NumPy, old kernel\\ \python{Dipolar_interaction}} & 9.4s & 217.6s & \makecell{I don't even\\ wanna know} & Mem & Mem & Mem \\
+		\hline
+		\makecell{CuPy, old kernel\\ \python{Dipolar_interaction}} & 5.0s & 13.6s & 51.8s & Mem & Mem & Mem \\
+		\hline
+		\makecell{CuPy, re-calculating\\single-switch update} & 7.1s & 7.2s & 8.2s & 9.0s & 13.0s & ? \\
+		\hline
+		\makecell{CuPy, precalculating\\for a unit cell (1D index)} & 7.8s & 7.9s & 8.3s & 8.9s & 11.8s & 36.9s \\
+		\hline \hline
+		\makecell{CuPy, 2D indexing and\\convolution initialization} & 6.8s & 7.0s & 7.2s & 7.6s & 10.2s & 35.9s \\
+		\hline
+		\makecell{NumPy, 2D indexing and\\convolution initialization} & 0.56s & 1.3s & 2.475s & 4.238s & 41s & ? \\
+		\hline
+	\end{tabular}
+}
+
 \subsubsection{GPU vs. CPU}
-\subsubsection{Kernels} % If not yet explained in detail earlier, talk about the perpendicular kernel etc. here
+\subsubsection{Kernels}\label{sec:2:Kernels} % If not yet explained in detail earlier, talk about the perpendicular kernel etc. here
 \paragraph{Numerical error with cut-off kernel}
 \subsubsection{Multi-switching in Metropolis-Hastings}
 \paragraph{Minimal distance between sampled magnets} % Derive equation

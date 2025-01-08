@@ -82,19 +82,20 @@
 }
 
 \newcommand{\xtable}[3][nolabel]{
-	\jonathanskip
-\colorbox{figcolor}{%%%%%%%%%%%
-	\begin{minipage}{0.95\linewidth}
-  		\centering
-  		\textsf{\tabcaption{#2\label{#1}}}
-  		{\sf
-		#3
+	\jonathanskip\vspace{1em}
+	\begin{tikzpicture}
+		\node[rounded corners=10pt, fill=figcolor, inner sep=10pt] (figbox) {
+			\begin{minipage}{0.95\linewidth}
+		  		\centering
+		  		\textsf{\tabcaption{#2\label{#1}}}
+		  		{\sf
+					#3
+				}
+			\end{minipage}
+		};
+	\end{tikzpicture}
+	\jonathanskip\vspace{0.05cm}
 }
-	\end{minipage}
-}%%%%%%%%%
-\smallskip
-}
-
 
 \newcommand{\smallfig}[3]{
 \smallskip
