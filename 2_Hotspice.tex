@@ -59,14 +59,14 @@ Thus, the total magnetic moment vector of magnet $i$ can be expressed as
 	\vc{\mu}_i = s_i \mu_i \vc{u}_i \mathrm{,}
 \end{equation}
 where $s_i = \pm 1$ and $\abs{\vc{u}_i} = 1$. \par
-The switching rate between these two states is determined by the temperature $T$ and the effective energy barrier $\widetilde{E_\mathrm{B}}$ separating them.
+The switching rate between these two states is determined by the temperature $T$ and the effective energy barrier $\EBtilde$ separating them.
 %A canonical ensemble is used where magnets are considered in contact with a heat bath of temperature $T_i$. % TODO: mention this or not?
-For an isolated nanomagnet, the energy barrier $E_\mathrm{B} = K_\mathrm{u} V$\footnote{
+For an isolated nanomagnet, the energy barrier $\EB = K_\mathrm{u} V$\footnote{
 	This is valid for switching by coherent rotation. Similar to the calculation of $\mu$, edge relaxation effects may cause the effective volume to be slightly smaller.
 } originates from its uniaxial shape anisotropy $K_\mathrm{u}$.
-Interactions with other magnets or external fields modify the energy landscape, leading to an effective barrier $\widetilde{E_\mathrm{B}}$, which we will denote with a tilde.~\cite{leo2021chiral}
+Interactions with other magnets or external fields modify the energy landscape, leading to an effective barrier $\EBtilde$, which we will denote with a tilde.~\cite{leo2021chiral}
 Each magnet can have a unique magnetic moment size $\mu_i$, temperature $T_i$ and energy barrier $E_{\mathrm{B},i}$.
-This enables, for instance, modelling some of the disorder due to lithographic variations by assigning a different shape anisotropy to each magnet, typically sampled from a Gaussian distribution with mean $E_\mathrm{B}$ and standard deviation $\sigma(E_\mathrm{B})$. \\\par
+This enables, for instance, modelling some of the disorder due to lithographic variations by assigning a different shape anisotropy to each magnet, typically sampled from a Gaussian distribution with mean $\EB$ and standard deviation $\sigma(\EB)$. \\\par
 
 Due to the periodic nature of many ASI lattices, \hotspice chooses to perform the simulation on a rectilinear grid, the benefits and details of which will be discussed in~\cref{sec:2:Implementation}.
 Each grid point may or may not contain a magnet, and the magnets must either all be of the IP type, or all OOP.
