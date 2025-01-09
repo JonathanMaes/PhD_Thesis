@@ -164,6 +164,7 @@ As a bonus, real-time visualisation is simple and efficient for a rectilinear gr
 By leveraging the unit cell concept in periodic lattices and the efficient indexation of a rectilinear grid in computer memory, several aspects of the calculation can be performed more efficiently than for free-form ASI. The unit cell of each lattice in~\cref{fig:2:ASIs} is depicted as a grey rectangle. Although non-rectilinear unit cells with fewer magnets could be identified for some lattices, \hotspice{} does not consider these to reduce complexity and to maintain a clear connection to the underlying rectilinear grid of the ASI implementation.
 
 \subsection{Kernels}\label{sec:2:Kernels}
+The kernel serves to reduce the amount of calculations required for every switch, so there is usually a trade-off between the initialisation time and runtime when simulating dynamics.
 \subsubsection{Perpendicular kernel} % If not yet explained in detail earlier, talk about the perpendicular kernel etc. here
 \subsubsection{Numerical error with cut-off kernel} % TODO
 A performance improvement presents itself by cutting off the magnetostatic kernel at a certain distance.
@@ -175,17 +176,16 @@ Luckily, the error introduced in this manner is bounded from above: whenever a m
 \subsection{Performance} % Several factors impacting performance, explain by using that one graph
 % TODO: update this introductory text, because now this section comes after the explanation of the kernels.
 The performance of \hotspice has been improved throughout development in various ways.
-The number of magnets in the ASI has a major impact on performance, and is often the determining factor as to whether calculation on the GPU or CPU will result in a faster simulation.
-Throughout the development of \hotspice, calculation on the GPU was made possible and the efficiency of calculating the magnetostatic interaction was improved drastically.
+Calculation on the GPU was made possible early on and the efficiency of updating the magnetostatic interaction was improved drastically.
+The number of magnets in the ASI has a major impact on performance, and often forms the determining factor as to whether calculation on the GPU rather than CPU will result in a faster simulation. \par
+We start with a summarizing chronological table of these various improvements, and explain each step in more detail in the following paragraphs.
+Two tables are shown:~\cref{tab:2:perf_init} for the initialisation time, and~\cref{tab:2:perf_switch} for the time it takes to perform 5000 switches using the N\'eel update algorithm.
+During initialisation, the magnetostatic kernel is constructed, after which the starting energy $E_i$ of all magnets is calculated.
+In the tables, only the last 3 rows use the kernel as it was explained in~\cref{sec:2:Kernels}; the other rows use less efficient kernels as explained below. \par % Can't really call it a "lookup table" if it is being convolved etc., right?
+This test was benchmarked on an NVIDIA GeForce RTX 3080 Mobile GPU and an 11th Gen Intel\textregistered{} Core\texttrademark{} i7-11800H @ 2.30GHz. Simulation times displayed serve an illustrative purpose: absolute values on other hardware may vary significantly, though the general trends within the tables should remain similar.
 
-We start with a summarizing table of these various improvements, and explain them in more detail in the following sections.
-Two tables are shown: one for the initialisation time, and one for the time it takes to perform 5000 switches.
-The initialisation encompasses the calculation of the initial energy $E_i$ of all magnets, and lookup tables we call `kernels' (see~\cref{sec:2:Kernels}) which serve to reduce the amount of calculations required for every switch.
-
-This test was benchmarked on an NVIDIA GeForce RTX 3080 Laptop GPU; displayed simulation times serve an illustrative purpose. For other GPU models, absolute values may vary significantly, while relative values within the tables should remain mostly similar.
-
-% Q: should we talk about L or N? I would prefer L because we talk about 2D indexation, so L makes this clearer.
-\xtable[tab:2:perf_init]{\textbf{Initialization time} for various simulation sizes $L$ (i.e. $L \times L$ magnets). `Mem' indicates excessive memory consumption, `?' means a simulation of that size takes prohibitively long ($\gtrsim \SI{1000}{\second}$).}{
+% Q: should we use L or N=L²? I would prefer L because at some point we talk about 2D indexation, so L makes it clearer that we have a 2D system.
+\xtable[tab:2:perf_init]{\textbf{Initialisation time} for various simulation sizes $L$ (i.e. $L \times L = N$ magnets). `Mem' indicates excessive memory consumption, `?' indicates a prohibitively long simulation time ($\gtrsim \SI{1000}{\second}$).}{
 	\begin{tabular}{r|c|c|c|c|c|c}
 		Simulation size $L$ & 50 & 100 & 150 & 200 & 400 & 1000 \\
 		\hline \hline
@@ -204,7 +204,7 @@ This test was benchmarked on an NVIDIA GeForce RTX 3080 Laptop GPU; displayed si
 	\end{tabular}
 }
 
-\xtable[tab:2:perf_switch]{\textbf{5000 switches time} for various simulation sizes $L$ (i.e. $L \times L$ magnets). `Mem' indicates excessive memory consumption, `?' means a simulation of that size takes prohibitively long ($\gtrsim \SI{1000}{\second}$).}{
+\xtable[tab:2:perf_switch]{\textbf{Time for 5000 switches} using the N\'eel algorithm, for various simulation sizes $L$ (i.e. $L \times L = N$ magnets). `Mem' indicates excessive memory consumption, `?' indicates a prohibitively long simulation time ($\gtrsim \SI{1000}{\second}$).}{
 	\begin{tabular}{r|c|c|c|c|c|c}
 		Simulation size $L$ & 50 & 100 & 150 & 200 & 400 & 1000 \\
 		\hline \hline
@@ -224,22 +224,40 @@ This test was benchmarked on an NVIDIA GeForce RTX 3080 Laptop GPU; displayed si
 }
 
 \paragraph{From CPU to GPU}
-Originally, \hotspice was written to calculate on CPU only.
+Originally, \hotspice performed all calculations on the CPU. % TODO: explain CPU/GPU briefly? Or elsewhere?
 This caused the simulation time to rise dramatically as the system size grew (e.g. first row in \cref{tab:2:perf_switch}).
 For early versions of \hotspice with an unoptimized kernel, this made it impractical to simulate systems larger than $50 \times 50$ magnets.
-By simply switching to GPU-based calculations using the \python{CuPy} library, this upper limit was increased significantly. The limiting factor instead became memory consumption of the unoptimized kernel. \par
-% TODO: explain the unoptimized kernel here, and only explain the optimized kernel in the 'kernels' section.
-After various kernel improvements, as detailed in~\cref{sec:2:Kernels}, the upper limit for feasible calculation time was increased to $L \approx 1000$ for GPU and $L \approx 400$ for CPU, with GPU outperforming CPU for $L \gtrapprox 300$ (last two rows of \cref{tab:2:perf_switch}).
-The same goes for the initialisation time (\cref{tab:2:perf_init}), where the GPU already outperforms CPU starting at $L > 150$.
+By simply switching to GPU-based calculations using the \python{CuPy} library (second row), this upper limit was increased significantly. The limiting factor instead became memory consumption of the unoptimized kernel. \par
+Do note, however, that for small systems the GPU performs worse than the CPU.
+This remains true independent of the kernel implementation.
+GPUs are optimized for parallel processing, and therefore reach a bottleneck when the simulation takes on a more sequential nature.
+Simulating a single switch requires several distinct operations that do not lend themselves to parallelisation.
+When operating on small arrays, this means relatively fewer parallel calculations can be performed, thereby increasing the importance of being able to perform distinct mathematical operations in quick succession.
+The CPU excels at the latter. % TODO: references for GPU performance and operation
 
-For small systems, the GPU still maintains the advantage when using the Metropolis-Hastings algorithm, due to the ability to perform multiple switches in that system and the speed at which such convolutions can be calculated on GPU.
 
 \paragraph{Kernel improvements}
+The first two rows `\textit{Full interaction kernel}' use the original method, where the kernel was far more naïve: it was simply an $N \times N$ matrix which stored the dipolar interaction between each pair of magnets.
+The initialisation time on CPU (first row in~\cref{tab:2:perf_init}) bears witness to this, as it is $\propto L^4 = N^2$.
+This was obviously a huge waste of memory, as evidenced by the fact that a system as small as $200 \times 200$ required a kernel larger than the \SI{8}{\giga\byte} available memory.
+Not only that, but for sparse ASI with empty cells there were many zero-elements in this matrix.
+In short, this was unsustainable and had to be improved upon. \\\par
+In the third row `\textit{Recalculate after each switch}', an attempt was made to not use a kernel at all. Instead, for every switch, the interaction energy of the switching magnet with all other magnets is calculated on-the-fly. This clearly gets rid of the memory issue and yields a surprisingly fast simulation, though now the initialisation becomes the bottleneck. This is because the initialisation was done by iterating over all magnets and adding the interaction energies sequentially. \\\par
+As such, there were still two clear improvements to be made. On the one hand, using a kernel as described earlier in~\cref{sec:2:Kernels}, and on the other hand performing a convolution to determine the initial interaction energies. The former is solved in the fourth row `\textit{Precalculated unitcell-kernel}', the latter in the final two rows `\textit{Final version}' where once again the CPU and GPU are compared. %The reason such a convolution was not implemented initially, is because it requires writing a custom function for each energy component.
+% TODO: incorporate the following sentences in the preceding text
+Not shown in the tables, however, is that the usage of kernels improves the performance for multi-switching in Metropolis-Hastings significantly as compared to recalculating the required values for each magnet that switches.
+Another small improvement in the final version is using 2D indices rather than 1D arrays, which improved performance by about \SI{15}{\percent}.
+
+\paragraph{Final performance}
+After these various improvements, the upper limit for feasible calculation time was increased to $L \approx 1000$ for GPU and $L \approx 400$ for CPU. As can be noted by comparing the last two rows of \cref{tab:2:perf_switch}, GPU outperforms CPU for $L \gtrapprox 300$.
+The same goes for the initialisation time (\cref{tab:2:perf_init}), where this transition already occurs at $L > 150$.
+However, when using the Metropolis-Hastings algorithm (not shown in the tables), enabling multi-switching allows the GPU to maintain the advantage for systems as small as $L \gtrapprox 70$, because the associated convolution can be performed very efficiently on GPU.
+
 \paragraph{RNG}
 Another factor which may contribute to the performance is the Random Number Generator (RNG).
 Both update algorithms rely on generating a large amount of random numbers to select the next magnet(s) to switch. % TODO: talk a bit about XORWOW etc. and how it actually doesn't really impact performance
 
-\subsection{Multi-switching in Metropolis-Hastings}
+\subsection{Multi-switching in Metropolis-Hastings} % TODO: I already talk about multi-switching in the performance section, should we put this earlier?
 \subsubsection{Minimal distance between sampled magnets} % Derive equation
 \subsubsection{Selection algorithms}
 \paragraph{Poisson disc}
