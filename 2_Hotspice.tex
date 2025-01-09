@@ -268,7 +268,23 @@ By default, an ASI object takes only the \python{hotspice.DipolarEnergy} into ac
 When relevant, the user has to explicitly add a \python{ZeemanEnergy} or \python{ExchangeEnergy}.
 It is possible to set longer-range exchange interactions (next-nearest neighbour etc.) by manually setting the \python{local_interaction} field of an \python{ExchangeEnergy} object.
 % TODO: create a custom "API" environment that we can put near all the different parts of the model to show code outside the main text?
-\subsubsection{RC}
+\subsubsection{RC} % io and experiments modules
+\subsubsection{Utilities} % Explain utils module (but only those functions/classes relevant to users) and perhaps mention the existence of plottools
+\paragraph{GUI}
+A graphical user interface (GUI) is available for \hotspice, which allows the user to directly interact with the ASI and observe changes in realtime. It can be run by calling \python{hotspice.gui.show(mm)}, with \python{mm} the ASI object, resulting in the window shown in~\cref{fig:2:GUI}.
+
+\xfig[1.0]{2_Hotspice/GUI.png}{
+	\label{fig:2:GUI}The \hotspice graphical user interface. This example shows a pinwheel ASI.
+}
+
+The state of the ASI is prominently displayed, and the bottom left panel shows a few useful statistics such as the elapsed time. The ASI display is controlled by the central bottom panel, which changes between 4 display modes.
+By default, the magnetisation is shown as an averaged field, with the averaging method determined by the ASI lattice.
+The second mode displays individual arrows, which either show each magnet's magnetisation direction or the effective field $\vc{H}_\mathrm{eff}$ it experiences. % Q: is it H? I wrote H because it does not add the magnetic moment. On a similar note, should we write B_ext or H_ext in the definition of the Zeeman energy?
+In the third mode, the energy contributions ($E_\mathrm{MC}$, $E_\mathrm{Z}$, $E_\mathrm{Exch}$ and their sum $E_i$) and the resulting effective energy barrier $\EBtilde$ for each magnet can be shown, both along the easy and hard axis.
+The last option is to show the spatial distribution (i.e., the value for each magnet) of some parameters like the temperature $T$, shape anisotropy $\EB$ and size of the magnetic moment $\mu$. \par
+Buttons in the sidebar on the right allow the user to interact with the ASI by progressing through time, setting an initial state, or -- for more complex simulations -- apply custom functions.
+By clicking with the mouse on the ASI plot, it is also possible to interact with the ASI at a granular level, switching one or multiple magnets. Finally, the red box in the bottom right controls the update algorithm.
+
 \subsection{Advantages and disadvantages of the \hotspice approach} % Hindsight is 20/20
 \subsubsection{Grid}
 \subsubsection{Input/output RC}
