@@ -230,7 +230,7 @@ For early versions of \hotspice with an unoptimized kernel, this made it impract
 By simply switching to GPU-based calculations using the \python{CuPy} library (second row), this upper limit was increased significantly. The limiting factor instead became memory consumption of the unoptimized kernel. \par
 Do note, however, that for small systems the GPU performs worse than the CPU.
 This remains true independent of the kernel implementation.
-GPUs are optimized for parallel processing, and therefore reach a bottleneck when the simulation takes on a more sequential nature.
+GPUs are optimized for parallel processing, and therefore reach a bottleneck when the simulation takes on a more sequential nature~\cite{owens2008gpu}.
 Simulating a single switch requires several distinct operations that do not lend themselves to parallelisation.
 When operating on small arrays, this means relatively fewer parallel calculations can be performed, thereby increasing the importance of being able to perform distinct mathematical operations in quick succession.
 The CPU excels at the latter. % TODO: references for GPU performance and operation
