@@ -140,6 +140,25 @@
     \jonathanskip\vspace{0.05cm}
 }
 
+%5 args: name1, shortcaption1, name2, shortcaption2, overallcaption
+\newcommand{\xfigs}[6][0.45]{
+	\jonathanskip\vspace{1em}
+	\begin{tikzpicture}
+		\node[rounded corners=10pt, fill=figcolor, inner sep=10pt] (figbox) {
+			\begin{minipage}{0.955\linewidth}
+				\centering
+				\begin{tabular}{cc}
+					\small\parbox[c]{0.48\linewidth}{\centering\textsf{\textbf{(a)} #3}} & \small\parbox[c]{0.48\linewidth}{\centering\textsf{\textbf{(b)} #5}}\normalsize\\
+					\includegraphics[width=#1\linewidth]{#2} & \includegraphics[width=#1\linewidth]{#4}\\
+				\end{tabular}
+				\textsf{\figcaption{#6\label{#2}}}
+				
+			\end{minipage}
+		};
+	\end{tikzpicture}
+	\jonathanskip\vspace{0.05cm}
+}
+
 \newcommand{\sidefig}[3][1]{
 	\jonathanskip
 	\colorbox{figcolor}{
@@ -180,23 +199,6 @@
 	\end{minipage}
 	}
 	\jonathanskip\vspace{0.05cm}
-}
-
-%5 args: name1,  name2, shortcaption1, shortcaption2, langcaption1+2
-\newcommand{\xfigs}[6][0.45]{
-	\jonathanskip
-\colorbox{figcolor}{
-	\begin{minipage}{0.94\linewidth}
-  		\centering
-		\begin{tabular}{cc}
-		\small\parbox[c]{0.48\linewidth}{\textsf{\textbf{(a)} #3}} & \small\parbox[c]{0.48\linewidth}{\textsf{\textbf{(b)} #5}}\normalsize\\
-		\includegraphics[width=#1\linewidth]{#2} & \includegraphics[width=#1\linewidth]{#4}\\
-		\end{tabular}
-		\textsf{\figcaption{#6\label{#2}}}
-  	
-	\end{minipage}
-	}
-\jonathanskip\vspace{0.05cm}
 }
 
 \newcommand{\xfigssmallbig}[6][unused]{
