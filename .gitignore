@@ -16,3 +16,6 @@
 *.pdf
 *.synctex.gz
 *.toc
+
+# Always include the following:
+!/fig/**
