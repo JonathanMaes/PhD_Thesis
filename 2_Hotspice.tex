@@ -258,7 +258,7 @@ First, a kernel as described earlier in~\cref{sec:2:Kernels} had to be implement
 This is used in the fourth row `\textit{Unitcell-kernel}', but does not constitute a significant improvement on its own aside from enabling $1000 \times 1000$ systems for the first time. \par
 Secondly, however, this new kernel enables the usage of a convolution to initialise the magnetostatic interaction energy $E_\mathrm{MS}$, rather than the sequential sum used before.
 This is what the final two rows `\textit{Final version}' use, where we once again compare CPU and GPU as this is the final version.
-Another minor improvement in the final version was to use 2D indexation (rather than a flat index $i = n_x y + x$), which resulted in another \SI{15}{\percent} speed-up.
+Another minor improvement in the final version was to use 2D indexation (rather than a flat index $i = n_x y + x$ which did not synergize well with the convolution), which resulted in another \SI{15}{\percent} speed-up.
 
 \paragraph{Final performance}
 In the end, the upper limit for feasible calculation time has become $L \approx 1000$ on GPU and $L \approx 400$ on CPU.
@@ -268,7 +268,12 @@ Performing multiple switches simultaneously in Metropolis-Hastings benefits grea
 With this algorithm, the GPU can maintain the advantage for systems as small as $L \gtrapprox 60$.
 
 \subsubsection{Multi-switching}
+% TODO: the final performance for metropolis-hastings
 
+\xfigs[0.48]{2_Hotspice/Performance_CPU.pdf}{CPU}{2_Hotspice/Performance_GPU.pdf}{GPU}{
+	\label{fig:2:Performance}Performance of OOP square ASI as a function of system size, using the Metropolis-Hastings algorithm with multi-switching ($Q=0.05$). Parameters: lattice spacing $a = \SI{1}{\micro\metre}$, $T = \SI{100}{\kelvin}$ and $\EB = 0$.
+}
+It is unclear what effect is causing the cliff in the CPU graph; it is not a lack of garbage collection, because starting the simulation at $L=100$ is exceedingly slow. Perhaps at $N=8000$ magnets the cache is full, making operations far less efficient from then on? % TODO: figure this out.
 
 \subsubsection{RNG}
 Another factor which may contribute to the performance is the Random Number Generator (RNG).
