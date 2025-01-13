@@ -77,7 +77,7 @@ def plot(data_dir=None):
     ax2 = ax1.twiny()
     ax1.plot(N, data['attempts/s'], label="Samples / sec")
     ax1.plot(N, data['switches/s'], label="Switches / sec")
-    ax1.plot(N, data['MCsteps/s'], label="MC steps / sec")
+    ax1.plot(N, data['MCsteps/s'], label="MC sweeps / sec")
     ax1.set_xlim([N.min(), N.max()])
     ax1.set_xscale('log')
     ax1.set_yscale('log')
