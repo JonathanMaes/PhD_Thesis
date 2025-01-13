@@ -40,16 +40,17 @@ def performance_sweep(L_range, ASI_type: type[hotspice.Magnets] = hotspice.ASI.O
     MCsteps_per_s = np.zeros_like(L_range, dtype='float')
     for i, L in enumerate(L_range):
         try:
+            try: del mm
+            except NameError: pass
             mm = ASI_type(1e-6, L, ny=L, **kwargs)
             mm.params.UPDATE_SCHEME = hotspice.Scheme.METROPOLIS
             mm.update() # Prevents an outlier at the first N
+            x = get_performance(mm, verbose=verbose)
+            N[i], attempts_per_s[i], switches_per_s[i], MCsteps_per_s[i] = mm.n, x['attempts/s'], x['switches/s'], x['MCsteps/s']
         except Exception as e:
             print(e)
             if verbose: print(f"Could not initialize {ASI_type} for L={L}.")
             continue
-        x = get_performance(mm, verbose=verbose)
-        N[i], attempts_per_s[i], switches_per_s[i], MCsteps_per_s[i] = mm.n, x['attempts/s'], x['switches/s'], x['MCsteps/s']
-        if i != len(L_range) - 1: del mm
     nz = N.nonzero()
     L_range, N, attempts_per_s, switches_per_s, MCsteps_per_s = L_range[nz], N[nz], attempts_per_s[nz], switches_per_s[nz], MCsteps_per_s[nz]
     
