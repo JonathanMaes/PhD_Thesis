@@ -173,6 +173,13 @@ However, this will result in inaccurate interaction energies being stored.
 When multiple magnets switch, this error will accumulate.
 Luckily, the error introduced in this manner is bounded from above: whenever a magnet switches back, the error its original switch introduced is cancelled (barring some remaining floating-point error).
 
+\subsection{Multi-switching in Metropolis-Hastings} \label{sec:2:MultiSwitch} % TODO: I already talk about multi-switching in the performance section, should we put this earlier?
+\subsubsection{Minimal distance between sampled magnets} % Derive equation
+\subsubsection{Selection algorithms}
+\paragraph{Poisson disc}
+\paragraph{Grid-select}
+\paragraph{Hybrid grid-poisson}
+
 \subsection{Performance} % Several factors impacting performance, explain by using that one graph
 % TODO: update this introductory text, because now this section comes after the explanation of the kernels.
 \subsubsection{History}
@@ -278,13 +285,6 @@ It is unclear what effect is causing the cliff in the CPU graph; it is not a lac
 \subsubsection{RNG}
 Another factor which may contribute to the performance is the Random Number Generator (RNG).
 Both update algorithms rely on generating a large amount of random numbers to select the next magnet(s) to switch. % TODO: talk a bit about XORWOW etc. and how it actually doesn't really impact performance
-
-\subsection{Multi-switching in Metropolis-Hastings} % TODO: I already talk about multi-switching in the performance section, should we put this earlier?
-\subsubsection{Minimal distance between sampled magnets} % Derive equation
-\subsubsection{Selection algorithms}
-\paragraph{Poisson disc}
-\paragraph{Grid-select}
-\paragraph{Hybrid grid-poisson}
 
 \subsection{Package structure} % Structure of Hotspice, explain all modules (core, ASI, energies, (config? with GPU)...)
 Hotspice is written as a Python 3.10 package and can perform simulations on either the CPU or GPU.
