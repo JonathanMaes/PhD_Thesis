@@ -275,12 +275,33 @@ Performing multiple switches simultaneously in Metropolis-Hastings benefits grea
 With this algorithm, the GPU can maintain the advantage for systems as small as $L \gtrapprox 60$.
 
 \subsubsection{Multi-switching}
-% TODO: the final performance for metropolis-hastings
+The N\'eel algorithm, used in the preceding discussion about performance, does not implement a multi-switching procedure.
+This makes it very inefficient for large systems: even though the time required to perform a single N\'eel iteration stays roughly constant up to $L<400$, the time per Monte Carlo sweep\footnote{
+	A Monte Carlo ``step'' refers to attempting to switch a single magnet. By a ``Monte Carlo sweep'' (MCS), we refer to $N$ attempted switches when the simulation contains $N$ magnets~\cite{NumericalDynamicalNiedermayer}. Note that the distinction between attempted switches and actual switches only exists in the Metropolis-Hastings algorithm, not in N\'eel. % TODO END: Could also decide to put this in a \begin{definition} environment somewhere earlier.
+} will scale linearly with the number of magnets if each iteration only switches a single magnet. \par
+The ability to perform multiple switches simultaneously in the Metropolis-Hastings algorithm (described earlier in \cref{sec:2:MultiSwitch}) alleviates this problem, allowing for a significantly higher amount of Monte Carlo sweeps per second. \\\par
+\cref{fig:2:Performance} shows the performance of the multi-switching algorithm as a function of system size, both for calculation on the CPU (a) and GPU (b).
+The multi-switching algorithm selects a certain number of magnets per second (blue curve: sampling rate); these are candidates for switching.
+Dividing this value by $N$, the number of magnets in the system, gives the number of Monte Carlo sweeps per second (grey curve), which is the main performance metric in MC simulations.
+Depending on the specific situation, only some of the selected magnets will in fact switch (yellow curve).
 
 \xfigs[0.48]{2_Hotspice/Performance_CPU.pdf}{CPU}{2_Hotspice/Performance_GPU.pdf}{GPU}{
-	\label{fig:2:Performance}Performance of OOP square ASI as a function of system size, using the Metropolis-Hastings algorithm with multi-switching ($Q=0.05$). Parameters: lattice spacing $a = \SI{1}{\micro\metre}$, $T = \SI{100}{\kelvin}$ and $\EB = 0$.
+	\label{fig:2:Performance}Performance of OOP square ASI as a function of system size, using the Metropolis-Hastings algorithm with multi-switching ($Q=0.05$). Lattice spacing $a = \SI{1}{\micro\metre}$, temperature $T = \SI{100}{\kelvin}$ and energy barrier $\EB = 0$.
 }
-It is unclear what effect is causing the cliff in the CPU graph; it is not a lack of garbage collection, because starting the simulation at $L=100$ is exceedingly slow. Perhaps at $N=8000$ magnets the cache is full, making operations far less efficient from then on? % TODO: figure this out.
+
+There is once again a stark contrast between CPU and GPU. \par
+On CPU, the sampling rate starts off rather constant for small systems, as overhead dominates.
+For $N>100$ magnets, the sampling rate increases proportional to $N$, leading to a stable performance (MCS/s) independent of $N$.
+However, performance drops dramatically once the system size increases beyond $\approx 80 \times 80$.
+We hypothesize that this is due to exceeding a CPU cache size.
+On the CPU used for~\cref{fig:2:Performance} (the aforementioned i7-11800H), the L1 and L2 cache hold \SI{48}{\kilo\byte} and \SI{1.25}{\mega\byte}, respectively. \par % Q: Are any of the below hypotheses reasonable? Which is most reasonable?
+% Hypothesis 1: The size occupied by a 72x72 ASI is 1.25MB. It is not unreasonable that, soon after reaching this point, some arrays can no longer be stored on this cache level, impacting performance.
+% Hypothesis 2: The size of mm.m at 78x78 is 48kB, so we might be exceeding the L1 cache beyond this point.
+% Hypothesis 3: The size of the dipole kernel at this point is around 220kB. Doesn't seem to match up with anything.
+% TODO: Revisit this at some point, it is odd that on another CPU (Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz) the cut-off happens at the same system size, indicating that it is not cache-size-related because that CPU has 256kB L2 and 32kB L1, both different from the UGent laptop.
+The GPU, on the other hand, hits its stride for exactly those systems that are too large for the CPU to handle.
+Around $70 \times 70$, the sampling rate increases rapidly, resulting in an increased number of MC sweeps per second (MCS/s) that reach a local maximum for $200 \times 200$ magnets.
+Beyond this, the sampling rate stagnates, eventually settling at around \SI{150e3}{samples\per\second}, corresponding to an ever decreasing MCS/s as the parallelism of the GPU gets exhausted.
 
 \subsubsection{RNG}
 Another factor which may contribute to the performance is the Random Number Generator (RNG).
