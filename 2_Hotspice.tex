@@ -77,8 +77,7 @@ Even though this implementation does not allow complete freedom in the placement
 }
 
 \cref{fig:2:ASIs} showcases the 12 lattices that \hotspice provides out-of-the-box. The pinwheel lattices (a) and (b) are equal to the square lattices (c) and (d), respectively, but with each magnet individually rotated by \ang{45}. Both lattices have two variants (diamond/lucky-knot and closed/open), related by a global \ang{45} rotation of the entire lattice. This gives rise to different boundaries due to the Cartesian character of the underlying grid, which may alter the dynamics of the ASI. Furthermore, the unit cell for lucky-knot pinwheel and open square is more compact, resulting in faster simulation, while diamond pinwheel and closed square are more popular in literature and were therefore implemented separately. \par % TODO: more popular in literature? Examples where these are used?
-The remaining four IP and four OOP lattices are also related: the magnets in the OOP lattices (i)-(l) are positioned at the vertices where magnets meet in their respective IP counterparts (e)-(h). \\\par
-
+The remaining four IP and four OOP lattices are also related: the magnets in the OOP lattices (i)-(l) are positioned at the vertices where magnets meet in their respective IP counterparts (e)-(h).
 
 \section{Energy calculation}
 \subsection{Energy terms}
@@ -107,7 +106,7 @@ Three energy contributions have been implemented in \hotspice, supporting both o
 	
 	\item The \textit{exchange coupling energy} between nearest neighbours (NN) $i$ and $j$
 	\begin{equation}
-		E_{\mathrm{exch},i,j} = J \frac{\vc{\mu}_i \bcdot \vc{\mu}_j}{\mu_i \mu_j} \mathrm{,} \label{eq:Eexch}
+		E_{\mathrm{exch},i,j} = J \frac{\vc{\mu}_i \bcdot \vc{\mu}_j}{\mu_i \mu_j} \mathrm{,} \label{eq:E_exch}
 	\end{equation}
 	with $J$ the exchange coupling constant, which is constant throughout the ASI. \par
 	This interaction is rarely present in ASI, but can for example be relevant in interconnected ASI -- whether by design or due to limited lithographic accuracy.
@@ -129,7 +128,7 @@ As such, $E_i$ represents the total interaction energy of a magnet with its `nei
 This is called the \textit{switching energy}, and we will later see (\cref{sec:2:Dynamics}) that it takes a central role in the algorithms used for simulating system dynamics.
 It is therefore very advantageous to have such a simple method of calculating the switching energy. \par
 When the simulation is initialized, the energy contributions are calculated for all magnets.
-Each magnet therefore has a value for each of the terms in \cref{eq:E} stored in memory.
+Each magnet therefore stores a value in memory for each of the terms in \cref{eq:E}.
 Whenever a magnet switches, the energies of its `neighbours' are updated appropriately, which constitutes a major part of the calculation effort required for every step in the simulation.
 
 \subsection{Finite-size correction for magnetostatic energy}
@@ -143,6 +142,7 @@ Whenever a magnet switches, the energies of its `neighbours' are updated appropr
 \subsubsection{Exact solution} % OOP only
 
 \section{Dynamics}\label{sec:2:Dynamics}
+A Monte Carlo simulator would not be complete without an algorithm to change the state of the system.
 \subsection{N\'eel relaxation: temporal evolution}
 \subsection{Metropolis-Hastings: sampling equilibrium states}
 % TODO: decide whether to talk about nomenclature details etc. here, or in the introduction.
