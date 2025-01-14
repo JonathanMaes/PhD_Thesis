@@ -1,3 +1,6 @@
+import matplotlib
+matplotlib.use("Agg")
+
 import hotspice
 import inspect
 
