@@ -83,7 +83,7 @@ def plot(data_dir=None):
     ax1.set_xscale('log')
     ax1.set_yscale('log')
     ax1.set_xlabel("Number of magnets")
-    if not GPU: ax1.set_ylabel("Throughput [$s^{-1}$]")
+    if not GPU: ax1.set_ylabel("Throughput ($s^{-1}$)")
 
     ax2.set_xscale('log')
     ax2.set_xlim([L.min(), L.max()])
