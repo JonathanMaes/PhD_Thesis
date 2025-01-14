@@ -9,6 +9,8 @@
 \newcommand{\indexlabel}[1]{\index{#1}\label{#1}}
 \newcommand{\xlabel}[1]{#1\index{#1}\label{#1}}
 
+\newcommand{\numberthis}{\addtocounter{equation}{1}\tag{\theequation}} % Numbers a single line in a no-numbering multiline equation* or align*
+
 %\newcommand{\debug}[1]{}
 %\newcommand{\debug}[1]{{\tiny{(\pageref{#1})}}\normalsize}
 
@@ -33,7 +35,6 @@
 \newcommand{\EB}{E_\mathrm{B}}
 \newcommand{\EBtilde}{\widetilde{\EB}}
 
-
 % \newcommand{\abs}[1]{\ensuremath{\left| #1 \right|}\xspace}
 \newcommand{\diff}[2]{\frac{\partial #1}{\partial #2}}			    %% derivative
 \newcommand{\dispdiff}[2]{{\partial #1}/{\partial #2}}			    %% derivative
@@ -47,14 +48,11 @@
 \newcommand{\bcdot}{\boldsymbol{\cdot}}
 \renewcommand{\quote}[1]{``#1''}
 \newcommand{\etal}{\textit{et al.}\xspace}
+
 \newcommand{\code}[1]{\textsf{#1}}
 \newcommand{\shell}[1]{{\texttt{#1}}\smallskip\\}
 \newcommand{\python}[1]{\lstinline{#1}}
 
-%\newcommand{\class}[1]{\code{\hyperref[code#1]{#1}}} %final version
-%\newcommand{\file}[1]{\code{\hyperref[code#1]{#1.java}}} %final version
-\newcommand{\class}[1]{\code{#1}\index{#1.java}\xspace}
-\newcommand{\file}[1]{\code{#1.java}\index{#1.java}\xspace} %debug version
 \newcommand{\hide}[1]{}
 
 \newcommand{\glijbaantje}[2]{\vspace{-0.5cm}\begin{flushright}{\textit{#1}\\--- #2\\}\vspace{0.5cm}\end{flushright}}
