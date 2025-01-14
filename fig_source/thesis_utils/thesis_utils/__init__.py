@@ -8,6 +8,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from matplotlib import cycler
+from matplotlib.legend import Legend
+from matplotlib.axes import Axes
+from matplotlib.figure import Figure
 from pathlib import Path
 
 
@@ -82,6 +85,19 @@ def get_last_outdir(subdir: str = None):
         raise FileNotFoundError("No automatically generated output directory could be found.")
     else:
         return sorted(timestamped_dirs)[-1]
+
+def move_legend(leg: Legend, ax: Axes|Figure, dx: float = 0, dy: float = 0):
+    if isinstance(ax, Axes):     trans = ax.transAxes
+    elif isinstance(ax, Figure): trans = ax.transFigure
+    else: raise ValueError("<ax> must be an Axes or Figure object.")
+    bb = leg.get_bbox_to_anchor().transformed(trans.inverted())
+
+    # Change to location of the legend.
+    bb.x0 += dx
+    bb.x1 += dx
+    bb.y0 += dy
+    bb.y1 += dy
+    leg.set_bbox_to_anchor(bb, transform=trans)
 
 # def std_of_correlated_series(series):
 #     series = hotspice.utils.asnumpy(series)

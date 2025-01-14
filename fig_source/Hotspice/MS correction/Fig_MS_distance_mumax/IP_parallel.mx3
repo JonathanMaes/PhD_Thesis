@@ -1,0 +1,56 @@
+/*
+    Calculates the magnetic dipole-dipole energy for a pair of in-plane magnets aligned along their long axis.
+*/
+//// Shape
+l := 220e-9
+w := 80e-9
+z := 10e-9
+distance_step := 1/100
+
+//// Grid
+Nx := 400
+Ny := 40 
+Nz := ceil(z/4e-9)
+SetGridSize(Nx, Ny, Nz)
+SetCellSize(l*distance_step, l*distance_step, z/Nz)
+print(sprintf("Cell size: %.2fnm x %.2fnm x %.2fnm", l*distance_step*1e9, l*distance_step*1e9, z/Nz*1e9))
+
+//// Material parameters
+Msat = 1063242
+Aex = 13e-12
+print("Exchange length:", Sqrt((2*Aex.GetRegion(0))/(mu0*Pow(Msat.GetRegion(0), 2)))) // Check if larger than cell size
+print("Saturation magnetization:", Msat.GetRegion(0))
+
+//// Track E_total, angle, shape
+TableAdd(E_total)
+TableAdd(E_demag)
+distance := 1.
+distance0 := distance
+interaction := 0.
+TableAddVar(distance, "Distance", "l") // Center-to-center distance in multiples of <d>
+TableAddVar(interaction, "E_MC", "J") // Magnetostatic coupling energy between magnets
+
+//// Determine demag energy of single magnet (and declare shape variables so we can change them in the loop)
+magnet := Ellipse(l, w)
+magnet1 := magnet.Transl(-Nx*l*distance_step/2+l/2, 0, 0)
+magnet2 := magnet.Transl( distance*l/2, 0, 0)
+geometry := magnet1.Add(magnet2)
+SetGeom(magnet)
+m.Set(Uniform(1, 0, 0))
+E_self := E_demag.Get()
+
+//// Sweep center-to-center distance
+for distance=distance0; distance <= 3; distance = distance + distance_step {
+    print(sprintf("Distance: %.2f*l", distance))
+
+    //// Set shape
+    magnet2 = magnet1.Transl(distance*l, 0, 0)
+    geometry = magnet1.Add(magnet2)
+    SetGeom(geometry)
+
+    m.Set(Uniform(1, 0, 0))
+    interaction = E_demag.get() - 2*E_self
+    SnapshotAs(m, sprintf("m_%.2fl.png", distance))
+    
+    TableSave()
+}
