@@ -72,13 +72,13 @@ def plot(data_dir=None):
     GPU = params["GPU"]
     
     ## We need two axes, because Matplotlib does not natively support broken axes.
-    hotspice.plottools.init_style()
+    thesis_utils.init_style()
     fig = plt.figure(figsize=(thesis_utils.page_width/2, 3.5))
     ax1 = fig.add_subplot(111)
     ax2 = ax1.twiny()
     ax1.plot(N, data['attempts/s'], label="Samples / sec")
     ax1.plot(N, data['switches/s'], label="Switches / sec")
-    ax1.plot(N, data['MCsteps/s'], label="MC sweeps / sec")
+    ax1.plot(N, data['MCsteps/s'], label="MC sweeps / sec", color="k")
     ax1.set_xlim([N.min(), N.max()])
     ax1.set_xscale('log')
     ax1.set_yscale('log')

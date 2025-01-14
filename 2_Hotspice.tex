@@ -282,8 +282,8 @@ This makes it very inefficient for large systems: even though the time required 
 The ability to perform multiple switches simultaneously in the Metropolis-Hastings algorithm (described earlier in \cref{sec:2:MultiSwitch}) alleviates this problem, allowing for a significantly higher amount of Monte Carlo sweeps per second. \\\par
 \cref{fig:2:Performance} shows the performance of the multi-switching algorithm as a function of system size, both for calculation on the CPU (a) and GPU (b).
 The multi-switching algorithm selects a certain number of magnets per second (blue curve: sampling rate); these are candidates for switching.
-Dividing this value by $N$, the number of magnets in the system, gives the number of Monte Carlo sweeps per second (grey curve), which is the main performance metric in MC simulations.
-Depending on the specific situation, only some of the selected magnets will in fact switch (yellow curve).
+Dividing this value by $N$, the number of magnets in the system, gives the number of Monte Carlo sweeps per second (black curve), which is the main performance metric in MC simulations.
+Depending on the specific situation, only some of the selected magnets will actually switch (red curve).
 
 \xfigs[0.48]{2_Hotspice/Performance_CPU.pdf}{CPU}{2_Hotspice/Performance_GPU.pdf}{GPU}{
 	\label{fig:2:Performance}Performance of OOP square ASI as a function of system size, using the Metropolis-Hastings algorithm with multi-switching ($Q=0.05$). Lattice spacing $a = \SI{1}{\micro\metre}$, temperature $T = \SI{100}{\kelvin}$ and energy barrier $\EB = 0$.
