@@ -180,9 +180,21 @@ The minus sign in the equation appears because north and south poles have opposi
 \hotspice is limited to a single value of $d$ for all magnets, due to the structure of the kernels used to calculate the magnetostatic interaction, which will be discussed in~\cref{sec:2:Kernels}.
 
 \subsubsection{Comparison}
+
 \xfig[1.0]{2_Hotspice/MS_distance.pdf}{
 	\label{fig:2:MS_distance}Magnitude of the magnetostatic interaction between two magnets as a function of their normalized center-to-center distance, for the three \hotspice{} calculation methods (point dipole, second-order correction for dipoles, and dumbbell) compared to a micromagnetic \mumax{} calculation. OOP magnets are assumed to be circular with diameter $2r$, IP magnets are ellipses with length $l$ and width $w=4l/11$. Positions of north and south monopoles used for the dumbbell calculation in IP magnets are shown as red {\color{red}$\bullet$} and blue {\color{blue}$\bullet$} dots and are a distance $d=0.9l$ apart within a magnet. The energy on the vertical axis was divided by $M^2$ to be independent of magnet volume.
 }
+
+The impact of these two corrections to the magnetostatic energy is illustrated in~\cref{fig:2:MS_distance}, as a function of the normalized distance between interacting magnets. Ideally, the magnetostatic energy should approach the black \mumax curves corresponding to micromagnetic calculations. \par % TODO: explain mumax³ a bit?
+For out-of-plane (OOP) systems, the dumbbell model is inadequate due to the small fringe fields and the limited thickness of the magnets.
+Instead, the second-order dipole correction is more appropriate, yielding a significant improvement towards the ideal \mumax curve. \\\par
+For IP systems, the dumbbell model constitutes a vast improvement over the standard point dipole treatment.
+The best correspondence with \mumax is found when the monopole-monopole distance $d$ is set slightly shorter than the length $l$ of a magnet, typically around $d/l\approx0.9$.
+This adjustment accounts for the curvature and corresponding non-uniform magnetisation at the ends of real nanomagnets. Similar values for $d/l$ were previously found in~\ccite{DDG_Masterproef} for typical nanomagnet shapes like ellipses and stadiums. \par
+In contrast, the second-order dipole correction has little effect in IP systems and can even increase the discrepancy with \mumax: it emulates increased spatial extent and therefore always increases the interaction, but in the anti-parallel configuration ($\uparrow \downarrow$, rightmost panel in~\cref{fig:2:MS_distance}) the point dipole model already overestimates the interaction. \par
+In conclusion, the dumbbell model is preferred for IP systems, while the second-order dipole correction is most suitable for OOP systems.
+
+
 \subsection{Effective energy barrier}
 \subsubsection{Intrinsic barrier from shape anisotropy}
 \subsubsection{Mean-barrier approximation} % and relevant choices with discontinuities
