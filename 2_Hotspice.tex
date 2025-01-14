@@ -389,7 +389,33 @@ In hindsight, we mostly worked on small systems with the N\'eel algorithm (to si
 The fact that the current implementation requires making choice to use GPU or CPU before the `import hotspice` statement can be limiting in specific situations. A spiritual successor to \hotspice should address this limitation.
 
 \section{Verification} % See paper
+Now that we know the ins and outs of the model used by \hotspice, all that remains is to verify its correct implementation.
+To this end, we simulate several systems of increasing complexity for which analytical solutions are available.
+The examples discussed here are all equilibrium problems, so we will use the Metropolis-Hastings algorithm to verify that it indeed samples the equilibrium state space.
+Special attention will be given to the issue of ``critical slowing down'' which plagues this algorithm near phase transitions.
 \subsection{Hexagon}
+Before progressing to equilibrium problems, we briefly check that the magnetostatic interaction and its underlying kernels all work as expected.
+The magnetostatic interaction energy of any given arrangement of nanomagnets can be calculated analytically and compared to \hotspice.
+As an example that is neither too simple nor complex, we use a regular hexagon in a vortex state. The energy of all magnets should equal the following analytical solution, which is the sum of the magnetostatic interaction energy between nearest neighbours $\circled{1}$, next-nearest neighbours $\circled{2}$ and magnets on opposite sides of the hexagon $\circled{3}$:
+\begin{align*}
+	E_{\mathrm{MS},i} =&\, \circled{1} + 2 \times \circled{2} + 2 \times \circled{3} \\
+	=&\, -\frac{\mu_0 m^2}{4\pi a^3} -2\frac{\mu_0 m^2}{4\pi \frac{3 \sqrt{3} a^3}{8}} \Big[3\cos^2(\pi/3) - \cos(2\pi/3)\Big] -2\frac{\mu_0 m^2}{4\pi \frac{a^3}{8}} \Big[3\cos^2(\pi/6) - \cos(\pi/3)\Big] \\
+	=&\, -\frac{\mu_0 m^2}{4\pi a^3} \bigg[29+\frac{20}{3\sqrt{3}}\bigg] \mathrm{.}
+\end{align*}
+The following Python function verifies that, indeed, \hotspice gives the expected total energy $E_{\mathrm{MS},i}$ for all 6 magnets $i$ in the system.
+\begin{lstlisting}
+import numpy as np
+import hotspice
+
+def test_hexagon(l=470e-9, s=10e-9, m=1.1278401e-15):
+	mm = hotspice.ASI.IP_Kagome(a := (l+2*s)/np.tan(30*np.pi/180), nx=5, ny=3, moment=m, pattern="vortex")
+	E_sim = mm.get_energy('dipolar').E[mm.m.astype(bool)]
+	E_exact = -1e-7*m*m/a**3*(29+20*np.sqrt(3)/9)
+	print("OK" if np.allclose(E_sim, E_exact, atol=0) else "Fail")
+
+test_hexagon() # OK
+\end{lstlisting}
+
 \subsection{Non-interacting spin ensemble}
 \subsection{Exchange-coupled OOP square system}
 \subsubsection{Critical slowing down}
