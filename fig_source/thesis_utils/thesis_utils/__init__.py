@@ -8,7 +8,7 @@ from matplotlib import cycler
 from pathlib import Path
 
 
-page_width = 6.148*1.2 # inches
+page_width = 6.148*1.1 # inches
 
 class Cycle(object):
     def __init__(self, data): self.data = data
