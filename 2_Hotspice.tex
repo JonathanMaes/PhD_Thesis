@@ -131,8 +131,37 @@ When the simulation is initialized, the energy contributions are calculated for 
 Each magnet therefore stores a value in memory for each of the terms in \cref{eq:E}.
 Whenever a magnet switches, the energies of its `neighbours' are updated appropriately, which constitutes a major part of the calculation effort required for every step in the simulation.
 
-\subsection{Finite-size correction for magnetostatic energy}
+\subsection{Finite-size corrections to the magnetostatic energy}
+\cref{eq:E_MS,eq:E_Z,eq:E_exch} approximate each nanomagnet as a point dipole, but real nanomagnets have a finite spatial extent.
+If one assumes a uniform magnetisation throughout each single-domain nanomagnet, then this finite size does not affect the Zeeman energy, nor the exchange energy which can capture any shape-related effects by an appropriate choice of the exchange coupling $J$.
+The Zeeman energy could even account for a deviation from uniform magnetisation near the edge of a magnet, which occurs in reality but which we will neglect in the following, by an appropriate choice of $\vc{B}_\mathrm{ext}$. \par
+The magnetostatic interaction, however, depends on the relative position, orientation, and shape of all magnets.
+This may result in inadequate simulation of closely spaced ASI where the true magnetostatic coupling can be significantly stronger than predicted by a point dipole approximation.
+Therefore, two (mutually exclusive) improvements have been implemented in \hotspice, which rescale the magnetostatic interaction energy between magnets.
+
 \subsubsection{Second-order correction for dipoles}
+\textit{Politi and Pini}~\cite{Dipolar2Dparticles} have presented a multipole expansion of the magnetostatic interaction, to account for the finite size of 2D nanomagnets (i.e., lateral dimensions $\gg$ thickness), assuming a uniform magnetization.
+This results in a second-order correction
+\begin{equation}
+	E_{\mathrm{MS},i,j} = E_{\mathrm{MS},i,j}^\mathrm{(0)} + E_{\mathrm{MS},i,j}^\mathrm{(2)} \mathrm{,}
+\end{equation}
+where $E_{\mathrm{MS},i,j}^\mathrm{(0)}$ is the original point dipole magnetostatic interaction given by~\cref{eq:E_MS}. \par
+The second-order correction can be written as
+\begin{equation}
+	E_{\mathrm{MS},i,j}^\mathrm{(2)} = \frac{\mu_0}{4\pi} \frac{3\mathcal{I}_{ij}}{2} \Bigg[3\frac{\vc{\mu}_i^\mathrm{OOP} \bcdot \vc{\mu}_j^\mathrm{OOP}}{\abs{\vc{r}_{ij}}^5} + \frac{\vc{\mu}_i^\mathrm{IP} \bcdot \vc{\mu}_j^\mathrm{IP}}{\abs{\vc{r}_{ij}}^5} -5\frac{(\vc{\mu}_i^\mathrm{IP} \bcdot \vc{r}_{ij}) (\vc{\mu}_j^\mathrm{IP} \bcdot \vc{r}_{ij})}{\abs{\vc{r}_{ij}}^7} \Bigg] \mathrm{,}
+\end{equation}
+where $\vc{\mu}_i$ was split into its IP and OOP components, conveniently leading to separate IP and OOP terms as implemented in the two types of ASI in \hotspice. \par
+The particular shape of the nanomagnets is encapsulated in the single scalar $\mathcal{I}_{ij} = (\mathcal{I}_i + \mathcal{I}_j)/2$.
+These $\mathcal{I}$ are calculated similar to a moment of inertia:
+\begin{equation}
+	\mathcal{I}_i = \int_{\Omega_i} \abs{\vc{r} - \ab(\int_{\Omega_i} \vc{r} d\vc{r})}^2 d\vc{r} \mathrm{,}
+\end{equation}
+with $\Omega_i$ the volume of magnet $i$.
+We assume all magnets have the same shape, such that $\mathcal{I}_{ij} = \mathcal{I}_i = \mathcal{I}_j$.
+Since nanomagnets in ASI are typically rather elliptical (IP ASI) or round (OOP ASI), \hotspice allows the user to set the semi-major axis $a$ and semi-minor axis $b$ of the magnets comprising an ASI.
+For such a geometry -- elliptic cylinders -- these moments of inertia reduce to the simple expression $\mathcal{I}_{ij} = \frac{1}{4}(a^2 + b^2)$. % TODO REF: add examples of papers using round or elliptical magnets?
+%While this correction can be applied to both IP and OOP magnetic dipoles, it is most effective for OOP systems, as can be seen in~\cref{fig:2:MS_distance}.
+
 \subsubsection{Dumbbell model}
 \subsubsection{Comparison}
 \subsection{Effective energy barrier}
