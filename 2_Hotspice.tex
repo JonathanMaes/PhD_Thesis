@@ -163,6 +163,22 @@ For such a geometry -- elliptic cylinders -- these moments of inertia reduce to 
 %While this correction can be applied to both IP and OOP magnetic dipoles, it is most effective for OOP systems, as can be seen in~\cref{fig:2:MS_distance}.
 
 \subsubsection{Dumbbell model}
+Instead of representing a magnet as a point dipole, one may instead choose to represent it as a pair of magnetic monopoles~\cite{MagneticMonopoles2008,MagneticMonopoleDynamics}.
+This introduces a new parameter $d$: the effective distance between the north and south poles of a magnet, with respective positions $\vc{r_N}_i = \vc{r}_i + s_i\frac{d_i}{2}\vc{u}_i$ and $\vc{r_S}_i = \vc{r}_i - s_i\frac{d_i}{2}\vc{u}_i$.
+An appropriate choice of $d_i$ (slightly smaller than the physical length $l$ of the nanomagnet~\cite{DDG_Masterproef}) allows this dumbbell model to emulate the spatial extent of a real nanomagnet. \par
+The north and south monopoles are assigned magnetic charges $+q_i$ and $-q_i$, respectively, with $q_i=\mu_i/d_i$~\cite{MagneticMonopoles2008}.
+This choice yields the same effective dipole moment at long distance.
+The interaction energy between two magnetic charges $q$ and $q'$ can be derived from the magnetic version of Coulomb's law~\cite{ForceMagneticDipole} as
+\begin{equation}
+	E = -\int_\infty^{\vc{r}} \frac{\mu_0}{\num{4}\pi}\frac{qq'}{\abs{\vc{r}}^3} \hat{\vc{r}} \cdot d\vc{r} = \frac{\mu_0}{\num{4}\pi} \frac{qq'}{\abs{\vc{r}}} \mathrm{.}
+\end{equation}
+The magnetostatic interaction energy between two nanomagnets is then the sum of their four mutual monopole interactions, finally resulting in
+\begin{equation}
+	E_{\mathrm{MS},i,j} = \frac{\mu_0 \mu_i \mu_j}{4\pi d_i d_j} \Bigg(\frac{1}{\abs{\mathbf{r_N}_i - \mathbf{r_N}_j}} + \frac{1}{\abs{\mathbf{r_S}_i - \mathbf{r_S}_j}}\\ - \frac{1}{\abs{\mathbf{r_N}_i - \mathbf{r_S}_j}} - \frac{1}{\abs{\mathbf{r_S}_i - \mathbf{r_N}_j}}\Bigg) \mathrm{.} \label{eq:2:E_MS_mono}
+\end{equation}
+The minus sign in the equation appears because north and south poles have opposite charge.
+\hotspice is limited to a single value of $d$ for all magnets, due to the structure of the kernels used to calculate the magnetostatic interaction, which will be discussed in~\cref{sec:2:Kernels}.
+
 \subsubsection{Comparison}
 \xfig[1.0]{2_Hotspice/MS_distance.pdf}{
 	\label{fig:2:MS_distance}Magnitude of the magnetostatic interaction between two magnets as a function of their normalized center-to-center distance, for the three \hotspice{} calculation methods (point dipole, second-order correction for dipoles, and dumbbell) compared to a micromagnetic \mumax{} calculation. OOP magnets are assumed to be circular with diameter $2r$, IP magnets are ellipses with length $l$ and width $w=4l/11$. Positions of north and south monopoles used for the dumbbell calculation in IP magnets are shown as red {\color{red}$\bullet$} and blue {\color{blue}$\bullet$} dots and are a distance $d=0.9l$ apart within a magnet. The energy on the vertical axis was divided by $M^2$ to be independent of magnet volume.
