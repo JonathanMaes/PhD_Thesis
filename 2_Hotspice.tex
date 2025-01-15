@@ -79,6 +79,7 @@ Even though this implementation does not allow complete freedom in the placement
 
 \cref{fig:2:ASIs} showcases the 12 lattices that \hotspice provides out-of-the-box. The pinwheel lattices (a) and (b) are equal to the square lattices (c) and (d), respectively, but with each magnet individually rotated by \ang{45}. Both lattices have two variants (diamond/lucky-knot and closed/open), related by a global \ang{45} rotation of the entire lattice. This gives rise to different boundaries due to the Cartesian character of the underlying grid, which may alter the dynamics of the ASI. Furthermore, the unit cell for lucky-knot pinwheel and open square is more compact, resulting in faster simulation, while diamond pinwheel and closed square are more popular in literature and were therefore implemented separately. \par % TODO: more popular in literature? Examples where these are used?
 The remaining four IP and four OOP lattices are also related: the magnets in the OOP lattices (i)-(l) are positioned at the vertices where magnets meet in their respective IP counterparts (e)-(h).
+The Cairo lattice (h) can be continuously deformed into the Shakti lattice~\cite{ShaktiCairo}, but note that the point dipole model is no longer appropriate for the latter; instead, a dumbbell model (see~\cref{sec:2:Dumbbell}) would be more accurate.
 
 \section{Energy calculation}
 The energy of the system is the driving force behind these Monte Carlo simulations.
@@ -166,7 +167,7 @@ Since nanomagnets in ASI are typically rather elliptical (IP ASI) or round (OOP 
 For such a geometry -- elliptic cylinders -- these moments of inertia reduce to the simple expression $\mathcal{I}_{ij} = \frac{1}{4}(a^2 + b^2)$. % TODO REF: add examples of papers using round or elliptical magnets?
 %While this correction can be applied to both IP and OOP magnetic dipoles, it is most effective for OOP systems, as can be seen in~\cref{fig:2:MS_distance}.
 
-\subsubsection{Dumbbell model}
+\subsubsection{Dumbbell model}\label{sec:2:Dumbbell}
 Instead of representing a magnet as a point dipole, one may instead choose to represent it as a pair of magnetic monopoles~\cite{MagneticMonopoles2008,MagneticMonopoleDynamics}.
 This introduces a new parameter $d$: the effective distance between the north and south poles of a magnet, with respective positions $\vc{r_N}_i = \vc{r}_i + s_i\frac{d_i}{2}\vc{u}_i$ and $\vc{r_S}_i = \vc{r}_i - s_i\frac{d_i}{2}\vc{u}_i$.
 An appropriate choice of $d_i$ (slightly smaller than the physical length $l$ of the nanomagnet~\cite{DDG_Masterproef}) allows this dumbbell model to emulate the spatial extent of a real nanomagnet. \par
@@ -193,13 +194,13 @@ The figure shows 3 typical arrangements of neighbouring magnets in an ASI: two c
 The magnetostatic interaction energy between the pair of magnets, divided by $\mu^2$ to be independent of magnet volume, is shown as a function of their normalized centre-to-centre distance.
 A uniform magnetisation was used in the \mumax simulation, as this is the assumption under which the corrections were derived and because the lowest energy magnetisation state is size-dependent while the figure uses dimensionless units. \\\par
 
-For out-of-plane (OOP) systems, the dumbbell model is inadequate due to the small fringe fields and the limited thickness of the magnets.
-Instead, the second-order dipole correction is more appropriate, yielding a significant improvement towards the ideal \mumax curve.
-Still, a discrepancy remains for separations below $r_{ij}/2r \lessapprox 1.5$, which could be reduced by even higher-order corrections. \\\par
-
 \xfig[1.0]{2_Hotspice/MS_distance.pdf}{
 	\label{fig:2:MS_distance}Magnitude of the magnetostatic interaction between two magnets as a function of their normalized center-to-center distance, for the three \hotspice{} calculation methods (point dipole, second-order correction for dipoles, and dumbbell) compared to a micromagnetic \mumax{} calculation. OOP magnets are assumed to be circular with diameter $2r$, IP magnets are ellipses with length $l$ and width $w=4l/11$. Positions of north and south monopoles used in the dumbbell model are shown as red {\color{red}$\bullet$} and blue {\color{blue}$\bullet$} dots and are a distance $d=0.9l$ apart within a magnet.
 }
+
+For out-of-plane (OOP) systems, the dumbbell model is inadequate due to the small fringe fields and the limited thickness of the magnets.
+Instead, the second-order dipole correction is more appropriate, yielding a significant improvement towards the ideal \mumax curve.
+Still, a discrepancy remains for separations below $r_{ij}/2r \lessapprox 1.5$, which could be reduced by even higher-order corrections. \\\par
 
 For IP systems, the dumbbell model constitutes a vast improvement over the standard point dipole treatment.
 The dumbbell model does, however, require an additional parameter $d$, which affects the interaction energy.
