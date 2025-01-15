@@ -69,6 +69,7 @@ Interactions with other magnets or external fields modify the energy landscape, 
 Each magnet can have a unique magnetic moment size $\mu_i$, temperature $T_i$ and energy barrier $E_{\mathrm{B},i}$.
 This enables, for instance, modelling some of the disorder due to lithographic variations by assigning a different shape anisotropy to each magnet, typically sampled from a Gaussian distribution with mean $\EB$ and standard deviation $\sigma(\EB)$. \\\par
 
+% We are most interested in simulating ASI, which are often well-ordered and spatially periodic. Therefore, \hotspice chooses to...
 Due to the periodic nature of many ASI lattices, \hotspice chooses to perform the simulation on a rectilinear grid, the benefits and details of which will be discussed in~\cref{sec:2:Implementation}.
 Each grid point may or may not contain a magnet, and the magnets must either all be of the IP type, or all OOP.
 Even though this implementation does not allow complete freedom in the placement of magnets, many popular ASI lattices can be constructed in this manner. \par
@@ -240,7 +241,8 @@ By leveraging the unit cell concept in periodic lattices and the efficient index
 
 \subsection{Kernels}\label{sec:2:Kernels}
 The kernel serves to reduce the amount of calculations required for every switch, so there is usually a trade-off between the initialisation time and runtime when simulating dynamics.
-\subsubsection{Perpendicular kernel} % If not yet explained in detail earlier, talk about the perpendicular kernel etc. here
+\subsubsection{Magnetostatic interaction kernel}
+\subsubsection{Perpendicular magnetostatic kernel} % If not yet explained in detail earlier, talk about the perpendicular kernel etc. here
 \subsubsection{Numerical error with cut-off kernel} % TODO
 A performance improvement presents itself by cutting off the magnetostatic kernel at a certain distance.
 Due to the underlying grid, the most natural way of achieving this is to simply reduce the size of the kernel from $2L-1 \times 2L-1$ to a smaller $2K-1 \times 2K-1$ central region. \par % Note that the size has to remain odd for the convolution to still place the magnet in the center.
@@ -325,9 +327,9 @@ The first two rows `\textit{Full interaction kernel}' in the tables use the orig
 The initialisation time on CPU (first row in~\cref{tab:2:perf_init}) bears witness to this, as $t_\mathrm{init} \propto L^4 = N^2$.
 This is because the initialisation of the magnetostatic interaction energy $E_\mathrm{MS}$ requires iterating over all magnets and adding these energies sequentially.
 On GPU, parallelisation of each individual term in this summation approximately reduces this to $\propto L^2 = N$. \par
-This method obviously wasted a lot of memory, as evidenced by the fact that a system as small as $200 \times 200$ requires more than \SI{8}{\giga\byte} of memory.
+This method obviously wasted a lot of memory: for periodic lattices, the matrix would contain many identical values. For a system as small as $170 \times 170$, this type of kernel already exceeded the \SI{8}{\giga\byte} of available memory.
 While it was possible to reduce memory usage by instead using a sparse matrix and limiting the interaction distance, this would not drastically improve performance due to additional indexation overhead.
-Clearly, a more memory-efficient approach was required. \\\par
+Clearly, a more efficient approach was required. \\\par
 
 An extreme solution is to not use a kernel at all, as in the third row `\textit{No kernel}'.
 Instead, for every switching magnet, its interaction energy with all other magnets was calculated from scratch.
@@ -335,12 +337,12 @@ The tables show that this clearly gets rid of the memory issue and yields a surp
 However, the initialisation for larger systems now takes a long time, because without a kernel this requires $N^2$ operations resulting in $t_\mathrm{init} \propto N=L^2$ on GPU for small systems.
 Still, in all situations it is beneficial not to use the unoptimized kernel. \\\par
 
-To reduce the initialisation time, two improvements had to be combined.
-First, a kernel as described earlier in~\cref{sec:2:Kernels} had to be implemented.
+To reduce the initialisation time, two improvements had to be combined. \par
+First, a kernel as described earlier in~\cref{sec:2:Kernels} had to be implemented, which overcomes the memory issue by using the periodic nature of most ASI to only store interactions for a single unit cell.
 This is used in the fourth row `\textit{Unitcell-kernel}', but does not constitute a significant improvement on its own aside from enabling $1000 \times 1000$ systems for the first time. \par
 Secondly, however, this new kernel enables the usage of a convolution to initialise the magnetostatic interaction energy $E_\mathrm{MS}$, rather than the sequential sum used before.
 This is what the final two rows `\textit{Final version}' use, where we once again compare CPU and GPU as this is the final version.
-Another minor improvement in the final version was to use 2D indexation (rather than a flat index $i = n_x y + x$ which did not synergize well with the convolution), which resulted in another \SI{15}{\percent} speed-up.
+Another minor improvement in the final version was to use 2D indexation (rather than a flat index $i = n_x y + x$ which did not synergize well with the convolution), yielding another \SI{15}{\percent} performance increase.
 
 \paragraph{Final performance}
 In the end, the upper limit for feasible calculation time has become $L \approx 1000$ on GPU and $L \approx 400$ on CPU.
@@ -351,25 +353,31 @@ With this algorithm, the GPU can maintain the advantage for systems as small as 
 
 \subsubsection{Multi-switching}
 The N\'eel algorithm, used in the preceding discussion about performance, does not implement a multi-switching procedure.
-This makes it very inefficient for large systems: even though the time required to perform a single N\'eel iteration stays roughly constant up to $L<400$, the time per Monte Carlo sweep\footnote{
-	A Monte Carlo ``step'' refers to attempting to switch a single magnet. By a ``Monte Carlo sweep'' (MCS), we refer to $N$ attempted switches when the simulation contains $N$ magnets~\cite{NumericalDynamicalNiedermayer}. Note that the distinction between attempted switches and actual switches only exists in the Metropolis-Hastings algorithm, not in N\'eel. % TODO END: Could also decide to put this in a \begin{definition} environment somewhere earlier.
-} will scale linearly with the number of magnets if each iteration only switches a single magnet. \par
+This makes it very inefficient for large systems: for a system of $N$ magnets to change its macrostate significantly, on the order of $N$ switches must occur.
+Even though the time required to perform a single switch with the N\'eel algorithm stays roughly constant up to $L<400$, the time per Monte Carlo sweep\footnote{
+	A Monte Carlo ``step'' refers to attempting to switch a single magnet. By a ``Monte Carlo sweep'' (MCS), we refer to $N$ attempted switches when the simulation contains $N$ magnets~\cite{NumericalDynamicalNiedermayer}. Note that the distinction between attempted switches and actual switches only exists in the Metropolis-Hastings algorithm. % TODO END: Could also decide to put this in a \begin{definition} environment somewhere earlier.
+} will scale linearly with the number of magnets if each iteration only switches a single magnet.
 The ability to perform multiple switches simultaneously in the Metropolis-Hastings algorithm (described earlier in \cref{sec:2:MultiSwitch}) alleviates this problem, allowing for a significantly higher amount of Monte Carlo sweeps per second. \\\par
 \cref{fig:2:Performance} shows the performance of the multi-switching algorithm as a function of system size, both for calculation on the CPU (a) and GPU (b).
-The multi-switching algorithm selects a certain number of magnets per second (blue curve: sampling rate); these are candidates for switching.
-Dividing this value by $N$, the number of magnets in the system, gives the number of Monte Carlo sweeps per second (black curve), which is the main performance metric in MC simulations.
-Depending on the specific situation, only some of the selected magnets will actually switch (red curve).
+The multi-switching algorithm selects a certain number of magnets per second, as depicted by the blue curve: these are candidates for switching.
+Dividing this value by $N$, the number of magnets in the system, gives the number of Monte Carlo sweeps per second, depicted by the black curve.
+This is the main performance metric in Monte Carlo simulations. \par
+Only a subset of the selected magnets will switch, as depicted by the red curve.
+This switching rate is highly dependent on the specific conditions of the simulation -- particularly the ratio $\EBtilde/T$ -- making it infeasible to make general statements.
+There exist situations where no magnets switch or where any selected magnet switches.
+In the figure, values of $a$, $T$, and $\EB$ were chosen which result in a reasonable switching rate.
 
 \xfigs[0.47]{2_Hotspice/Performance_CPU.pdf}{CPU}{2_Hotspice/Performance_GPU.pdf}{GPU}{
 	\label{fig:2:Performance}Performance of OOP square ASI as a function of system size, using the Metropolis-Hastings algorithm with multi-switching ($Q=0.05$). Lattice spacing $a = \SI{1}{\micro\metre}$, temperature $T = \SI{100}{\kelvin}$ and energy barrier $\EB = 0$.
-}
+} % Q: Performance for IP ASI might be worse. Add a Pinwheel figure as well?
 
 There is once again a stark contrast between CPU and GPU. \par
 On CPU, the sampling rate starts off rather constant for small systems, as overhead dominates.
 For $N>100$ magnets, the sampling rate increases proportional to $N$, leading to a stable performance (MCS/s) independent of $N$.
-However, performance drops dramatically once the system size increases beyond $\approx 80 \times 80$.
-We hypothesize that this is due to exceeding a CPU cache size.
-On the CPU used for~\cref{fig:2:Performance} (the aforementioned i7-11800H), the L1 and L2 cache hold \SI{48}{\kilo\byte} and \SI{1.25}{\mega\byte}, respectively. \par % Q: Are any of the below hypotheses reasonable? Which is most reasonable?
+However, performance drops dramatically once the system size increases beyond $\approx 80 \times 80$. % While this is reminiscent of a lack of garbage collection while building the figure, this is not the case here as the drop remains even when starting the figure at $L=80$.
+We hypothesize that this is due to exceeding a CPU cache size. \par
+%On the CPU used for~\cref{fig:2:Performance} (the aforementioned i7-11800H), the L1 and L2 cache hold \SI{48}{\kilo\byte} and \SI{1.25}{\mega\byte}, respectively.
+% Q: Are any of the below hypotheses reasonable? Which is most reasonable?
 % Hypothesis 1: The size occupied by a 72x72 ASI is 1.25MB. It is not unreasonable that, soon after reaching this point, some arrays can no longer be stored on this cache level, impacting performance.
 % Hypothesis 2: The size of mm.m at 78x78 is 48kB, so we might be exceeding the L1 cache beyond this point.
 % Hypothesis 3: The size of the dipole kernel at this point is around 220kB. Doesn't seem to match up with anything.
