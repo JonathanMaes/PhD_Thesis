@@ -437,7 +437,7 @@ In hindsight, for the purposes of this thesis it was not necessary to go through
 In~\cref{ch:Applications}, I rarely use large systems, and often use the N\'eel algorithm for which multi-switching was not implemented.
 Therefore, the vast majority of calculations in that chapter will be performed on CPU. 
 In hindsight, we mostly worked on small systems with the N\'eel algorithm (to simulate RC in OOP ASI), making all the effort of allowing \hotspice to run on the GPU unnecessary. Still, the effort was not wasted as it has expanded the envelope of applicability for \hotspice, particularly when using the Metropolis-Hastings algorithm.
-The fact that the current implementation requires making choice to use GPU or CPU before the `import hotspice` statement can be limiting in specific situations. A spiritual successor to \hotspice should address this limitation.
+The fact that the current implementation requires making the choice to use GPU or CPU before the \python{import hotspice} statement can be limiting in specific situations. A spiritual successor to \hotspice should address this limitation.
 
 \section{Verification} % See paper
 Now that we know the ins and outs of the model used by \hotspice, all that remains is to verify its correct implementation.
