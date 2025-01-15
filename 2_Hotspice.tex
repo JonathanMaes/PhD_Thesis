@@ -471,4 +471,21 @@ test_hexagon() # OK
 \subsection{Exchange-coupled OOP square system}
 \subsubsection{Critical slowing down}
 \subsection{Exchange- and magnetostatically-coupled OOP square system}
-\subsection{Square-to-pinwheel transition angle}
+\subsection{Square-to-pinwheel transition angle}\label{sec:2:Verification_IP_SquarePinwheel}
+The in-plane square and pinwheel ASI lattices can be continuously transformed into each other by rotating each individual magnet by \ang{45}.
+Despite being this closely related, their ground state magnetic ordering differs significantly.
+Square ASI has an antiferromagnetic (AFM) ground state, where all vertices have a net zero magnetisation.
+Meanwhile, pinwheel ASI exhibits superferromagnetic order, where all magnets with similarly-oriented easy axes are magnetized in the same direction~\cite{ApparentFMpinwheel}.
+Therefore, a critical angle $\ang{0} < \alpha_c < \ang{45}$ must exist where the ground state transitions between these two extremes. \par
+For the dipole model, theoretical calculations predict this transition at $\alpha_c = \arcsin(\sqrt{3}/3) = \ang{35.3}$~\cite{AFM-FM-transition-Pinwheel,MagicAngle}.
+For the dumbbell model, the transition angle depends on the distance $d$ between monopoles, but is always larger than for the dipole model~\cite{AFM-FM-transition-Pinwheel}. \par
+The result of a \hotspice simulation using both models is shown in \cref{fig:2:Pinwheel_angle}.
+To quantify this transition, we measure the fraction of vertices with net zero magnetisation -- this value is 0 for superferromagnetic order while it is 1 for AFM order.
+For the dipole model, the transition occurs at $\approx \ang{35}$ as expected, while the dumbbell model indeed transitions at a larger rotation angle.
+% TODO: debate (with myself) whether or not to look for some more experimental references to include the following sentences.
+% While this transition was experimentally observed to be gradual from \ang{35} to nearly \ang{45}, these experiments likely could not reach an equilibrium state due to defects, rapid quenching, or finite correlation times, all of which freeze domain walls in the system. Metropolis-Hastings samples the equilibrium state space, resulting in the sharp transition seen in the figure.
+
+\xfig[0.6]{2_Hotspice/Pinwheel_angle.pdf}{
+	\label{fig:2:Pinwheel_angle}Fraction of vertices with net zero magnetisation at equilibrium, as square ASI (left) transitions to pinwheel ASI (right) by rotating individual magnets. The theoretical transition angle $\alpha_c \approx \ang{35.3}$ for the dipole model is indicated by the vertical dotted line.
+}
+
