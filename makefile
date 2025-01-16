@@ -17,4 +17,5 @@ $(PDFS): %.pdf: %.tex
 
 .PHONY: clean
 clean:
-	rm -f *.aux  *.blg *.ind *.ilg *.log *.toc *.out *.idx *.bbl #$(PDFS) 
+	rm -f *.aux *.blg *.brf *.ind *.ilg *.log *.synctex.gz *.toc *.out *.idx *.bbl $(PDFS)
+	rm -rf build
