@@ -97,7 +97,7 @@ def show_all_lattices():
         hotspice.ASI.IP_Square_Open: dict(radius_a=3, a=(0,1,-np.pi/4), name="Square\n(open)"),
         hotspice.ASI.IP_Ising: dict(radius_a=3.5, a=(0,0)),
         hotspice.ASI.IP_Triangle: dict(radius_a=2.45, scale=1, a=(0,1)),
-        hotspice.ASI.IP_Kagome: dict(radius_a=2.15, a=(0,1)),
+        hotspice.ASI.IP_Kagome: dict(radius_a=2.45, a=(0,1)),
         hotspice.ASI.IP_Cairo: dict(radius_a=4, scale=1, a=(5,4,np.pi-hotspice.ASI.IP_Cairo.BETA)),
         hotspice.ASI.OOP_Square: dict(radius_a=3.5, scale=scale_OOP),
         hotspice.ASI.OOP_Triangle: dict(radius_a=3.5, scale=scale_OOP, a=(0,1)),

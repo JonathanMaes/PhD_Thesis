@@ -78,9 +78,14 @@ Even though this implementation does not allow complete freedom in the placement
 	\label{fig:2:ASIs}Predefined artificial spin ice (ASI) lattices available in \hotspice. The unit cell of each lattice is delineated by a central dark grey rectangle. The red indicator defines the lattice parameter $a$. In the Ising approximation, the magnetization of in-plane magnets (top) aligns along the major axis of the depicted ellipses. Out-of-plane magnets (bottom) are illustrated as circles.
 }
 
-\cref{fig:2:ASIs} showcases the 12 lattices that \hotspice provides out-of-the-box. The pinwheel lattices (a) and (b) are equal to the square lattices (c) and (d), respectively, but with each magnet individually rotated by \ang{45}. Both lattices have two variants (diamond/lucky-knot and closed/open), related by a global \ang{45} rotation of the entire lattice. This gives rise to different boundaries due to the Cartesian character of the underlying grid, which may alter the dynamics of the ASI. Furthermore, the unit cell for lucky-knot pinwheel and open square is more compact, resulting in faster simulation, while diamond pinwheel and closed square are more popular in literature and were therefore implemented separately. \par % TODO: more popular in literature? Examples where these are used?
+\cref{fig:2:ASIs} showcases the 12 lattices that \hotspice provides out-of-the-box. \par
+The pinwheel and square lattices come in two variants, related by a global \ang{45} rotation of the entire lattice.
+This gives rise to different boundaries due to the Cartesian character of the underlying grid, which may alter the dynamics of the ASI.
+Furthermore, the unit cell for lucky-knot pinwheel (b) and open square (d) is more compact than for the more popular diamond pinwheel (a) and closed square (c), resulting in faster simulation. \par % TODO REF: more popular in literature? Examples where these are used?
+Magnets in the pinwheel lattices (a) and (b) are placed at the same location as in the square lattices (c) and (d), respectively, but with each magnet rotated by \ang{45}.
+The same can be said of the triangle (f) and kagome (g) lattices where individual magnets are rotated by \ang{90}.
+The Cairo lattice (h) can be continuously deformed into the Shakti lattice~\cite{ShaktiCairo}, but note that the point dipole model is no longer appropriate for the latter; instead, a dumbbell model (see~\cref{sec:2:Dumbbell}) would be more accurate. \par
 The remaining four IP and four OOP lattices are also related: the magnets in the OOP lattices (i)-(l) are positioned at the vertices where magnets meet in their respective IP counterparts (e)-(h).
-The Cairo lattice (h) can be continuously deformed into the Shakti lattice~\cite{ShaktiCairo}, but note that the point dipole model is no longer appropriate for the latter; instead, a dumbbell model (see~\cref{sec:2:Dumbbell}) would be more accurate.
 
 \section{Energy calculation}
 The energy of the system is the driving force behind these Monte Carlo simulations.
