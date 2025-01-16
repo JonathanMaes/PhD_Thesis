@@ -230,7 +230,7 @@ A Monte Carlo simulator would not be complete without an algorithm to change the
 \subsection{Other Monte Carlo algorithms} % Not implemented, explain why Wolff could be useful but why it's not in Hotspice
 
 \section{Implementation}\label{sec:2:Implementation}
-Now that the physics underlying the simulator have been extensively discussed, we turn our attention to the implementation in software. \par
+Now that the physics underlying the simulator have been extensively discussed, we turn our attention to the software implementation. \par
 First, we discuss why we chose to implement the ASI on an underlying rectilinear grid, and explain how the \textit{`kernel'} --- the lookup table for the magnetostatic interaction --- was implemented.
 We then take a look at the performance of \hotspice and how it has improved since its initial version due to improvements to the kernel.
 One particular performance-enhancing feature is examined in more detail: the possibility to select multiple magnets at once in the Metropolis-Hastings algorithm.
@@ -238,17 +238,26 @@ Finally, we briefly discuss the structure of the package and the functionality i
 
 \subsection{Grid}
 \hotspice{} represents an ASI as a rectilinear grid of non-uniform unit cells, with magnets positioned at selected grid points.
-This choice was made based on a trade-off; calculation efficiency against the freedom to place magnets arbitrarily.
+This choice was made based on the trade-off between calculation efficiency and the freedom to place magnets arbitrarily.
 We opted to prioritise efficiency and accept the geometrical restriction, as most ASI research focuses on periodic lattices.
 Despite the seemingly restrictive nature of the rectilinear grid,~\cref{fig:2:ASIs} illustrates its versatility in forming various periodic lattices, with only the Cairo lattices requiring grid non-uniformity.
 As a bonus, real-time visualisation is simple and efficient for a rectilinear grid, as the underlying matrix can directly be cast to a pixel image. \par
-By leveraging the unit cell concept in periodic lattices and the efficient indexation of a rectilinear grid in computer memory, several aspects of the calculation can be performed more efficiently than for free-form ASI. The unit cell of each lattice in~\cref{fig:2:ASIs} is depicted as a grey rectangle. Although non-rectilinear unit cells with fewer magnets could be identified for some lattices, \hotspice{} does not consider these to reduce complexity and to maintain a clear connection to the underlying rectilinear grid of the ASI implementation.
+By leveraging the unit cell concept in periodic lattices and the efficient indexation of a rectilinear grid in computer memory, several aspects of the calculation can be performed more efficiently than for free-form ASI.
+%The unit cell of each lattice in~\cref{fig:2:ASIs} is depicted as a grey rectangle.
+Although non-rectilinear unit cells with fewer magnets could be identified for some lattices, \hotspice{} does not consider these to reduce complexity and to maintain a clear connection to the underlying rectilinear grid of the ASI implementation.
 
-\subsection{Kernels}\label{sec:2:Kernels}
-The kernel serves to reduce the amount of calculations required for every switch, so there is usually a trade-off between the initialisation time and runtime when simulating dynamics.
+\subsection{Kernels for magnetostatic interaction}\label{sec:2:Kernels}
+Pre-calculated ``kernels'' are used to efficiently update the magnetostatic interaction after each switch. 
+The need to calculate these kernels beforehand increases the initialisation time, but the reduced runtime when simulating dynamics more than makes up for this.
+
 \subsubsection{Magnetostatic interaction kernel}
+For each magnet $i$, a kernel $\vc{K}_i(j)$ stores the strength of the magnetostatic interaction between itself and all other magnets $j$. This enables the quick calculation of their magnetostatic interaction energy as $E_{\mathrm{MS},i,j}= s_i s_j \vc{K}_i(j) \mu_i \mu_j$ by pre-calculating all $\vc{K}_i(j)$ values once when the ASI is created.
+\subsubsection{Periodic boundary conditions}
+The grid allows the straightforward implementation of first-order PBC by adjusting these kernels (adding eight offset versions of a kernel to itself), which does not impact performance. % TODO: show in figure?
+However, including further copies than these 8 adjacent ``ghost'' ASIs is not as straightforward, and has not been implemented. Due to the extent of the magnetostatic interaction and its $1/r^3$ dependence, the use for such further ``ghost'' ASIs is limited, and has therefore not been implemented.
 \subsubsection{Perpendicular magnetostatic kernel} % If not yet explained in detail earlier, talk about the perpendicular kernel etc. here
-\subsubsection{Numerical error with cut-off kernel} % TODO
+Note that, if the asymmetric energy barrier is to be accounted for, two additional kernels are needed for each magnet in the unit cell: one where the central magnet is rotated \ang{90} (for initial calculation of $E_\perp$), and one where all other magnets are rotated \ang{90} (for updating $E_\perp$ when a magnet switches). \par
+\subsubsection{Numerical error with cut-off kernel} % TODO: expand + FIGURE
 A performance improvement presents itself by cutting off the magnetostatic kernel at a certain distance.
 Due to the underlying grid, the most natural way of achieving this is to simply reduce the size of the kernel from $2L-1 \times 2L-1$ to a smaller $2K-1 \times 2K-1$ central region. \par % Note that the size has to remain odd for the convolution to still place the magnet in the center.
 However, this will result in inaccurate interaction energies being stored.
