@@ -33,9 +33,9 @@ To assess the potential of \xref{Reservoir Computing} in (perpendicular-anisotro
 
 Nanomagnetic systems are often simulated using micromagnetic codes, such as the finite-difference-based \mumax~\cite{mumax3} and \oommf~\cite{OOMMF} or the finite-element-based \nmag~\cite{Nmag}, which capture the magnetization dynamics of individual nanomagnets in great detail. \par
 However, the time between successive switches of a nanomagnet is not necessarily similar to the timescale of micromagnetics.
-Furthermore, determining RC metrics requires applying many input cycles -- on the order of 100 for the task-agnostic metrics -- to get a statistically valid result.
+Furthermore, determining RC metrics requires applying many input cycles --- on the order of 100 for the task-agnostic metrics --- to get a statistically valid result.
 In this timeframe, many switches occur.
-When the simulated time extends beyond several microseconds, as is typically the case, simulating even a modest number of magnets -- on the order of several dozen -- becomes computationally unfeasible~\cite{leo2021chiral}. \\\par
+When the simulated time extends beyond several microseconds, as is typically the case, simulating even a modest number of magnets --- on the order of several dozen --- becomes computationally unfeasible~\cite{leo2021chiral}. \\\par
 
 To address these limitations, specialized ASI simulation tools have been developed.
 An example of this is the flatspin simulator~\cite{flatspin}, which implements deterministic spin flipping via a Stoner-Wohlfarth model~\cite{StonerWohlfarth2008}.
@@ -115,7 +115,7 @@ Three energy contributions have been implemented in \hotspice, supporting both o
 		E_{\mathrm{exch},i,j} = J \frac{\vc{\mu}_i \bcdot \vc{\mu}_j}{\mu_i \mu_j} \mathrm{,} \label{eq:E_exch}
 	\end{equation}
 	with $J$ the exchange coupling constant, which is constant throughout the ASI. \par
-	This interaction is rarely present in ASI, but can for example be relevant in interconnected ASI -- whether by design or due to limited lithographic accuracy.
+	This interaction is rarely present in ASI, but can for example be relevant in interconnected ASI --- whether by design or due to limited lithographic accuracy.
 	We will encounter an example of the latter in \cref{sec:3:OOP:MFM}.
 \end{enumerate}
 
@@ -165,7 +165,7 @@ These $\mathcal{I}$ are calculated similar to a moment of inertia:
 with $\Omega_i$ the volume of magnet $i$.
 We assume all magnets have the same shape, such that $\mathcal{I}_{ij} = \mathcal{I}_i = \mathcal{I}_j$.
 Since nanomagnets in ASI are typically rather elliptical (IP ASI) or round (OOP ASI), \hotspice allows the user to set the semi-major axis $a$ and semi-minor axis $b$ of the magnets comprising an ASI.
-For such a geometry -- elliptic cylinders -- these moments of inertia reduce to the simple expression $\mathcal{I}_{ij} = \frac{1}{4}(a^2 + b^2)$. % TODO REF: add examples of papers using round or elliptical magnets?
+For such a geometry --- elliptic cylinders --- these moments of inertia reduce to the simple expression $\mathcal{I}_{ij} = \frac{1}{4}(a^2 + b^2)$. % TODO REF: add examples of papers using round or elliptical magnets?
 %While this correction can be applied to both IP and OOP magnetic dipoles, it is most effective for OOP systems, as can be seen in~\cref{fig:2:MS_distance}.
 
 \subsubsection{Dumbbell model}\label{sec:2:Dumbbell}
@@ -226,7 +226,7 @@ A Monte Carlo simulator would not be complete without an algorithm to change the
 
 \section{Implementation}\label{sec:2:Implementation}
 Now that the physics underlying the simulator have been extensively discussed, we turn our attention to the implementation in software. \par
-First, we discuss why we chose to implement the ASI on an underlying rectilinear grid, and explain how the \textit{`kernel'} -- the lookup table for the magnetostatic interaction -- was implemented.
+First, we discuss why we chose to implement the ASI on an underlying rectilinear grid, and explain how the \textit{`kernel'} --- the lookup table for the magnetostatic interaction --- was implemented.
 We then take a look at the performance of \hotspice and how it has improved since its initial version due to improvements to the kernel.
 One particular performance-enhancing feature is examined in more detail: the possibility to select multiple magnets at once in the Metropolis-Hastings algorithm.
 Finally, we briefly discuss the structure of the package and the functionality included in the various submodules, and finish with a small discussion of things that could have been done better.
@@ -363,7 +363,7 @@ The multi-switching algorithm selects a certain number of magnets per second, as
 Dividing this value by $N$, the number of magnets in the system, gives the number of Monte Carlo sweeps per second, depicted by the black curve.
 This is the main performance metric in Monte Carlo simulations. \par
 Only a subset of the selected magnets will switch, as depicted by the red curve.
-This switching rate is highly dependent on the specific conditions of the simulation -- particularly the ratio $\EBtilde/T$ -- making it infeasible to make general statements.
+This switching rate is highly dependent on the specific conditions of the simulation --- particularly the ratio $\EBtilde/T$ --- making it infeasible to make general statements.
 There exist situations where no magnets switch or where any selected magnet switches.
 In the figure, values of $a$, $T$, and $\EB$ were chosen which result in a reasonable switching rate.
 
@@ -426,7 +426,7 @@ By default, the magnetisation is shown as an averaged field, with the averaging 
 The second mode displays individual arrows, which either show each magnet's magnetisation direction or the effective field $\vc{H}_\mathrm{eff}$ it experiences. % Q: is it H? I wrote H because it does not add the magnetic moment. On a similar note, should we write B_ext or H_ext in the definition of the Zeeman energy?
 In the third mode, the energy contributions ($E_\mathrm{MC}$, $E_\mathrm{Z}$, $E_\mathrm{Exch}$ and their sum $E_i$) and the resulting effective energy barrier $\EBtilde$ for each magnet can be shown, both along the easy and hard axis.
 The last option is to show the spatial distribution (i.e., the value for each magnet) of some parameters like the temperature $T$, shape anisotropy $\EB$ and size of the magnetic moment $\mu$. \par
-Buttons in the sidebar on the right allow the user to interact with the ASI by progressing through time, setting an initial state, or -- for more complex simulations -- apply custom functions.
+Buttons in the sidebar on the right allow the user to interact with the ASI by progressing through time, setting an initial state, or --- for more complex simulations --- apply custom functions.
 By clicking with the mouse on the ASI plot, it is also possible to interact with the ASI at a granular level, switching one or multiple magnets. Finally, the red box in the bottom right controls the update algorithm.
 
 \subsection{Advantages and disadvantages of the \hotspice approach} % Hindsight is 20/20
@@ -480,7 +480,7 @@ Therefore, a critical angle $\ang{0} < \alpha_c < \ang{45}$ must exist where the
 For the dipole model, theoretical calculations predict this transition at $\alpha_c = \arcsin(\sqrt{3}/3) = \ang{35.3}$~\cite{AFM-FM-transition-Pinwheel,MagicAngle}.
 For the dumbbell model, the transition angle depends on the distance $d$ between monopoles, but is always larger than for the dipole model~\cite{AFM-FM-transition-Pinwheel}. \par
 The result of a \hotspice simulation using both models is shown in \cref{fig:2:Pinwheel_angle}.
-To quantify this transition, we measure the fraction of vertices with net zero magnetisation -- this value is 0 for superferromagnetic order while it is 1 for AFM order.
+To quantify this transition, we measure the fraction of vertices with net zero magnetisation --- this value is 0 for superferromagnetic order while it is 1 for AFM order.
 For the dipole model, the transition occurs at $\approx \ang{35}$ as expected, while the dumbbell model indeed transitions at a larger rotation angle.
 % TODO: debate (with myself) whether or not to look for some more experimental references to include the following sentences.
 % While this transition was experimentally observed to be gradual from \ang{35} to nearly \ang{45}, these experiments likely could not reach an equilibrium state due to defects, rapid quenching, or finite correlation times, all of which freeze domain walls in the system. Metropolis-Hastings samples the equilibrium state space, resulting in the sharp transition seen in the figure.
