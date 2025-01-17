@@ -259,25 +259,58 @@ Pre-calculated ``kernels'' are used to efficiently update the magnetostatic inte
 The need to calculate these kernels beforehand increases the initialisation time, but the reduced runtime when simulating dynamics more than makes up for this.
 
 \subsubsection{Magnetostatic interaction kernel}
-For each magnet $i$, a kernel $\vc{K}^{(i)}$ stores the magnitude of the magnetostatic interaction between itself and all other magnets.
+For each magnet $i$, a kernel $\vc{k}^{(i)}$ stores the magnitude of the magnetostatic interaction between itself and all other magnets.
 By calculating these values beforehand, when the ASI is created, the magnetostatic interaction energy between magnets $i$ and $j$ can readily be calculated as
 \begin{equation}
-	E_{\mathrm{MS},i,j}= s_i s_j \vc{K}^{(i)}_j \mathrm{,}
+	E_{\mathrm{MS},i,j}= s_i s_j \vc{k}^{(i)}_j \mathrm{,}
 \end{equation}
 which only ever changes sign since the magnetisation directions $s_i = \pm 1$ and $s_j = \pm 1$ are the only variables in the system. \par
-Due to the fact that magnets are placed on a rectilinear grid, the kernel of magnet $i$ can be constructed as a matrix $\vc{K}^{(i)}_{ab}$ where $ab$ denotes a position on the ASI grid.
+Due to the fact that magnets are placed on a rectilinear grid, the kernel of magnet $i$ can also be written as an $L_x \times L_y$ matrix $\vc{K}^{(i)}_{ab}$ where $ab$ denotes a position on the ASI grid.
 For example, $\vc{K}^{(i)}_{2,3}$ stores the interaction strength between magnet $i$ and the magnet at index $(2,3)$ on the grid.
-If there is no magnet at index $(a,b)$ on the grid, then $\vc{K}^{(i)}_{ab} = 0, \forall i$. \par
+If no magnet was placed at index $(a,b)$ on the grid, then $\vc{K}^{(i)}_{ab} = 0, \forall i$. \\\par
+
 However, storing such a kernel for all magnets $i$ would require storing $\order{N^2}$ values.
 By leveraging unit cells, this storage requirement can be reduced to $\order{N}$.
-We label each occupied grid point in the unit cell by a unique index $q = 1,\dots,\widetilde{N}$, with $\widetilde{N}$ the number of magnets in a single unit cell.
-Hence, each magnet in the ASI has a value of $q$ associated with it.
+Each occupied grid point in the unit cell is assigned a unique index $q = 1,\dots,\widetilde{N}$, with $\widetilde{N}$ the number of magnets in a single unit cell.
+Hence, each magnet in the ASI is associated with a specific value of $q$. \par
+All magnets with the same value of $q$ share the same layout of surrounding magnets, except for a different cut-off at the border in case of open boundary conditions.
+Therefore, if two magnets occupy equivalent positions $q$ in the unit cell --- say, $i$ at zero-based index $(x,y)$ and $j$ at $(x+\Delta x, y+\Delta y)$ --- then
+\begin{equation}
+	\label{eq:2:Kernel_equivalence}
+	\vc{K}^{(i)}_{ab} = \vc{K}^{(j)}_{a+\Delta x,b+\Delta y} \quad \mathrm{,} \quad \forall a,b:
+	\begin{cases}
+		-\Delta x \leq a < L_x - \Delta x \\
+		-\Delta y \leq b < L_y - \Delta y \\
+		% Or more rigorously, but even more overcomplicated:
+		% \max(-\Delta x, 0) \leq a < L_x - \min(\Delta x, 0) \\
+		% \max(-\Delta y, 0) \leq b < L_y - \min(\Delta y, 0) \\
+	\end{cases}
+\end{equation}
+In other words, their kernels are identical apart from an offset by $(\Delta x, \Delta y)$, at least in the area that remains inside the kernel after this offset.
+Due to this equivalence, and the fact that $1 - L_x \leq \Delta x \leq L_x - 1$ and $1 - L_y \leq \Delta y \leq L_y - 1$, all possible interactions that a magnet at site $q$ can experience can be stored in a single large $(2L_x-1) \times (2L_y-1)$ matrix $\vc{\mathcal{K}}^{(q)}_{ab}$. \\\par
 
+This matrix, a ``unitcell-kernel'', can be interpreted as shown in~\cref{fig:2:Kernel_IP_Pinwheel}.
+This figure shows how these unitcell-kernels store the magnetostatic interaction strength between a particular magnet and any other magnet in the system.
+Take for example the blue magnet in the pinwheel lattice on the left side of the figure.
+It occupies position $q=\mathrm{A}$ in the unit cell.
+The kernel $\vc{\mathcal{K}}^\mathrm{(A)}$, also shown in blue, stores the interaction strength in such a way that, when the ASI grid is shifted onto the kernel to put the blue magnet at the centre of the kernel, the interaction strength of the blue magnet with any other magnet in the ASI is stored in those cells where these other magnets end up.
+The same is true for the interaction of the red magnet with all magnets, though it occupies position $q=\mathrm{B}$ in the unit cell so it uses the red kernel $\vc{\mathcal{K}}^\mathrm{(B)}$.
+
+\xfig[1.0]{2_Hotspice/Kernel_IP_Pinwheel.pdf}{
+	\label{fig:2:Kernel_IP_Pinwheel}
+	Two examples showing the shifting of the kernel with respect to the ASI grid for multiplication (convolution), when a magnet switches.
+	The ASI itself is shown on the left.
+	Thin lines indicate individual cells in the simulation grid, thick lines delineate the unit cells.
+	Letters indicate the index of a magnet within its unit cell.
+	Each site in the unit cell corresponds to a kernel, shown in the right.
+	The values stored in the kernel are designed such that shifting the switching magnet to the center of the kernel and multiplying overlapping cells ($s_{ab}$ of the ASI with $\vc{K}_{ab}$ of the kernel) yields the magnetostatic interaction energy between the switching magnet and all other magnets at positions $ab$.
+	The figure shows this for two example magnets indicated in blue and red.
+}
 \subsubsection{Periodic boundary conditions}
 The grid allows the straightforward implementation of first-order PBC by adjusting these kernels (adding eight offset versions of a kernel to itself), which does not impact performance. % TODO: show in figure?
 However, including further copies than these 8 adjacent ``ghost'' ASIs is not as straightforward, and has not been implemented. Due to the extent of the magnetostatic interaction and its $1/r^3$ dependence, the use for such further ``ghost'' ASIs is limited, and has therefore not been implemented.
 \subsubsection{Perpendicular magnetostatic kernel} % If not yet explained in detail earlier, talk about the perpendicular kernel etc. here
-Note that, if the asymmetric energy barrier is to be accounted for, two additional kernels are needed for each magnet in the unit cell: one where the central magnet is rotated \ang{90} (for initial calculation of $E_\perp$), and one where all other magnets are rotated \ang{90} (for updating $E_\perp$ when a magnet switches). \par
+Note that, if the asymmetric energy barrier is to be accounted for, two additional kernels are needed for each magnet in the unit cell: one where the central magnet is rotated \ang{90} (for initial calculation of $E_\perp$), and one where all other magnets are rotated \ang{90} (for updating $E_\perp$ when a magnet switches). \par % TODO: explain more, add formulae
 \subsubsection{Numerical error with cut-off kernel} % TODO: expand + FIGURE
 A performance improvement presents itself by cutting off the magnetostatic kernel at a certain distance.
 Due to the underlying grid, the most natural way of achieving this is to simply reduce the size of the kernel from $2L-1 \times 2L-1$ to a smaller $2K-1 \times 2K-1$ central region. \par % Note that the size has to remain odd for the convolution to still place the magnet in the center.
