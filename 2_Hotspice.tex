@@ -251,7 +251,20 @@ Pre-calculated ``kernels'' are used to efficiently update the magnetostatic inte
 The need to calculate these kernels beforehand increases the initialisation time, but the reduced runtime when simulating dynamics more than makes up for this.
 
 \subsubsection{Magnetostatic interaction kernel}
-For each magnet $i$, a kernel $\vc{K}_i(j)$ stores the strength of the magnetostatic interaction between itself and all other magnets $j$. This enables the quick calculation of their magnetostatic interaction energy as $E_{\mathrm{MS},i,j}= s_i s_j \vc{K}_i(j) \mu_i \mu_j$ by pre-calculating all $\vc{K}_i(j)$ values once when the ASI is created.
+For each magnet $i$, a kernel $\vc{K}^{(i)}$ stores the magnitude of the magnetostatic interaction between itself and all other magnets.
+By calculating these values beforehand, when the ASI is created, the magnetostatic interaction energy between magnets $i$ and $j$ can readily be calculated as
+\begin{equation}
+	E_{\mathrm{MS},i,j}= s_i s_j \vc{K}^{(i)}_j \mathrm{,}
+\end{equation}
+which only ever changes sign since the magnetisation directions $s_i = \pm 1$ and $s_j = \pm 1$ are the only variables in the system. \par
+Due to the fact that magnets are placed on a rectilinear grid, the kernel of magnet $i$ can be constructed as a matrix $\vc{K}^{(i)}_{ab}$ where $ab$ denotes a position on the ASI grid.
+For example, $\vc{K}^{(i)}_{2,3}$ stores the interaction strength between magnet $i$ and the magnet at index $(2,3)$ on the grid.
+If there is no magnet at index $(a,b)$ on the grid, then $\vc{K}^{(i)}_{ab} = 0, \forall i$. \par
+However, storing such a kernel for all magnets $i$ would require storing $\order{N^2}$ values.
+By leveraging unit cells, this storage requirement can be reduced to $\order{N}$.
+We label each occupied grid point in the unit cell by a unique index $q = 1,\dots,\widetilde{N}$, with $\widetilde{N}$ the number of magnets in a single unit cell.
+Hence, each magnet in the ASI has a value of $q$ associated with it.
+
 \subsubsection{Periodic boundary conditions}
 The grid allows the straightforward implementation of first-order PBC by adjusting these kernels (adding eight offset versions of a kernel to itself), which does not impact performance. % TODO: show in figure?
 However, including further copies than these 8 adjacent ``ghost'' ASIs is not as straightforward, and has not been implemented. Due to the extent of the magnetostatic interaction and its $1/r^3$ dependence, the use for such further ``ghost'' ASIs is limited, and has therefore not been implemented.
