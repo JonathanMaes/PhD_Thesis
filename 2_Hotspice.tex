@@ -75,7 +75,12 @@ Each grid point may or may not contain a magnet, and the magnets must either all
 Even though this implementation does not allow complete freedom in the placement of magnets, many popular ASI lattices can be constructed in this manner. \par
 
 \xfig[1.0]{2_Hotspice/ASIs.pdf}{
-	\label{fig:2:ASIs}Predefined artificial spin ice (ASI) lattices available in \hotspice. The unit cell of each lattice is delineated by a central dark grey rectangle. The red indicator defines the lattice parameter $a$. In the Ising approximation, the magnetization of in-plane magnets (top) aligns along the major axis of the depicted ellipses. Out-of-plane magnets (bottom) are illustrated as circles.
+	Predefined artificial spin ice (ASI) lattices available in \hotspice.
+	The unit cell of each lattice is delineated by a central dark grey rectangle.
+	The red indicator defines the lattice parameter $a$.
+	In the Ising approximation, the magnetization of in-plane magnets (top) aligns along the major axis of the depicted ellipses.
+	Out-of-plane magnets (bottom) are illustrated as circles.
+	\label{fig:2:ASIs}
 }
 
 \cref{fig:2:ASIs} showcases the 12 lattices that \hotspice provides out-of-the-box. \par
@@ -201,7 +206,10 @@ The magnetostatic interaction energy between the pair of magnets, divided by $\m
 A uniform magnetisation was used in the \mumax simulation, as this is the assumption under which the corrections were derived and because the lowest energy magnetisation state is size-dependent while the figure uses dimensionless units. \\\par
 
 \xfig[1.0]{2_Hotspice/MS_distance.pdf}{
-	\label{fig:2:MS_distance}Magnitude of the magnetostatic interaction between two magnets as a function of their normalized center-to-center distance, for the three \hotspice{} calculation methods (point dipole, second-order correction for dipoles, and dumbbell) compared to a micromagnetic \mumax{} calculation. OOP magnets are assumed to be circular with diameter $2r$, IP magnets are ellipses with length $l$ and width $w=4l/11$. Positions of north and south monopoles used in the dumbbell model are shown as red {\color{red}$\bullet$} and blue {\color{blue}$\bullet$} dots and are a distance $d=0.9l$ apart within a magnet.
+	Magnitude of the magnetostatic interaction between two magnets as a function of their normalized center-to-center distance, for the three \hotspice{} calculation methods (point dipole, second-order correction for dipoles, and dumbbell) compared to a micromagnetic \mumax{} calculation.
+	OOP magnets are assumed to be circular with diameter $2r$, IP magnets are ellipses with length $l$ and width $w=4l/11$.
+	Positions of north and south monopoles used in the dumbbell model are shown as red {\color{red}$\bullet$} and blue {\color{blue}$\bullet$} dots and are a distance $d=0.9l$ apart within a magnet.
+	\label{fig:2:MS_distance}
 }
 
 For out-of-plane (OOP) systems, the dumbbell model is inadequate due to the small fringe fields and the limited thickness of the magnets.
@@ -395,7 +403,9 @@ There exist situations where no magnets switch or where any selected magnet swit
 In the figure, values of $a$, $T$, and $\EB$ were chosen which result in a reasonable switching rate.
 
 \xfigs[0.47]{2_Hotspice/Performance_CPU.pdf}{CPU}{2_Hotspice/Performance_GPU.pdf}{GPU}{
-	\label{fig:2:Performance}Performance of OOP square ASI as a function of system size, using the Metropolis-Hastings algorithm with multi-switching ($Q=0.05$). Lattice spacing $a = \SI{1}{\micro\metre}$, temperature $T = \SI{100}{\kelvin}$ and energy barrier $\EB = 0$.
+	Performance of OOP square ASI as a function of system size, using the Metropolis-Hastings algorithm with multi-switching ($Q=0.05$).
+	Lattice spacing $a = \SI{1}{\micro\metre}$, temperature $T = \SI{100}{\kelvin}$ and energy barrier $\EB = 0$.
+	\label{fig:2:Performance}
 } % Q: Performance for IP ASI might be worse. Add a Pinwheel figure as well?
 
 There is once again a stark contrast between CPU and GPU. \par
@@ -445,7 +455,9 @@ It is possible to set longer-range exchange interactions (next-nearest neighbour
 A graphical user interface (GUI) is available for \hotspice, which allows the user to directly interact with the ASI and observe changes in realtime. It can be run by calling \python{hotspice.gui.show(mm)}, with \python{mm} the ASI object, resulting in the window shown in~\cref{fig:2:GUI}.
 
 \xfig[1.0]{2_Hotspice/GUI.png}{
-	\label{fig:2:GUI}The \hotspice graphical user interface. This example shows an $80 \times 50$ pinwheel ASI.
+	The \hotspice graphical user interface.
+	This example shows an $80 \times 50$ pinwheel ASI.
+	\label{fig:2:GUI}
 }
 
 The state of the ASI is prominently displayed, and the bottom left panel shows a few useful statistics such as the elapsed time. The ASI display is controlled by the central bottom panel, which changes between 4 display modes.
@@ -513,6 +525,8 @@ For the dipole model, the transition occurs at $\approx \ang{35}$ as expected, w
 % While this transition was experimentally observed to be gradual from \ang{35} to nearly \ang{45}, these experiments likely could not reach an equilibrium state due to defects, rapid quenching, or finite correlation times, all of which freeze domain walls in the system. Metropolis-Hastings samples the equilibrium state space, resulting in the sharp transition seen in the figure.
 
 \xfig[0.6]{2_Hotspice/Pinwheel_angle.pdf}{
-	\label{fig:2:Pinwheel_angle}Fraction of vertices with net zero magnetisation at equilibrium, as square ASI (left) transitions to pinwheel ASI (right) by rotating individual magnets. The theoretical transition angle $\alpha_c \approx \ang{35.3}$ for the dipole model is indicated by the vertical dotted line.
+	Fraction of vertices with net zero magnetisation at equilibrium, as square ASI (left) transitions to pinwheel ASI (right) by rotating individual magnets.
+	The theoretical transition angle $\alpha_c \approx \ang{35.3}$ for the dipole model is indicated by the vertical dotted line.
+	\label{fig:2:Pinwheel_angle}
 }
 
