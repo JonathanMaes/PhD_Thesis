@@ -15,7 +15,7 @@ alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 def main_plot():
     thesis_utils.init_style()
     
-    figsize = (thesis_utils.page_width, 3)
+    figsize = (thesis_utils.page_width, 2.6)
     figparams = [
         dict(n=5,  lw=1, ASI_type=hotspice.ASI.IP_Pinwheel, colors = {(1,2): 'C0', (4,3): 'C1'}),
         dict(n=15, lw=1, ASI_type=hotspice.ASI.IP_Cairo,    colors = {(1,2): 'C0', (4,6): 'C1'}),
@@ -35,15 +35,16 @@ def main_plot():
         ax.patch.set_alpha(0)  # Transparent background
         
         ## Add the parts
+        y_center = y_max*0.45
         h_ASI, h_kernel = 0.2, 0.33
-        plot_ASI(ax, 0.01, (y_max-h_ASI)/2, h_ASI, magnet_enlargement=1, **style_kwargs)
+        plot_ASI(ax, 0.01, y_center - h_ASI/2, h_ASI, magnet_enlargement=1, **style_kwargs)
         for i, pos in enumerate(style_kwargs.get('colors', {}).keys()):
-            plot_kernel(ax, 0.3+i*(h_kernel*1.1), (y_max-h_kernel)/2, h_kernel, pos=pos, **style_kwargs)
+            plot_kernel(ax, 0.3+i*(h_kernel*1.1), y_center - h_kernel/2, h_kernel, pos=pos, **style_kwargs)
         
         ## Save the result
         ASI_type = style_kwargs.get("ASI_type", None)
         ASI_type = "" if ASI_type is None else f"_{ASI_type.__name__}"
-        hotspice.utils.save_results(figures={f"Fig_kernel{ASI_type}": fig}, timestamped=False)
+        hotspice.utils.save_results(figures={f"Kernel{ASI_type}": fig}, timestamped=False)
 
 
 def plot_ASI(ax: plt.Figure, x, y, w, n=5, lw=1, magnet_enlargement=1, ASI_type: type[hotspice.Magnets] = hotspice.ASI.IP_Pinwheel, colors: dict|str = None):
