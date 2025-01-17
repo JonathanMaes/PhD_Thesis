@@ -306,6 +306,14 @@ The same is true for the interaction of the red magnet with all magnets, though 
 	The values stored in the kernel are designed such that shifting the switching magnet to the center of the kernel and multiplying overlapping cells ($s_{ab}$ of the ASI with $\vc{K}_{ab}$ of the kernel) yields the magnetostatic interaction energy between the switching magnet and all other magnets at positions $ab$.
 	The figure shows this for two example magnets indicated in blue and red.
 }
+
+% TODO: write down the mathematical form of the kernel elements (you know, with o_i and o_j and u_i etc. etc.)
+\begin{equation}
+	\label{eq:2:Kernel_unitcell}
+	E_{\mathrm{MS},i,j}= (s_i \mu_i) (s_j \mu_j) \vc{K}^{(i)}_{ab} \mathrm{,} % TODO: this equation is ancient, adjust it using the new indexation paradigm and explain any necessary extra symbols required in the text
+\end{equation}
+where $\mu_i$ and $\mu_j$ were not included in the unitcell-kernel to allow magnets in different unit cells but with the same unitcell-index $q$ to have a different magnetic moment.
+This versatility comes at the cost of two additional multiplications per interaction, which has a non-negligible performance impact as \cref{eq:2:Kernel_unitcell} is by far the most common operation performed during a meaningful simulation. \par
 \subsubsection{Periodic boundary conditions}
 Due to the rectilinear grid, first-order periodic boundary conditions (PBC) --- accounting for the 8 nearest copies of the ASI --- are easily applied.
 By adding 8 offset copies of the open-boundary kernels $\vc{\mathcal{K}}^{(q)}$ to themselves, these adjacent ASI copies can be felt by magnets at the boundaries.
