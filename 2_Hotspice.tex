@@ -310,9 +310,9 @@ Simulation times displayed serve an illustrative purpose: absolute values on oth
 	\begin{tabular}{r|c|c|c|c|c|c}
 		Simulation size $L$ & 50 & 100 & 150 & 200 & 400 & 1000 \\
 		\hline \hline
-		CPU | \makecell{Full interaction kernel} & 0.5s & 6.8s & 34.0s & Mem & Mem & Mem \\
+		CPU | \makecell{Pairwise kernel} & 0.5s & 6.8s & 34.0s & Mem & Mem & Mem \\
 		\hline
-		GPU | \makecell{Full interaction kernel} & 2.2s & 5.4s & 11.9s & Mem & Mem & Mem \\
+		GPU | \makecell{Pairwise kernel} & 2.2s & 5.4s & 11.9s & Mem & Mem & Mem \\
 		\hline
 		GPU | \makecell{No kernel} & 1.0s & 3.4s & 7.6s & 14.5s & 91.6s & ? \\
 		\hline
@@ -329,9 +329,9 @@ Simulation times displayed serve an illustrative purpose: absolute values on oth
 	\begin{tabular}{r|c|c|c|c|c|c}
 		Simulation size $L$ & 50 & 100 & 150 & 200 & 400 & 1000 \\
 		\hline \hline
-		CPU | \makecell{Full interaction kernel} & 9.4s & 217.6s & ? & Mem & Mem & Mem \\
+		CPU | \makecell{Pairwise kernel} & 9.4s & 217.6s & ? & Mem & Mem & Mem \\
 		\hline
-		GPU | \makecell{Full interaction kernel} & 5.0s & 13.6s & 51.8s & Mem & Mem & Mem \\
+		GPU | \makecell{Pairwise kernel} & 5.0s & 13.6s & 51.8s & Mem & Mem & Mem \\
 		\hline
 		GPU | \makecell{No kernel} & 7.1s & 7.2s & 8.2s & 9.0s & 13.0s & ? \\
 		\hline
@@ -358,18 +358,21 @@ When operating on small arrays, this means relatively fewer parallel calculation
 The CPU excels at the latter. % TODO: references for GPU performance and operation
 
 \paragraph{Kernel improvements}
-The first two rows `\textit{Full interaction kernel}' in the tables use the original method, where the kernel was far more naïve: it was simply an $N \times N$ matrix which stored the magnetostatic interaction between each pair of magnets.
+The first two rows `\textit{Pairwise kernel}' in the tables use a far more na\"ive kernel than the one described earlier.
+It was simply an $N \times N$ matrix which stored the magnetostatic interaction between each pair of magnets.
 The initialisation time on CPU (first row in~\cref{tab:2:perf_init}) bears witness to this, as $t_\mathrm{init} \propto L^4 = N^2$.
-This is because the initialisation of the magnetostatic interaction energy $E_\mathrm{MS}$ requires iterating over all magnets and adding these energies sequentially.
-On GPU, parallelisation of each individual term in this summation approximately reduces this to $\propto L^2 = N$. \par
-This method obviously wasted a lot of memory: for periodic lattices, the matrix would contain many identical values. For a system as small as $170 \times 170$, this type of kernel already exceeded the \SI{8}{\giga\byte} of available memory.
-While it was possible to reduce memory usage by instead using a sparse matrix and limiting the interaction distance, this would not drastically improve performance due to additional indexation overhead.
+This is because calculating the initial magnetostatic interaction energy $E_\mathrm{MS}$ with this kernel structure requires iterating over all magnets and summing the interaction energy with each other magnet.
+On GPU, parallelisation of this sum in each such iteration approximately reduces this to $\propto L^2 = N$. \par
+Clearly, for large arrays, the need to store $\order{N^2}$ elements quickly becomes prohibitive.
+For a system as small as $170 \times 170$, this type of kernel already exceeded the \SI{8}{\giga\byte} of available memory, as indicated in the table by ``Mem''.
+For periodic lattices, the matrix will contain many identical values, wasting a lot of memory.
+While it was possible to alleviate this by instead using a sparse matrix and limiting the interaction distance, memory usage was not the only issue: also the performance per switch (\cref{tab:2:perf_switch}) was rapidly declining for increasing $N$, both on CPU and GPU. % Also: sparse matrices probably have more indexation overhead
 Clearly, a more efficient approach was required. \\\par
 
-An extreme solution is to not use a kernel at all, as in the third row `\textit{No kernel}'.
+An extreme solution would be to use no kernel at all, as in the third row `\textit{No kernel}'.
 Instead, for every switching magnet, its interaction energy with all other magnets was calculated from scratch.
 The tables show that this clearly gets rid of the memory issue and yields a surprisingly fast simulation.
-However, the initialisation for larger systems now takes a long time, because without a kernel this requires $N^2$ operations resulting in $t_\mathrm{init} \propto N=L^2$ on GPU for small systems.
+However, the initialisation for larger systems now takes a long time, because without a kernel this requires $\order{N^2}$ operations resulting in $t_\mathrm{init} \propto N=L^2$ on GPU for small systems.
 Still, in all situations it is beneficial not to use the unoptimized kernel. \\\par
 
 To reduce the initialisation time, two improvements had to be combined. \par
