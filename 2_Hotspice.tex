@@ -308,7 +308,7 @@ Simulation times displayed serve an illustrative purpose: absolute values on oth
 % Q: should we use L or N=L²? I would prefer L because at some point we talk about 2D indexation, so L makes it clearer that we have a 2D system.
 \xtable[tab:2:perf_init]{\textbf{Initialisation time} for various simulation sizes $L$ (i.e. $L \times L = N$ magnets). `Mem' indicates excessive memory consumption, `?' indicates a prohibitively long simulation time ($\gtrsim \SI{1000}{\second}$).}{
 	\begin{tabular}{r|c|c|c|c|c|c}
-		Simulation size $L$ & 50 & 100 & 150 & 200 & 400 & 1000 \\
+		\multicolumn{1}{r}{Simulation size $L=$} & \multicolumn{1}{c}{50} & \multicolumn{1}{c}{100} & \multicolumn{1}{c}{150} & \multicolumn{1}{c}{200} & \multicolumn{1}{c}{400} & 1000 \\
 		\hline \hline
 		CPU | \makecell{Pairwise kernel} & 0.5s & 6.8s & 34.0s & Mem & Mem & Mem \\
 		\hline
@@ -316,7 +316,7 @@ Simulation times displayed serve an illustrative purpose: absolute values on oth
 		\hline
 		GPU | \makecell{No kernel} & 1.0s & 3.4s & 7.6s & 14.5s & 91.6s & ? \\
 		\hline
-		GPU | \makecell{Unitcell-kernel (\cref{sec:2:Kernels})} & 2.4s & 4.6s & 9.7s & 16.3s & 66.2s & 730.4s \\
+		GPU | \makecell{Unitcell-kernel (see \S\ref{sec:2:Kernels})} & 2.4s & 4.6s & 9.7s & 16.3s & 66.2s & 730.4s \\
 		\hline \hline
 		GPU | \makecell{Final version\\(convolution initialization)} & 1.0s & 1.0s & 1.0s & 1.0s & 1.6s & 23.9s \\
 		\hline
@@ -327,7 +327,7 @@ Simulation times displayed serve an illustrative purpose: absolute values on oth
 
 \xtable[tab:2:perf_switch]{\textbf{Time for 5000 switches} using the N\'eel algorithm, for various simulation sizes $L$ (i.e. $L \times L = N$ magnets). `Mem' indicates excessive memory consumption, `?' indicates a prohibitively long simulation time ($\gtrsim \SI{1000}{\second}$).}{
 	\begin{tabular}{r|c|c|c|c|c|c}
-		Simulation size $L$ & 50 & 100 & 150 & 200 & 400 & 1000 \\
+		\multicolumn{1}{r}{Simulation size $L=$} & \multicolumn{1}{c}{50} & \multicolumn{1}{c}{100} & \multicolumn{1}{c}{150} & \multicolumn{1}{c}{200} & \multicolumn{1}{c}{400} & 1000 \\
 		\hline \hline
 		CPU | \makecell{Pairwise kernel} & 9.4s & 217.6s & ? & Mem & Mem & Mem \\
 		\hline
@@ -335,7 +335,7 @@ Simulation times displayed serve an illustrative purpose: absolute values on oth
 		\hline
 		GPU | \makecell{No kernel} & 7.1s & 7.2s & 8.2s & 9.0s & 13.0s & ? \\
 		\hline
-		GPU | \makecell{Unitcell-kernel (\cref{sec:2:Kernels})} & 7.8s & 7.9s & 8.3s & 8.9s & 11.8s & 36.9s \\
+		GPU | \makecell{Unitcell-kernel (see \S\ref{sec:2:Kernels})} & 7.8s & 7.9s & 8.3s & 8.9s & 11.8s & 36.9s \\
 		\hline \hline
 		GPU | \makecell{Final version\\(2D indexation)} & 6.8s & 7.0s & 7.2s & 7.6s & 10.2s & 35.9s \\
 		\hline
