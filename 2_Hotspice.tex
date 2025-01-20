@@ -567,9 +567,48 @@ When an external magnetic field of magnitude $B$ is applied to a non-interacting
 	\newline\newline\newline
 }
 
-\subsection{Exchange-coupled OOP square system}
+\subsection{Exchange-coupled Ising system}
+The 2D square-lattice exchange-coupled Ising model is one of the few exactly solvable systems in statistical physics~\cite{ExactlySolvedModelsStatMech}.
+An analytical solution is known for the temperature-dependence of its average magnetisation
+\begin{equation}
+	M = \sqrt[8]{1 - \sinh^{-4}(2J/\kBT)} \mathrm{,}
+	\label{eq:2:Verification_exchange_M}
+\end{equation}
+with $J$ the exchange coupling constant~\cite{Correlations2DIsing,IsingSpontaneousMagnetization,coey2010magnetism}.
+This implies that the system exhibits a second-order phase transition at the critical temperature~\cite{ExactlySolvedModelsStatMech}
+\begin{equation}
+	T_c = \frac{2J}{\kB \ln(1 + \sqrt{2})} \mathrm{.}
+\end{equation}
+Furthermore, an analytical solution is available for the nearest-neighbour correlation
+\begin{equation}
+	\langle \sigma_{1} \sigma_{2} \rangle = 
+	\begin{cases}
+		\sqrt{1+k} \ab[\frac{1-k}{\pi}K(k) + \frac{1}{2} \ab] &\text{for } T < T_c \mathrm{,} \\ 
+		\sqrt{1+k} \ab[\frac{1-k}{\pi k}K(1/k) + \frac{1}{2} \ab] &\text{for } T > T_c \mathrm{.} \\ 
+	\end{cases}
+\end{equation}
+with $K$ the complete elliptic integral of the first kind and $k=\sinh^{-2}(2J/\kBT)$~\cite{Correlations2DIsing}. \\\par
+
+The result of a \hotspice simulation of this Ising system is shown in \cref{fig:2:Verification_exchange}, as calculated for an $800 \times 800$ lattice.
+Maximal multi-sampling ($Q=+\infty$) for the Metropolis-Hastings algorithm was used to verify that --- at least for systems with such short-range coupling --- this sort of extreme multi-sampling still converges to the correct solution.
+Since the theoretical curves for $M$ and $\langle \sigma_{1} \sigma_{2} \rangle$ are monotonically decreasing~\cite{MCinStatPhys}, the final state from the previous temperature step was retained as the starting point for the next step. This preserves progress already made towards equilibrium and avoids the disruption that resetting to the uniform state would cause. \par
+
+\xfig{2_Hotspice/Verification/OOP_Exchange.pdf}{
+	\label{fig:2:Verification_exchange}
+	\textbf{(a)} Average magnetisation and \textbf{(b)} nearest-neighbour (NN) correlation as a function of temperature.
+	Markers show the \hotspice result for an $800 \times 800$ OOP square-lattice exchange-coupled Ising system using the Metropolis-Hastings algorithm with maximal multi-switching.
+	The simulation was performed for 3 values of $N$ --- the number of Monte Carlo steps per site performed at each temperature step.
+	Discrepancies due to critical slowing down above $T_c$ improve with increasing $N$.
+}
+
+The \hotspice result corresponds well to the theoretical predictions both below $T_c$ and in the high-temperature limit.
+However, just above $T_c$, the average magnetisation evolves only slowly towards the expected value.
+Increasing the number of Monte Carlo sweeps per temperature step brings the system closer to the theoretical equilibrium and reduces the temperature range above $T_c$ where the system has not yet reached equilibrium again.
+This slow convergence near the critical point is a symptom of the well-known phenomenon called ``critical slowing down''.
+% TODO: why the discrepancy in the correlation?
+
 \subsubsection{Critical slowing down}
-\subsection{Exchange- and magnetostatically-coupled OOP square system}
+\subsection{Exchange- and magnetostatically-coupled Ising system}
 \subsection{Square-to-pinwheel transition angle}\label{sec:2:Verification_IP_SquarePinwheel}
 The in-plane square and pinwheel ASI lattices can be continuously transformed into each other by rotating each individual magnet by \ang{45}.
 Despite being this closely related, their ground state magnetic ordering differs significantly.
@@ -577,7 +616,7 @@ Square ASI has an antiferromagnetic (AFM) ground state, where all vertices have 
 Meanwhile, pinwheel ASI exhibits superferromagnetic order, where all magnets with similarly-oriented easy axes are magnetized in the same direction~\cite{ApparentFMpinwheel}.
 Therefore, a critical angle $\ang{0} < \alpha_c < \ang{45}$ must exist where the ground state transitions between these two extremes. \par
 For the dipole model, theoretical calculations predict this transition at $\alpha_c = \arcsin(\sqrt{3}/3) = \ang{35.3}$~\cite{AFM-FM-transition-Pinwheel,MagicAngle}.
-For the dumbbell model, the transition angle depends on the distance $d$ between monopoles, but is always larger than for the dipole model~\cite{AFM-FM-transition-Pinwheel}. \par
+For the dumbbell model, the transition angle depends on the distance $d$ between monopoles, but is always larger than for the dipole model~\cite{AFM-FM-transition-Pinwheel}. \\\par
 The result of a \hotspice simulation using both models is shown in \cref{fig:2:Pinwheel_angle}.
 To quantify this transition, we measure the fraction of vertices with net zero magnetisation --- this value is 0 for superferromagnetic order while it is 1 for AFM order.
 For the dipole model, the transition occurs at $\approx \ang{35}$ as expected, while the dumbbell model indeed transitions at a larger rotation angle.
@@ -589,4 +628,3 @@ For the dipole model, the transition occurs at $\approx \ang{35}$ as expected, w
 	The theoretical transition angle $\alpha_c \approx \ang{35.3}$ for the dipole model is indicated by the vertical dotted line.
 	\label{fig:2:Pinwheel_angle}
 }
-
