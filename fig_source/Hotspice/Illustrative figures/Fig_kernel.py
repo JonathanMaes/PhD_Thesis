@@ -68,8 +68,10 @@ def plot_ASI(ax: plt.Figure, x, y, w, n=5, lw=1, magnet_enlargement=1, ASI_type:
     ## Draw box and unitcell
     x0, y0, x1, y1 = x, y, x + ASI.nx*d, y + ASI.ny*d
     for i in range(ASI.nx + 1):
-        draw_line(ax, x + i*d, y0, x + i*d, y1, lw=(lw*2 if i % ASI.unitcell.x == 0 else lw))
-        draw_line(ax, x0, y + i*d, x1, y + i*d, lw=(lw*2 if i % ASI.unitcell.y == 0 else lw))
+        ucx = i % ASI.unitcell.x == 0 # x=i is at edge of a unitcell?
+        ucy = i % ASI.unitcell.y == 0 # y=i is at edge of a unitcell?
+        draw_line(ax, x + i*d, y0, x + i*d, y1, lw=(lw*2 if ucx else lw), style="-" if ucx else ":")
+        draw_line(ax, x0, y + i*d, x1, y + i*d, lw=(lw*2 if ucy else lw), style="-" if ucy else ":")
 
 
 def plot_kernel(ax: plt.Figure, x, y, w, n=5, lw=1, pos: tuple = (0, 0), magnet_enlargement=1, ASI_type: type[hotspice.Magnets] = hotspice.ASI.IP_Pinwheel, colors: dict|str = None):
@@ -96,8 +98,10 @@ def plot_kernel(ax: plt.Figure, x, y, w, n=5, lw=1, pos: tuple = (0, 0), magnet_
     ax.add_artist(patches.Rectangle(xy=(x0, y + (ASI.ny-1)*d), width=d*n_kernel, height=d, color=color, alpha=0.25))
     # Draw all lines
     for i in range(n_kernel + 1):
-        line_kwargs_x = dict(lw=(lw*2 if (i - ASI.nx + 1 + pos[0]) % ASI.unitcell.x == 0 else lw), color=color)
-        line_kwargs_y = dict(lw=(lw*2 if (i - ASI.nx + 1 + pos[1]) % ASI.unitcell.y == 0 else lw), color=color)
+        ucx = (i - ASI.nx + 1 + pos[0]) % ASI.unitcell.x == 0 # x=i is at edge of a unitcell?
+        ucy = (i - ASI.ny + 1 + pos[1]) % ASI.unitcell.y == 0 # y=i is at edge of a unitcell?
+        line_kwargs_x = dict(lw=(lw*2 if ucx else lw), color=color, style="-" if ucx else ":")
+        line_kwargs_y = dict(lw=(lw*2 if ucy else lw), color=color, style="-" if ucy else ":")
         draw_line(ax, x + i*d, y0, x + i*d, y1, **line_kwargs_x)
         draw_line(ax, x0, y + i*d, x1, y + i*d, **line_kwargs_y)
     ax.text((x1+x0)/2, y1+0.01, f"Kernel {alphabet[kernel_unitcell_index]:s}", ha="center", va="bottom", color=color, fontsize=12)
@@ -116,8 +120,11 @@ def plot_kernel(ax: plt.Figure, x, y, w, n=5, lw=1, pos: tuple = (0, 0), magnet_
     x0, y0, x1, y1 = x+dx, y+dy, x+dx + ASI.nx*d, y+dy + ASI.ny*d
     color = colors.get(pos, "grey") if isinstance(colors, dict) else colors
     for i in range(ASI.nx + 1):
-        draw_line(ax, x+dx + i*d, y0, x+dx + i*d, y1, lw=(lw*2 if i % ASI.unitcell.x == 0 else lw), color=blend_colors("k", color, 0.4))
-        draw_line(ax, x0, y+dy + i*d, x1, y+dy + i*d, lw=(lw*2 if i % ASI.unitcell.y == 0 else lw), color=blend_colors("k", color, 0.4))
+        ucx = i % ASI.unitcell.x == 0 # x=i is at edge of a unitcell?
+        ucy = i % ASI.unitcell.y == 0 # y=i is at edge of a unitcell?
+        color = blend_colors("k", color, 0.4)
+        draw_line(ax, x+dx + i*d, y0, x+dx + i*d, y1, lw=(lw*2 if ucx else lw), color=color, style="-") # style=":" looks bad on top of ":"
+        draw_line(ax, x0, y+dy + i*d, x1, y+dy + i*d, lw=(lw*2 if ucy else lw), color=color, style="-") # style=":" looks bad on top of ":"
 
 
 ## Helper functions
