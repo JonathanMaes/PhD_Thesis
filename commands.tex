@@ -17,7 +17,7 @@
 \newcommand{\xref}[1]{\hyperref[#1]{#1}\xspace}
 \newcommand{\xrefs}[2]{\hyperref[#2]{#1#2}\xspace} %% meervoud etc, add {s}
 \newcommand{\link}[2]{\hyperref[#1]{#2}\xspace}
-\newcommand{\crefSubFigRef}[2]{\crefformat{figure}{fig.~##2##1{#2}##3}%
+\newcommand{\crefSubFigRef}[2]{\crefformat{figure}{Fig.~##2##1{#2}##3}%
   \cref{#1}\crefformat{figure}{fig.~##2##1##3}}
 \newcommand{\ccite}[1]{Ref.~\cite{#1}} % Ref. [1] instead of [1]
 \newcommand{\Py}{\xref{permalloy}}
@@ -35,6 +35,8 @@
 
 \newcommand{\EB}{E_\mathrm{B}}
 \newcommand{\EBtilde}{\widetilde{\EB}}
+\newcommand{\kB}{\ifmmode k_\mathrm{B} \else $k_\mathrm{B}$ \fi}
+\newcommand{\kBT}{\ifmmode k_\mathrm{B}T \else $k_\mathrm{B}T$ \fi}
 
 % \newcommand{\abs}[1]{\ensuremath{\left| #1 \right|}\xspace}
 \newcommand{\diff}[2]{\frac{\partial #1}{\partial #2}}			    %% derivative
@@ -148,7 +150,7 @@
 			\end{minipage}
 			\begin{minipage}[c]{0.455\linewidth}
 				\centering
-				\textsf{\figcaption{\raggedright#3\label{#2}}}
+				\textsf{\figcaption{\justifying #3\label{#2}}}
 			\end{minipage}
 		};
 	\end{tikzpicture}

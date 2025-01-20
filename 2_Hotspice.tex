@@ -555,6 +555,19 @@ test_hexagon() # OK
 \end{lstlisting}
 
 \subsection{Non-interacting spin ensemble}
+
+When an external magnetic field of magnitude $B$ is applied to a non-interacting ensemble of Ising spins, it follows directly from the partition function that the average magnetization follows the relation
+\begin{equation}
+	\frac{\langle M \rangle}{M_0} = \tanh\ab(\frac{\mu B}{\kBT}) \mathrm{.}
+\end{equation}
+\cref{fig:2:Noninteracting} demonstrates that \hotspice{} correctly reproduces the expected result.
+
+\sidefig{2_Hotspice/Verification/Noninteracting_IP.pdf}{
+	\label{fig:2:Noninteracting}
+	Average magnetisation of a non-interacting ensemble of spins, as a function of the applied magnetic field magnitude $B$.
+	Simulated using the Metropolis-Hastings algorithm.\newline\newline\newline
+}
+
 \subsection{Exchange-coupled OOP square system}
 \subsubsection{Critical slowing down}
 \subsection{Exchange- and magnetostatically-coupled OOP square system}
