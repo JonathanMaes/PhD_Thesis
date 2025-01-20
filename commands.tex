@@ -159,16 +159,19 @@
 }
 
 \newcommand{\sidefig}[3][1]{
-	\jonathanskip
-	\colorbox{figcolor}{
-	\begin{minipage}[c]{0.5\textwidth}
-  		\centering
-  		\includegraphics[width=#1\textwidth]{#2}
-	\end{minipage}
-	\begin{minipage}[c]{0.455\linewidth}
-	 \textsf{\figcaption{#3\label{#2}}}
-	\end{minipage}
-	}
+	\jonathanskip\vspace{1em}
+	\begin{tikzpicture}
+		\node[rounded corners=10pt, fill=figcolor, inner sep=10pt] (figbox) {
+			\begin{minipage}[c]{0.5\textwidth}
+				\centering
+				\includegraphics[width=#1\textwidth]{#2}
+			\end{minipage}
+			\begin{minipage}[c]{0.455\linewidth}
+				\centering
+				\textsf{\figcaption{\raggedright#3\label{#2}}}
+			\end{minipage}
+		};
+	\end{tikzpicture}
 	\jonathanskip\vspace{0.05cm}
 }
 
