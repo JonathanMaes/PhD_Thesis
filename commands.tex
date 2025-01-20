@@ -70,18 +70,23 @@
 \newcommand{\figuur}[1]{figure \ref{#1} (page \pageref{#1})\xspace}
 \newcommand{\Figuur}[1]{Figure \ref{#1} (page \pageref{#1})\xspace}
 
-%\newcommand{\xline}{\includegraphics[width=\textwidth]{line} \\ }
-%\renewcommand{\colorbox}[2]{\parbox{\textwidth}{\xline \\ \mbox{#2} \\ \xline}}
-
 
 \newcommand{\kolommen}[2]{
-\begin{minipage}{0.445\textwidth}
-#1
-\end{minipage}
-\begin{minipage}{0.445\textwidth}
-#2
-\end{minipage}
-\smallskip
+	\begin{minipage}{0.445\textwidth}
+		#1
+	\end{minipage}
+	\begin{minipage}{0.445\textwidth}
+		#2
+	\end{minipage}
+	\smallskip
+}
+
+\newcommand{\smallfig}[3]{
+	\smallskip
+	\begin{center}
+		\includegraphics[width=#1\linewidth]{#2}\footnotesize{\\\textsf{(#3)}}
+	\end{center}
+	\smallskip
 }
 
 \newcommand{\xtable}[3][nolabel]{
@@ -99,31 +104,6 @@
 	\end{tikzpicture}
 	\jonathanskip\vspace{0.05cm}
 }
-
-\newcommand{\smallfig}[3]{
-\smallskip
-\begin{center}
-\includegraphics[width=#1\linewidth]{#2}\footnotesize{\\\textsf{(#3)}}
-\end{center}
-\smallskip
-}
-
-
-\newcommand{\makeshiftfig}[2]{
-	\jonathanskip
-	\colorbox{figcolor}{
-	\begin{minipage}{\linewidth}
-  		\centering
-  		
-			#1
-		
-  		\textsf{\figcaption{#2}}
-  	
-	\end{minipage}
-	}
-	\jonathanskip
-}
-
 
 \newcommand{\xfig}[3][1]{
     \jonathanskip\vspace{1em}
@@ -187,6 +167,21 @@
 	\end{minipage}
 	}
 	\jonathanskip\vspace{0.05cm}
+}
+
+\newcommand{\makeshiftfig}[2]{
+	\jonathanskip
+	\colorbox{figcolor}{
+		\begin{minipage}{\linewidth}
+			\centering
+			
+			#1
+			
+			\textsf{\figcaption{#2}}
+			
+		\end{minipage}
+	}
+	\jonathanskip
 }
 
 \newcommand{\sidefigr}[3][1]{
