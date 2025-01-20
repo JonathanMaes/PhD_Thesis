@@ -317,9 +317,12 @@ This versatility comes at the cost of two additional multiplications per interac
 \subsubsection{Periodic boundary conditions}
 Due to the rectilinear grid, first-order periodic boundary conditions (PBC) --- accounting for the 8 nearest copies of the ASI --- are easily applied.
 By adding 8 offset copies of the open-boundary kernels $\vc{\mathcal{K}}^{(q)}$ to themselves, these adjacent ASI copies can be felt by magnets at the boundaries.
-Therefore, PBC do not impact performance as they are baked into the kernel. \par
-% TODO: show in figure for visual example for pinwheel like I already tried back in the day for debugging? Explain in more detail how this offset works in the text? Can probably rework the following two sentences into the explanation of that future figure, because the offset kernels do not reach all the way through the original kernels so they are cut off already so must mention the 1/r³ decline already then.
-Higher-order PBC, beyond only the 8 nearest copies, can not be calculated based on the open-boundary kernels because they do not include interactions with such distant magnets.
+
+\xfig[1.0]{2_Hotspice/Kernel_PBC.pdf}{
+	\label{fig:2:Kernel_PBC}
+	Comparison of the magnetostatic interaction kernel for open (left) and periodic (right) boundary conditions, for a magnet in $16 \times 16$ pinwheel ASI.
+}
+
 Due to the rapid $1/r^3$ decline of the magnetostatic interaction over distance, the use for such higher-order PBC is very limited, and were therefore not implemented.
 \subsubsection{Perpendicular magnetostatic kernel} % If not yet explained in detail earlier, talk about the perpendicular kernel etc. here
 Note that, if the asymmetric energy barrier is to be accounted for, two additional kernels are needed for each magnet in the unit cell: one where the central magnet is rotated \ang{90} (for initial calculation of $E_\perp$), and one where all other magnets are rotated \ang{90} (for updating $E_\perp$ when a magnet switches). \par % TODO: explain more, add formulae
