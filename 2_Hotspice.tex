@@ -533,8 +533,8 @@ The examples discussed here are all equilibrium problems, so we will use the Met
 Special attention will be given to the issue of ``critical slowing down'' which plagues this algorithm near phase transitions.
 \subsection{Hexagon}
 Before progressing to equilibrium problems, we briefly check that the magnetostatic interaction and its underlying kernels all work as expected.
-The magnetostatic interaction energy of any given arrangement of nanomagnets can be calculated analytically and compared to \hotspice.
-As an example that is neither too simple nor complex, we use a regular hexagon in a vortex state. The energy of all magnets should equal the following analytical solution, which is the sum of the magnetostatic interaction energy between nearest neighbours $\circled{1}$, next-nearest neighbours $\circled{2}$ and magnets on opposite sides of the hexagon $\circled{3}$:
+The magnetostatic interaction energy of any given arrangement of nanomagnets can be calculated analytically and compared to \hotspice. \par
+As an example that is neither too simple nor complex, we consider a regular hexagon in a vortex state. The energy of all magnets should equal the following analytical solution, which is the sum of the magnetostatic interaction energy between nearest neighbours $\circled{1}$, next-nearest neighbours $\circled{2}$ and magnets on opposite sides of the hexagon $\circled{3}$:
 \begin{align*}
 	E_{\mathrm{MS},i} =&\, \circled{1} + 2 \times \circled{2} + 2 \times \circled{3} \\
 	=&\, -\frac{\mu_0 m^2}{4\pi a^3} -2\frac{\mu_0 m^2}{4\pi \frac{3 \sqrt{3} a^3}{8}} \Big[3\cos^2(\pi/3) - \cos(2\pi/3)\Big] -2\frac{\mu_0 m^2}{4\pi \frac{a^3}{8}} \Big[3\cos^2(\pi/6) - \cos(\pi/3)\Big] \\
@@ -565,7 +565,7 @@ When an external magnetic field of magnitude $B$ is applied to a non-interacting
 \sidefig{2_Hotspice/Verification/Noninteracting_IP.pdf}{
 	\label{fig:2:Noninteracting}
 	Average magnetisation of a non-interacting ensemble of spins, as a function of the applied magnetic field magnitude $B$.
-	Simulated using the Metropolis-Hastings algorithm.\newline\newline\newline
+	\newline\newline\newline
 }
 
 \subsection{Exchange-coupled OOP square system}
