@@ -70,15 +70,18 @@ def plot(data_dir=None):
     params, data = hotspice.utils.load_results(data_dir)
     L, N = data["L"], data["N"]
     GPU = params["GPU"]
+    PU = "GPU" if GPU else "CPU"
     
     ## We need two axes, because Matplotlib does not natively support broken axes.
     thesis_utils.init_style()
-    fig = plt.figure(figsize=(thesis_utils.page_width/2, 3.5))
+    fig = plt.figure(figsize=(thesis_utils.page_width/2, 3.7))
     ax1 = fig.add_subplot(111)
     ax2 = ax1.twiny()
     ax1.plot(N, data['attempts/s'], label="Samples / sec")
     ax1.plot(N, data['switches/s'], label="Switches / sec")
     ax1.plot(N, data['MCsteps/s'], label="MC sweeps / sec", color="k")
+    ax1.set_title(PU, pad=10)
+    thesis_utils.label_ax(ax1, int(GPU), offset=(-0.15, 0.225))
     ax1.set_xlim([N.min(), N.max()])
     ax1.set_xscale('log')
     ax1.set_yscale('log')
@@ -93,8 +96,8 @@ def plot(data_dir=None):
     ax2.set_xlabel("Cells in x- and y-direction")
     
     if not GPU: ax2.legend(*ax1.get_legend_handles_labels(), loc="lower left")
-    plt.gcf().tight_layout()
-    PU = "GPU" if GPU else "CPU"
+    fig.tight_layout()
+    fig.subplots_adjust(top=0.8)
     hotspice.utils.save_results(figures={f'Performance_{PU}': fig}, outdir=data_dir, copy_script=False)
 
 

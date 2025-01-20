@@ -91,6 +91,8 @@
 	\smallskip
 }
 
+% 2 args: caption, tabular environment
+% 1 optional arg: label
 \newcommand{\xtable}[3][nolabel]{
 	\jonathanskip\vspace{1em}
 	\begin{tikzpicture}
@@ -107,6 +109,8 @@
 	\jonathanskip\vspace{0.05cm}
 }
 
+% 2 args: filename, caption
+% 1 optional arg: width
 \newcommand{\xfig}[3][1]{
     \jonathanskip\vspace{1em}
     \begin{tikzpicture}
@@ -121,7 +125,8 @@
     \jonathanskip\vspace{0.05cm}
 }
 
-%5 args: name1, shortcaption1, name2, shortcaption2, overallcaption
+% 5 args: filename1, caption1, filename2, caption2, overallcaption
+% 1 optional arg: width of subfigures
 \newcommand{\xfigs}[6][0.45]{
 	\jonathanskip\vspace{1em}
 	\begin{tikzpicture}
@@ -140,6 +145,26 @@
 	\jonathanskip\vspace{0.05cm}
 }
 
+% 3 args: filename1, filename2, caption
+% 1 optional arg: width of subfigures
+\newcommand{\xfigsnocap}[4][0.45]{
+	\jonathanskip\vspace{1em}
+	\begin{tikzpicture}
+		\node[rounded corners=10pt, fill=figcolor, inner sep=10pt] (figbox) {
+			\begin{minipage}{0.955\linewidth}
+				\centering
+				\begin{tabular}{cc}
+					\includegraphics[width=#1\linewidth]{#2} & \includegraphics[width=#1\linewidth]{#3}
+				\end{tabular}
+				\textsf{\figcaption{#4\label{#2}}}
+			\end{minipage}
+		};
+	\end{tikzpicture}
+	\jonathanskip\vspace{0.05cm}
+}
+
+% 2 args: filename, caption
+% 1 optional arg: width of subfigures
 \newcommand{\sidefig}[3][1]{
 	\jonathanskip\vspace{1em}
 	\begin{tikzpicture}
