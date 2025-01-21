@@ -147,7 +147,7 @@ When the simulation is initialized, the energy contributions are calculated for 
 Each magnet therefore stores a value in memory for each of the terms in \cref{eq:E}.
 Whenever a magnet switches, the energies of its `neighbours' are updated appropriately, which constitutes a major part of the calculation effort required for every step in the simulation.
 
-\subsection{Finite-size corrections to the magnetostatic energy}
+\subsection{Finite-size corrections to the magnetostatic energy}\label{sec:2:finite}
 \cref{eq:E_MS,eq:E_Z,eq:E_exch} approximate each nanomagnet as a point dipole, but real nanomagnets have a finite spatial extent.
 If one assumes a uniform magnetisation throughout each single-domain nanomagnet, then this finite size does not affect the Zeeman energy, nor the exchange energy which can capture any shape-related effects by an appropriate choice of the exchange coupling $J$.
 The Zeeman energy could even account for a deviation from uniform magnetisation near the edge of a magnet, which occurs in reality but which we will neglect in the following, by an appropriate choice of $\vc{B}_\mathrm{ext}$. \par
@@ -224,7 +224,7 @@ Similar values for $d/l$ were previously found in~\ccite{DDG_Masterproef} for ty
 In contrast, the second-order dipole correction has little effect in IP systems and can even increase the discrepancy with \mumax. It emulates increased spatial extent and therefore always increases the interaction, but for magnets neighbouring along their hard axes (rightmost panel in~\cref{fig:2:MS_distance}) the point dipole model already overestimates the interaction. \par
 In conclusion, the dumbbell model is preferred for IP systems, while the second-order dipole correction is most suitable for OOP systems.
 
-\subsection{Effective energy barrier}
+\subsection{Effective energy barrier}\label{sec:2:E_B_eff}
 \subsubsection{Intrinsic barrier from shape anisotropy}
 \subsubsection{Mean-barrier approximation} % and relevant choices with discontinuities
 \subsubsection{Asymmetric barrier}
@@ -311,13 +311,42 @@ The same is true for the interaction of the red magnet with all magnets, though 
 	The figure shows this for two example magnets indicated in \textcolor{lightblue}{blue} and \textcolor{lightred}{red}.
 }
 
-% TODO: write down the mathematical form of the kernel elements (you know, with o_i and o_j and u_i etc. etc.)
+This construction can be used to efficiently update the magnetostatic energy $E_\mathrm{MC}$ of all magnets whenever a magnet switches.
+Recall that the grid stores the state $s_i$ of all magnets in a matrix $\vc{S}$.
+When a magnet at unit cell index $q$ switches, the energy of all other magnets will be updated by shifting $\vc{S}$ in the same way as the ASI was shifted in \cref{fig:2:Kernel_IP_Pinwheel}, and performing a pointwise multiplication (Hadamard product, denoted by $\odot$) with the respective elements of the kernel $\vc{\mathcal{K}}^{(q)}$.
+Denoting the grid index of the switching magnet as $(x,y)$, this yields a new matrix
+\begin{equation}
+	\label{eq:2:Kernel_update}
+	\Delta \vc{E_\mathrm{MC}} = \vc{S} \odot \ab(\vc{\mathcal{K}}^{(q)}_{ab})_{\substack{L_x < a + x \leq 2L_x \\ L_y < a + y \leq 2L_y}} \quad\mathrm{,}
+\end{equation}
+containing the change in magnetostatic energy $\Delta E_\mathrm{MC}$ for each grid point, which can then simply be added to the current values of $E_\mathrm{MC}$. \par
+The kernel is also used to initialise the magnetostatic energy $\left. E_\mathrm{MS} \right|_{t=0}$ of each magnet at the start of the simulation.
+This is done by performing a convolution rather than a pointwise multiplication:
+\begin{equation}
+	\label{eq:2:Kernel_init}
+	\vc{E_\mathrm{MC}} = \vc{S} * \vc{\mathcal{K}}^{(q)} \mathrm{,}
+\end{equation}
+where only the central $L_x \times L_y$ area of the convolution is calculated. \\\par
+
+The exact values stored in the kernel depend on whether any finite-size corrections to the magnetostatic interaction (\cref{sec:2:finite}) were used and whether the ASI is of the IP or OOP type. For example, an IP kernel using the point dipole approximation contains elements
+\begin{equation}
+	\label{eq:2:Kernel_detailed}
+	\vc{\mathcal{K}}^{(q)}_{ab} = \frac{
+		u_x^{(q)} u_x^{(ab)} \ab(1 - 3 \ab(\Delta x)^2) + u_y^{(q)} u_y^{(ab)} \ab(1 - 3 \ab(\Delta y)^2) - 3\Delta x \Delta y \ab(u_x^{(q)} u_y^{(ab)} + u_x^{(ab)} u_y^{(q)})
+	}{
+		\sqrt{\ab(\ab(\Delta x)^2 + \ab(\Delta y)^2)^5}
+	} \mathrm{,}
+\end{equation}
+with $\Delta x$ and $\Delta y$ the x- and y-distance between the central magnet $(q)$ and a magnet at position $(ab)$ in the kernel (if a magnet exists at the corresponding point in the ASI grid) and $\vc{u}^{(i)}$ a unit vector along the easy axis of magnet $i$. \par
+With this form for the kernel, the magnetostatic interaction between a magnet $i$ at grid-index $(v,w)$ and another magnet $j$ at index $(v+x, w+y)$ can be calculated as
 \begin{equation}
 	\label{eq:2:Kernel_unitcell}
-	E_{\mathrm{MS},i,j}= (s_i \mu_i) (s_j \mu_j) \vc{K}^{(i)}_{ab} \mathrm{,} % TODO: this equation is ancient, adjust it using the new indexation paradigm and explain any necessary extra symbols required in the text
+	E_{\mathrm{MS},i,j} = (s_i \mu_i) (s_j \mu_j) \vc{\mathcal{K}}^{(q_i)}_{L_x+x, L_y+y} = (s_i \mu_i) (s_j \mu_j) \vc{\mathcal{K}}^{(q_j)}_{L_x-x, L_y-y} \quad \mathrm{,}
 \end{equation}
-where $\mu_i$ and $\mu_j$ were not included in the unitcell-kernel to allow magnets in different unit cells but with the same unitcell-index $q$ to have a different magnetic moment.
-This versatility comes at the cost of two additional multiplications per interaction, which has a non-negligible performance impact as \cref{eq:2:Kernel_unitcell} is by far the most common operation performed during a meaningful simulation. \par
+if the indexation of $\vc{\mathcal{K}}^{(q)}$ starts at $(1,1)$.
+Note that $\mu_i$ and $\mu_j$ were not included in the unitcell-kernel to allow magnets in different unit cells but with the same unitcell-index $q$ to have a different magnetic moment.
+This versatility comes at the cost of two additional multiplications per interaction, which has a non-negligible performance impact as \cref{eq:2:Kernel_unitcell} is by far the most common operation performed during a meaningful simulation. \\\par
+
 \subsubsection{Periodic boundary conditions}
 The rectilinear grid enables the straightforward implementation of first-order periodic boundary conditions (PBC), which account for the eight nearest replicas of the ASI --- two horizontally, two vertically and four diagonally.
 An open-boundary kernel $\vc{\mathcal{K}}^{(q)}$ can be transformed into a PBC kernel by just adding eight offset copies of the kernel to itself.
@@ -341,7 +370,17 @@ Due to the rapid $1/r^3$ decline of the magnetostatic interaction over distance,
 % To explain the usage of the magnetostatic kernel, we can possibly refer to ``Real-space observation of emergent magnetic monopoles and associated Dirac strings in artificial kagome spin ice'', which notes that the energy is just a convolution of the interaction potential with the lattice sites at which there are magnets (which, for the Ewald summation, means that in Fourier space it is just a multiplication of the Fourier-transformed versions of those functions), which is pretty much what we are doing during multi-switching.
 
 \subsubsection{Perpendicular magnetostatic kernel} % If not yet explained in detail earlier, talk about the perpendicular kernel etc. here
-Note that, if the asymmetric energy barrier is to be accounted for, two additional kernels are needed for each magnet in the unit cell: one where the central magnet is rotated \ang{90} (for initial calculation of $E_\perp$), and one where all other magnets are rotated \ang{90} (for updating $E_\perp$ when a magnet switches). \par % TODO: explain more, add formulae
+If the simulation accounts for the asymmetric energy barrier, as detailed in \cref{sec:2:E_B_eff}, then two additional kernels are needed for each site in the unit cell. \par
+The first one is calculated for a situation where the central magnet maintains its usual orientation while all other magnets are rotated counter-clockwise by \ang{90}.
+This kernel will be used whenever a magnet switches, to update the perpendicular magnetostatic energy $\left. E_{\mathrm{MC}} \right|_{\perp}$ of all other magnets.
+The underlying equation is very similar to \cref{eq:2:Kernel_detailed}, but with $u_x^{(q)} \rightarrow -u_y^{(q)}$ and $u_y^{(q)} \rightarrow u_x^{(q)}$ substituted.
+It is used in the same way as the kernel $\vc{\mathcal{K}}^{(q)}$ in \cref{eq:2:Kernel_update}. \par
+The second additional kernel is the opposite of the first one; the central magnet is rotated \ang{90} counter-clockwise while all other magnets maintain their usual orientation.
+This kernel needed only once, to calculate the initial value of $\left. E_{\mathrm{MC}} \right|_{\perp}$ for all magnets.
+The underlying equation of this one is also very similar to \cref{eq:2:Kernel_detailed}, but with $u_x^{(ab)} \rightarrow -u_y^{(ab)}$ and $u_y^{(ab)} \rightarrow u_x^{(ab)}$ substituted.
+It is used in the same way as the kernel $\vc{\mathcal{K}}^{(q)}$ in \cref{eq:2:Kernel_init}.
+
+ % TODO: explain more, add formulae possibly
 \subsubsection{Numerical error with cut-off kernel} % TODO: expand + FIGURE
 A performance improvement presents itself by cutting off the magnetostatic kernel at a certain distance, though only in the case of open BC.
 Due to the underlying grid, the most natural way of achieving this is to simply reduce the size of the kernel from $2L-1 \times 2L-1$ to a smaller $2K-1 \times 2K-1$ central region. \par % Note that the size has to remain odd for the convolution to still place the magnet in the center.

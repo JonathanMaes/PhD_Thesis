@@ -1,6 +1,8 @@
 % \definecolor{figcolor}{HTML}{F2F2FF}
 \definecolor{figcolor}{HTML}{F2F2F2}
 \definecolor{ugentblue}{RGB}{10,30,96}
+\definecolor{lightblue}{HTML}{1E90FF} % C0
+\definecolor{lightred}{HTML}{D62728} % C1
 
 \newcommand{\colorcode}{(Color code on page \pageref{colorcode}.)\xspace}
 
@@ -17,8 +19,7 @@
 \newcommand{\xref}[1]{\hyperref[#1]{#1}\xspace}
 \newcommand{\xrefs}[2]{\hyperref[#2]{#1#2}\xspace} %% meervoud etc, add {s}
 \newcommand{\link}[2]{\hyperref[#1]{#2}\xspace}
-\newcommand{\crefSubFigRef}[2]{\crefformat{figure}{Fig.~##2##1{#2}##3}%
-  \cref{#1}\crefformat{figure}{fig.~##2##1##3}}
+\newcommand{\crefSubFigRef}[2]{\namecref{#1}~\hyperref[#1]{\ref{#1}#2}}
 \newcommand{\ccite}[1]{Ref.~\cite{#1}} % Ref. [1] instead of [1]
 \newcommand{\Py}{\xref{permalloy}}
 %%vector
