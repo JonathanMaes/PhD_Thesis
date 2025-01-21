@@ -295,22 +295,20 @@ Therefore, if two magnets occupy equivalent positions $q$ in the unit cell --- s
 In other words, their kernels are identical apart from an offset by $(\Delta x, \Delta y)$, at least in the area that remains inside the kernel after this offset.
 Due to this equivalence, and the fact that $- L_x < \Delta x < L_x$ and $- L_y < \Delta y < L_y$, all possible interactions that a magnet at site $q$ can experience can be stored in a single large $(2L_x-1) \times (2L_y-1)$ matrix $\vc{\mathcal{K}}^{(q)}_{ab}$. \\\par
 
-This matrix, a ``unitcell-kernel'', can be interpreted as shown in~\cref{fig:2:Kernel_IP_Pinwheel}.
-This figure shows how these unitcell-kernels store the magnetostatic interaction strength between a particular magnet and any other magnet in the system.
-Take for example the blue magnet in the pinwheel lattice on the left side of the figure.
-It occupies position $q=\mathrm{A}$ in the unit cell.
-The kernel $\vc{\mathcal{K}}^\mathrm{(A)}$, also shown in blue, stores the interaction strength in such a way that, when the ASI grid is shifted onto the kernel to put the blue magnet at the centre of the kernel, the interaction strength of the blue magnet with any other magnet in the ASI is stored in those cells where these other magnets end up.
-The same is true for the interaction of the red magnet with all magnets, though it occupies position $q=\mathrm{B}$ in the unit cell so it uses the red kernel $\vc{\mathcal{K}}^\mathrm{(B)}$.
+\cref{fig:2:Kernel_IP_Pinwheel} shows how this matrix, a ``unitcell-kernel'', can be interpreted to store the magnetostatic interaction strength between a particular magnet and any other magnet in the system.
+Take for example the blue magnet in the pinwheel lattice on the left side of the figure, which occupies position $q=\mathrm{A}$ in the unit cell.
+The corresponding blue kernel $\vc{\mathcal{K}}^\mathrm{(A)}$ stores the interaction strength in such a way that, when the ASI grid is shifted onto the kernel to put the blue magnet at the centre of the kernel, the interaction strength of the blue magnet with any other magnet in the ASI is stored in those cells where these other magnets end up.
+The same is true for the interaction of the red magnet with all magnets, though it occupies position $q=\mathrm{B}$ in the unit cell so it uses a different kernel; the red kernel $\vc{\mathcal{K}}^\mathrm{(B)}$.
 
 \xfig[1.0]{2_Hotspice/Kernel_IP_Pinwheel.pdf}{
 	\label{fig:2:Kernel_IP_Pinwheel}
-	Two examples showing the shifting of the kernel with respect to the ASI grid for multiplication (convolution), when a magnet switches.
+	Two examples showing the kernel shifting with respect to the ASI grid for multiplication (convolution), when a magnet switches.
 	The ASI itself is shown on the left.
 	Thin dotted lines indicate individual cells in the simulation grid while thick solid lines delineate the boundaries of unit cells.
 	Letters indicate the index of a magnet within its unit cell.
 	Each site in the unit cell corresponds to a kernel, shown in the right.
-	The values stored in the kernel are designed such that shifting the switching magnet to the center of the kernel and multiplying overlapping cells ($s_{ab}$ of the ASI with $\vc{K}_{ab}$ of the kernel) yields the magnetostatic interaction energy between the switching magnet and all other magnets at positions $ab$.
-	The figure shows this for two example magnets indicated in blue and red.
+	The values stored in the kernel are designed such that shifting the switching magnet to the centre of the kernel and multiplying overlapping cells ($s_{ab}$ of the ASI with $\vc{K}_{ab}$ of the kernel) yields the magnetostatic interaction energy between the switching magnet and all other magnets at positions $ab$.
+	The figure shows this for two example magnets indicated in \textcolor{lightblue}{blue} and \textcolor{lightred}{red}.
 }
 
 % TODO: write down the mathematical form of the kernel elements (you know, with o_i and o_j and u_i etc. etc.)
