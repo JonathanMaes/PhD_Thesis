@@ -315,21 +315,24 @@ The same is true for the interaction of the red magnet with all magnets, though 
 where $\mu_i$ and $\mu_j$ were not included in the unitcell-kernel to allow magnets in different unit cells but with the same unitcell-index $q$ to have a different magnetic moment.
 This versatility comes at the cost of two additional multiplications per interaction, which has a non-negligible performance impact as \cref{eq:2:Kernel_unitcell} is by far the most common operation performed during a meaningful simulation. \par
 \subsubsection{Periodic boundary conditions}
-The rectilinear grid allows the straightforward application of first-order periodic boundary conditions (PBC) --- accounting for the 8 nearest copies of the ASI.
-By adding 8 offset copies of an open-boundary kernel $\vc{\mathcal{K}}^{(q)}$ to itself, it can be transformed into a PBC kernel.
+The rectilinear grid enables the straightforward implementation of first-order periodic boundary conditions (PBC), which account for the eight nearest replicas of the ASI --- two horizontally, two vertically and four diagonally.
+An open-boundary kernel $\vc{\mathcal{K}}^{(q)}$ can be transformed into a PBC kernel by just adding eight offset copies of the kernel to itself.
+Specifically, four copies are shifted along the axes by $\pm L_x$ or $\pm L_y$, while the remaining four are shifted diagonally by $(\pm L_x, \pm L_y)$.
 This is illustrated in~\cref{fig:2:Kernel_PBC} for an example of pinwheel ASI. \par
-More specifically, 4 copies of the kernel are shifted along the axes by $\pm L_x$ or $\pm L_y$, and 4 copies are shifted diagonally by $(\pm L_x, \pm L_y)$.
-This way, the adjacent ASI copies can be felt by magnets at the boundaries.
-This construction works because kernel elements at the edges are only ever used to calculate the interaction between distant magnets on opposite sides of the ASI, so adjusting these elements can create the effect of PBC.
 
 \xfig[1.0]{2_Hotspice/Kernel_PBC.pdf}{
 	\label{fig:2:Kernel_PBC}
-	Comparison of the magnetostatic interaction kernel for open (left) and periodic (right) boundary conditions, for a magnet in $16 \times 16$ pinwheel ASI.
+	Comparison of the magnetostatic interaction kernel for open (left) and periodic (right) boundary conditions, for a $16 \times 16$ pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a}).
+	The magnet of the unit cell site associated to this particular kernel is shown in the center with a black outline.
+	The color of other magnets indicates the magnitude of the magnetostatic interaction between the central and the colored magnets if they both point `up'. This alignment is preferable for \textcolor{blue}{blue} magnets (low energy) and unstable for \textcolor{red}{red} magnets (high energy).
 }
 
-This approach has the advantage that PBC do not impact performance, as they are baked into the kernel.
-Higher-order PBC --- beyond only the 8 nearest copies --- can not be calculated based on the open-boundary kernels because they do not include interactions with such distant magnets.
-Due to the rapid $1/r^3$ decline of the magnetostatic interaction over distance, the use for such higher-order PBC is very limited, and were therefore not implemented.
+This construction works because elements near the edge of a kernel represent interactions between distant magnets on opposite sides of the ASI, which are the interactions most affected by PBC.
+Since the middle region of the open-boundary kernel already stores the interaction between nearby magnets, PBC can be applied by re-using these central values and moving the kernel by $\pm L_x$ and/or $\pm L_y$. \\\par
+
+This approach has the advantage that PBC do not impact performance, as they are baked into the kernel, but is limited to ASI consisting of an integer number of unit cells as systems with truncated unit cells along an edge can not properly be tiled.
+Higher-order PBC --- beyond only the 8 nearest copies --- can not be calculated based on an open-boundary kernel since it does not include interactions with such distant magnets.
+Due to the rapid $1/r^3$ decline of the magnetostatic interaction over distance, the use for such higher-order PBC would be very limited, and they were therefore not implemented.
 % For very small systems, higher-order PBC can be relevant, but it is recommended to instead increase the system size to increase the fidelity of the Monte Carlo simulation.
 % To explain the usage of the magnetostatic kernel, we can possibly refer to ``Real-space observation of emergent magnetic monopoles and associated Dirac strings in artificial kagome spin ice'', which notes that the energy is just a convolution of the interaction potential with the lattice sites at which there are magnets (which, for the Ewald summation, means that in Fourier space it is just a multiplication of the Fourier-transformed versions of those functions), which is pretty much what we are doing during multi-switching.
 

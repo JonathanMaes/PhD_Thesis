@@ -60,7 +60,7 @@ def plot_kernel_PBC(L: int = 16):
                     if i==j==0: edgecolor = "black"
                     elif abs(i) < 2 and abs(j) < 2: edgecolor = "#EEE"
                     else: edgecolor = color
-                    draw_magnet(i, j, -45 if i%2 else 45, alpha=1, facecolor="white" if i==j==0 else color, edgecolor=edgecolor)
+                    draw_magnet(i, j, 45 if i%2 else -45, alpha=1, facecolor="white" if i==j==0 else color, edgecolor=edgecolor)
     
     ## Add colorbar axis on the right
     X, Y = 0.89, 0.75 # X: left edge of colorbar, Y: height of all axes
