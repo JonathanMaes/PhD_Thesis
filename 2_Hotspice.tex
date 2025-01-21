@@ -623,6 +623,10 @@ This slow convergence near the critical point is a symptom of the well-known phe
 % TODO: why the discrepancy in the correlation?
 
 \subsubsection{Critical slowing down}
+Critical slowing down (CSD) originates from a divergence in the autocorrelation time $\tau$ near a critical point, causing subsequent Monte Carlo configurations to be highly correlated~\cite{NumericalDynamicalNiedermayer,CompStatPhys,StatisticalMechanicsAlgorithmsComputations}.
+As a result, the system explores the phase space very slowly, particularly with single-spin flip algorithms like Metropolis-Hastings~\cite{StatisticalMechanicsAlgorithmsComputations}.
+Although cluster algorithms like the Wolff algorithm~\cite{Wolff} can mitigate this effect, they are not intended for application beyond the 2D Ising system.
+% TODO: extend this discussion
 \subsection{Exchange- and magnetostatically-coupled Ising system}
 \subsection{Square-to-pinwheel transition angle}\label{sec:2:Verification_IP_SquarePinwheel}
 The in-plane square and pinwheel ASI lattices can be continuously transformed into each other by rotating each individual magnet by \ang{45}.
