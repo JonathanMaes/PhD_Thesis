@@ -248,7 +248,7 @@ Finally, we briefly discuss the structure of the software package and the functi
 \hotspice{} represents an ASI as a rectilinear grid of non-uniform unit cells, with magnets positioned at selected grid points.
 This choice was made based on the trade-off between calculation efficiency and the freedom to place magnets arbitrarily.
 We opted to prioritise efficiency and accept the geometrical restriction, as most ASI research focuses on periodic lattices.
-All quantities are therefore stored in 2D matrices, upon which operations can be performed efficiently.
+All quantities are therefore stored in 2D matrices of size $L_x \times L_y$, upon which operations can be performed efficiently.
 We will denote these matrices with bold upright capitalised symbols: e.g., $\vc{S}$ contains the states $s_i$, $\vc{E_\mathrm{MC}}$ the magnetostatic energies... \par
 Despite the seemingly restrictive nature of the rectilinear grid,~\cref{fig:2:ASIs} illustrates its versatility in forming various periodic lattices, with only the Cairo lattices requiring grid non-uniformity.
 As a bonus, real-time visualisation is simple and efficient using this approach, as the underlying matrix can directly be cast to a pixel image. \par
@@ -268,28 +268,32 @@ By calculating these values beforehand, when the ASI is created, the magnetostat
 \end{equation}
 which only ever changes sign since the magnetisation directions $s_i = \pm 1$ and $s_j = \pm 1$ are the only variables in the system. \par
 Due to the fact that magnets are placed on a rectilinear grid, the kernel of magnet $i$ can also be written as an $L_x \times L_y$ matrix $\vc{K}^{(i)}_{ab}$ where $ab$ denotes a position on the ASI grid.
-For example, $\vc{K}^{(i)}_{2,3}$ stores the interaction strength between magnet $i$ and the magnet at index $(2,3)$ on the grid.
+For example, $\vc{K}^{(i)}_{2,3}$ stores the interaction strength between magnet $i$ and the magnet at index\footnote{The indexation used throughout this section denotes the first element in a matrix as $(1,1)$.} $(2,3)$ on the grid.
 If no magnet was placed at index $(a,b)$ on the grid, then $\vc{K}^{(i)}_{ab} = 0, \forall i$. \\\par
 
-However, storing such a kernel for all magnets $i$ would require storing $\order{N^2}$ values.
+However, storing such a kernel for all magnets $i$ would require storing $\order{N^2}$ values in memory.
 By leveraging unit cells, this storage requirement can be reduced to $\order{N}$.
 Each occupied grid point in the unit cell is assigned a unique index $q = 1,\dots,\widetilde{N}$, with $\widetilde{N}$ the number of magnets in a single unit cell.
 Hence, each magnet in the ASI is associated with a specific value of $q$. \par
-All magnets with the same value of $q$ share the same layout of surrounding magnets, except for a different cut-off at the border in case of open boundary conditions.
-Therefore, if two magnets occupy equivalent positions $q$ in the unit cell --- say, $i$ at zero-based index $(x,y)$ and $j$ at $(x+\Delta x, y+\Delta y)$ --- then
+This way, all magnets with the same value of $q$ share the same layout of surrounding magnets\footnote{
+	In some ASI, it is possible that different sites inside a single unit cell also share the same surrounding layout.
+	This can be used to further improve memory usage (but not performance) by only storing unique kernels.
+	This was not implemented as this constitutes only a minor improvement; for the lattices in~\cref{fig:2:ASIs}, this would at most reduce the number of kernels by half.
+}, apart from a different cut-off at the border in case of open boundary conditions.
+Therefore, if two magnets occupy equivalent positions $q$ in the unit cell --- say, $i$ at index $(x,y)$ on the grid and $j$ at $(x+\Delta x, y+\Delta y)$ --- then
 \begin{equation}
 	\label{eq:2:Kernel_equivalence}
 	\vc{K}^{(i)}_{ab} = \vc{K}^{(j)}_{a+\Delta x,b+\Delta y} \quad \mathrm{,} \quad \forall a,b:
 	\begin{cases}
-		-\Delta x \leq a < L_x - \Delta x \\
-		-\Delta y \leq b < L_y - \Delta y \\
+		-\Delta x < a \leq L_x - \Delta x \\
+		-\Delta y < b \leq L_y - \Delta y \\
 		% Or more rigorously, but even more overcomplicated:
 		% \max(-\Delta x, 0) \leq a < L_x - \min(\Delta x, 0) \\
 		% \max(-\Delta y, 0) \leq b < L_y - \min(\Delta y, 0) \\
 	\end{cases}
 \end{equation}
 In other words, their kernels are identical apart from an offset by $(\Delta x, \Delta y)$, at least in the area that remains inside the kernel after this offset.
-Due to this equivalence, and the fact that $1 - L_x \leq \Delta x \leq L_x - 1$ and $1 - L_y \leq \Delta y \leq L_y - 1$, all possible interactions that a magnet at site $q$ can experience can be stored in a single large $(2L_x-1) \times (2L_y-1)$ matrix $\vc{\mathcal{K}}^{(q)}_{ab}$. \\\par
+Due to this equivalence, and the fact that $- L_x < \Delta x < L_x$ and $- L_y < \Delta y < L_y$, all possible interactions that a magnet at site $q$ can experience can be stored in a single large $(2L_x-1) \times (2L_y-1)$ matrix $\vc{\mathcal{K}}^{(q)}_{ab}$. \\\par
 
 This matrix, a ``unitcell-kernel'', can be interpreted as shown in~\cref{fig:2:Kernel_IP_Pinwheel}.
 This figure shows how these unitcell-kernels store the magnetostatic interaction strength between a particular magnet and any other magnet in the system.
