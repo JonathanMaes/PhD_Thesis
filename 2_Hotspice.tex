@@ -400,10 +400,12 @@ Luckily, the error introduced in this manner is bounded from above: whenever a m
 
 \subsection{Performance}
 \subsubsection{History}
-The performance of \hotspice has been improved throughout development in various ways.
-Calculation on the GPU was made possible early on and the efficiency of updating the magnetostatic interaction was improved drastically.
-The number of magnets in the ASI has a major impact on performance, and often forms the determining factor as to whether calculation on the GPU rather than CPU will result in a faster simulation. \par
-We start with a summarizing chronological table of these various improvements, and explain each step in more detail in the following paragraphs.
+The performance of \hotspice has been improved throughout development in various ways. \par
+At an early stage of development, the implementation of \hotspice was adjusted to allow calculations to be performed on either a central processing unit (CPU) or a graphics processing unit (GPU).
+Both types of processor are typically present in modern computers and are designed for different tasks.
+The CPU can execute diverse, sequential tasks in rapid succession, while the GPU is optimized for parallel computing and therefore excels at performing the same calculation across a large amount of data simultaneously~\cite{owens2008gpu}.
+In our simulations, the number of magnets in the ASI has a major impact on performance, and often forms the determining factor as to whether calculation on the GPU rather than CPU will result in a faster simulation~\cite{lee2010debunking}. \par
+In the following paragraphs, we present a chronological overview of various improvements to the calculation of the magnetostatic interaction, with a performance comparison between CPU and GPU for the first and final methods.
 Two tables are shown:~\cref{tab:2:perf_init} for the initialisation time, and~\cref{tab:2:perf_switch} for the time it takes to perform 5000 switches using the N\'eel update algorithm, taking into account the magnetostatic interaction between all magnets.
 During initialisation, the magnetostatic kernel is constructed, after which the starting energy $E_i$ of all magnets is calculated.
 In the tables, only the last 3 rows use the kernel as it was explained in~\cref{sec:2:Kernels}; the other rows use less efficient kernels as explained below. \par % Can't really call it a "lookup table" if it is being convolved etc., right?
@@ -450,7 +452,7 @@ Simulation times displayed serve an illustrative purpose: absolute values on oth
 }
 
 \paragraph{From CPU to GPU}
-Originally, \hotspice performed all calculations on the CPU. % TODO: explain CPU/GPU briefly? Or elsewhere?
+Originally, \hotspice performed all calculations on the CPU.
 This caused the simulation time to rise dramatically as the system size grew (e.g. first row in \cref{tab:2:perf_switch}).
 For early versions of \hotspice with an unoptimized kernel, this made it impractical to simulate systems larger than $50 \times 50$ magnets.
 By simply switching to GPU-based calculations using the \python{CuPy} library (second row), this upper limit was increased significantly.
