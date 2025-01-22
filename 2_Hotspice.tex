@@ -60,12 +60,11 @@ Thus, the total magnetic moment vector of magnet $i$ can be expressed as
 	\vc{\mu}_i = s_i \mu_i \vc{u}_i \mathrm{,}
 \end{equation}
 where $s_i = \pm 1$ and $\abs{\vc{u}_i} = 1$. \par
-The switching rate between these two states is determined by the temperature $T$ and the effective energy barrier $\EBtilde$ separating them.
-%A canonical ensemble is used where magnets are considered in contact with a heat bath of temperature $T_i$. % TODO: mention this or not?
+The switching rate between these two states is determined by the effective energy barrier $\EBtilde$ that separates them, as well as the temperature $T$.
 For an isolated nanomagnet, the energy barrier $\EB = K_\mathrm{u} V$\footnote{
 	This is valid for switching by coherent rotation. Similar to the calculation of $\mu$, edge relaxation effects may cause the effective volume to be slightly smaller.
 } originates from its uniaxial shape anisotropy $K_\mathrm{u}$.
-Interactions with other magnets or external fields modify the energy landscape, leading to an effective barrier which we will denote with a tilde $\EBtilde$~\cite{leo2021chiral}.
+Interactions with other magnets or external fields modify the energy landscape, leading to an effective barrier which we denote as $\EBtilde$~\cite{leo2021chiral}.
 Each magnet can have a unique magnetic moment size $\mu_i$, temperature $T_i$ and energy barrier $E_{\mathrm{B},i}$.
 This enables, for instance, modelling some of the disorder due to lithographic variations by assigning a different shape anisotropy to each magnet, typically sampled from a Gaussian distribution with mean $\EB$ and standard deviation $\sigma(\EB)$. \\\par
 
@@ -266,7 +265,7 @@ By calculating these values beforehand, when the ASI is created, the magnetostat
 \begin{equation}
 	E_{\mathrm{MS},i,j}= s_i s_j \vc{k}^{(i)}_j \mathrm{,}
 \end{equation}
-which only ever changes sign since the magnetisation states $s_i = \pm 1$ and $s_j = \pm 1$ are the only variables in the system. \par
+which can only change sign, since the states $s_i = \pm 1$ and $s_j = \pm 1$ are the only variables in the system. \par
 Due to the fact that magnets are placed on a rectilinear grid, the kernel of magnet $i$ can also be written as an $L_x \times L_y$ matrix $\vc{K}^{(i)}_{ab}$ where $ab$ denotes a position on the ASI grid.
 For example, $\vc{K}^{(i)}_{2,3}$ stores the interaction strength between magnet $i$ and the magnet at index\footnote{The indexation used throughout this section starts counting at 1, as is typical for matrix notation. This is not to be confused with indexation in source code, which starts at 0.} $(2,3)$ on the grid.
 If no magnet was placed at index $(a,b)$ on the grid, then $\vc{K}^{(i)}_{ab} = 0, \forall i$. \\\par
@@ -293,17 +292,7 @@ Therefore, if two magnets occupy equivalent positions $q$ in the unit cell --- s
 	\end{cases} \quad\mathrm{.}
 \end{equation}
 In other words, their kernels are identical apart from an offset by $(\Delta x, \Delta y)$, at least in the area that remains inside the kernel after this offset.
-Due to this equivalence, and the fact that $- L_x < \Delta x < L_x$ and $- L_y < \Delta y < L_y$, all possible interactions that a magnet at site $q$ can experience can be stored in a single large $(2L_x-1) \times (2L_y-1)$ matrix $\vc{\mathcal{K}}^{(q)}_{ab}$, a ``unit cell kernel''. \\\par
-
-\cref{fig:2:Kernel_IP_Pinwheel} shows the structure of such unit cell kernels $\vc{\mathcal{K}}$ to clarify the interpretation of how they store the magnetostatic interaction strength between a particular magnet and any other magnet in the system.
-This is most easily illustrated by an example.
-Consider the blue magnet in the $5 \times 5$ pinwheel lattice on the left side of the figure, which occupies position $q=\mathrm{A}$ in the unit cell.
-The corresponding $9 \times 9$ kernel $\vc{\mathcal{K}}^\mathrm{(A)}$ is shown schematically, also in blue.
-It stores the magnetostatic interactions in such a way that, when the ASI grid is shifted onto the kernel to put the blue magnet at the centre of the kernel, the interaction strength of the blue magnet with any other magnet in the ASI is stored in the kernel elements where those other magnets end up.
-So, in the figure, these are the elements in kernel A shown to contain a grey magnet\footnote{
-	The exact values stored at these elements are omitted as they are irrelevant to illustrate the concept. See \cref{fig:2:Kernel_PBC} for an example of the particular values stored in kernel A for a larger $16 \times 16$ lattice.
-}. \par
-The concept is illustrated a second time, now for the red magnet in the pinwheel ASI, which instead occupies position $q=\mathrm{B}$ in the unit cell and therefore uses a different kernel; the red kernel $\vc{\mathcal{K}}^\mathrm{(B)}$.
+Due to this equivalence, and the fact that $- L_x < \Delta x < L_x$ and $- L_y < \Delta y < L_y$, all possible interactions that a magnet at site $q$ can experience can be stored in a single $(2L_x-1) \times (2L_y-1)$ matrix $\vc{\mathcal{K}}^{(q)}_{ab}$, a ``unit cell kernel''.
 
 \xfig[1.0]{2_Hotspice/Kernel_IP_Pinwheel.pdf}{
 	\label{fig:2:Kernel_IP_Pinwheel}
@@ -315,6 +304,16 @@ The concept is illustrated a second time, now for the red magnet in the pinwheel
 	The values stored in the kernel are designed such that shifting the switching magnet to the centre of the kernel and multiplying overlapping cells ($s_{ab}$ of the ASI with $\vc{K}_{ab}$ of the kernel) yields the magnetostatic interaction energy between the switching magnet and all other magnets at positions $ab$.
 	The figure shows this for two example magnets indicated in \textcolor{lightblue}{blue} and \textcolor{lightred}{red}.
 }
+
+\cref{fig:2:Kernel_IP_Pinwheel} shows the structure of such unit cell kernels $\vc{\mathcal{K}}$ to clarify the interpretation of how they store the magnetostatic interaction strength between a particular magnet and any other magnet in the system.
+This is most easily illustrated by an example.
+Consider the blue magnet in the $5 \times 5$ pinwheel lattice on the left side of the figure, which occupies position $q=\mathrm{A}$ in the unit cell.
+The corresponding $9 \times 9$ kernel $\vc{\mathcal{K}}^\mathrm{(A)}$ is shown schematically, also in blue.
+It stores the magnetostatic interactions in such a way that, when the ASI grid is shifted onto the kernel to put the blue magnet at the centre of the kernel, the interaction strength of the blue magnet with any other magnet in the ASI is stored in the kernel elements where those other magnets end up.
+So, in the figure, these are the elements in kernel A shown to contain a grey magnet\footnote{
+	The exact values stored at these elements are omitted as they are irrelevant to illustrate the concept. See \cref{fig:2:Kernel_PBC} for an example of the particular values stored in kernel A for a larger $16 \times 16$ lattice.
+}. \par
+The concept is illustrated a second time, now for the red magnet in the pinwheel ASI, which instead occupies position $q=\mathrm{B}$ in the unit cell and therefore uses a different kernel; the red kernel $\vc{\mathcal{K}}^\mathrm{(B)}$. \\\par
 
 This construction can be used to efficiently update the magnetostatic energy $E_\mathrm{MC}$ of all magnets whenever a magnet switches.
 Recall that the grid stores the state $s_i$ of all magnets in a matrix $\vc{S}$ and the size of their magnetic moment $\mu_i$ in $\vc{\upmu}$.
@@ -376,16 +375,15 @@ Due to the rapid $1/r^3$ decline of the magnetostatic interaction over distance,
 
 \subsubsection{Perpendicular magnetostatic kernel} % If not yet explained in detail earlier, talk about the perpendicular kernel etc. here
 If the simulation accounts for the asymmetric energy barrier, as detailed in \cref{sec:2:E_B_eff}, then two additional kernels are needed for each site in the unit cell. \par
-The first one is calculated for a situation where the central magnet maintains its usual orientation while all other magnets are rotated counter-clockwise by \ang{90}.
+The first is calculated for a situation where the central magnet maintains its usual orientation while all other magnets are rotated counter-clockwise by \ang{90}.
 This kernel will be used whenever a magnet switches, to update the perpendicular magnetostatic energy $\left. E_{\mathrm{MC}} \right|_{\perp}$ of all other magnets.
 The underlying equation is very similar to \cref{eq:2:Kernel_detailed}, but with $u_x^{(q)} \rightarrow -u_y^{(q)}$ and $u_y^{(q)} \rightarrow u_x^{(q)}$ substituted.
 It is used in the same way as the kernel $\vc{\mathcal{K}}^{(q)}$ in \cref{eq:2:Kernel_update}. \par
 The second additional kernel is the opposite of the first one; the central magnet is rotated \ang{90} counter-clockwise while all other magnets maintain their usual orientation.
-This kernel needed only once, to calculate the initial value of $\left. E_{\mathrm{MC}} \right|_{\perp}$ for all magnets.
-The underlying equation of this one is also very similar to \cref{eq:2:Kernel_detailed}, but with $u_x^{(ab)} \rightarrow -u_y^{(ab)}$ and $u_y^{(ab)} \rightarrow u_x^{(ab)}$ substituted.
+This kernel is needed only once, to calculate the initial value of $\left. E_{\mathrm{MC}} \right|_{\perp}$ for all magnets.
+The underlying equation for this one is also very similar to \cref{eq:2:Kernel_detailed}, but now with $u_x^{(ab)} \rightarrow -u_y^{(ab)}$ and $u_y^{(ab)} \rightarrow u_x^{(ab)}$ substituted.
 It is used in the same way as the kernel $\vc{\mathcal{K}}^{(q)}$ in \cref{eq:2:Kernel_init}.
 
- % TODO: explain more, add formulae possibly
 \subsubsection{Numerical error with cut-off kernel} % TODO: expand + FIGURE
 A performance improvement presents itself by cutting off the magnetostatic kernel at a certain distance, though only in the case of open BC.
 Due to the underlying grid, the most natural way of achieving this is to simply reduce the size of the kernel from $2L-1 \times 2L-1$ to a smaller $2K-1 \times 2K-1$ central region. \par % Note that the size has to remain odd for the convolution to still place the magnet in the center.
@@ -393,15 +391,14 @@ However, this will result in inaccurate interaction energies being stored.
 When multiple magnets switch, this error will accumulate.
 Luckily, the error introduced in this manner is bounded from above: whenever a magnet switches back, the error its original switch introduced is cancelled (barring some remaining floating-point error).
 
-\subsection{Multi-switching in Metropolis-Hastings} \label{sec:2:MultiSwitch} % TODO: I already talk about multi-switching in the performance section, should we put this earlier?
+\subsection{Multi-switching in Metropolis-Hastings} \label{sec:2:MultiSwitch}
 \subsubsection{Minimal distance between sampled magnets} % Derive equation
 \subsubsection{Selection algorithms}
 \paragraph{Poisson disc}
 \paragraph{Grid-select}
 \paragraph{Hybrid grid-poisson}
 
-\subsection{Performance} % Several factors impacting performance, explain by using that one graph
-% TODO: update this introductory text, because now this section comes after the explanation of the kernels.
+\subsection{Performance}
 \subsubsection{History}
 The performance of \hotspice has been improved throughout development in various ways.
 Calculation on the GPU was made possible early on and the efficiency of updating the magnetostatic interaction was improved drastically.
@@ -466,8 +463,8 @@ When operating on small arrays, this means relatively fewer parallel calculation
 The CPU excels at the latter. % TODO: references for GPU performance and operation
 
 \paragraph{Kernel improvements}
-The first two rows `\textit{Pairwise kernel}' in the tables use a far more na\"ive kernel than the one described earlier.
-It was simply an $N \times N$ matrix which stored the magnetostatic interaction between each pair of magnets.
+The first two rows `\textit{Pairwise kernel}' in the tables use the na\"ive kernels $\vc{k}$ (or, equivalently, $\vc{K}$) described at the start of \cref{sec:2:Kernels}.
+Their values were simply arranged in a big $N \times N$ matrix which stored the magnetostatic interaction between each pair of magnets.
 The initialisation time on CPU (first row in~\cref{tab:2:perf_init}) bears witness to this, as $t_\mathrm{init} \propto L^4 = N^2$.
 This is because calculating the initial magnetostatic interaction energy $E_\mathrm{MS}$ with this kernel structure requires iterating over all magnets and summing the interaction energy with each other magnet.
 On GPU, parallelisation of this sum in each such iteration approximately reduces this to $\propto L^2 = N$. \par
