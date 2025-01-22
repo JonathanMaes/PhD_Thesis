@@ -68,8 +68,9 @@ Each magnet can have a unique magnetic moment size $\mu_i$, temperature $T_i$ an
 This enables, for instance, modelling some of the disorder due to lithographic variations by assigning a different shape anisotropy to each magnet, typically sampled from a Gaussian distribution with mean $\EB$ and standard deviation $\sigma(\EB)$. \\\par
 
 % We are most interested in simulating ASI, which are often well-ordered and spatially periodic. Therefore, \hotspice chooses to...
-Due to the periodic nature of many ASI lattices, \hotspice chooses to perform the simulation on a rectilinear grid, the benefits and details of which will be discussed in~\cref{sec:2:Implementation}.
+Due to the periodic nature of many ASI lattices, \hotspice chooses to perform the simulation on a rectilinear grid as this allows quantities to be stored as matrices.
 Each grid point may or may not contain a magnet, and the magnets must either all be of the IP type, or all OOP.
+The benefits and details of this approach will be discussed further in~\cref{sec:2:Implementation}.
 Even though this implementation does not allow complete freedom in the placement of magnets, many popular ASI lattices can be constructed in this manner. \par
 
 \xfig[1.0]{2_Hotspice/ASIs.pdf}{
@@ -101,8 +102,8 @@ Three energy contributions have been implemented in \hotspice, supporting both o
 \begin{enumerate}
 	\item The \textit{magnetostatic interaction energy} between magnets $i$ and $j$
 	\begin{equation}
+		\label{eq:2:E_MS}
 		E_{\mathrm{MS},i,j} = \frac{\mu_0}{4 \pi} \ab(\frac{\vc{\mu}_i \bcdot \vc{\mu}_j}{\abs{\vc{r}_{ij}}^3} - \frac{3(\vc{\mu}_i \bcdot \vc{r}_{ij}) (\vc{\mu}_j \bcdot \vc{r}_{ij})}{\abs{\vc{r}_{ij}}^5}) \mathrm{,}
-		\label{eq:E_MS}
 	\end{equation}
 	with $\mu_0$ the vacuum permeability and $\vc{r}_{ij} = \vc{r}_i - \vc{r}_j$ the vector connecting the two magnetic dipoles $\vc{\mu}_i$ and $\vc{\mu}_j$. \par
 	This is the main interaction dictating how nanomagnets influence each other, causing the typical properties of the various ASI lattices, e.g. superferromagnetism in the pinwheel lattice~\cite{li2018pinwheel}.
@@ -112,7 +113,8 @@ Three energy contributions have been implemented in \hotspice, supporting both o
 	
 	\item The \textit{Zeeman energy} of an external field $\vc{B}_\mathrm{ext}$ interacting with magnet $i$
 	\begin{equation}
-		E_{\mathrm{Z},i} = -\vc{\mu}_i \bcdot \vc{B}_\mathrm{ext} \mathrm{,} \label{eq:E_Z}
+		\label{eq:2:E_Z}
+		E_{\mathrm{Z},i} = -\vc{\mu}_i \bcdot \vc{B}_\mathrm{ext} \mathrm{,}
 	\end{equation}
 	where $\vc{B}_\mathrm{ext}$ can be set for each magnet individually. \par
 	This energy contribution provides a means for the outside world to interact with the system, and is therefore indispensable when we will be investigating reservoir computing later on.
@@ -120,7 +122,8 @@ Three energy contributions have been implemented in \hotspice, supporting both o
 	
 	\item The \textit{exchange coupling energy} between nearest neighbours (NN) $i$ and $j$
 	\begin{equation}
-		E_{\mathrm{exch},i,j} = J \frac{\vc{\mu}_i \bcdot \vc{\mu}_j}{\mu_i \mu_j} \mathrm{,} \label{eq:E_exch}
+		\label{eq:2:E_exch}
+		E_{\mathrm{exch},i,j} = J \frac{\vc{\mu}_i \bcdot \vc{\mu}_j}{\mu_i \mu_j} \mathrm{,}
 	\end{equation}
 	with $J$ the exchange coupling constant, which is constant throughout the ASI. \par
 	This interaction is rarely present in ASI, but can for example be relevant in interconnected ASI --- whether by design or due to limited lithographic accuracy.
@@ -129,24 +132,24 @@ Three energy contributions have been implemented in \hotspice, supporting both o
 
 The combined \textit{interaction energy} $E_i$ of a single magnet $i$ with its environment is then given by
 \begin{equation}
+	\label{eq:2:E}
 	E_i = E_{\mathrm{Z},i} + \sum_j E_{\mathrm{MS},i,j} + \sum_{j \in \mathcal{N}_i} E_{\mathrm{exch},i,j} \mathrm{,}
-	\label{eq:E}
 \end{equation}
 where $\mathcal{N}_i$ is the collection of nearest neighbours of magnet $i$.
 Which magnets are included in this collection depends on the ASI lattice and which site of the unit cell magnet $i$ is in, and can be defined separately for each ASI lattice. \\\par
-Note that all terms in \cref{eq:E} simply change sign when magnet $i$ switches ($\vc{\mu}_i \rightarrow -\vc{\mu}_i$).
-The magnetostatic self-energy is not present in \cref{eq:E} because it only contributes a constant offset and does not change when the magnet switches.
+Note that all terms in \cref{eq:2:E} simply change sign when magnet $i$ switches ($\vc{\mu}_i \rightarrow -\vc{\mu}_i$).
+The magnetostatic self-energy is not present in \cref{eq:2:E} because it only contributes a constant offset and does not change when the magnet switches.
 As such, $E_i$ represents the total interaction energy of a magnet with its `neighbours',\footnote{
 	In this context, a `neighbour' of a magnet can be interpreted more broadly as all magnets it interacts with through a particular energy contribution. For example, the magnetostatic interaction considers all magnets to be `neigbours', unless the user has explicitly set a maximum interaction distance.
 } and therefore the change in energy of the whole ASI when magnet $i$ switches is simply $\Delta E_{i,1\rightarrow2} = -2 E_i$.
 This is called the \textit{switching energy}, and we will later see (\cref{sec:2:Dynamics}) that it plays a central role in the algorithms used for simulating system dynamics.
 It is therefore very advantageous to have such a simple method of calculating the switching energy. \par
 When the simulation is initialized, the energy contributions are calculated for all magnets.
-Each magnet therefore stores a value in memory for each of the terms in \cref{eq:E}.
+Each magnet therefore stores a value in memory for each of the terms in \cref{eq:2:E}.
 Whenever a magnet switches, the energies of its `neighbours' are updated appropriately, which constitutes a major part of the calculation effort required for every step in the simulation.
 
 \subsection{Finite-size corrections to the magnetostatic energy}\label{sec:2:finite}
-\cref{eq:E_MS,eq:E_Z,eq:E_exch} approximate each nanomagnet as a point dipole, but real nanomagnets have a finite spatial extent.
+\cref{eq:2:E_MS,eq:2:E_Z,eq:2:E_exch} approximate each nanomagnet as a point dipole, but real nanomagnets have a finite spatial extent.
 If one assumes a uniform magnetisation throughout each single-domain nanomagnet, then this finite size does not affect the Zeeman energy, nor the exchange energy which can capture any shape-related effects by an appropriate choice of the exchange coupling $J$.
 The Zeeman energy could even account for a deviation from uniform magnetisation near the edge of a magnet, which occurs in reality but which we will neglect in the following, by an appropriate choice of $\vc{B}_\mathrm{ext}$. \par
 The magnetostatic interaction, however, depends on the relative position, orientation, and shape of all magnets.
@@ -159,7 +162,7 @@ This results in a second-order correction
 \begin{equation}
 	E_{\mathrm{MS},i,j} = E_{\mathrm{MS},i,j}^\mathrm{(0)} + E_{\mathrm{MS},i,j}^\mathrm{(2)} \mathrm{,}
 \end{equation}
-where $E_{\mathrm{MS},i,j}^\mathrm{(0)}$ is the original point dipole magnetostatic interaction given by~\cref{eq:E_MS}. \par
+where $E_{\mathrm{MS},i,j}^\mathrm{(0)}$ is the original point dipole magnetostatic interaction given by~\cref{eq:2:E_MS}. \par
 The second-order correction can be written as
 \begin{equation}
 	E_{\mathrm{MS},i,j}^\mathrm{(2)} = \frac{\mu_0}{4\pi} \frac{3\mathcal{I}_{ij}}{2} \Bigg[3\frac{\vc{\mu}_i^\mathrm{OOP} \bcdot \vc{\mu}_j^\mathrm{OOP}}{\abs{\vc{r}_{ij}}^5} + \frac{\vc{\mu}_i^\mathrm{IP} \bcdot \vc{\mu}_j^\mathrm{IP}}{\abs{\vc{r}_{ij}}^5} -5\frac{(\vc{\mu}_i^\mathrm{IP} \bcdot \vc{r}_{ij}) (\vc{\mu}_j^\mathrm{IP} \bcdot \vc{r}_{ij})}{\abs{\vc{r}_{ij}}^7} \Bigg] \mathrm{,}
@@ -536,7 +539,7 @@ This remains true independent of the kernel implementation.
 GPUs are optimized for parallel processing, and therefore reach a bottleneck when the simulation takes on a more sequential nature~\cite{owens2008gpu}.
 Simulating a single switch requires several distinct operations that do not lend themselves to parallelisation.
 When operating on small arrays, this means relatively fewer parallel calculations can be performed, thereby increasing the importance of being able to perform distinct mathematical operations in quick succession.
-The CPU excels at the latter. % TODO: references for GPU performance and operation
+The CPU excels at the latter.
 
 \paragraph{Kernel improvements}
 The first two rows `\textit{Pairwise kernel}' in the tables use the na\"ive kernels $\vc{k}$ (or, equivalently, $\vc{K}$) described at the start of \cref{sec:2:Kernels}.
