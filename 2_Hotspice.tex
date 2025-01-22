@@ -249,7 +249,7 @@ Finally, we briefly discuss the structure of the software package and the functi
 This choice was made based on the trade-off between calculation efficiency and the freedom to place magnets arbitrarily.
 We opted to prioritise efficiency and accept the geometrical restriction, as most ASI research focuses on periodic lattices.
 All quantities are therefore stored in 2D matrices of size $L_x \times L_y$, upon which operations can be performed efficiently.
-We will denote these matrices with bold upright capitalised symbols: e.g., $\vc{S}$ contains the states $s_i$, $\vc{E_\mathrm{MC}}$ the magnetostatic energies... \par
+We will denote these matrices with bold upright capitalised symbols: e.g., $\vc{S}$ contains the states $s_i$, $\vc{E_\mathrm{MC}}$ the magnetostatic energies, $\vc{\upmu}$ the magnitudes of magnetic moments... \par % Q: other suggestions? I can not capitalise the magnitudes of magnetic moments, because that would just be capital M which is too reminiscent of the magnetisation (in H = B/mu0 - M). So I just put it upright. Is that sufficient?
 Despite the seemingly restrictive nature of the rectilinear grid,~\cref{fig:2:ASIs} illustrates its versatility in forming various periodic lattices, with only the Cairo lattices requiring grid non-uniformity.
 As a bonus, real-time visualisation is simple and efficient using this approach, as the underlying matrix can directly be cast to a pixel image. \par
 By leveraging the unit cell concept in periodic lattices and the efficient indexation of a rectilinear grid in computer memory, several aspects of the calculation can be performed more efficiently than for free-form ASI.
@@ -266,9 +266,9 @@ By calculating these values beforehand, when the ASI is created, the magnetostat
 \begin{equation}
 	E_{\mathrm{MS},i,j}= s_i s_j \vc{k}^{(i)}_j \mathrm{,}
 \end{equation}
-which only ever changes sign since the magnetisation directions $s_i = \pm 1$ and $s_j = \pm 1$ are the only variables in the system. \par
+which only ever changes sign since the magnetisation states $s_i = \pm 1$ and $s_j = \pm 1$ are the only variables in the system. \par
 Due to the fact that magnets are placed on a rectilinear grid, the kernel of magnet $i$ can also be written as an $L_x \times L_y$ matrix $\vc{K}^{(i)}_{ab}$ where $ab$ denotes a position on the ASI grid.
-For example, $\vc{K}^{(i)}_{2,3}$ stores the interaction strength between magnet $i$ and the magnet at index\footnote{The indexation used throughout this section denotes the first element in a matrix as $(1,1)$.} $(2,3)$ on the grid.
+For example, $\vc{K}^{(i)}_{2,3}$ stores the interaction strength between magnet $i$ and the magnet at index\footnote{The indexation used throughout this section starts counting at 1, as is typical for matrix notation. This is not to be confused with indexation in source code, which starts at 0.} $(2,3)$ on the grid.
 If no magnet was placed at index $(a,b)$ on the grid, then $\vc{K}^{(i)}_{ab} = 0, \forall i$. \\\par
 
 However, storing such a kernel for all magnets $i$ would require storing $\order{N^2}$ values in memory.
@@ -276,9 +276,9 @@ By leveraging unit cells, this storage requirement can be reduced to $\order{N}$
 Each occupied grid point in the unit cell is assigned a unique index $q = 1,\dots,\widetilde{N}$, with $\widetilde{N}$ the number of magnets in a single unit cell.
 Hence, each magnet in the ASI is associated with a specific value of $q$. \par
 This way, all magnets with the same value of $q$ share the same layout of surrounding magnets\footnote{
-	In some ASI, it is possible that different sites inside a single unit cell also share the same surrounding layout.
+	In some ASI, it is possible that different sites inside a single unit cell also experience the same surrounding layout.
 	This can be used to further improve memory usage (but not performance) by only storing unique kernels.
-	This was not implemented as this constitutes only a minor improvement; for the lattices in~\cref{fig:2:ASIs}, this would at most reduce the number of kernels by half.
+	This was not implemented as this constitutes only a minor improvement; for the lattices in~\cref{fig:2:ASIs}, this would at best half the number of kernels.
 }, apart from a different cut-off at the border in case of open boundary conditions.
 Therefore, if two magnets occupy equivalent positions $q$ in the unit cell --- say, $i$ at index $(x,y)$ on the grid and $j$ at $(x+\Delta x, y+\Delta y)$ --- then
 \begin{equation}
@@ -290,15 +290,20 @@ Therefore, if two magnets occupy equivalent positions $q$ in the unit cell --- s
 		% Or more rigorously, but even more overcomplicated:
 		% \max(-\Delta x, 0) \leq a < L_x - \min(\Delta x, 0) \\
 		% \max(-\Delta y, 0) \leq b < L_y - \min(\Delta y, 0) \\
-	\end{cases}
+	\end{cases} \quad\mathrm{.}
 \end{equation}
 In other words, their kernels are identical apart from an offset by $(\Delta x, \Delta y)$, at least in the area that remains inside the kernel after this offset.
-Due to this equivalence, and the fact that $- L_x < \Delta x < L_x$ and $- L_y < \Delta y < L_y$, all possible interactions that a magnet at site $q$ can experience can be stored in a single large $(2L_x-1) \times (2L_y-1)$ matrix $\vc{\mathcal{K}}^{(q)}_{ab}$. \\\par
+Due to this equivalence, and the fact that $- L_x < \Delta x < L_x$ and $- L_y < \Delta y < L_y$, all possible interactions that a magnet at site $q$ can experience can be stored in a single large $(2L_x-1) \times (2L_y-1)$ matrix $\vc{\mathcal{K}}^{(q)}_{ab}$, a ``unit cell kernel''. \\\par
 
-\cref{fig:2:Kernel_IP_Pinwheel} shows how this matrix, a ``unitcell-kernel'', can be interpreted to store the magnetostatic interaction strength between a particular magnet and any other magnet in the system.
-Take for example the blue magnet in the pinwheel lattice on the left side of the figure, which occupies position $q=\mathrm{A}$ in the unit cell.
-The corresponding blue kernel $\vc{\mathcal{K}}^\mathrm{(A)}$ stores the interaction strength in such a way that, when the ASI grid is shifted onto the kernel to put the blue magnet at the centre of the kernel, the interaction strength of the blue magnet with any other magnet in the ASI is stored in those cells where these other magnets end up.
-The same is true for the interaction of the red magnet with all magnets, though it occupies position $q=\mathrm{B}$ in the unit cell so it uses a different kernel; the red kernel $\vc{\mathcal{K}}^\mathrm{(B)}$.
+\cref{fig:2:Kernel_IP_Pinwheel} shows the structure of such unit cell kernels $\vc{\mathcal{K}}$ to clarify the interpretation of how they store the magnetostatic interaction strength between a particular magnet and any other magnet in the system.
+This is most easily illustrated by an example.
+Consider the blue magnet in the $5 \times 5$ pinwheel lattice on the left side of the figure, which occupies position $q=\mathrm{A}$ in the unit cell.
+The corresponding $9 \times 9$ kernel $\vc{\mathcal{K}}^\mathrm{(A)}$ is shown schematically, also in blue.
+It stores the magnetostatic interactions in such a way that, when the ASI grid is shifted onto the kernel to put the blue magnet at the centre of the kernel, the interaction strength of the blue magnet with any other magnet in the ASI is stored in the kernel elements where those other magnets end up.
+So, in the figure, these are the elements in kernel A shown to contain a grey magnet\footnote{
+	The exact values stored at these elements are omitted as they are irrelevant to illustrate the concept. See \cref{fig:2:Kernel_PBC} for an example of the particular values stored in kernel A for a larger $16 \times 16$ lattice.
+}. \par
+The concept is illustrated a second time, now for the red magnet in the pinwheel ASI, which instead occupies position $q=\mathrm{B}$ in the unit cell and therefore uses a different kernel; the red kernel $\vc{\mathcal{K}}^\mathrm{(B)}$.
 
 \xfig[1.0]{2_Hotspice/Kernel_IP_Pinwheel.pdf}{
 	\label{fig:2:Kernel_IP_Pinwheel}
@@ -312,26 +317,26 @@ The same is true for the interaction of the red magnet with all magnets, though 
 }
 
 This construction can be used to efficiently update the magnetostatic energy $E_\mathrm{MC}$ of all magnets whenever a magnet switches.
-Recall that the grid stores the state $s_i$ of all magnets in a matrix $\vc{S}$.
-When a magnet at unit cell index $q$ switches, the energy of all other magnets will be updated by shifting $\vc{S}$ in the same way as the ASI was shifted in \cref{fig:2:Kernel_IP_Pinwheel}, and performing a pointwise multiplication (Hadamard product, denoted by $\odot$) with the respective elements of the kernel $\vc{\mathcal{K}}^{(q)}$.
-Denoting the grid index of the switching magnet as $(x,y)$, this yields a new matrix
+Recall that the grid stores the state $s_i$ of all magnets in a matrix $\vc{S}$ and the size of their magnetic moment $\mu_i$ in $\vc{\upmu}$.
+When a magnet at unit cell index $q$ switches, the change of magnetostatic energy for all other magnets can be calculated by shifting $\vc{S}$ in the same way as the ASI was shifted in \cref{fig:2:Kernel_IP_Pinwheel}, and performing a pointwise multiplication (Hadamard product, denoted by $\odot$) with the respective elements of the kernel $\vc{\mathcal{K}}^{(q)}$.
+Denoting the grid index of the switching $q$-site magnet as $(x,y)$ and using the states $\vc{S}$ after the switch, this yields a new matrix
 \begin{equation}
 	\label{eq:2:Kernel_update}
-	\Delta \vc{E_\mathrm{MC}} = \vc{S} \odot \ab(\vc{\mathcal{K}}^{(q)}_{ab})_{\substack{L_x < a + x \leq 2L_x \\ L_y < a + y \leq 2L_y}} \quad\mathrm{,}
+	\Delta \vc{E_\mathrm{MC}} = 2\mu_{xy} s_{xy}\vc{\upmu} \odot \vc{S} \odot \ab(\vc{\mathcal{K}}^{(q)}_{ab})_{\substack{L_x < a + x \leq 2L_x \\ L_y < a + y \leq 2L_y}} \quad\mathrm{,}
 \end{equation}
 containing the change in magnetostatic energy $\Delta E_\mathrm{MC}$ for each grid point, which can then simply be added to the current values of $E_\mathrm{MC}$. \par
 The kernel is also used to initialise the magnetostatic energy $\left. E_\mathrm{MS} \right|_{t=0}$ of each magnet at the start of the simulation.
-This is done by performing a convolution rather than a pointwise multiplication:
+This is done by performing a convolution ($*$) rather than a pointwise multiplication:
 \begin{equation}
 	\label{eq:2:Kernel_init}
-	\vc{E_\mathrm{MC}} = \vc{S} * \vc{\mathcal{K}}^{(q)} \mathrm{,}
+	\left. \vc{E_\mathrm{MC}} \right|_{t=0} = \sum_q \vc{Q_q} \odot \vc{\upmu} \odot \vc{S} \odot \ab((\vc{\upmu} \odot \vc{S}) * \vc{\mathcal{K}}^{(q)}) \mathrm{,}
 \end{equation}
-where only the central $L_x \times L_y$ area of the convolution is calculated. \\\par
+where only the central $L_x \times L_y$ area of the convolution is calculated and the matrix $\vc{Q_q}$ contains 1 at sites with unit cell index $q$, otherwise 0. \\\par
 
 The exact values stored in the kernel depend on whether any finite-size corrections to the magnetostatic interaction (\cref{sec:2:finite}) were used and whether the ASI is of the IP or OOP type. For example, an IP kernel using the point dipole approximation contains elements
 \begin{equation}
 	\label{eq:2:Kernel_detailed}
-	\vc{\mathcal{K}}^{(q)}_{ab} = \frac{
+	\vc{\mathcal{K}}^{(q)}_{ab} = \frac{\mu_0}{4 \pi} \frac{
 		u_x^{(q)} u_x^{(ab)} \ab(1 - 3 \ab(\Delta x)^2) + u_y^{(q)} u_y^{(ab)} \ab(1 - 3 \ab(\Delta y)^2) - 3\Delta x \Delta y \ab(u_x^{(q)} u_y^{(ab)} + u_x^{(ab)} u_y^{(q)})
 	}{
 		\sqrt{\ab(\ab(\Delta x)^2 + \ab(\Delta y)^2)^5}
@@ -355,7 +360,7 @@ This is illustrated in~\cref{fig:2:Kernel_PBC} for an example of pinwheel ASI. \
 
 \xfig[1.0]{2_Hotspice/Kernel_PBC.pdf}{
 	\label{fig:2:Kernel_PBC}
-	Comparison of the magnetostatic interaction kernel for open (left) and periodic (right) boundary conditions, for a $16 \times 16$ pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a}).
+	Comparison of the magnetostatic interaction kernel for open (left) and periodic (right) boundary conditions, for a $16 \times 16$ pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a}) using the point dipole approximation.
 	The magnet of the unit cell site associated to this particular kernel is shown in the center with a black outline.
 	The color of other magnets indicates the magnitude of the magnetostatic interaction between the central and the colored magnets if they both point `up'. This alignment is preferable for \textcolor{blue}{blue} magnets (low energy) and unstable for \textcolor{red}{red} magnets (high energy).
 }
