@@ -242,9 +242,11 @@ In IP ASI, these states usually arise from shape anisotropy, which originates fr
 This imposes an additional energy cost when the magnetisation does not point along the preferential ``easy axis'', which is usually the longest axis of the magnet's geometry~\cite{PhD_Leliaert}. \par
 Shape anisotropy is quantified by a uniaxial anisotropy constant $K_\mathrm{u}$.
 Assuming that switching occurs by coherent rotation\footnote{
-	Depending on the magnet's properties, switching by domain wall nucleation may be energetically cheaper and result in a lower energy barrier. We ignore these cases as they require micromagnetic simulations for an accurate energy barrier estimate.
+	Depending on the magnet's properties, non-coherent reversal such as switching by domain wall nucleation may be energetically cheaper.
+	An accurate estimate of the energy barrier for such processes can be determined by e.g. micromagnetic simulations.
 }, this leads to an energy barrier $\EB = K_\mathrm{u} V$, with $V$ the magnet's volume.
-Similar to the calculation of the magnetic moment $\mu$ in \cref{fn:2:moment_integral}, relaxation of the magnetisation profile $\vc{M}(\vc{r})$ near the surface of the magnet may cause the actual energy barrier to be slightly smaller. \par
+Similar to the calculation of the magnetic moment $\mu$ in \cref{fn:2:moment_integral}, relaxation of the magnetisation profile $\vc{M}(\vc{r})$ near the surface of the magnet may cause the actual energy barrier to be slightly smaller.
+\hotspice ignores the specifics of the reversal process by allowing the user to set an arbitrary value of $\EB$. \par
 Magnets in OOP ASI are usually very flat, so one would expect the shape anisotropy to result in a preferential in-plane magnetisation direction.
 This can be avoided by properly choosing materials that exhibit a strong interfacial anisotropy, as occurs at e.g. the Co/Pt interface, resulting in a net preferential out-of-plane magnetisation.
 
@@ -257,8 +259,8 @@ This means the barrier height changes at half the rate at which the switching en
 	\EBtilde = \EB + \frac{\Delta E}{2} \mathrm{,}
 \end{equation}
 as it is often encountered in literature~\cite{MC_TemperatureDesorption,DirectionalEnergyBarrier}. \par
-However, this does not account for the extreme cases where the interactions are so strong that the energy barrier effectively disappears.
-This happens when $\abs{\Delta E}$ exceeds twice the shape anisotropy $\EB$, leaving only one global minimum.
+However, this is a very crude approximation which does not account for the extreme cases where the interactions are so strong that the energy barrier effectively disappears ($\abs{E} \gg \EB$).
+In the model of \cref{eq:2:EB_meanbarrier_original}, this happens when $\abs{\Delta E}$ exceeds twice the shape anisotropy $\EB$, leaving only one global minimum.
 To handle these situations, \hotspice modifies the calculation of the effective energy barrier $\EBtilde$ as follows:
 \begin{equation}
 	\label{eq:2:EB_meanbarrier_cases}
@@ -269,16 +271,20 @@ To handle these situations, \hotspice modifies the calculation of the effective 
 \end{equation}
 This way, $\Delta E$ serves as the barrier when the original energy barrier disappears.
 
-\subsubsection{IP: asymmetric barrier}
+\subsubsection{Asymmetric barrier (in-plane)}
 The simple mean-barrier approximation is insufficient for many IP ASI.
-In real nanomagnets, the magnetisation must rotate for switching to occur: either clockwise ($\clockwise$) or counter-clockwise ($\counterclockwise$)~\cite{DirectionalEnergyBarrier}.
-In an asymmetrical environment (when the effective field has a non-zero component perpendicular to the easy axis) one of these two rotation directions will be preferred~\cite{leo2021chiral,DirectionalEnergyBarrier}.
-Take for example the pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a}): any two neighbouring magnets form a T-shape, so the magnet pointing into the side of the other will greatly influence whether the other magnet prefers $\clockwise$ or $\counterclockwise$ rotation.~\cite{DirectionalEnergyBarrier} % TODO: also make a figure for this. Possibly combine with the mean-barrier figure.
+In real nanomagnets, reversal by coherent rotation can occur via two pathways; clockwise ($\clockwise$) or counter-clockwise ($\counterclockwise$) rotation of the magnetisation.
+In an asymmetrical environment --- when the effective field has a non-zero component perpendicular to the easy axis --- one of these two rotation directions will be preferred~\cite{leo2021chiral,DirectionalEnergyBarrier}.
+Take for example the pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a}): any two neighbouring magnets form a T-shape, so the magnet pointing into the side of the other will greatly influence whether the other magnet prefers $\clockwise$ or $\counterclockwise$ rotation~\cite{DirectionalEnergyBarrier}. % TODO: also make a figure for this. Possibly combine with the mean-barrier figure.
+Such an asymmetry can not occur in OOP ASI, so the asymmetric barrier is only applicable to IP ASI.
 Accounting for the existence of these separate chiral switching channels profoundly affects the switching rates and transition kinetics, since switching will occur predominantly via the more favourable pathway~\cite{leo2021chiral}. \\\par
-In the dipole model, this can be accounted for by keeping track of the energy of each magnet in these transitional `perpendicular' states.
-We therefore introduce $E_\perp$, which represents the energy of a magnet if it would point \ang{90} counter-clockwise from its normal magnetization direction, but without taking into account the shape anisotropy ($E_\mathrm{B}$) associated with that orientation.
-Note that we are not deviating from the two-state Ising model used by \hotspice: we are simply putting ``test dipoles'' in the perpendicular orientation, but the magnets are never actually put in these states. \par
-Using this additional knowledge, the equation for the effective barrier along the two rotation pathways ($\pm$) then becomes
+
+In the dipole model, this can be accounted for by considering the energy of each magnet in these transitional ``perpendicular'' states.
+Therefore, \hotspice tracks yet another quantity for every magnet: $E_\perp$, representing the interaction energy of a magnet if it would point \ang{90} counter-clockwise from its normal magnetisation direction $\vc{u}$.
+Note that we are not deviating from the two-state Ising model: we are simply putting ``test dipoles'' in the perpendicular orientation to get a better estimate of $\EBtilde$, but magnets will never end up in these states during a simulation. \par
+In \cref{eq:2:EB_meanbarrier_cases}, $\EB$ essentially represented an estimate of the total energy in the perpendicular state.
+With our newfound knowledge of the interaction energy $E_\perp$ in that state, our improved estimate of the total perpendicular energy becomes $\EB + E_\perp$.
+Therefore, we get an expression for the effective barrier $\EBtilde$ along the two rotation pathways ($\pm$) by simply substituting $\EB \rightarrow \EB + E_\perp$ in \cref{eq:2:EB_meanbarrier_cases}:
 \begin{equation}
 	\label{eq:2:EB_asymmetric}
 	\widetilde{E_\mathrm{B}} = \begin{cases}
@@ -287,34 +293,51 @@ Using this additional knowledge, the equation for the effective barrier along th
 	\end{cases}
 \end{equation}
 which results in two different barriers if $E_\perp \neq 0$.
-Note that it does not matter which barrier corresponds to clockwise or counter-clockwise rotation; only the height of the barriers must be known to determine the switching rate of each magnet. \par
 The parameter $\rho = \mu_\perp/\mu_\parallel > 0$ was introduced in \cref{eq:2:EB_asymmetric} to account for non-coherent magnetisation reversal processes like domain wall nucleation and propagation, which result in an effective reduction of the magnetic moment during reversal.~\cite{leo2021chiral,TimeResolvedDynamicsSOT}
-Using a value $\rho < 1$ improves correspondence with experimental observations, as we will show in~\cref{sec:3:IP_Pinwheel_reversal}.
-% TODO: mention that the perpendicular energy can be used to determine H_eff
+Using a value $\rho < 1$ improves correspondence with experimental observations, as we will observe in~\cref{sec:3:IP_Pinwheel_reversal}. \par
+As a bonus, we can use the combined knowledge of $E$ and $E_\perp$ to implicitly define the effective field $\vc{B}_\mathrm{eff}$ that any given magnet experiences by
+\begin{equation}
+	\label{eq:2:B_eff_implicit}
+	\begin{cases}
+		\vc{\mu} \,\cdot\, \vc{B}_\mathrm{eff} = E \mathrm{,} \\
+		\norm{\vc{\mu} \times \vc{B}_\mathrm{eff}} = E_\perp  \mathrm{.}
+	\end{cases}
+\end{equation}
+For IP ASI, this uniquely defines $\vc{B}_\mathrm{eff}$ since all vectors lay in-plane. Solving \cref{eq:2:B_eff_implicit} for $\vc{B}_\mathrm{eff}$ yields an expression as function of $E$, $E_\perp$ and $\vc{\mu}$, valid for both IP and OOP ASI:
+\begin{equation}
+	\label{eq:2:B_eff_explicit}
+	\vc{B}_\mathrm{eff} = - \frac{E \vc{\mu} + E_\perp \vc{e}_z \times \vc{\mu}}{\mu^2} \mathrm{.}
+\end{equation}
 
-\subsubsection{OOP: exact solution}
-If an analytical expression for the energy as a function of magnetisation angle $\theta$ relative to the magnet's easy axis is known, then $\EBtilde$ can be calculated exactly.
+\subsubsection{Exact solution (out-of-plane)}
+The effective energy barrier $\EBtilde$ can be calculated exactly if an analytical expression is known for the energy as a function of magnetisation angle $\theta$ relative to the magnet's easy axis.
 The shape anisotropy creates a basic energy profile with two minima at $\theta=0$ and $\theta=\pi$, but the exact form of this profile depends on the magnet's shape.
-For ellipsoidal magnets, the energy landscape is $\frac{-E_\mathrm{B}}{2} \cos{2\theta}$~\cite{neel1949theorie}.
+For ellipsoidal magnets, the energy landscape is $-\frac{E_\mathrm{B}}{2} \cos{2\theta}$~\cite{neel1949theorie}.
 Assuming a uniform magnetisation in each magnet\footnote{
 	Only perfectly ellipsoidal magnets have uniform magnetisation in a uniform external field~\cite{EllipsoidDemag,MaxwellElectricityMagnetism}.
-}, the magnetostatic and Zeeman interactions add a term proportional to $\cos(\theta - \phi)$, with $\phi$ the angle of their combined effective field.
+}, the magnetostatic and Zeeman interactions add a term proportional to $\cos(\theta - \phi)$, with $\phi$ the angle of their combined effective field $\vc{B}_\mathrm{eff}$.
 Thus, the total profile is a sum of two sines and can be fully characterised if $E$ and $E_\perp$ are known.
-However, in the general case, this results in a transcendental equation requiring numerical approximation to solve, which is not done in \hotspice for performance reasons. \par
-In OOP ASI, an explicit expression can still be obtained because the effective field aligns with the easy axis.
-This causes the perpendicular energy to vanish ($E_\perp=0$) such that the equation is no longer transcendental.
-Instead, this leads to a quadratic relation as described in~\ccite{StonerWohlfarth2008}:
+However, in the general case, this results in a transcendental equation
+\begin{align*}
+	\frac{\partial E(\theta)}{\partial \theta} = 0 \iff & \frac{\partial}{\partial \theta} \ab(-\frac{\EB}{2} \cos{2\theta} - \mu B_\mathrm{eff} \cos(\theta - \phi)) = 0 \\
+	\iff & \EB \sin{2\theta} + \mu B_\mathrm{eff} \sin(\theta - \phi) = 0 \numberthis
+\end{align*}
+This would require numerical approximation to solve, and is therefore not done in \hotspice for performance reasons. \par
+In OOP ASI, however, the high degree of symmetry nonetheless allows an explicit expression to be obtained.
+All relevant vectors ($\vc{B}_\mathrm{eff}$, $\vc{\mu}$ ...) in such systems point along the z-axis, causing the perpendicular energy to vanish ($E_\perp=0$) and the equation to no longer be transcendental.
+Instead, this leads to a quadratic relation as described by \textit{Tannous and Gieraltowski}~\cite{StonerWohlfarth2008}:
 \begin{equation}
 	\label{eq:2:EB_exact}
 	\widetilde{E_\mathrm{B}} = \begin{cases}
 		E_\mathrm{B} \ab(\frac{\Delta E}{4 E_\mathrm{B}} + 1)^2 & \quad \text{if} \quad \abs{\frac{\Delta E}{2}} < E_\mathrm{B}, \\
-		\Delta E & \quad \text{otherwise}. \\
+		\Delta E & \quad \text{otherwise.} \\
 	\end{cases}
 \end{equation}
 
 \section{Dynamics}\label{sec:2:Dynamics}
 A Monte Carlo simulator would not be complete without an algorithm to change the state of the system.
 \subsection{N\'eel relaxation: temporal evolution}
+% Note that it does not matter which barrier corresponds to clockwise or counter-clockwise rotation; only the height of the barriers must be known to determine the switching rate of each magnet. \par
 \subsection{Metropolis-Hastings: sampling equilibrium states}
 % TODO: decide whether to talk about nomenclature details etc. here, or in the introduction.
 \subsection{Other Monte Carlo algorithms} % Not implemented, explain why Wolff could be useful but why it's not in Hotspice
@@ -535,7 +558,7 @@ Simulation times displayed serve an illustrative purpose: absolute values on oth
 }
 
 \paragraph{From CPU to GPU}
-Originally, \hotspice performed all calculations on the CPU.
+Originally, \hotspice performed all calculations on the CPU. % Ing the beninging
 This caused the simulation time to rise dramatically as the system size grew (e.g. first row in \cref{tab:2:perf_switch}).
 For early versions of \hotspice with an unoptimized kernel, this made it impractical to simulate systems larger than $50 \times 50$ magnets.
 By simply switching to GPU-based calculations using the \python{CuPy} library (second row), this upper limit was increased significantly.
@@ -654,7 +677,7 @@ A graphical user interface (GUI) is available for \hotspice, which allows the us
 
 The state of the ASI is prominently displayed, and the bottom left panel shows a few useful statistics such as the elapsed time. The ASI display is controlled by the central bottom panel, which changes between 4 display modes.
 By default, the magnetisation is shown as an averaged field, with the averaging method determined by the ASI lattice.
-The second mode displays individual arrows, which either show each magnet's magnetisation direction or the effective field $\vc{H}_\mathrm{eff}$ it experiences. % Q: is it H? I wrote H because it does not add the magnetic moment. On a similar note, should we write B_ext or H_ext in the definition of the Zeeman energy?
+The second mode displays individual arrows, which either show each magnet's magnetisation direction $s_i \vc{u}_i$ or the effective field $\vc{B}_{\mathrm{eff},i}$ it experiences.
 In the third mode, the energy contributions ($E_\mathrm{MC}$, $E_\mathrm{Z}$, $E_\mathrm{Exch}$ and their sum $E_i$) and the resulting effective energy barrier $\EBtilde$ for each magnet can be shown, both along the easy and hard axis.
 The last option is to show the spatial distribution (i.e., the value for each magnet) of some parameters like the temperature $T$, shape anisotropy $\EB$ and size of the magnetic moment $\mu$. \par
 Buttons in the sidebar on the right allow the user to interact with the ASI by progressing through time, setting an initial state, or --- for more complex simulations --- apply custom functions.
