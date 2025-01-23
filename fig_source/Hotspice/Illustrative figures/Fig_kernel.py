@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 xp = hotspice.xp
-from hotspice.utils import asnumpy
 from matplotlib import lines, patches
 
 import thesis_utils

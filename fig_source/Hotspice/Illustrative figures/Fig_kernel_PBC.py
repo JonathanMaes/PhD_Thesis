@@ -1,11 +1,9 @@
 import hotspice
-import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
 
 xp = hotspice.xp
-from hotspice.utils import asnumpy
-from matplotlib import lines, patches
+from matplotlib import patches
 
 import thesis_utils
 
