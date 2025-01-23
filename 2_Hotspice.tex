@@ -237,14 +237,16 @@ Recall that the switching energy is cheap to compute as $\Delta E = -2 E$ becaus
 We will omit the subscript $i$ for the remainder of this section; it is implied that the following discussion and equations apply to each magnet individually.
 
 \subsubsection{Intrinsic barrier due to shape anisotropy} % TODO END: is any of this more relevant in the introduction?
-An isolated single-domain nanomagnet often has two stable magnetisation states separated by energy barriers.
-In IP ASI, these states typically originate from shape anisotropy: due to the demagnetising field, there is an energy cost associated with pointing the magnetisation along any direction.
-This usually results in a preferential direction along the longest axis of the magnet's geometry~\cite{PhD_Leliaert}.
-This anisotropy is quantified by the uniaxial shape anisotropy constant $K_\mathrm{u}$, leading to an energy barrier $\EB = K_\mathrm{u} V$.
-Note that this expression is valid under the assumption that switching occurs by coherent rotation.
-Similar to the calculation of the magnetic moment $\mu$ in \cref{fn:2:moment_integral}, edge relaxation effects may cause the effective volume, and therefore the energy barrier, to be slightly smaller than this. \par
-Magnets in OOP ASI are usually still very flat, so one would expect the shape anisotropy to result in a preferential in-plane direction.
-This can be avoided by choosing materials such as Co/Pt that exhibit a strong interfacial anisotropy which creates a preferential out-of-plane magnetisation direction.
+An isolated single-domain nanomagnet often exhibits two stable magnetisation states separated by energy barriers.
+In IP ASI, these states usually arise from shape anisotropy, which originates from the demagnetising field of the magnet itself.
+This imposes an additional energy cost when the magnetisation does not point along the preferential ``easy axis'', which is usually the longest axis of the magnet's geometry~\cite{PhD_Leliaert}. \par
+Shape anisotropy is quantified by a uniaxial anisotropy constant $K_\mathrm{u}$.
+Assuming that switching occurs by coherent rotation\footnote{
+	Depending on the magnet's properties, switching by domain wall nucleation may be energetically cheaper and result in a lower energy barrier. We ignore these cases as they require micromagnetic simulations for an accurate energy barrier estimate.
+}, this leads to an energy barrier $\EB = K_\mathrm{u} V$, with $V$ the magnet's volume.
+Similar to the calculation of the magnetic moment $\mu$ in \cref{fn:2:moment_integral}, relaxation of the magnetisation profile $\vc{M}(\vc{r})$ near the surface of the magnet may cause the actual energy barrier to be slightly smaller. \par
+Magnets in OOP ASI are usually very flat, so one would expect the shape anisotropy to result in a preferential in-plane magnetisation direction.
+This can be avoided by properly choosing materials that exhibit a strong interfacial anisotropy, as occurs at e.g. the Co/Pt interface, resulting in a net preferential out-of-plane magnetisation.
 
 \subsubsection{Mean-barrier approximation} % TODO: mention relevant choices with discontinuities, expand this explanation
 The simplest approximation of the effective energy barrier $\EBtilde$ is the \textit{mean-barrier approximation}.
