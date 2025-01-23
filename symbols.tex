@@ -14,13 +14,15 @@
 \begin{longtable}[l]{p{60pt} p{350pt}}
 	$\langle \cdot \rangle$ & Spatial average over the ASI \\
 	$\langle \cdot \cdot \rangle$ & Correlation over the ASI \\
+	$\odot$ & Hadamard product (element-wise matrix multiplication) \\
+	$*$ & Convolution \\
 	% $\overline{a}$& time average\\
 	%$\av{a b}$& correlation\\
 	%$\sav{a}$&spatial average over computational domain\\
 	%$\dot{a}$&time derivative\\
 	$K()$ & Complete elliptic integral of the first kind \\
 	$\sigma( \cdot )$ & Standard deviation for variable sampled from Gaussian distribution \\
-	$\norm{\vc{a}}$ & Vector norm\\
+	$\norm{ \cdot }$ & Vector norm\\
 	&\\
 \end{longtable}
 
@@ -36,9 +38,9 @@
 	$d$ & Effective distance between north and south poles of a magnet in the dumbbell approximation \\
 	&\\
 
-	$E$ & Energy \\
-	$E_\mathrm{B}$ & Energy barrier due to shape anisotropy \\ % TODO: what to do with E_B^c? Make a new global rule that (something)^c is critical? Should change T_c then
-	$\widetilde{E_\mathrm{B}}$ & Effective energy barrier \\
+	$E$ & Total interaction energy \\
+	$\EB$ & Energy barrier due to shape anisotropy \\ % TODO: what to do with E_B^c? Make a new global rule that (something)^c is critical? Should change T_c then
+	$\EBtilde$ & Effective energy barrier \\
 	$E_\mathrm{Exch}$ & Exchange energy\\
 	$E_\mathrm{MS}$ & Magnetostatic interaction energy \\
 	$E_\mathrm{Z}$ & Zeeman energy\\
@@ -53,6 +55,7 @@
 	&\\
 
 	$\vc{K}_i$ & Demagnetisation kernel for a magnet $i$ \\
+	$\vc{\mathcal{K}}^{(q)}$ & Demagnetisation kernel for a magnet at site $q$ in the unit cell \\
 	$K_u$ & Uniaxial shape anisotropy \\
 	&\\
 
@@ -96,7 +99,7 @@
 	$\vc{u}_i$ & Uniaxial anisotropy axis of magnet $i$ \\
 	&\\
 
-	$V$ & Volume \\
+	$V$ & Volume of a magnet \\
 	&\\
 
 	$w$ & Width of elliptical magnet ($2b$) \\
