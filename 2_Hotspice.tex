@@ -253,6 +253,7 @@ The simplest approximation of the effective energy barrier $\EBtilde$ is the \te
 It assumes that the highest-energy state lies halfway between the two stable states.
 This means the barrier height changes at half the rate at which the switching energy $\Delta E$ changes, leading to the approximation % TODO: illustrate with a simple figure
 \begin{equation}
+	\label{eq:2:EB_meanbarrier_original}
 	\EBtilde = \EB + \frac{\Delta E}{2} \mathrm{,}
 \end{equation}
 as it is often encountered in literature~\cite{MC_TemperatureDesorption,DirectionalEnergyBarrier}. \par
@@ -260,9 +261,10 @@ However, this does not account for the extreme cases where the interactions are 
 This happens when $\abs{\Delta E}$ exceeds twice the shape anisotropy $\EB$, leaving only one global minimum.
 To handle these situations, \hotspice modifies the calculation of the effective energy barrier $\EBtilde$ as follows:
 \begin{equation}
+	\label{eq:2:EB_meanbarrier_cases}
 	\widetilde{E_\mathrm{B}} = \begin{cases}
-		E_\mathrm{B} + \frac{\Delta E}{2} & \text{if } \abs{\frac{\Delta E}{2}} < E_\mathrm{B}, \\
-		\Delta E & \text{otherwise}.
+		E_\mathrm{B} + \frac{\Delta E}{2} & \quad \text{if} \quad \abs{\frac{\Delta E}{2}} < E_\mathrm{B}, \\
+		\Delta E & \quad \text{otherwise}.
 	\end{cases}
 \end{equation}
 This way, $\Delta E$ serves as the barrier when the original energy barrier disappears.
@@ -278,15 +280,15 @@ We therefore introduce $E_\perp$, which represents the energy of a magnet if it 
 Note that we are not deviating from the two-state Ising model used by \hotspice: we are simply putting ``test dipoles'' in the perpendicular orientation, but the magnets are never actually put in these states. \par
 Using this additional knowledge, the equation for the effective barrier along the two rotation pathways ($\pm$) then becomes
 \begin{equation}
-	\label{eq:2:E_B_asymmetric}
+	\label{eq:2:EB_asymmetric}
 	\widetilde{E_\mathrm{B}} = \begin{cases}
-		E_\mathrm{B} \pm \rho E_\perp + \frac{\Delta E}{2} & \text{if } \abs{\frac{\Delta E}{2}} < E_\mathrm{B} \pm \rho E_\perp, \\
-		\Delta E & \text{otherwise}, \\
+		E_\mathrm{B} \pm \rho E_\perp + \frac{\Delta E}{2} & \quad \text{if} \quad \abs{\frac{\Delta E}{2}} < E_\mathrm{B} \pm \rho E_\perp, \\
+		\Delta E & \quad \text{otherwise}, \\
 	\end{cases}
 \end{equation}
 which results in two different barriers if $E_\perp \neq 0$.
 Note that it does not matter which barrier corresponds to clockwise or counter-clockwise rotation; only the height of the barriers must be known to determine the switching rate of each magnet. \par
-The parameter $\rho = \mu_\perp/\mu_\parallel > 0$ was introduced in \cref{eq:2:E_B_asymmetric} to account for non-coherent magnetisation reversal processes like domain wall nucleation and propagation, which result in an effective reduction of the magnetic moment during reversal.~\cite{leo2021chiral,TimeResolvedDynamicsSOT}
+The parameter $\rho = \mu_\perp/\mu_\parallel > 0$ was introduced in \cref{eq:2:EB_asymmetric} to account for non-coherent magnetisation reversal processes like domain wall nucleation and propagation, which result in an effective reduction of the magnetic moment during reversal.~\cite{leo2021chiral,TimeResolvedDynamicsSOT}
 Using a value $\rho < 1$ improves correspondence with experimental observations, as we will show in~\cref{sec:3:IP_Pinwheel_reversal}.
 % TODO: mention that the perpendicular energy can be used to determine H_eff
 
@@ -303,9 +305,10 @@ In OOP ASI, an explicit expression can still be obtained because the effective f
 This causes the perpendicular energy to vanish ($E_\perp=0$) such that the equation is no longer transcendental.
 Instead, this leads to a quadratic relation as described in~\ccite{StonerWohlfarth2008}:
 \begin{equation}
+	\label{eq:2:EB_exact}
 	\widetilde{E_\mathrm{B}} = \begin{cases}
-		E_\mathrm{B} \ab(\frac{\Delta E}{4 E_\mathrm{B}} + 1)^2 & \text{if } \abs{\frac{\Delta E}{2}} < E_\mathrm{B}, \\
-		\Delta E & \text{otherwise}. \\
+		E_\mathrm{B} \ab(\frac{\Delta E}{4 E_\mathrm{B}} + 1)^2 & \quad \text{if} \quad \abs{\frac{\Delta E}{2}} < E_\mathrm{B}, \\
+		\Delta E & \quad \text{otherwise}. \\
 	\end{cases}
 \end{equation}
 
