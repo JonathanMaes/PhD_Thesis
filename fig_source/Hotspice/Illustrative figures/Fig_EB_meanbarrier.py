@@ -2,6 +2,9 @@ import hotspice
 import matplotlib.pyplot as plt
 import numpy as np
 
+from matplotlib.patches import FancyArrowPatch
+from matplotlib.path import Path
+
 xp = hotspice.xp
 
 import thesis_utils
@@ -56,8 +59,6 @@ def plot_EB_meanbarrier(N: int = 5): # N: number of bottom plots
     plt.rc('text', usetex=False)
     ax1.set_xlim([-4*E_B, 4*E_B])
     ax1.set_ylim([-4*E_B, 4*E_B])
-    # ax1.set_xticks(ticks)
-    # ax1.set_yticks(ticks)
     
     ## Subplots
     for i in range(N):
@@ -67,6 +68,23 @@ def plot_EB_meanbarrier(N: int = 5): # N: number of bottom plots
         col = N_sidepanel_cols - abs(N_sidepanel_cols - i - 1)
         ax = fig.add_subplot(gs[row:row+2,col+1:col+2])
         plot_subplot(ax, delta_E = delta_E, title_bottom=row > 1)
+    
+    ## Draw the arrow
+    L = (2*N_sidepanel_cols+.5)
+    x0 = (2*N_sidepanel_cols-1.4)/L
+    x1 = (2*N_sidepanel_cols-.9)/L
+    y = 0.55
+    w = 0.02 # Curvature radius
+
+    codes, verts = zip(*[
+        (Path.MOVETO, (x0, y-w)),
+        (Path.CURVE3, (x1, y-2*w)),
+        (Path.CURVE3, (x1, y)),
+        (Path.CURVE3, (x1, y+2*w)),
+        (Path.CURVE3, (x0-w, y+w))
+    ])
+    fig.patches.append(FancyArrowPatch(path=Path(verts, codes), arrowstyle="->", color="black", mutation_scale=15, lw=2, transform=fig.transFigure))
+    # fig.text((2*N_sidepanel_cols-1.25)/(2*N_sidepanel_cols+.5), 0.51, r"$\curvearrowleft$", fontsize=24, rotation=270)
 
     ## Adjust layout to avoid overlapping elements
     fig.tight_layout()
