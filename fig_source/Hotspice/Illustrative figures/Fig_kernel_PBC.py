@@ -65,7 +65,7 @@ def plot_kernel_PBC(L: int = 16):
     cbar_ax: plt.Axes = fig.add_axes([X, (1-Y)/2, 0.02, Y])  # [left, bottom, width, height]
     cbar = fig.colorbar(im2, cax=cbar_ax)
     cbar.set_ticks([-1, 0, 1])
-    cbar.set_label("Magnetostatic interaction (a.u.)", rotation=-90, labelpad=12)  # Add a label to the colorbar
+    cbar.set_label("Magnetostatic interaction [a.u.]", rotation=-90, labelpad=12)  # Add a label to the colorbar
 
     ## Adjust layout to avoid overlapping elements
     fig.tight_layout(rect=[0, 0, X, 1])  # Leave space on the right for the colorbar
