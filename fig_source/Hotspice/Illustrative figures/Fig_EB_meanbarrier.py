@@ -119,9 +119,8 @@ def plot_subplot(ax: plt.Axes, delta_E: float = 0, title_bottom: bool = False):
     ax.plot(thetas, landscape, color=col_exact)
     
     ## Points of interest
-    # Values at 0, 90 and 180°
-    dots_x = np.array([0, 90, 180])
-    ax.scatter(dots_x, E_landscape(delta_E, thetas=dots_x), color='black')
+    ax.scatter([0, 180], E_landscape(delta_E, thetas=[0, 180]), color='black') # Two stable states
+    ax.scatter([90], E_landscape(delta_E, thetas=[90]), color='black', facecolors='none') # Midway point
     
     # Exact top
     topindex = np.argmax(landscape)
@@ -129,13 +128,8 @@ def plot_subplot(ax: plt.Axes, delta_E: float = 0, title_bottom: bool = False):
     
     ## Lines
     d = -4
-    # Vertical & horizontal bars: exact top
-    x = d/3
-    y_exact = landscape[topindex]
-    ax.plot([x, x], [0, y_exact], color=col_exact)[0]
-    ax.plot([x, 180], [y_exact, y_exact], color='grey', lw=1, linestyle=':')[0]
     # Vertical & horizontal bars: method 1
-    x += d
+    x = d/3
     y_1 = method1(delta_E)
     ax.plot([x, x], [0, y_1], color=col_1)[0]
     ax.plot([x, 180], [y_1, y_1], color=col_1, lw=1, linestyle=':')[0]
@@ -144,6 +138,11 @@ def plot_subplot(ax: plt.Axes, delta_E: float = 0, title_bottom: bool = False):
     y_2 = method2(delta_E)
     ax.plot([x, x], [0, y_2], color=col_2)[0]
     ax.plot([x, 180], [y_2, y_2], color=col_2, lw=1, linestyle=':')[0]
+    # Vertical & horizontal bars: exact top
+    x += d
+    y_exact = landscape[topindex]
+    ax.plot([x, x], [0, y_exact], color=col_exact)[0]
+    ax.plot([x, 180], [y_exact, y_exact], color='grey', lw=1, linestyle=':')[0]
     
     ## Title
     pad = 0.2
