@@ -319,20 +319,23 @@ Assuming a uniform magnetisation in each magnet\footnote{
 Thus, the total profile is a sum of two sines and can be fully characterised if $E$ and $E_\perp$ are known.
 However, in the general case, this results in a transcendental equation
 \begin{align*}
+	\label{eq:2:EB_exact_transcendental}
 	\frac{\partial E(\theta)}{\partial \theta} = 0 \iff & \frac{\partial}{\partial \theta} \ab(-\frac{\EB}{2} \cos{2\theta} - \mu B_\mathrm{eff} \cos(\theta - \phi)) = 0 \\
-	\iff & \EB \sin{2\theta} + \mu B_\mathrm{eff} \sin(\theta - \phi) = 0 \numberthis
+	\iff & \EB \sin{2\theta} + \mu B_\mathrm{eff} \sin(\theta - \phi) = 0 \mathrm{,} \numberthis
 \end{align*}
-This would require numerical approximation to solve, and is therefore not done in \hotspice for performance reasons. \par
+which would require numerical approximation to solve.
+Since this could significantly impact performance, this is not done in \hotspice. \par
 In OOP ASI, however, the high degree of symmetry nonetheless allows an explicit expression to be obtained.
 All relevant vectors ($\vc{B}_\mathrm{eff}$, $\vc{\mu}$ ...) in such systems point along the z-axis, causing the perpendicular energy to vanish ($E_\perp=0$) and the equation to no longer be transcendental.
-Instead, this leads to a quadratic relation as described by \textit{Tannous and Gieraltowski}~\cite{StonerWohlfarth2008}:
+Solving \cref{eq:2:EB_exact_transcendental} and applying the double-angle identities for $\cos$ and $\sin$ instead leads to the quadratic relation % Q: should I derive this from the d/dtheta equations or is this clear enough? (only needs double-angle rules for cos and sin basically)
 \begin{equation}
 	\label{eq:2:EB_exact}
 	\widetilde{E_\mathrm{B}} = \begin{cases}
 		E_\mathrm{B} \ab(\frac{\Delta E}{4 E_\mathrm{B}} + 1)^2 & \quad \text{if} \quad \abs{\frac{\Delta E}{2}} < E_\mathrm{B}, \\
-		\Delta E & \quad \text{otherwise.} \\
+		\Delta E & \quad \text{otherwise,} \\
 	\end{cases}
 \end{equation}
+as has previously been described by \textit{Tannous and Gieraltowski}~\cite{StonerWohlfarth2008}.
 
 \section{Dynamics}\label{sec:2:Dynamics}
 A Monte Carlo simulator would not be complete without an algorithm to change the state of the system.
