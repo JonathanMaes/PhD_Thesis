@@ -359,9 +359,11 @@ However, since OOP magnets are not ellipsoidal as assumed by the transcendental 
 
 \section{Dynamics}\label{sec:2:Dynamics}
 A Monte Carlo simulator would not be complete without an algorithm to change the state of the system.
-Since any magnet in the ASI may spontaneously switch to the opposite magnetisation state due to thermal fluctuations, \hotspice evaluates the time evolution of the ASI in a stepwise manner using an update algorithm that determines which magnet should switch next.
-The two update algorithms implemented in \hotspice are examples of two distinct classes of kinetic Monte Carlo (KMC) algorithms --- rejection-free and rejection KMC.
-In the context of ASI, we refer to these as \textit{N\'eel-Arrhenius switching} and \textit{Metropolis-Hastings}, respectively~\cite{PhysicalTimeKMC}.
+Since any magnet in the ASI may spontaneously switch to the opposite magnetisation state due to thermal fluctuations, \hotspice evaluates the time evolution of the ASI in a stepwise manner using an update algorithm that determines which magnet should switch next. \par
+To achieve this, \hotspice uses kinetic Monte Carlo (KMC) algorithms, sometimes also referred to as Dynamic Monte Carlo.
+KMC algorithms can typically be divided into two distinct classes: rejection-free and rejection KMC.
+\hotspice implements algorithms of both types.
+These techniques go by many names, but in the context of ASI we shall refer to them as \textit{N\'eel-Arrhenius switching} and \textit{Metropolis-Hastings}, respectively~\cite{PhysicalTimeKMC}.
 The former is more suitable for simulating the temporal evolution of the system, while the latter can be used to sample the equilibrium distribution of the state space.
 
 \subsection{N\'eel relaxation: temporal evolution}
@@ -387,16 +389,17 @@ This is reported to be on the order of \qtyrange{e9}{e10}{\hertz}~\cite{BrownThe
 As $\EB \rightarrow 0$, \cref{eq:2:Néel} implies that $\nu \rightarrow \nu_0$, so we use $\nu_0=\qty{e10}{\hertz}$~\cite{JM_Masterproef}. \par % Each oscillation is an attempt to leave this energy minimum.
 A more precise value for $\nu_0$ for a particular simulation could be achieved by comparing with a similar experiment.
 However, an order-of-magnitude estimate often suffices because any small (i.e., $\sim \kBT$) change of $\EB$ will translate to an exponential change of the switching rate.
-As discussed in~\cref{sec:2:E_B_eff}, our approximations of $\EBeff$ are imperfect, thus rendering an accurate value of $\nu_0$ irrelevant. \par
+As discussed in~\cref{sec:2:E_B_eff}, our approximations of $\EBeff$ are imperfect, thus rendering an accurate value of $\nu_0$ irrelevant.
+Furthermore, $\nu_0$ only affects the absolute value of the elapsed time, not the switching order, so its overall importance to the simulation is limited. \par
 The values for $\nu_0$ on the order of \SI{e10}{\hertz} are valid for reversal by coherent rotation, as was already assumed in \hotspice during the calculation of the effective barriers.
 For other reversal processes, e.g. domain wall-mediated reversal, the attempt frequency could be many orders of magnitude faster because its interpretation as a rotation frequency then no longer holds~\cite{ArrheniusPrefactor}. % Another ref: 45 in leo2021chiral
 It must also be noted that the attempt frequency can significantly depend on other system parameters.
 For example, the energy barrier $\EB$ itself may be temperature-dependent, which can ultimately be captured by a temperature-dependent attempt frequency~\cite{AttemptFreqTemperature}. % Ref says: ``When this energy barrier is the result of a collective statistical behavior of many constituents, it may contain an intrinsic temperature dependence which has to be carefully taken into account, in particular when the prefactor is interpreted in terms of an attempt frequency.''
 
 \paragraph{Algorithm}
-A single iteration of the N\'eel-Arrhenius algorithm is presented in~\cref{alg:NeelArrheniusSingle}.
-Each iteration will increment the elapsed time by a certain amount $t \leq t_\mathrm{max}$, where the maximum time $t_\mathrm{max}$ can be set by the user to prevent excessively long switching times.
-When using the N\'eel-Arrhenius update scheme, this iteration is simply performed as many times as is required to reach a desired elapsed time. \par
+Knowledge of the switching rate $\nu$ can be used to construct a rejection-free kinetic Monte Carlo method, which we refer to as the N\'eel-Arrhenius update algorithm.
+Each iteration, as presented in~\cref{alg:NeelArrheniusSingle}, will increment the elapsed time by a certain duration $t \leq t_\mathrm{max}$, where the maximum time $t_\mathrm{max}$ can be set by the user to prevent excessively long switching times.
+When using the N\'eel-Arrhenius update scheme, \cref{alg:NeelArrheniusSingle} is simply performed as many times as needed to reach the desired elapsed time. \par
 \begin{algorithm}[Single N\'eel-Arrhenius iteration]
 	\label{alg:NeelArrheniusSingle}
 	\begin{enumerate}[rightmargin=15pt]
@@ -414,10 +417,53 @@ When using the N\'eel-Arrhenius update scheme, this iteration is simply performe
 % Note that this algorithm still gives the correct switching rate $\nu$, even though the switching time $t_i$ is sampled randomly multiple times before magnet $i$ typically switches. This is because, the more magnets there are, the harder it gets for an arbitrary magnet $i$ to have the shortest randomly sampled time (and thus to switch), but the elapsed time increment after each switch will be smaller as well, and these two effects cancel perfectly to end up with the same switching rate as if the magnet would be the only one switching.
 The maximum time $t_\mathrm{max}$ (default value of one second) prevents the simulation from advancing too far into the future, as the exponential character of the N\'eel-Arrhenius law can cause switching times to become much longer than what could ever be observed experimentally.
 It can also be used to apply time-dependent external fields.
-For example, when a sinusoidal signal of frequency $f$ is applied to the lattice, using $t_{\mathrm{max}}=20/f$ will ensure that the waveform is captured in sufficient detail.
+For example, when a sinusoidal signal of frequency $f$ is applied to the lattice, using $t_{\mathrm{max}}=20/f$ will ensure that the waveform is captured in sufficient detail. \par
+In the realm of rejection-free KMC, a commonly used algorithm is the Bortz-Kalos-Lebowitz (BKL) algorithm.
+While the procedure detailed in~\cref{alg:NeelArrheniusSingle} is not the same, its yields an identical result as the BKL algorithm. % TODO: add reference to this
 
 \subsection{Metropolis-Hastings: sampling equilibrium states}
 % TODO: decide whether to talk about nomenclature details etc. here, or in the introduction.
+Metropolis-Hastings is a rejection-based kinetic Monte Carlo (KMC) method designed to sample the state space at thermal equilibrium, where the probability of each state appearing is proportional to their Boltzmann factor $e^{-E/\kBT}$~\cite{IntroductionMC,kyimba2006comparisonIsingAlgorithms}.
+Hence, in contrast to N\'eel-Arrhenius switching, Metropolis-Hastings is not intended to accurately model the system's transient dynamics and is instead more suitable for examining equilibrium statistical quantities in ASI, like the average magnetization, heat capacity, correlation...~\cite{ApparentFMpinwheel} \par
+
+% TODO: talk about acceptance probability here and detailed balance and ergodicity etc. etc.
+
+\paragraph{Algorithm}
+A rejection-based KMC method works by selecting magnets at random, and deciding whether or not to switch them with a certain probability.
+More rigorously, the algorithm repeats the following steps:
+\begin{algorithm}[Single Metropolis-Hastings iteration]
+	\begin{enumerate}
+		\item Select a magnet $i$ at random (with all magnets equally likely to be chosen).
+		\item Calculate the energy change $\Delta E_i$ if this magnet were to switch.
+		\item Switch the magnet with probability
+		\begin{equation}
+			P_i = \begin{cases}
+				\exp(-\Delta E_i/\kBT), & \text{if } \Delta E_i > 0 \mathrm{,} \\
+				1 & \text{otherwise} \mathrm{.}
+			\end{cases}
+		\end{equation} % This MH formulation acceptance probability will converge faster than the GD acceptance probability for equilibrium studies since any attempted switches without barrier are guaranteed to switch, whereas the GD acceptance probability may reject such switches.
+		\item \textit{Optional}:
+		Increment the elapsed time $t$ by
+		\begin{equation}
+			\Delta t = -\frac{\exp\ab(\EBeff\big/\kBT\ab) \ln{\chi}}{N \nu} \mathrm{,}
+			\label{eq:Metropolis_time}
+		\end{equation}
+		with $N$ the number of magnets in the system and $\chi$ a uniformly distributed random variable in $(0,1]$.~\cite{PhysicalTimeKMC}
+	\end{enumerate}
+\end{algorithm}
+This algorithm satisfies detailed balance and ergodicity, thus ensuring equilibrium is eventually reached, though the rate of convergence may vary as noted in~\cref{sec:2:Verification_OOP_Exchange}~\cite{jang2004stochastic}.
+For enhanced performance, multiple sufficiently distant magnets can be selected simultaneously, see~\cref{sec:2:MultiSwitch}. \par
+While N\'eel relaxation relies on an explicit calculation of the elapsed time, Metropolis-Hastings does not strictly require this knowledge.
+Therefore, the last step of the algorithm --- the calculation of the elapsed time --- is optional.
+For a long time, the notion of a well-defined elapsed time in rejection KMC was controversial~\cite{nfoldMCalgorithm,GlauberTimescale_sadiq1984,MCSim_StatPhys}. % Refs: `nfoldMCalgorithm` mentions both Glauber & MH acceptance prob., but says that Glauber can have a timescale (their equation looks a lot like in PhysicalTimeKMC) yet Metropolis cannot (due to the max()?), which is no longer true. `GlauberTimescale_sadiq1984' uses a less rigorously defined yet similar expression as in `PhysicalTimeKMC`. Don't use this reference when referring to the lack of a timescale, because this one seems to be one of the better solutions presented in literature, yet not very rigorous. Also `Lattice Kinetic Descriptions for Bulk Reaction-Diffusion Processes: Application to Alloys under Irradiation' p.215 says that ``The relationship between the simulation time and the physical time has been widely debated [MCSim_StatPhys], and it is sometimes assumed that the two time scales are proportional.''
+Often, the number of performed Monte Carlo sweeps\footnote{
+	A Monte Carlo ``step'' refers to attempting to switch a single magnet. By a ``Monte Carlo sweep'' (MCS), we refer to $N$ attempted switches when the simulation contains $N$ magnets~\cite{NumericalDynamicalNiedermayer}. Note that the distinction between attempted switches and actual switches only exists in the Metropolis-Hastings algorithm.
+} was used as a crude measure of ``elapsed time'', but eventually a formal derivation for the physical time scale in rejection KMC was presented by \textit{Serebrinsky}~\ccite{PhysicalTimeKMC}, where~\cref{eq:Metropolis_time} was derived.
+Note that the effective energy barrier $\EBeff$ only appears in the calculation of the elapsed time: it does not influence the switching probability in the Metropolis-Hastings algorithm because energy barriers do not affect the equilibrium state.
+
+\paragraph{Nomenclature disambiguation}
+There often exists confusion between the Metropolis-Hastings algorithm and so-called ``Glauber dynamics''. % TODO
+
 \subsection{Other Monte Carlo algorithms} % Not implemented, explain why Wolff could be useful but why it's not in Hotspice
 For a broader overview of Monte Carlo methods, we refer to Ref.~\cite{IntroductionMC}, which may also clarify the at times confusing naming present throughout literature.
 
@@ -651,8 +697,8 @@ The CPU excels at the latter.
 
 \paragraph{Kernel improvements}
 The first two rows `\textit{Pairwise kernel}' in the tables use the na\"ive kernels $\vc{k}$ (or, equivalently, $\vc{K}$) described at the start of \cref{sec:2:Kernels}.
-Their values were simply arranged in a big $N \times N$ matrix which stored the magnetostatic interaction between each pair of magnets.
-The initialisation time on CPU (first row in~\cref{tab:2:perf_init}) bears witness to this, as $t_\mathrm{init} \propto L^4 = N^2$.
+Their values were simply arranged in a big $N \times N$ matrix $\vc{D}$ which stored the magnetostatic interaction between each pair of magnets.
+While this allowed the magnetostatic interaction energy of each magnet to easily be calculated by a single matrix product $\vc{D}\vc{s}$, the initialisation time on CPU (first row in~\cref{tab:2:perf_init}) bears witness to the size of this matrix, as $t_\mathrm{init} \propto L^4 = N^2$.
 This is because calculating the initial magnetostatic interaction energy $E_\mathrm{MS}$ with this kernel structure requires iterating over all magnets and summing the interaction energy with each other magnet.
 On GPU, parallelisation of this sum in each such iteration approximately reduces this to $\propto L^2 = N$. \par
 Clearly, for large arrays, the need to store $\order{N^2}$ elements quickly becomes prohibitive.
@@ -684,9 +730,7 @@ With this algorithm, the GPU can maintain the advantage for systems as small as 
 \subsubsection{Multi-switching}
 The N\'eel algorithm, used in the preceding discussion about performance, does not implement a multi-switching procedure.
 This makes it very inefficient for large systems: for a system of $N$ magnets to change its macrostate significantly, on the order of $N$ switches must occur.
-Even though the time required to perform a single switch with the N\'eel algorithm stays roughly constant up to $L<400$, the time per Monte Carlo sweep\footnote{
-	A Monte Carlo ``step'' refers to attempting to switch a single magnet. By a ``Monte Carlo sweep'' (MCS), we refer to $N$ attempted switches when the simulation contains $N$ magnets~\cite{NumericalDynamicalNiedermayer}. Note that the distinction between attempted switches and actual switches only exists in the Metropolis-Hastings algorithm. % TODO END: Could also decide to put this in a \begin{definition} environment somewhere earlier.
-} will scale linearly with the number of magnets if each iteration only switches a single magnet.
+Even though the time required to perform a single switch with the N\'eel algorithm stays roughly constant up to $L<400$, the time per Monte Carlo sweep will scale linearly with the number of magnets if each iteration only switches a single magnet.
 The ability to perform multiple switches simultaneously in the Metropolis-Hastings algorithm (described earlier in \cref{sec:2:MultiSwitch}) alleviates this problem, allowing for a significantly higher amount of Monte Carlo sweeps per second. \\\par
 \cref{fig:2:Performance} shows the performance of the multi-switching algorithm as a function of system size, both for calculation on the CPU (a) and GPU (b).
 The multi-switching algorithm selects a certain number of magnets per second, as depicted by the blue curve: these are candidates for switching.
@@ -815,6 +859,7 @@ When an external magnetic field of magnitude $B$ is applied to a non-interacting
 }
 
 \subsection{Exchange-coupled Ising system}
+\label{sec:2:Verification_OOP_Exchange}
 The 2D square-lattice exchange-coupled Ising model is one of the few exactly solvable systems in statistical physics~\cite{ExactlySolvedModelsStatMech}.
 An analytical solution is known for the temperature-dependence of its average magnetisation
 \begin{equation}
