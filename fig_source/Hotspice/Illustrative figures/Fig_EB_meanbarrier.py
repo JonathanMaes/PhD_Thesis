@@ -43,28 +43,31 @@ def plot_EB_meanbarrier(N: int = 5): # N: number of bottom plots
     figsize = (thesis_utils.page_width, 3)
     fig = plt.figure(figsize=figsize)
     N_sidepanel_cols = int(np.ceil(N/2))
-    gs = fig.add_gridspec(4, N_sidepanel_cols+2, width_ratios=[N_sidepanel_cols, 0.5] + [1]*N_sidepanel_cols, wspace=0)
+    gs = fig.add_gridspec(4, N_sidepanel_cols+2, width_ratios=[N_sidepanel_cols*0.8, 0.5] + [1]*N_sidepanel_cols, wspace=0)
     
     ## Main graph showing E_B_eff(Delta E)
     ax1 = fig.add_subplot(gs[:,0])
-    delta_E_range = np.linspace(-E_B*4, E_B*4, 201)
+    lim = (-E_B*5, E_B*5)
+    delta_E_range = np.linspace(*lim, 1001)
     
     E_barrier_method1 = method1(delta_E_range)
     E_barrier_method2 = method2(delta_E_range)
 
     ax1.plot(delta_E_range, E_barrier_method1, color=col_1, label="Mean-barrier")
     ax1.plot(delta_E_range, E_barrier_method2, color=col_2, label="Conditional\nmean-barrier")
-    exact = [E_landscape(delta_E)[np.argmax(E_landscape(delta_E))] for delta_E in delta_E_range]
+    exact = [E_landscape(delta_E)[np.argmax(E_landscape(delta_E))] if delta_E > -4*E_B else delta_E for delta_E in delta_E_range]
     # ax1.scatter(delta_E_range, exact, marker='*', color=col_exact, label=r"Real $E_\mathrm{B}$ for ideal sines")
     ax1.plot(delta_E_range, exact, color=col_exact, label=r"Exact")
     # ax1.plot(delta_E_range, E_B*(delta_E_range/E_B/4+1)**2, color=col_exact, label=r"Exact $\widetilde{E_\mathrm{B}}$")
-    ax1.set_xlabel(r"$\Delta E$ between state $1 \rightarrow 2$")
+    ax1.set_xlabel(r"Switching energy $\Delta E/E_\mathrm{B}$")
     ax1.legend()
     plt.rc('text', usetex=True)
-    ax1.set_ylabel(r'$\widetilde{E_\mathrm{B}}$') # Need to usetex=True for proper widetilde
+    ax1.set_ylabel(r'Effective energy barrier $\widetilde{E_\mathrm{B}}/E_\mathrm{B}$') # Need to usetex=True for proper widetilde
     plt.rc('text', usetex=False)
-    ax1.set_xlim([-4*E_B, 4*E_B])
-    ax1.set_ylim([-4*E_B, 4*E_B])
+    ax1.set_xlim(*lim)
+    ax1.set_ylim(*lim)
+    thesis_utils.label_ax(ax1, 0, offset=(-0.24, 0.02))
+    thesis_utils.label_ax(ax1, 1, offset=(1.1, 0.02))
     
     ## Subplots
     for i in range(N):
@@ -77,9 +80,9 @@ def plot_EB_meanbarrier(N: int = 5): # N: number of bottom plots
     
     ## Draw the arrow
     L = (2*N_sidepanel_cols+.5)
-    x0 = (2*N_sidepanel_cols-1.5)/L
-    x1 = (2*N_sidepanel_cols-.7)/L
-    y = 0.56
+    x0 = (2*N_sidepanel_cols-1.6)/L
+    x1 = (2*N_sidepanel_cols-.8)/L
+    y = 0.54
     w = 0.03 # Curvature radius
 
     codes, verts = zip(*[
@@ -94,7 +97,7 @@ def plot_EB_meanbarrier(N: int = 5): # N: number of bottom plots
 
     ## Adjust layout to avoid overlapping elements
     fig.tight_layout()
-    # fig.subplots_adjust()
+    fig.subplots_adjust(top=0.9, bottom=0.15)
 
     ## Save
     hotspice.utils.save_results(figures={"EB_meanbarrier": fig}, timestamped=False)
@@ -157,7 +160,8 @@ def plot_subplot(ax: plt.Axes, delta_E: float = 0, title_bottom: bool = False):
     lowest_point_frac = (lowest_point - ymin)/(ymax - ymin)
     highest_point_frac = (highest_point - ymin)/(ymax - ymin)
     y_title = lowest_point_frac - pad if title_bottom else highest_point_frac + pad
-    ax.set_title(r"$\Delta E = " + f"{delta_E:.2g}$", y=y_title, pad=-4)
+    num = f"{delta_E:.2g}"
+    ax.set_title(r"$\Delta E = " + num + (r"E_\mathrm{B}$" if num != "0" else "$"), y=y_title, pad=-4)
 
 
 if __name__ == "__main__":

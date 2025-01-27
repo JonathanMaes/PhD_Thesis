@@ -229,11 +229,25 @@ In conclusion, the dumbbell model is preferred for IP systems, while the second-
 
 \subsection{Effective energy barrier}\label{sec:2:E_B_eff}
 To properly simulate ASI dynamics and hysteresis, knowledge of the effective energy barrier $\EBtilde$, which separates the two magnetisation states of each magnet, is crucial.
-Recall that this quantity is distinct from the shape anisotropy $E_\mathrm{B}$: the effective energy barrier  $\EBtilde$ is a modification of $\EB$ caused by the interaction with other magnets.
-It can be calculated at various levels of accuracy, which may yield different switching rates or even a different switching order~\cite{leo2021chiral}. \par
+Recall that this quantity is distinct from the shape anisotropy $\EB$: the effective energy barrier $\EBtilde$ is a modification of $\EB$ caused by the interaction with other magnets. \par
+This is illustrated in~\crefSubFigRef{fig:2:EB_meanbarrier}{b}, where the energy landscape for $\Delta E = 0$ reveals the shape anisotropy $\EB$ while slanted energy landscapes for $\Delta E \neq 0$ show how $\EBtilde$ is changed by these interactions.
+The figure shows that $\EBtilde$ can be calculated at various levels of accuracy, which may yield different switching rates or even a different switching order~\cite{leo2021chiral}. \par
 In this section, we will explore some of these approximations.
-All of them make use of the switching energy $\Delta E$ between the current and opposite state of a magnet.
-Recall that the switching energy is cheap to compute as $\Delta E = -2 E$ because the terms in \cref{eq:2:E} simply change sign when the magnetisation $\vc{\mu}$ of a magnet is reversed. \par
+All of them make use of the switching energy $\Delta E$ between the current and opposite state of a magnet, since this is cheap to compute\footnote{
+	Recall that the terms in \cref{eq:2:E} simply change sign when the magnetisation $\vc{\mu}$ of a magnet is reversed.
+} as $\Delta E = -2 E$.
+
+\xfig[1.0]{2_Hotspice/EB_meanbarrier.pdf}{
+	Mean-barrier approximation (\ref{eq:2:EB_meanbarrier_original}, \textcolor{lightblue}{blue}) and its conditional form (\ref{eq:2:EB_meanbarrier_cases}, \textcolor{lightred}{red}) compared to the exact energy barrier (\ref{eq:2:EB_exact}, \textcolor{mplgrey}{grey}).
+	Due to the limited information available to a mean-barrier model (only $\EB$ and $\Delta E$), the exact solution assumes a sinusoidal shape anisotropy and a uniform effective external field along the easy axis.
+	\textbf{(a)} Effective energy barrier $\EBtilde$ as function of switching energy $\Delta E$ for these approximations.
+	\textbf{(b)} Energy landscape between the two stable states (black filled circles) for several values of the switching energy $\Delta E$.
+	The energy landscapes without and with shape anisotropy are shown as dotted black and solid grey lines, respectively.
+	An open circle indicates the halfway point, while a star is put at the top of the exact energy barrier.
+	On each landscape, the height of the barrier in the different approximations is indicated by a dotted horizontal line, indicating how they use different values on the energy landscape for their estimate.
+	\label{fig:2:EB_meanbarrier}
+}
+
 We will omit the subscript $i$ for the remainder of this section; it is implied that the following discussion and equations apply to each magnet individually.
 
 \subsubsection{Intrinsic barrier due to shape anisotropy} % TODO END: is any of this more relevant in the introduction?
@@ -258,9 +272,11 @@ This means the barrier height changes at half the rate at which the switching en
 	\label{eq:2:EB_meanbarrier_original}
 	\EBtilde = \EB + \frac{\Delta E}{2} \mathrm{,}
 \end{equation}
-as it is often encountered in literature~\cite{MC_TemperatureDesorption,DirectionalEnergyBarrier}. \par
+as it is often encountered in literature~\cite{MC_TemperatureDesorption,DirectionalEnergyBarrier}.
+This method is illustrated in blue in~\cref{fig:2:EB_meanbarrier}. \par
 However, this is a very crude approximation which does not account for the extreme cases where the interactions are so strong that the energy barrier effectively disappears ($\abs{E} \gg \EB$).
 In the model of \cref{eq:2:EB_meanbarrier_original}, this happens when $\abs{\Delta E}$ exceeds twice the shape anisotropy $\EB$, leaving only one global minimum.
+This can be seen in \crefSubFigRef{fig:2:EB_meanbarrier}{b} for $\Delta E = \pm 4 \EB$, where \cref{eq:2:EB_meanbarrier_original} clearly does not make physical sense.
 To handle these situations, \hotspice modifies the calculation of the effective energy barrier $\EBtilde$ as follows:
 \begin{equation}
 	\label{eq:2:EB_meanbarrier_cases}
@@ -270,8 +286,10 @@ To handle these situations, \hotspice modifies the calculation of the effective 
 	\end{cases}
 \end{equation}
 This way, $\Delta E$ serves as the barrier when the original energy barrier disappears.
+This adjustment is shown in red in~\cref{fig:2:EB_meanbarrier}: it is closer to the exact solution except for $-4 \EB < \Delta E < -2 \EB$.
+Notwithstanding that the original mean-barrier approximation~\eqref{eq:2:EB_meanbarrier_original} lies closer to the exact solution in this range, we choose not to use it as this lies outside its valid range of $\abs{\Delta E} < 2 \EB$.
 
-\subsubsection{Asymmetric barrier (in-plane)}
+\subsubsection{Asymmetric barrier}
 The simple mean-barrier approximation is insufficient for many IP ASI.
 In real nanomagnets, reversal by coherent rotation can occur via two pathways; clockwise ($\clockwise$) or counter-clockwise ($\counterclockwise$) rotation of the magnetisation.
 In an asymmetrical environment --- when the effective field has a non-zero component perpendicular to the easy axis --- one of these two rotation directions will be preferred~\cite{leo2021chiral,DirectionalEnergyBarrier}.
@@ -309,7 +327,7 @@ For IP ASI, this uniquely defines $\vc{B}_\mathrm{eff}$ since all vectors lay in
 	\vc{B}_\mathrm{eff} = - \frac{E \vc{\mu} + E_\perp \vc{e}_z \times \vc{\mu}}{\mu^2} \mathrm{.}
 \end{equation}
 
-\subsubsection{Exact solution (out-of-plane)}
+\subsubsection{Exact solution}
 The effective energy barrier $\EBtilde$ can be calculated exactly if an analytical expression is known for the energy as a function of magnetisation angle $\theta$ relative to the magnet's easy axis.
 The shape anisotropy creates a basic energy profile with two minima at $\theta=0$ and $\theta=\pi$, but the exact form of this profile depends on the magnet's shape.
 For ellipsoidal magnets, the energy landscape is $-\frac{E_\mathrm{B}}{2} \cos{2\theta}$~\cite{neel1949theorie}.
@@ -336,6 +354,8 @@ Solving \cref{eq:2:EB_exact_transcendental} and applying the double-angle identi
 	\end{cases}
 \end{equation}
 as has previously been described by \textit{Tannous and Gieraltowski}~\cite{StonerWohlfarth2008}.
+This is the exact solution that was shown in grey in~\cref{fig:2:EB_meanbarrier}.
+However, since OOP magnets are not ellipsoidal as assumed by the transcendental equation that originally led to \cref{eq:2:EB_exact_transcendental}, the relevance of \cref{eq:2:EB_exact} remains questionable.
 
 \section{Dynamics}\label{sec:2:Dynamics}
 A Monte Carlo simulator would not be complete without an algorithm to change the state of the system.
