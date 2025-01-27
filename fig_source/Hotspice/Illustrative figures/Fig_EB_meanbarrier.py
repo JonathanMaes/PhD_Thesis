@@ -13,10 +13,16 @@ import thesis_utils
 E_B = 1
     
 def method1(delta_E):
+    """ Standard mean-barrier approximation:
+        Effective barrier = E + ΔE/2
+    """
     E = -delta_E/2
-    return np.maximum(delta_E, E_B - E)
+    return E_B - E
 
 def method2(delta_E):
+    """ Conditional mean-barrier approximation:
+        Effective barrier = E + ΔE/2 if abs(ΔE/2) < E_B else ΔE
+    """
     E = -delta_E/2
     E_highest_state = np.abs(E)
     return np.where(E_B > E_highest_state, E_B - E, delta_E)
@@ -46,8 +52,8 @@ def plot_EB_meanbarrier(N: int = 5): # N: number of bottom plots
     E_barrier_method1 = method1(delta_E_range)
     E_barrier_method2 = method2(delta_E_range)
 
-    ax1.plot(delta_E_range, E_barrier_method1, color=col_1, label="Method 1:\n"+r"$\mathrm{max}(E_\perp, E_2) - E_1$")
-    ax1.plot(delta_E_range, E_barrier_method2, color=col_2, label="Method 2:\n"+r"$E_\perp$ if $E_\perp > \mathrm{max}(E_1, E_2)$ else $E_2$")
+    ax1.plot(delta_E_range, E_barrier_method1, color=col_1, label="Mean-barrier")
+    ax1.plot(delta_E_range, E_barrier_method2, color=col_2, label="Conditional\nmean-barrier")
     exact = [E_landscape(delta_E)[np.argmax(E_landscape(delta_E))] for delta_E in delta_E_range]
     # ax1.scatter(delta_E_range, exact, marker='*', color=col_exact, label=r"Real $E_\mathrm{B}$ for ideal sines")
     ax1.plot(delta_E_range, exact, color=col_exact, label=r"Exact")
@@ -71,19 +77,19 @@ def plot_EB_meanbarrier(N: int = 5): # N: number of bottom plots
     
     ## Draw the arrow
     L = (2*N_sidepanel_cols+.5)
-    x0 = (2*N_sidepanel_cols-1.4)/L
-    x1 = (2*N_sidepanel_cols-.9)/L
-    y = 0.55
-    w = 0.02 # Curvature radius
+    x0 = (2*N_sidepanel_cols-1.5)/L
+    x1 = (2*N_sidepanel_cols-.7)/L
+    y = 0.56
+    w = 0.03 # Curvature radius
 
     codes, verts = zip(*[
         (Path.MOVETO, (x0, y-w)),
-        (Path.CURVE3, (x1, y-2*w)),
+        (Path.CURVE3, (x1, y-3*w)),
         (Path.CURVE3, (x1, y)),
-        (Path.CURVE3, (x1, y+2*w)),
-        (Path.CURVE3, (x0-w, y+w))
+        (Path.CURVE3, (x1, y+3*w)),
+        (Path.CURVE3, (x0-0.01, y+w))
     ])
-    fig.patches.append(FancyArrowPatch(path=Path(verts, codes), arrowstyle="->", color="black", mutation_scale=15, lw=2, transform=fig.transFigure))
+    fig.patches.append(FancyArrowPatch(path=Path(verts, codes), arrowstyle="->", color="black", mutation_scale=15, lw=1, transform=fig.transFigure))
     # fig.text((2*N_sidepanel_cols-1.25)/(2*N_sidepanel_cols+.5), 0.51, r"$\curvearrowleft$", fontsize=24, rotation=270)
 
     ## Adjust layout to avoid overlapping elements
