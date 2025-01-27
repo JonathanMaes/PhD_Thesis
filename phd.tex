@@ -23,6 +23,7 @@
 \usepackage{cancel} % Strikethrough diagonal in math mode
 \usepackage{changepage} % Enables adjustable margins within the document
 \usepackage{color} % Basic color support (often superseded by "xcolor")
+\usepackage{enumitem}
 \usepackage{float} % Provides option [H] to floats
 \usepackage[backref=none]{hyperref} % Creates hyperlinks and metadata in PDFs. Set backref=page to add back-references in bibliography.
 \usepackage{listings} % Formats code snippets for programming examples
@@ -31,12 +32,11 @@
 \usepackage{lscape} % Rotate content to landscape orientation
 \usepackage{makecell} % Line breaks in table cells
 \usepackage{makeidx} % Creates an index for the document
-\usepackage{mdframed} % Creates framed content with custom styles
+\usepackage[framemethod=TikZ]{mdframed} % Creates framed content with custom styles
 \usepackage{microtype} % Enhances typographic appearance (e.g., kerning and justification)
 \usepackage{nonfloat} % Prevents floating figures/tables for specific environments
 \usepackage{pagecolor} % Sets background color of pages
 \usepackage{physics2} % Simplifies common physics expressions and notation
-\usephysicsmodule{ab,ab.legacy}
 \usepackage{ragged2e} % Provides \justifying command
 \usepackage{soul} % For text decoration, e.g., underline (\ul{}), strikethrough (\st{}), highlighting...
 % \usepackage{subcaption} % Subfigure captions
@@ -53,17 +53,17 @@
 \usepackage[all]{hypcap} % [Requires "hyperref"] Ensures links to figures focus on the image, not the caption
 \usepackage[capitalise]{cleveref} % [Requires "hyperref"] Intelligent cross-referencing
 
+%%%% CREATE CUSTOM COMMANDS
 \input{commands}
+\newcommand{\phdtitle}{Modelling of Reservoir Computing in Perpendicular-Anisotropy Artificial Spin Ice}
+\newcommand{\phdauthor}{Jonathan Maes}
 
 %%%% PACKAGES SETUP COMMANDS
 \graphicspath{{fig/}} % Package "graphicx"
 \sisetup{ % Package "siunitx"
    detect-weight=true
 }
-%\usephysicsmodule{ab,ab.legacy} % Package "physics2": needs to load modules explicitly to avoid namespace conflicts
-\newcommand{\phdtitle}{Modelling of Reservoir Computing in Perpendicular-Anisotropy Artificial Spin Ice}
-\newcommand{\phdauthor}{Jonathan Maes}
-\definecolor{xrefcolor}{HTML}{000040}
+\usephysicsmodule{ab,ab.legacy} % Package "physics2": needs to load modules explicitly to avoid namespace conflicts
 \hypersetup{ % Package "hyperref": configures options for hyperlinks, bookmarks, and metadata in PDFs.
    plainpages=false,
    colorlinks=true,
@@ -97,6 +97,24 @@
 \setlength{\headheight}{13.6pt} 
 
 
+%%%% DEFINE BOXED ENVIRONMENTS WITH MDFRAMED PACKAGE
+%% Algorithm
+\mdfdefinestyle{algorithmstyle}{%
+	roundcorner=10pt,
+	backgroundcolor=figcolor,
+	frametitlebackgroundcolor=gray!30,
+	linecolor=gray!50, linewidth=0pt,
+	frametitlerule=false,%
+	innertopmargin=\topskip,
+	innerbottommargin=\topskip,
+	subtitleaboveline=true,
+	subtitlebackgroundcolor=gray!10,
+	%topline=false,
+	%bottomline=false,
+}
+\mdtheorem[style=algorithmstyle]{algorithm}{Algorithm}
+
+%%%% SETUP HEADER
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{}

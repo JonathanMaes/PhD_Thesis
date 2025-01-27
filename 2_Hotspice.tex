@@ -72,7 +72,7 @@ Due to the periodic nature of many ASI lattices, \hotspice chooses to perform th
 Each grid point may or may not contain a magnet, and the magnets must either all be of the IP type, or all OOP.
 The benefits and details of this approach will be discussed further in~\cref{sec:2:Implementation}.
 Even though this implementation does not allow complete freedom in the placement of magnets, many popular ASI lattices can be constructed in this manner. \par
-
+\vspace{-1em}
 \xfig[1.0]{2_Hotspice/ASIs.pdf}{
 	Predefined artificial spin ice (ASI) lattices available in \hotspice.
 	The unit cell of each lattice is delineated by a central dark grey rectangle.
@@ -359,11 +359,67 @@ However, since OOP magnets are not ellipsoidal as assumed by the transcendental 
 
 \section{Dynamics}\label{sec:2:Dynamics}
 A Monte Carlo simulator would not be complete without an algorithm to change the state of the system.
+Since any magnet in the ASI may spontaneously switch to the opposite magnetisation state due to thermal fluctuations, \hotspice evaluates the time evolution of the ASI in a stepwise manner using an update algorithm that determines which magnet should switch next.
+The two update algorithms implemented in \hotspice are examples of two distinct classes of kinetic Monte Carlo (KMC) algorithms --- rejection-free and rejection KMC.
+In the context of ASI, we refer to these as \textit{N\'eel-Arrhenius switching} and \textit{Metropolis-Hastings}, respectively~\cite{PhysicalTimeKMC}.
+The former is more suitable for simulating the temporal evolution of the system, while the latter can be used to sample the equilibrium distribution of the state space.
+
 \subsection{N\'eel relaxation: temporal evolution}
-% Note that it does not matter which barrier corresponds to clockwise or counter-clockwise rotation; only the height of the barriers must be known to determine the switching rate of each magnet. \par
+N\'eel relaxation theory~\cite{neel1949theorie} states that, for an isolated nanomagnet, the switching rate $\nu$ is given by the N\'eel-Arrhenius equation
+\begin{equation}
+	\nu = \nu_0 \exp\ab(-\frac{\EB}{\kBT}) \mathrm{,}
+	\label{eq:2:Néel}
+\end{equation}
+with $\kBT$ the thermal energy and $\nu_0$ the so-called \textit{attempt frequency}.
+For mutually interacting magnets, an adjusted version of \cref{eq:2:Néel} can be used where $\EB$ is replaced by the effective energy barrier $\EBeff$. \par
+In the general case where the energy barriers for clockwise and anticlockwise rotation during switching differ, these two switching channels ($\circlearrowright$ and $\circlearrowleft$) will separately follow~\cref{eq:2:Néel}, so their switching frequencies must be combined.
+This yields the total switching rate as presented by \textit{Koraltan et al.}~\cite{DirectionalEnergyBarrier},
+\begin{equation}
+	\nu = \nu_\circlearrowleft + \nu_\circlearrowright = \frac{\nu_0}{2} \ab[\exp\ab(-\frac{\EBeffLeft}{\kBT}) + \exp\ab(-\frac{\EBeffRight}{\kBT})] \mathrm{,}
+	\label{eq:2:Néel_2}
+\end{equation}
+where we assigned a halved attempt frequency $\nu_0/2$ to either switching channel such that~\cref{eq:2:Néel_2} reduces to~\cref{eq:2:Néel} in the case of $\EBeffLeft=\EBeffRight$~\cite{leo2021chiral}.
+Note that it does not matter which barrier corresponds to clockwise or counter-clockwise rotation; only the height of both barriers matters when determining the switching rate of a magnet. \par
+
+\paragraph{Attempt frequency}
+An estimate of $\nu_0$ for coherent magnetisation reversal can be obtained from the limit $\EB \rightarrow 0$, where the switching rate $\nu$ should approach the gyromagnetic precession frequency of the magnetisation of a nanomagnet.
+This is reported to be on the order of \qtyrange{e9}{e10}{\hertz}~\cite{BrownThermalFluctuations,bean1959superparamagnetism}.
+As $\EB \rightarrow 0$, \cref{eq:2:Néel} implies that $\nu \rightarrow \nu_0$, so we use $\nu_0=\qty{e10}{\hertz}$~\cite{JM_Masterproef}. \par % Each oscillation is an attempt to leave this energy minimum.
+A more precise value for $\nu_0$ for a particular simulation could be achieved by comparing with a similar experiment.
+However, an order-of-magnitude estimate often suffices because any small (i.e., $\sim \kBT$) change of $\EB$ will translate to an exponential change of the switching rate.
+As discussed in~\cref{sec:2:E_B_eff}, our approximations of $\EBeff$ are imperfect, thus rendering an accurate value of $\nu_0$ irrelevant. \par
+The values for $\nu_0$ on the order of \SI{e10}{\hertz} are valid for reversal by coherent rotation, as was already assumed in \hotspice during the calculation of the effective barriers.
+For other reversal processes, e.g. domain wall-mediated reversal, the attempt frequency could be many orders of magnitude faster because its interpretation as a rotation frequency then no longer holds~\cite{ArrheniusPrefactor}. % Another ref: 45 in leo2021chiral
+It must also be noted that the attempt frequency can significantly depend on other system parameters.
+For example, the energy barrier $\EB$ itself may be temperature-dependent, which can ultimately be captured by a temperature-dependent attempt frequency~\cite{AttemptFreqTemperature}. % Ref says: ``When this energy barrier is the result of a collective statistical behavior of many constituents, it may contain an intrinsic temperature dependence which has to be carefully taken into account, in particular when the prefactor is interpreted in terms of an attempt frequency.''
+
+\paragraph{Algorithm}
+A single iteration of the N\'eel-Arrhenius algorithm is presented in~\cref{alg:NeelArrheniusSingle}.
+Each iteration will increment the elapsed time by a certain amount $t \leq t_\mathrm{max}$, where the maximum time $t_\mathrm{max}$ can be set by the user to prevent excessively long switching times.
+When using the N\'eel-Arrhenius update scheme, this iteration is simply performed as many times as is required to reach a desired elapsed time. \par
+\begin{algorithm}[Single N\'eel-Arrhenius iteration]
+	\label{alg:NeelArrheniusSingle}
+	\begin{enumerate}[rightmargin=15pt]
+		\item Calculate the effective energy barriers of all magnets (i.e., $\EBeff{}_{,i}$ for OOP ASI, $\EBeffLeft{}_{,i}$ and $\EBeffRight{}_{,i}$ for IP ASI, $\forall i$) based on their interaction energies $E_i$, as determined by the current magnetisation state.
+		\item Calculate the switching rate $\nu_i$ of each magnet using \cref{eq:2:Néel_2}.
+		\item Generate a random switching time interval $\Delta t_i$ for each magnet $i$, sampled from an exponential distribution with mean value $1/\nu_i$.
+		\item Determine which magnet $j$ has the smallest such time $\Delta t_j = \min_i \Delta t_i$.
+		\item Finally, $t_\mathrm{max}$ determines whether a switch occurs.
+		\begin{itemize}
+			\item \textit{If $t + \Delta t_j \leq t_\mathrm{max}$}: increment the elapsed time $t$ by $\Delta t_j$ and switch magnet $j$.
+			\item \textit{If $t + \Delta t_j > t_\mathrm{max}$}: increment the elapsed time $t$ by $t_\mathrm{max}$ without switching a magnet.
+		\end{itemize}
+	\end{enumerate} % NOTE: this is different from the BKL algorithm, yet still gives the exact same result.
+\end{algorithm}
+% Note that this algorithm still gives the correct switching rate $\nu$, even though the switching time $t_i$ is sampled randomly multiple times before magnet $i$ typically switches. This is because, the more magnets there are, the harder it gets for an arbitrary magnet $i$ to have the shortest randomly sampled time (and thus to switch), but the elapsed time increment after each switch will be smaller as well, and these two effects cancel perfectly to end up with the same switching rate as if the magnet would be the only one switching.
+The maximum time $t_\mathrm{max}$ (default value of one second) prevents the simulation from advancing too far into the future, as the exponential character of the N\'eel-Arrhenius law can cause switching times to become much longer than what could ever be observed experimentally.
+It can also be used to apply time-dependent external fields.
+For example, when a sinusoidal signal of frequency $f$ is applied to the lattice, using $t_{\mathrm{max}}=20/f$ will ensure that the waveform is captured in sufficient detail.
+
 \subsection{Metropolis-Hastings: sampling equilibrium states}
 % TODO: decide whether to talk about nomenclature details etc. here, or in the introduction.
 \subsection{Other Monte Carlo algorithms} % Not implemented, explain why Wolff could be useful but why it's not in Hotspice
+For a broader overview of Monte Carlo methods, we refer to Ref.~\cite{IntroductionMC}, which may also clarify the at times confusing naming present throughout literature.
 
 \section{Implementation}\label{sec:2:Implementation}
 Now that the physics underlying the simulator have been extensively discussed, we turn our attention to the software implementation. \par
