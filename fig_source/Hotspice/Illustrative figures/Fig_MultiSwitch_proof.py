@@ -36,22 +36,22 @@ def main_plot():
     plot_state(ax, x_max-pad-w, y_max-pad-h, w, h, state1=1, state2=0, title=r"$E^{(i)} + \Delta E^{(i)}$")
     plot_state(ax, x_max-pad-w, y_min+pad,   w, h, state1=0, state2=0, title=r"$E^{(f)} + \Delta E^{(f)}$")
     
-    ## Add horizontal arrows
-    for y, text, va in [(y_max-pad-h/2, "$P_2^{(i)}$", "bottom"), (y_min+pad+h/2, "$P_2^{(f)}$", "top")]:
-        ax.arrow(pad+w, y, x_max-2*pad-2*w, 0, head_width=pad, head_length=pad, width=pad/2, fc="black", ec="None", length_includes_head=True)
-        ax.text(x_center, y - 1.5*pad if va == "top" else y + 0.5*pad, text, ha="center", va=va, fontsize=14)
-    
     ## Add vertical arrow
     offset = -0.3*(x_max-2*pad-2*w)
     ax.arrow(x_center+offset, y_max-pad-h/2, 0, y_min-y_max+2.25*pad+h, head_width=2*pad, head_length=2*pad, width=pad, fc="black", ec="None", length_includes_head=True)
     ax.text(x_center+offset+pad, y_center, r"$|\Delta P_2| \leq Q$", ha="left", va="center", rotation=0, fontsize=14)
+    
+    ## Add horizontal arrows
+    for y, text, va in [(y_max-pad-h/2, "$P_2^{(i)}$", "bottom"), (y_min+pad+h/2, "$P_2^{(f)}$", "top")]:
+        ax.arrow(pad+w, y, x_max-2*pad-2*w, 0, head_width=pad, head_length=pad, width=pad/2, fc="grey", ec="None", length_includes_head=True)
+        ax.text(x_center, y - 1.5*pad if va == "top" else y + 0.5*pad, text, ha="center", va=va, fontsize=14)
     
     ## Save the result
     hotspice.utils.save_results(figures={f"MultiSwitch_proof": fig}, timestamped=False)
 
 
 def plot_state(ax: plt.Figure, x, y, w, h, state1: bool = True, state2: bool = True, title: str = ""):
-    draw_rectangle(ax, x, y, w, h)
+    draw_rectangle(ax, x, y, w, h, color="grey")
     l = w*0.2
     draw_magnet(ax, x + w*0.2, y + h*0.5, l, state=state1, color="black", arrow_color="white")
     draw_magnet(ax, x + w*0.8, y + h*0.5, l, state=state2, color="black", arrow_color="white")
@@ -148,7 +148,6 @@ def poisson_disk_sampling(width, height, radius, points=None, k=30, pad=0, seed=
                 grid[grid_x][grid_y] = new_point
 
     return final_points
-
 
 
 if __name__ == "__main__":
