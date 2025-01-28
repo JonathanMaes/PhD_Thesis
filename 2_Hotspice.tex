@@ -421,7 +421,7 @@ For example, when a sinusoidal signal of frequency $f$ is applied to the lattice
 In the realm of rejection-free KMC, a commonly used algorithm is the Bortz-Kalos-Lebowitz (BKL) algorithm.
 While the procedure detailed in~\cref{alg:NeelArrheniusSingle} is not the same, its yields an identical result as the BKL algorithm. % TODO: add reference to this
 
-\subsection{Metropolis-Hastings: sampling equilibrium states}
+\subsection{Metropolis-Hastings: sampling equilibrium states} \label{sec:2:Dynamics_MH}
 % TODO: decide whether to talk about nomenclature details etc. here, or in the introduction.
 Metropolis-Hastings is a rejection-based kinetic Monte Carlo (KMC) method designed to sample the state space at thermal equilibrium, where the probability of each state appearing is proportional to their Boltzmann factor $e^{-E/\kBT}$~\cite{IntroductionMC,kyimba2006comparisonIsingAlgorithms}.
 Hence, in contrast to N\'eel-Arrhenius switching, Metropolis-Hastings is not intended to accurately model the system's transient dynamics and is instead more suitable for examining equilibrium statistical quantities in ASI, like the average magnetization, heat capacity, correlation...~\cite{ApparentFMpinwheel} \par
@@ -623,7 +623,93 @@ When multiple magnets switch, this error will accumulate.
 Luckily, the error introduced in this manner is bounded from above: whenever a magnet switches back, the error its original switch introduced is cancelled (barring some remaining floating-point error).
 
 \subsection{Multi-switching in Metropolis-Hastings} \label{sec:2:MultiSwitch}
+The standard Metropolis-Hastings algorithm selects a magnet at random and subsequently decides whether or not to switch it.
+Since this algorithm is designed primarily for sampling equilibrium states rather than capturing the temporal evolution of the system, a straightforward performance improvement can be achieved by selecting multiple magnets simultaneously rather than sequentially.
+This allows for better usage of the parallel processing capabilities of the GPU, as the magnetostatic energy can then be updated using a convolution.
+
 \subsubsection{Minimal distance between sampled magnets} % Derive equation
+Since all magnets affect each other through the magnetostatic interaction, simultaneously switching nearby magnets that significantly affect each other's switching energy may result in unphysical behaviour.
+Take for example the extreme case where it would be allowed to switch all magnets in a system at once: the total energy would not change after such a simultaneous step and an infinite loop results where the energy of the system remains high.
+In a less extreme case, convergence to a low-energy or equilibrium state may be slowed down significantly. \par
+Therefore, to avoid such issues, we enforce a minimum distance $\rmin$ between selected magnets.
+The particular criterion we will use is as follows: two simultaneously sampled magnets should never be able to affect each other's switching probability by more than some user-adjustable factor $0 < Q \leq 1$, where we commonly use $Q=0.01$.
+This principle is illustrated in~\cref{fig:2:MultiSwitch_proof}.
+
+\xfig[1.0]{2_Hotspice/MultiSwitch_proof.pdf}{
+	\label{fig:2:MultiSwitch_proof}
+	Consider two states: the initial state `i' (top), and the final state `f' where magnet 1 has switched (bottom).
+	The surrounding magnets stay unchanged.
+	In both states, magnet 2 has a certain acceptance probability for switching $P_2$ if it is selected by the Metropolis-Hastings algorithm, determined by the associated energy change $\Delta E$.
+	This switch of magnet 1 induces a change in switching probability $\Delta P_2$ of magnet 2.
+	The limitation that we impose, is that the Metropolis-Hastings algorithm is only allowed to simultaneously sample magnet 1 and 2 if $\abs{\Delta P_2} = \abs{P_2^{(f)} - P_2^{(i)}} \leq Q$.
+}
+
+We will now derive an inequality for the minimal distance $\rmin$ as a function of $Q$.
+\newtheorem{inequality}{Inequality}
+\begin{inequality}
+	The minimal distance $\rmin$ between magnets 1 and 2, such that the acceptance probability $P(\Delta E)$ of one of them can not change by more than $0 < Q \leq 1$ when the other switches, is upper bounded by
+	\begin{equation}
+		r_{12} \geq \sqrt[3]{\frac{2 \mu_0 \, \underset{i}{\max}(\mu_i)}{\pi Q} \cdot \, \underset{\Delta E}{\max} \abs{\frac{\partial P}{\partial \Delta E}}} \triangleq \rmin \mathrm{.}
+		\label{eq:2:MultiSwitch_inequality}
+	\end{equation}
+\end{inequality}
+
+\begin{proof}
+	Consider~\cref{fig:2:MultiSwitch_proof}.
+	In the initial situation (top left panel), magnet 2 has an acceptance probability $P_2^{(i)}$ due to its possible change in energy $\Delta E^{(i)}$.
+	Once magnet 1 switches (bottom left panel), magnet 2 has an acceptance probability $P_2^{(f)} = P_2^{(i)} + \Delta P_2$ where a switch would incur a change of $\Delta E^{(f)}$ in energy.
+	Our requirement is that $\abs{\Delta P_2} \leq Q$, with $0 < Q \leq 1$.
+	We therefore want to determine the minimal distance between magnets 1 and 2 such that $\abs{\Delta P_2} \leq Q$. \par
+	For any function $P(\Delta E)$, we can move this constraint from $\Delta P_2$ to the more manageable quantity $\Delta E^{(f)} - \Delta E^{(i)}$ by writing the upper bound
+	\begin{equation}
+		\abs{\Delta P} \leq \abs{\Delta E^{(f)} - \Delta E^{(i)}} \cdot \, \underset{\Delta E}{\max} \abs{\frac{\partial P}{\partial \Delta E}} \leq Q \mathrm{.}
+		\label{eq:2:MultiSwitch_proof_leq_Q}
+	\end{equation}
+	The only long-range interaction present in the systems under consideration here is the magnetostatic interaction given by \eqref{eq:2:E_MS}, repeated here for convenience,
+	\begin{equation*}
+		E_{\mathrm{MS},1,2} = \frac{\mu_0}{4 \pi} \ab(\frac{\vc{\mu}_1 \bcdot \vc{\mu}_2}{\abs{\vc{r}_{12}}^3} - \frac{3(\vc{\mu}_1 \bcdot \vc{r}_{12}) (\vc{\mu}_2 \bcdot \vc{r}_{12})}{\abs{\vc{r}_{12}}^5}) \mathrm{.}  \tag{\ref*{eq:2:E_MS}}
+	\end{equation*}
+	We do not consider any finite-size corrections, since their long-range effects are negligible and any reasonable value of $Q$ will result in a value $\rmin$ far larger than the magnet size.
+	The magnetostatic energy in the point-dipole approximation is bounded by
+	\begin{equation}
+		\abs{E_{\mathrm{MS},1,2}} \leq \frac{\mu_0 \abs{\vc{\mu}_1} \abs{\vc{\mu}_2}}{2 \pi r_{12}^3} = \frac{\mu_0 \max(\mu_1, \mu_2)}{2 \pi r_{12}^3} \mathrm{,}
+		\label{eq:2:MultiSwitch_proof_EMS_leq}
+	\end{equation}
+	with this extremum being achieved for two dipoles $\vc{\mu}_1$ and $\vc{\mu}_2$ aligned in the same direction along their common axis $\vc{r}_{12}$.
+	From the symmetry of the magnetostatic interaction, and considering the states in~\cref{fig:2:MultiSwitch_proof}, the unknown term in~\cref{eq:2:MultiSwitch_proof_leq_Q} can be expanded as 
+	\begin{align*}
+		\abs{\Delta E^{(f)} - \Delta E^{(i)}} &= \abs{-\cancel{2 \sum_{k=3}^N E_{\mathrm{MS},2,k}^{(f)}} -2 E_{\mathrm{MS},2,1}^{(f)} +\cancel{2 \sum_{k=3}^N E_{\mathrm{MS},2,k}^{(i)}} +2 E_{\mathrm{MS},2,1}^{(i)}} \\
+		&= 2\abs{E_{\mathrm{MS},2,1}^{(f)} + E_{\mathrm{MS},2,1}^{(i)}} = 4 \abs{E_{\mathrm{MS},2,1}^{(i)}} \numeq{\ref{eq:2:MultiSwitch_proof_EMS_leq}}{\leq} \frac{2 \mu_0 \max(\mu_1, \mu_2)}{\pi r_{12}^3} \mathrm{,}
+	\end{align*}
+	since only magnet 1 is different between the initial and final states, hence $E_{\mathrm{MS},2,1}^{(f)} = - E_{\mathrm{MS},2,1}^{(i)}$.
+	Combining this with \eqref{eq:2:MultiSwitch_proof_leq_Q} gives the sufficient condition
+	\begin{equation}
+		\frac{2 \mu_0 \max(\mu_1, \mu_2)}{\pi r_{12}^3} \cdot \, \underset{\Delta E}{\max} \abs{\frac{\partial P}{\partial \Delta E}} \leq Q \mathrm{.}
+	\end{equation}
+	To get a single value for $\rmin$ that is valid throughout the ASI, replacing $\max(\mu_1, \mu_2)$ by $\underset{i}{\max}(\mu_i)$ finally yields the expected expression for $\rmin$:
+	\begin{equation*}
+		r_{12} \geq \sqrt[3]{\frac{2 \mu_0 \, \underset{i}{\max}(\mu_i)}{\pi Q} \cdot \, \underset{\Delta E}{\max} \abs{\frac{\partial P}{\partial \Delta E}}} \triangleq \rmin \mathrm{.} \tag{\ref*{eq:2:MultiSwitch_inequality}}
+	\end{equation*}
+\end{proof}
+This equation is an upper bound for $\rmin$ thoughout the entire ASI.
+To apply this inequality in \hotspice, all that remains is to plug in the derivative of the Metropolis-Hastings acceptance probability function $P_\mathrm{MH}(\Delta E, T) = \min(1, \exp(-\Delta E/k_B T))$, into~\cref{eq:2:MultiSwitch_inequality}.
+Since
+\begin{equation}
+	\abs{\frac{\partial P_\mathrm{MH}}{\partial \Delta E}} = \left.\begin{cases}
+		\frac{1}{k_B T} \exp(\frac{-\Delta E}{k_B T}) \quad &\mathrm{if} \quad \Delta E > 0 \\
+		0 \quad &\mathrm{if} \quad \Delta E < 0
+	\end{cases} \right\}
+	\leq \frac{1}{k_B T} \mathrm{,}
+\end{equation}
+this finally gives
+\begin{equation}
+	r \geq \sqrt[3]{\frac{2 \mu_0 M_{sat}^2 V^2}{\pi Q k_B T}} \mathrm{.}
+\end{equation}
+Recall that we are using the Metropolis-Hastings acceptance probability in \hotspice's rejection-based kinetic Monte Carlo algorithm (\cref{sec:2:Dynamics_MH}) rather than the Glauber dynamics acceptance probability $P_\mathrm{GD}(\Delta E, T) = \frac{\exp(-\Delta E/k_B T)}{1+\exp(-\Delta E/k_B T)}$, because they both satisfy ergodicity and detailed balance but the Glauber acceptance probability is always more likely to reject a switch~\cite{bit-player_MCvsGlauber}. % TODO: since I say "recall" here, we must discuss the acceptance probability in the algorithms already.
+We can now see, however, that the Glauber acceptance probability is not all bad when using multi-switching.
+The extremum of its derivative is 4 times smaller than that of the Metropolis-Hastings acceptance probability, so \cref{eq:2:MultiSwitch_inequality} tells us that the minimal distance between samples can be decreased by a factor $\sqrt[3]{1/4} \approx 0.63$ and therefore $\sqrt[3]{16} \approx 2.52$ times more magnets can switch at once.
+As such, it can become debatable which acceptance probability is more efficient in a given situation.
+
 \subsubsection{Selection algorithms}
 \paragraph{Poisson disc}
 \paragraph{Grid-select}
