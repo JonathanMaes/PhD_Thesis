@@ -462,7 +462,7 @@ Often, the number of performed Monte Carlo sweeps\footnote{
 Note that the effective energy barrier $\EBeff$ only appears in the calculation of the elapsed time: it does not influence the switching probability in the Metropolis-Hastings algorithm because energy barriers do not affect the equilibrium state.
 
 \paragraph{Nomenclature disambiguation}
-There often exists confusion between the Metropolis-Hastings algorithm and so-called ``Glauber dynamics''. % TODO
+There often exists confusion between the Metropolis-Hastings algorithm and so-called ``Glauber dynamics''. % TODO: discuss acceptance probabilities and why they are correct (ergodicity, detailed balance). Can extend the small mention of detailed balance and ergodicity below the algorithm environment as well.
 
 \subsection{Other Monte Carlo algorithms} % Not implemented, explain why Wolff could be useful but why it's not in Hotspice
 For a broader overview of Monte Carlo methods, we refer to Ref.~\cite{IntroductionMC}, which may also clarify the at times confusing naming present throughout literature.
@@ -617,7 +617,8 @@ It is used in the same way as the kernel $\vc{\mathcal{K}}^{(q)}$ in \cref{eq:2:
 
 \subsubsection{Numerical error with cut-off kernel} % TODO: expand + FIGURE
 A performance improvement presents itself by cutting off the magnetostatic kernel at a certain distance, though only in the case of open BC.
-Due to the underlying grid, the most natural way of achieving this is to simply reduce the size of the kernel from $2L-1 \times 2L-1$ to a smaller $2K-1 \times 2K-1$ central region. \par % Note that the size has to remain odd for the convolution to still place the magnet in the center.
+Due to the underlying grid, the most natural way of achieving this is to simply reduce the size of the kernel from $2L-1 \times 2L-1$ to a smaller $2K-1 \times 2K-1$ central region.
+Note that the number of cells has to remain odd for the convolution to still place the magnet in the center. \par
 However, this will result in inaccurate interaction energies being stored.
 When multiple magnets switch, this error will accumulate.
 Luckily, the error introduced in this manner is bounded from above: whenever a magnet switches back, the error its original switch introduced is cancelled (barring some remaining floating-point error).
@@ -710,7 +711,7 @@ We can now see, however, that the Glauber acceptance probability is not all bad 
 The extremum of its derivative is 4 times smaller than that of the Metropolis-Hastings acceptance probability, so \cref{eq:2:MultiSwitch_inequality} tells us that the minimal distance between samples can be decreased by a factor $\sqrt[3]{1/4} \approx 0.63$ and therefore $\sqrt[3]{16} \approx 2.52$ times more magnets can switch at once.
 As such, it can become debatable which acceptance probability is more efficient in a given situation.
 
-\subsubsection{Selection algorithms}
+\subsubsection{Selection algorithms} % TODO
 \paragraph{Poisson disc}
 \paragraph{Grid-select}
 \paragraph{Hybrid grid-poisson}
@@ -893,7 +894,7 @@ Buttons in the sidebar on the right allow the user to interact with the ASI by p
 By clicking with the mouse on the ASI plot, it is also possible to interact with the ASI at a granular level, switching one or multiple magnets. Finally, the red box in the bottom right controls the update algorithm.
 
 \subsection{Advantages and disadvantages of the \hotspice approach} % Hindsight is 20/20
-\subsubsection{Grid}
+\subsubsection{Grid} % TODO
 \subsubsection{Input/output RC}
 \subsubsection{GPU/CPU}
 In hindsight, for the purposes of this thesis it was not necessary to go through all the effort to port \hotspice to the GPU.
@@ -990,7 +991,26 @@ Critical slowing down (CSD) originates from a divergence in the autocorrelation 
 As a result, the system explores the phase space very slowly, particularly with single-spin flip algorithms like Metropolis-Hastings~\cite{StatisticalMechanicsAlgorithmsComputations}.
 Although cluster algorithms like the Wolff algorithm~\cite{Wolff} can mitigate this effect, they are not intended for application beyond the 2D Ising system.
 % TODO: extend this discussion
+% Relevant quotes: ``It is above all in the critical region that the Metropolis-Hastings algorithm is less accurate, because update moves based on single-spin flips are no longer physically relevant in this region,'' and ``Reworded differently, critical slowing down is particularly stark in the context of Metropolis-Hastings algorithms owing to the drastically low pace at which the Markov chain explores the whole phase space when two successive states differ by at most one spin value.'' from the thesis `Phase Transitions in Long-range Spin Models: The Power of Generalized Ensembles'. The book StatisticalMechanicsAlgorithmsComputations says ``Around the critical temperature, the local Monte Carlo algorithm is increasingly slow. This is because the distribution of the total magnetization becomes wide: between the high-temperature regime where it is sharply peaked at zero magnetization, and the low-temperature regime with its double peak structure, the system passes through a regime where the probability distribution of the magnetization is essentially flat for almost all values of M (see Fig. 5.15). Such a distribution is extremely difficult to sample with a single spin-flip algorithm.''
+
 \subsection{Exchange- and magnetostatically-coupled Ising system}
+Including long-range magnetostatic interactions into an exchange-coupled square-lattice Ising system significantly alters its behaviour.
+While the temperature $T$ remains an important system parameter, now another determining factor is the ratio $\delta = E_{\mathrm{exch},i,j}/E_{\mathrm{MS},i,j}$ ($j \in \mathcal{N}_i$), which represents the balance between the exchange coupling and magnetostatic interaction for nearest neighbours.
+Analytical predictions remain possible in this system at zero temperature: for $\delta < 0.85$, the magnetostatic coupling dominates, leading to a checkerboard state.
+As $\delta$ increases, the ever-stronger exchange coupling leads to the formation of ferromagnetic domains, which organize into stripes due to the magnetostatic interaction, with the stripe width determined by $\delta$~\cite{StripedDipolarIsing}.
+
+\xfig{2_Hotspice/Verification/OOP_Dipolar.pdf}{
+	\label{fig:2:Verification_dipolar}
+	Nearest-neighbour (NN) correlation in an exchange-coupled system with long-range magnetostatic interactions included, as a function of relative NN magnetostatic/exchange coupling $\delta$. Transitions occur at $\delta=0.85$ and 2.65, indicated by dotted lines. Insets show the magnetisation state with growing stripe domains: white corresponds to spin `up', black to `down'.
+}
+
+The average stripe width is reflected in the NN correlation $\langle S_i S_{i+1} \rangle$, as shown in~\cref{fig:2:Verification_dipolar} for a \hotspice simulation.
+Because the analytical theory is valid at zero temperature, but we are using the Metropolis-Hastings algorithm which requires non-zero temperature, we will be using a sufficiently low temperature (\SI{50}{\kelvin}) for this simulation.
+Consistent with the theoretical predictions of~\ccite{StripedDipolarIsing}, for $\delta < 0.85$ a checkerboard state exists with $\langle S_i S_{i+1} \rangle = -1$.
+In the range $0.85 < \delta < 2.65$, stripe domains with a width of 1 row are preferred, leading to $\langle S_i S_{i+1} \rangle = 0$.
+Beyond $\delta=2.65$, a 2-row width becomes preferable with $\langle S_i S_{i+1} \rangle = 0.5$.
+Increasing $\delta$ further leads to ever wider stripe domains, and in the limit $\delta \rightarrow +\infty$ the correlation approaches $\langle S_i S_{i+1} \rangle \rightarrow 1$.
+
 \subsection{Square-to-pinwheel transition angle}\label{sec:2:Verification_IP_SquarePinwheel}
 The in-plane square and pinwheel ASI lattices can be continuously transformed into each other by rotating each individual magnet by \ang{45}.
 Despite being this closely related, their ground state magnetic ordering differs significantly.
