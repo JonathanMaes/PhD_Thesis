@@ -264,10 +264,10 @@ Similar to the calculation of the magnetic moment $\mu$ in \cref{fn:2:moment_int
 Magnets in OOP ASI are usually very flat, so one would expect the shape anisotropy to result in a preferential in-plane magnetisation direction.
 This can be avoided by properly choosing materials that exhibit a strong interfacial anisotropy, as occurs at e.g. the Co/Pt interface, resulting in a net preferential out-of-plane magnetisation.
 
-\subsubsection{Mean-barrier approximation} % TODO: mention relevant choices with discontinuities, expand this explanation
+\subsubsection{Mean-barrier approximation}
 The simplest approximation of the effective energy barrier $\EBeff$ is the \textit{mean-barrier approximation}.
 It assumes that the highest-energy state lies halfway between the two stable states.
-This means the barrier height changes at half the rate at which the switching energy $\Delta E$ changes, leading to the approximation % TODO: illustrate with a simple figure
+This means the barrier height changes at half the rate at which the switching energy $\Delta E$ changes, leading to the approximation
 \begin{equation}
 	\label{eq:2:EB_meanbarrier_original}
 	\EBeff = \EB + \frac{\Delta E}{2} \mathrm{,}
@@ -293,7 +293,7 @@ Notwithstanding that the original mean-barrier approximation~\eqref{eq:2:EB_mean
 The simple mean-barrier approximation is insufficient for many IP ASI.
 In real nanomagnets, reversal by coherent rotation can occur via two pathways; clockwise ($\clockwise$) or counter-clockwise ($\counterclockwise$) rotation of the magnetisation.
 In an asymmetrical environment --- when the effective field has a non-zero component perpendicular to the easy axis --- one of these two rotation directions will be preferred~\cite{leo2021chiral,DirectionalEnergyBarrier}.
-Take for example the pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a}): any two neighbouring magnets form a T-shape, so the magnet pointing into the side of the other will greatly influence whether the other magnet prefers $\clockwise$ or $\counterclockwise$ rotation~\cite{DirectionalEnergyBarrier}. % TODO: also make a figure for this. Possibly combine with the mean-barrier figure.
+Take for example the pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a}): any two neighbouring magnets form a T-shape, so the magnet pointing into the side of the other will greatly influence whether the other magnet prefers $\clockwise$ or $\counterclockwise$ rotation~\cite{DirectionalEnergyBarrier}. % Q: does this need a figure?
 Such an asymmetry can not occur in OOP ASI, so the asymmetric barrier is only applicable to IP ASI.
 Accounting for the existence of these separate chiral switching channels profoundly affects the switching rates and transition kinetics, since switching will occur predominantly via the more favourable pathway~\cite{leo2021chiral}. \\\par
 
@@ -419,14 +419,11 @@ The maximum time $t_\mathrm{max}$ (default value of one second) prevents the sim
 It can also be used to apply time-dependent external fields.
 For example, when a sinusoidal signal of frequency $f$ is applied to the lattice, using $t_{\mathrm{max}}=20/f$ will ensure that the waveform is captured in sufficient detail. \par
 In the realm of rejection-free KMC, a commonly used algorithm is the Bortz-Kalos-Lebowitz (BKL) algorithm.
-While the procedure detailed in~\cref{alg:NeelArrheniusSingle} is not the same, its yields an identical result as the BKL algorithm. % TODO: add reference to this
+While the procedure detailed in~\cref{alg:NeelArrheniusSingle} is not the same, its yields an identical result as the BKL algorithm. % TODO REF
 
 \subsection{Metropolis-Hastings: sampling equilibrium states} \label{sec:2:Dynamics_MH}
-% TODO: decide whether to talk about nomenclature details etc. here, or in the introduction.
 Metropolis-Hastings is a rejection-based kinetic Monte Carlo (KMC) method designed to sample the state space at thermal equilibrium, where the probability of each state appearing is proportional to their Boltzmann factor $e^{-E/\kBT}$~\cite{IntroductionMC,kyimba2006comparisonIsingAlgorithms}.
 Hence, in contrast to N\'eel-Arrhenius switching, Metropolis-Hastings is not intended to accurately model the system's transient dynamics and is instead more suitable for examining equilibrium statistical quantities in ASI, like the average magnetization, heat capacity, correlation...~\cite{ApparentFMpinwheel} \par
-
-% TODO: talk about acceptance probability here and detailed balance and ergodicity etc. etc.
 
 \paragraph{Algorithm}
 A rejection-based KMC method works by selecting magnets at random, and deciding whether or not to switch them with a certain probability.
@@ -462,7 +459,7 @@ Often, the number of performed Monte Carlo sweeps\footnote{
 Note that the effective energy barrier $\EBeff$ only appears in the calculation of the elapsed time: it does not influence the switching probability in the Metropolis-Hastings algorithm because energy barriers do not affect the equilibrium state.
 
 \paragraph{Nomenclature disambiguation}
-There often exists confusion between the Metropolis-Hastings algorithm and so-called ``Glauber dynamics''. % TODO: discuss acceptance probabilities and why they are correct (ergodicity, detailed balance). Can extend the small mention of detailed balance and ergodicity below the algorithm environment as well.
+There often exists confusion between the Metropolis-Hastings algorithm and so-called ``Glauber dynamics''. % TODO: discuss acceptance probabilities and why they are correct (ergodicity, detailed balance). Can extend the small mention of detailed balance and ergodicity below the algorithm environment as well. Must already be mentioned here since we use it later in the minimal distance discussion.
 
 \subsection{Other Monte Carlo algorithms} % Not implemented, explain why Wolff could be useful but why it's not in Hotspice
 For a broader overview of Monte Carlo methods, we refer to Ref.~\cite{IntroductionMC}, which may also clarify the at times confusing naming present throughout literature.
@@ -706,12 +703,12 @@ this finally gives
 \begin{equation}
 	r \geq \sqrt[3]{\frac{2 \mu_0 M_{sat}^2 V^2}{\pi Q k_B T}} \mathrm{.}
 \end{equation}
-Recall that we are using the Metropolis-Hastings acceptance probability in \hotspice's rejection-based kinetic Monte Carlo algorithm (\cref{sec:2:Dynamics_MH}) rather than the Glauber dynamics acceptance probability $P_\mathrm{GD}(\Delta E, T) = \frac{\exp(-\Delta E/k_B T)}{1+\exp(-\Delta E/k_B T)}$, because they both satisfy ergodicity and detailed balance but the Glauber acceptance probability is always more likely to reject a switch~\cite{bit-player_MCvsGlauber}. % TODO: since I say "recall" here, we must discuss the acceptance probability in the algorithms already.
+Recall that we are using the Metropolis-Hastings acceptance probability in \hotspice's rejection-based kinetic Monte Carlo algorithm (\cref{sec:2:Dynamics_MH}) rather than the Glauber dynamics acceptance probability $P_\mathrm{GD}(\Delta E, T) = \frac{\exp(-\Delta E/k_B T)}{1+\exp(-\Delta E/k_B T)}$, because they both satisfy ergodicity and detailed balance but the Glauber acceptance probability is always more likely to reject a switch~\cite{bit-player_MCvsGlauber}.
 We can now see, however, that the Glauber acceptance probability is not all bad when using multi-switching.
 The extremum of its derivative is 4 times smaller than that of the Metropolis-Hastings acceptance probability, so \cref{eq:2:MultiSwitch_inequality} tells us that the minimal distance between samples can be decreased by a factor $\sqrt[3]{1/4} \approx 0.63$ and therefore $\sqrt[3]{16} \approx 2.52$ times more magnets can switch at once.
 As such, it can become debatable which acceptance probability is more efficient in a given situation.
 
-\subsubsection{Selection algorithms} % TODO
+\subsubsection{Selection algorithms} % TODO: expand + FIGURES select_analysis.py
 \paragraph{Poisson disc}
 \paragraph{Grid-select}
 \paragraph{Hybrid grid-poisson}
@@ -843,14 +840,14 @@ We hypothesize that this is due to exceeding a CPU cache size. \par
 % Hypothesis 1: The size occupied by a 72x72 ASI is 1.25MB. It is not unreasonable that, soon after reaching this point, some arrays can no longer be stored on this cache level, impacting performance.
 % Hypothesis 2: The size of mm.m at 78x78 is 48kB, so we might be exceeding the L1 cache beyond this point.
 % Hypothesis 3: The size of the dipole kernel at this point is around 220kB. Doesn't seem to match up with anything.
-% TODO: Revisit this at some point, it is odd that on another CPU (Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz) the cut-off happens at the same system size, indicating that it is not cache-size-related because that CPU has 256kB L2 and 32kB L1, both different from the UGent laptop.
+% TODO: ? revisit this at some point, it is odd that on another CPU (Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz) the cut-off happens at the same system size, indicating that it is not cache-size-related because that CPU has 256kB L2 and 32kB L1, both different from the UGent laptop.
 The GPU, on the other hand, hits its stride for exactly those systems that are too large for the CPU to handle.
 Around $70 \times 70$, the sampling rate increases rapidly, resulting in an increased number of MC sweeps per second (MCS/s) that reach a local maximum for $200 \times 200$ magnets.
 Beyond this, the sampling rate stagnates, eventually settling at around \SI{150e3}{samples\per\second}, corresponding to an ever decreasing MCS/s as the parallelism of the GPU gets exhausted.
 
 \subsubsection{RNG}
 Another factor which may contribute to the performance is the Random Number Generator (RNG).
-Both update algorithms rely on generating a large amount of random numbers to select the next magnet(s) to switch. % TODO: talk a bit about XORWOW etc. and how it actually doesn't really impact performance
+Both update algorithms rely on generating a large amount of random numbers to select the next magnet(s) to switch. % TODO: expand by talking about XORWOW etc. and how choice of RNG actually doesn't really impact performance
 
 \subsection{Package structure} % Structure of Hotspice, explain all modules (core, ASI, energies, (config? with GPU)...)
 Hotspice is written as a Python 3.10 package and can perform simulations on either the CPU or GPU.
@@ -873,7 +870,7 @@ The magnetostatic interaction is implemented by the \python{hotspice.DipolarEner
 By default, an ASI object takes only the \python{hotspice.DipolarEnergy} into account.
 When relevant, the user has to explicitly add a \python{ZeemanEnergy} or \python{ExchangeEnergy}.
 It is possible to set longer-range exchange interactions (next-nearest neighbour etc.) by manually setting the \python{local_interaction} field of an \python{ExchangeEnergy} object.
-% TODO: create a custom "API" environment that we can put near all the different parts of the model to show code outside the main text?
+% Q: should I put all the information of this section earlier already, at points where these subjects are discussed? I could e.g. create a custom "API" environment to explain different parts of the package in to show code outside the main text.
 \subsubsection{RC} % io and experiments modules
 \subsubsection{Utilities} % Explain utils module (but only those functions/classes relevant to users) and perhaps mention the existence of plottools
 \paragraph{GUI}
@@ -894,7 +891,7 @@ Buttons in the sidebar on the right allow the user to interact with the ASI by p
 By clicking with the mouse on the ASI plot, it is also possible to interact with the ASI at a granular level, switching one or multiple magnets. Finally, the red box in the bottom right controls the update algorithm.
 
 \subsection{Advantages and disadvantages of the \hotspice approach} % Hindsight is 20/20
-\subsubsection{Grid} % TODO
+\subsubsection{Grid} % TODO: expand
 \subsubsection{Input/output RC}
 \subsubsection{GPU/CPU}
 In hindsight, for the purposes of this thesis it was not necessary to go through all the effort to port \hotspice to the GPU.
@@ -984,13 +981,13 @@ The \hotspice result corresponds well to the theoretical predictions both below 
 However, just above $T_c$, the average magnetisation evolves only slowly towards the expected value.
 Increasing the number of Monte Carlo sweeps per temperature step brings the system closer to the theoretical equilibrium and reduces the temperature range above $T_c$ where the system has not yet reached equilibrium again.
 This slow convergence near the critical point is a symptom of the well-known phenomenon called ``critical slowing down''.
-% TODO: why the discrepancy in the correlation?
+% TODO: ? why the discrepancy in the correlation?
 
 \subsubsection{Critical slowing down}
 Critical slowing down (CSD) originates from a divergence in the autocorrelation time $\tau$ near a critical point, causing subsequent Monte Carlo configurations to be highly correlated~\cite{NumericalDynamicalNiedermayer,CompStatPhys,StatisticalMechanicsAlgorithmsComputations}.
 As a result, the system explores the phase space very slowly, particularly with single-spin flip algorithms like Metropolis-Hastings~\cite{StatisticalMechanicsAlgorithmsComputations}.
 Although cluster algorithms like the Wolff algorithm~\cite{Wolff} can mitigate this effect, they are not intended for application beyond the 2D Ising system.
-% TODO: extend this discussion
+% TODO: expand CSD discussion
 % Relevant quotes: ``It is above all in the critical region that the Metropolis-Hastings algorithm is less accurate, because update moves based on single-spin flips are no longer physically relevant in this region,'' and ``Reworded differently, critical slowing down is particularly stark in the context of Metropolis-Hastings algorithms owing to the drastically low pace at which the Markov chain explores the whole phase space when two successive states differ by at most one spin value.'' from the thesis `Phase Transitions in Long-range Spin Models: The Power of Generalized Ensembles'. The book StatisticalMechanicsAlgorithmsComputations says ``Around the critical temperature, the local Monte Carlo algorithm is increasingly slow. This is because the distribution of the total magnetization becomes wide: between the high-temperature regime where it is sharply peaked at zero magnetization, and the low-temperature regime with its double peak structure, the system passes through a regime where the probability distribution of the magnetization is essentially flat for almost all values of M (see Fig. 5.15). Such a distribution is extremely difficult to sample with a single spin-flip algorithm.''
 
 \subsection{Exchange- and magnetostatically-coupled Ising system}
@@ -1022,7 +1019,7 @@ For the dumbbell model, the transition angle depends on the distance $d$ between
 The result of a \hotspice simulation using both models is shown in \cref{fig:2:Pinwheel_angle}.
 To quantify this transition, we measure the fraction of vertices with net zero magnetisation --- this value is 0 for superferromagnetic order while it is 1 for AFM order.
 For the dipole model, the transition occurs at $\approx \ang{35}$ as expected, while the dumbbell model indeed transitions at a larger rotation angle.
-% TODO: debate (with myself) whether or not to look for some more experimental references to include the following sentences.
+% TODO REF: should or should we not look for some experimental references to include the following sentences, or do we keep this text hidden?
 % While this transition was experimentally observed to be gradual from \ang{35} to nearly \ang{45}, these experiments likely could not reach an equilibrium state due to defects, rapid quenching, or finite correlation times, all of which freeze domain walls in the system. Metropolis-Hastings samples the equilibrium state space, resulting in the sharp transition seen in the figure.
 
 \xfig[0.6]{2_Hotspice/Verification/Pinwheel_angle.pdf}{
