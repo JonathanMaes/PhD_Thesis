@@ -418,8 +418,8 @@ When using the N\'eel-Arrhenius update scheme, \cref{alg:2:NeelArrheniusSingle} 
 The maximum time $t_\mathrm{max}$ (default value of one second) prevents the simulation from advancing too far into the future, as the exponential character of the N\'eel-Arrhenius law can cause switching times to become much longer than what could ever be observed experimentally.
 It can also be used to apply time-dependent external fields.
 For example, when a sinusoidal signal of frequency $f$ is applied to the lattice, using $t_{\mathrm{max}}=20/f$ will ensure that the waveform is captured in sufficient detail. \par
-In the realm of rejection-free KMC, a commonly used algorithm is the Bortz-Kalos-Lebowitz (BKL) algorithm.
-While the procedure detailed in~\cref{alg:2:NeelArrheniusSingle} is not the same, its yields an identical result as the BKL algorithm. % TODO REF
+In the realm of rejection-free KMC, the Bortz-Kalos-Lebowitz~\cite{nfoldMCalgorithm} and Gillespie~\cite{gillespie1976general} algorithms are commonly used.
+Although these algorithms are not the same as the procedure detailed in~\cref{alg:2:NeelArrheniusSingle}, they nonetheless yield identical results and only differ in how they implement the selection of a random switching time.
 
 \subsection{Metropolis-Hastings: sampling equilibrium states} \label{sec:2:Dynamics_MH}
 The Metropolis-Hastings algorithm is a rejection-based KMC method designed to sample the state space at thermal equilibrium, where the probability of each state appearing is proportional to their Boltzmann factor $e^{-E/\kBT}$~\cite{IntroductionMC,kyimba2006comparisonIsingAlgorithms}.
@@ -496,7 +496,7 @@ However, Glauber dynamics is always more likely to reject a switch --- especiall
 Therefore, \hotspice uses the Metropolis-Hastings acceptance probability.
 
 \subsection{Other Monte Carlo algorithms} % Not implemented, explain why Wolff could be useful but why it's not in Hotspice
-For a broader overview of Monte Carlo methods, we refer to Ref.~\cite{IntroductionMC}, which may also clarify the at times confusing naming present throughout literature.
+For a broader overview of Monte Carlo methods, we refer to Ref.~\cite{IntroductionMC}, which may also clarify the at times confusing naming present throughout literature. % TODO: combine this mention of IntroductionMC and Wolff etc. with the Critical Slowing Down discussion
 
 \section{Implementation}\label{sec:2:Implementation}
 Now that the physics underlying the simulator have been extensively discussed, we turn our attention to the software implementation. \par
