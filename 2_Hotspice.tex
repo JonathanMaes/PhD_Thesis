@@ -398,10 +398,10 @@ For example, the energy barrier $\EB$ itself may be temperature-dependent, which
 
 \paragraph{Algorithm}
 Knowledge of the switching rate $\nu$ can be used to construct a rejection-free kinetic Monte Carlo method, which we refer to as the N\'eel-Arrhenius update algorithm.
-Each iteration, as presented in~\cref{alg:NeelArrheniusSingle}, will increment the elapsed time by a certain duration $t \leq t_\mathrm{max}$, where the maximum time $t_\mathrm{max}$ can be set by the user to prevent excessively long switching times.
-When using the N\'eel-Arrhenius update scheme, \cref{alg:NeelArrheniusSingle} is simply performed as many times as needed to reach the desired elapsed time. \par
+Each iteration, as presented in~\cref{alg:2:NeelArrheniusSingle}, will increment the elapsed time by a certain duration $t \leq t_\mathrm{max}$, where the maximum time $t_\mathrm{max}$ can be set by the user to prevent excessively long switching times.
+When using the N\'eel-Arrhenius update scheme, \cref{alg:2:NeelArrheniusSingle} is simply performed as many times as needed to reach the desired elapsed time. \par
 \begin{algorithm}[Single N\'eel-Arrhenius iteration]
-	\label{alg:NeelArrheniusSingle}
+	\label{alg:2:NeelArrheniusSingle}
 	\begin{enumerate}[rightmargin=15pt]
 		\item Calculate the effective energy barriers of all magnets (i.e., $\EBeff{}_{,i}$ for OOP ASI, $\EBeffLeft{}_{,i}$ and $\EBeffRight{}_{,i}$ for IP ASI, $\forall i$) based on their interaction energies $E_i$, as determined by the current magnetisation state.
 		\item Calculate the switching rate $\nu_i$ of each magnet using \cref{eq:2:Néel_2}.
@@ -419,22 +419,25 @@ The maximum time $t_\mathrm{max}$ (default value of one second) prevents the sim
 It can also be used to apply time-dependent external fields.
 For example, when a sinusoidal signal of frequency $f$ is applied to the lattice, using $t_{\mathrm{max}}=20/f$ will ensure that the waveform is captured in sufficient detail. \par
 In the realm of rejection-free KMC, a commonly used algorithm is the Bortz-Kalos-Lebowitz (BKL) algorithm.
-While the procedure detailed in~\cref{alg:NeelArrheniusSingle} is not the same, its yields an identical result as the BKL algorithm. % TODO REF
+While the procedure detailed in~\cref{alg:2:NeelArrheniusSingle} is not the same, its yields an identical result as the BKL algorithm. % TODO REF
 
 \subsection{Metropolis-Hastings: sampling equilibrium states} \label{sec:2:Dynamics_MH}
-Metropolis-Hastings is a rejection-based kinetic Monte Carlo (KMC) method designed to sample the state space at thermal equilibrium, where the probability of each state appearing is proportional to their Boltzmann factor $e^{-E/\kBT}$~\cite{IntroductionMC,kyimba2006comparisonIsingAlgorithms}.
-Hence, in contrast to N\'eel-Arrhenius switching, Metropolis-Hastings is not intended to accurately model the system's transient dynamics and is instead more suitable for examining equilibrium statistical quantities in ASI, like the average magnetization, heat capacity, correlation...~\cite{ApparentFMpinwheel} \par
+The Metropolis-Hastings algorithm is a rejection-based KMC method designed to sample the state space at thermal equilibrium, where the probability of each state appearing is proportional to their Boltzmann factor $e^{-E/\kBT}$~\cite{IntroductionMC,kyimba2006comparisonIsingAlgorithms}.
+Hence, in contrast to N\'eel-Arrhenius switching, Metropolis-Hastings is not intended to accurately model the system's transient dynamics.
+Instead, it is more suitable for examining equilibrium statistical properties of ASI, e.g. the average magnetisation, heat capacity, correlation...~\cite{ApparentFMpinwheel} \par
 
 \paragraph{Algorithm}
-A rejection-based KMC method works by selecting magnets at random, and deciding whether or not to switch them with a certain probability.
-More rigorously, the algorithm repeats the following steps:
+A rejection-based KMC method works by selecting magnets at random and subsequently deciding, with a certain probability $P$, whether or not to switch them.
+In particular, the Metropolis-Hastings algorithm repeats the steps outlined in~\cref{alg:2:MetropolisHastingsSingle}.
 \begin{algorithm}[Single Metropolis-Hastings iteration]
+	\label{alg:2:MetropolisHastingsSingle}
 	\begin{enumerate}
 		\item Select a magnet $i$ at random (with all magnets equally likely to be chosen).
 		\item Calculate the energy change $\Delta E_i$ if this magnet were to switch.
 		\item Switch the magnet with probability
 		\begin{equation}
-			P_i = \begin{cases}
+			\label{eq:2:MH_acceptance}
+			P_{\mathrm{MH},i} = \begin{cases}
 				\exp(-\Delta E_i/\kBT), & \text{if } \Delta E_i > 0 \mathrm{,} \\
 				1 & \text{otherwise} \mathrm{.}
 			\end{cases}
@@ -448,18 +451,49 @@ More rigorously, the algorithm repeats the following steps:
 		with $N$ the number of magnets in the system and $\chi$ a uniformly distributed random variable in $(0,1]$.~\cite{PhysicalTimeKMC}
 	\end{enumerate}
 \end{algorithm}
-This algorithm satisfies detailed balance and ergodicity, thus ensuring equilibrium is eventually reached, though the rate of convergence may vary as noted in~\cref{sec:2:Verification_OOP_Exchange}~\cite{jang2004stochastic}.
-For enhanced performance, multiple sufficiently distant magnets can be selected simultaneously, see~\cref{sec:2:MultiSwitch}. \par
-While N\'eel relaxation relies on an explicit calculation of the elapsed time, Metropolis-Hastings does not strictly require this knowledge.
-Therefore, the last step of the algorithm --- the calculation of the elapsed time --- is optional.
-For a long time, the notion of a well-defined elapsed time in rejection KMC was controversial~\cite{nfoldMCalgorithm,GlauberTimescale_sadiq1984,MCSim_StatPhys}. % Refs: `nfoldMCalgorithm` mentions both Glauber & MH acceptance prob., but says that Glauber can have a timescale (their equation looks a lot like in PhysicalTimeKMC) yet Metropolis cannot (due to the max()?), which is no longer true. `GlauberTimescale_sadiq1984' uses a less rigorously defined yet similar expression as in `PhysicalTimeKMC`. Don't use this reference when referring to the lack of a timescale, because this one seems to be one of the better solutions presented in literature, yet not very rigorous. Also `Lattice Kinetic Descriptions for Bulk Reaction-Diffusion Processes: Application to Alloys under Irradiation' p.215 says that ``The relationship between the simulation time and the physical time has been widely debated [MCSim_StatPhys], and it is sometimes assumed that the two time scales are proportional.''
-Often, the number of performed Monte Carlo sweeps\footnote{
-	A Monte Carlo ``step'' refers to attempting to switch a single magnet. By a ``Monte Carlo sweep'' (MCS), we refer to $N$ attempted switches when the simulation contains $N$ magnets~\cite{NumericalDynamicalNiedermayer}. Note that the distinction between attempted switches and actual switches only exists in the Metropolis-Hastings algorithm.
-} was used as a crude measure of ``elapsed time'', but eventually a formal derivation for the physical time scale in rejection KMC was presented by \textit{Serebrinsky}~\ccite{PhysicalTimeKMC}, where~\cref{eq:Metropolis_time} was derived.
-Note that the effective energy barrier $\EBeff$ only appears in the calculation of the elapsed time: it does not influence the switching probability in the Metropolis-Hastings algorithm because energy barriers do not affect the equilibrium state.
+For enhanced performance, multiple sufficiently distant magnets can be selected simultaneously, as will be explored in~\cref{sec:2:MultiSwitch}.
 
-\paragraph{Nomenclature disambiguation}
-There often exists confusion between the Metropolis-Hastings algorithm and so-called ``Glauber dynamics''. % TODO: discuss acceptance probabilities and why they are correct (ergodicity, detailed balance). Can extend the small mention of detailed balance and ergodicity below the algorithm environment as well. Must already be mentioned here since we use it later in the minimal distance discussion.
+\paragraph{Elapsed time in rejection KMC}
+While N\'eel relaxation relies on an explicit calculation of the elapsed time, Metropolis-Hastings does not strictly require this knowledge.
+Therefore, the last step of~\cref{alg:2:MetropolisHastingsSingle} --- the calculation of the elapsed time --- is optional. \par
+For a long time, the notion of a well-defined measure for the elapsed time in rejection KMC was controversial~\cite{nfoldMCalgorithm,GlauberTimescale_sadiq1984,MCSim_StatPhys}. % Refs: `nfoldMCalgorithm` mentions both Glauber & MH acceptance prob., but says that Glauber can have a timescale (their equation looks a lot like in PhysicalTimeKMC) yet Metropolis cannot (due to the max()?), which is no longer true. `GlauberTimescale_sadiq1984' uses a less rigorously defined yet similar expression as in `PhysicalTimeKMC`. Don't use this reference when referring to the lack of a timescale, because this one seems to be one of the better solutions presented in literature, yet not very rigorous. Also `Lattice Kinetic Descriptions for Bulk Reaction-Diffusion Processes: Application to Alloys under Irradiation' p.215 says that ``The relationship between the simulation time and the physical time has been widely debated [MCSim_StatPhys], and it is sometimes assumed that the two time scales are proportional.''
+Often, the number of performed Monte Carlo sweeps\footnote{
+	A Monte Carlo ``step'' refers to attempting to switch a single magnet. By a ``Monte Carlo sweep'' (MCS), we refer to $N$ attempted switches when the simulation contains $N$ magnets~\cite{NumericalDynamicalNiedermayer}. Note that no distinction between attempted switches and actual switches exists in the N\'eel-Arrhenius algorithm.
+} was used as a crude measure, but eventually a formal derivation for the physical time scale in rejection KMC was presented by \textit{Serebrinsky}~\cite{PhysicalTimeKMC}, who derived~\cref{eq:Metropolis_time}. \par
+Note that the effective energy barrier $\EBeff$ only appears in the optional calculation of the elapsed time.
+Energy barriers do not affect the acceptance probability in the Metropolis-Hastings algorithm because they have no effect on the equilibrium state~\cite{DynamicalGlassyBehaviour}.
+
+\paragraph{Disambiguation: Glauber dynamics}
+The Metropolis-Hastings acceptance probability in~\cref{eq:2:MH_acceptance} is the main reason why this algorithm samples the equilibrium state space.
+However, it is not unique: there exist other forms of the acceptance probability which also correctly sample this equilibrium.
+This is the reason why there often exists confusion between the Metropolis-Hastings algorithm and the so-called \textit{Glauber dynamics}\footnote{
+	The term ``Glauber dynamics'' is actually a misnomer~\cite{bit-player_MCvsGlauber}; the acceptance probability in~\cref{eq:2:GD_acceptance} was first derived by \textit{Flinn and McManus}~\cite{flinn1961TransitionProbability}, and later used by \textit{Glauber}~\cite{glauber1963time}.
+}~\cite{flinn1961TransitionProbability,glauber1963time}.
+These two methods differ only in their choice of acceptance probability: Glauber dynamics instead uses
+\begin{equation}
+	\label{eq:2:GD_acceptance}
+	P_\mathrm{GD} = \frac{\exp(-\Delta E / \kBT)}{1 + \exp(-\Delta E / \kBT)} \mathrm{.}
+\end{equation}
+
+For a Monte Carlo Markov Chain algorithm to sample the equilibrium state space, it must satisfy two conditions: \textit{detailed balance} and \textit{ergodicity}.
+\begin{itemize}
+	\item The principle of \textit{detailed balance} states that, in a system at equilibrium, each elementary process must also be in equilibrium with its reverse process.
+	This can be expressed mathematically as $\pi_i P_{ij} = \pi_j P_{ji}, \forall i,j$, with $P_{ij}$ the Markov transition probability from state $i$ to $j$, and with $\pi_i$ and $\pi_j$ the equilibrium probabilities of these states appearing.
+	Since all magnets are equally likely to be chosen in step 1 of~\cref{alg:2:MetropolisHastingsSingle}, it can be shown that both $P_\mathrm{MH}$ and $P_\mathrm{GD}$ result in an algorithm that satisfies detailed balance~\cite{kyimba2006comparisonIsingAlgorithms}.
+	\item To guarantee that a Monte Carlo Markov chain algorithm will eventually reach this equilibrium, it must be \textit{ergodic}, i.e. from a given state it must be possible to reach any other state via some route~\cite{kyimba2006comparisonIsingAlgorithms}.
+	This is clearly satisfied by~\cref{alg:2:MetropolisHastingsSingle}, for both $P_\mathrm{MH}$ and $P_\mathrm{GD}$, as the acceptance probability is strictly positive.
+\end{itemize}
+As such, \cref{alg:2:MetropolisHastingsSingle} is guaranteed to reach equilibrium eventually, though the rate of convergence may vary, as noted in~\cref{sec:2:Verification_OOP_Exchange}~\cite{jang2004stochastic}. \par
+
+The two common choices for the acceptance probability, $P_\mathrm{MH}$ and $P_\mathrm{GD}$, are compared in~\cref{fig:2:RejectionKMC}.
+\sidefig{2_Hotspice/RejectionKMC.pdf}{
+	\label{fig:2:RejectionKMC}
+	Acceptance probability used by Metropolis-Hastings and Glauber Dynamics, as a function of the switching energy $\Delta E$.
+	\newline\newline\newline % Newlines center the caption w.r.t. plot
+}
+Both $P_\mathrm{MH}$ and $P_\mathrm{GD}$ result in an algorithm that satisfies ergodicity and detailed balance, so they both yield the same statistical values for quantities like the average magnetisation.
+However, Glauber dynamics is always more likely to reject a switch --- especially for small $\Delta E / \kBT$ --- since $P_\mathrm{GD}(\Delta E) < P_\mathrm{MH}(\Delta E), \forall \Delta E$.
+Therefore, \hotspice uses the Metropolis-Hastings acceptance probability.
 
 \subsection{Other Monte Carlo algorithms} % Not implemented, explain why Wolff could be useful but why it's not in Hotspice
 For a broader overview of Monte Carlo methods, we refer to Ref.~\cite{IntroductionMC}, which may also clarify the at times confusing naming present throughout literature.
@@ -949,7 +983,7 @@ When an external magnetic field of magnitude $B$ is applied to a non-interacting
 \sidefig{2_Hotspice/Verification/Noninteracting_IP.pdf}{
 	\label{fig:2:Noninteracting}
 	Average magnetisation of a non-interacting ensemble of spins, as a function of the applied magnetic field magnitude $B$.
-	\newline\newline\newline
+	\newline\newline\newline % Newlines center the caption w.r.t. plot
 }
 
 \subsection{Exchange-coupled Ising system}
