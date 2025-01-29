@@ -846,13 +846,23 @@ Around $70 \times 70$, the sampling rate increases rapidly, resulting in an incr
 Beyond this, the sampling rate stagnates, eventually settling at around \SI{150e3}{samples\per\second}, corresponding to an ever decreasing MCS/s as the parallelism of the GPU gets exhausted.
 
 \subsubsection{RNG}
-Another factor which may contribute to the performance is the Random Number Generator (RNG).
-Both update algorithms rely on generating a large amount of random numbers to select the next magnet(s) to switch. % TODO: expand by talking about XORWOW etc. and how choice of RNG actually doesn't really impact performance
+Another factor which could affect performance is the choice of Random Number Generator (RNG), since both update algorithms rely on generating a random numbers to select the next magnet(s) to switch.
+In the case of Néel-Arrhenius, the amount of random numbers per switch is $\order{N}$, since a random switching time is determined for each magnet.
+For Metropolis-Hastings, each switch only requires $\order{1}$ random numbers: one or multiple magnets are selected randomly, and for each selected magnet a random number is chosen to evaluate the acceptance probability.
+Both of these algorithms use exponentially distributed random numbers, which can easily be generated from a uniformly distributed random number $\chi$ by the transformation $-\ln{\chi}$. \par
+On CPU, \hotspice uses\footnote{
+	On CPU, \hotspice uses \python{numpy.random.default_rng}, which uses the PCG64 generator for \python{numpy}~\cite{NumPy} v1.17 and up.
+} the PCG64~\cite{PCG64} generator.
+For GPU calculations, NVIDIA's \code{cuRAND} library provides several random number generators, of which we use\footnote{
+	On GPU, \hotspice uses \python{cupy.random.default_rng}, which itself uses the \code{cuRAND} library.
+} the XORWOW~\cite{XORWOW} generator.
+The performance of these various types of GPU RNG depends on the amount of random values being generated in parallel (i.e., the size of the ASI) and the details of the GPU architecture used~\cite{RNG_GPU_evaluation}.
+In \hotspice, no significant effect on performance was noticed by changing the RNG type.
 
 \subsection{Package structure} % Structure of Hotspice, explain all modules (core, ASI, energies, (config? with GPU)...)
 Hotspice is written as a Python 3.10 package and can perform simulations on either the CPU or GPU.
 The optimal hardware choice depends on the size of the ASI and the update scheme used.
-By default, \hotspice runs on the CPU using the popular NumPy and SciPy libraries.
+By default, \hotspice runs on the CPU using the popular NumPy~\cite{NumPy} and SciPy~\cite{SciPy} libraries.
 For GPU-accelerated array manipulation, the CuPy v11.4~\cite{CuPy} library is used, but this is an optional dependency. \par
 \paragraph{\python{hotspice.config}: GPU/CPU choice}
 By default, \hotspice runs on the CPU. To run on the GPU, the environment variable \python{HOTSPICE_USE_GPU} must be set to \python{"true"} before the the \hotspice package is loaded in a Python script with \python{import hotspice}. It is not possible to switch between GPU/CPU within a script.

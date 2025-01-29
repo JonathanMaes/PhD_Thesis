@@ -12,6 +12,20 @@
 	eprint        = {https://direct.mit.edu/isal/proceedings-pdf/isal/33/99/1929897/isal\_a\_00436.pdf}
 }
 
+@article{NumPy,
+	title         = {Array programming with {NumPy}},
+	author        = {Charles R. Harris and K. Jarrod Millman and St{\'{e}}fan J. van der Walt and Ralf Gommers and Pauli Virtanen and David Cournapeau and Eric Wieser and Julian Taylor and Sebastian Berg and Nathaniel J. Smith and Robert Kern and Matti Picus and Stephan Hoyer and Marten H. van Kerkwijk and Matthew Brett and Allan Haldane and Jaime Fern{\'{a}}ndez del R{\'{i}}o and Mark Wiebe and Pearu Peterson and Pierre G{\'{e}}rard-Marchant and Kevin Sheppard and Tyler Reddy and Warren Weckesser and Hameer Abbasi and Christoph Gohlke and Travis E. Oliphant},
+	year          = 2020,
+	month         = sep,
+	journal       = {Nature},
+	publisher     = {Springer Science and Business Media {LLC}},
+	volume        = 585,
+	number        = 7825,
+	pages         = {357--362},
+	doi           = {10.1038/s41586-020-2649-2},
+	url           = {https://doi.org/10.1038/s41586-020-2649-2}
+}
+
 @misc{bayesopt_package,
 	title         = {{Bayesian Optimization}: Open source constrained global optimization tool for {Python}},
 	author        = {Fernando Nogueira},
@@ -735,6 +749,20 @@
 	pages         = 10975
 }
 
+@article{RNG_GPU_evaluation,
+	title         = {Evaluation of Pseudo-Random Number Generation on GPU Cards},
+	author        = {Askar, Tair and Shukirgaliyev, Bekdaulet and Lukac, Martin and Abdikamalov, Ernazar},
+	year          = 2021,
+	journal       = {Computation},
+	volume        = 9,
+	number        = 12,
+	doi           = {10.3390/computation9120142},
+	issn          = {2079-3197},
+	url           = {https://www.mdpi.com/2079-3197/9/12/142},
+	article-number = 142,
+	abstract      = {Monte Carlo methods rely on sequences of random numbers to obtain solutions to many problems in science and engineering. In this work, we evaluate the performance of different pseudo-random number generators (PRNGs) of the Curand library on a number of modern Nvidia GPU cards. As a numerical test, we generate pseudo-random number (PRN) sequences and obtain non-uniform distributions using the acceptance-rejection method. We consider GPU, CPU, and hybrid CPU/GPU implementations. For the GPU, we additionally consider two different implementations using the host and device application programming interfaces (API). We study how the performance depends on implementation parameters, including the number of threads per block and the number of blocks per streaming multiprocessor. To achieve the fastest performance, one has to minimize the time consumed by PRNG seed setup and state update. The duration of seed setup time increases with the number of threads, while PRNG state update decreases. Hence, the fastest performance is achieved by the optimal balance of these opposing effects.}
+}
+
 @book{ExactlySolvedModelsStatMech,
 	title         = {Exactly solved models in statistical mechanics},
 	author        = {Baxter, Rodney J},
@@ -1362,6 +1390,13 @@
 	abstract      = {This paper demonstrates that the waves produced on the surface of water can be used as the medium for a “Liquid State Machine” that pre-processes inputs so allowing a simple perceptron to solve the XOR problem and undertake speech recognition. Interference between waves allows non-linear parallel computation upon simultaneous sensory inputs. Temporal patterns of stimulation are converted to spatial patterns of water waves upon which a linear discrimination can be made. Whereas Wolfgang Maass’ Liquid State Machine requires fine tuning of the spiking neural network parameters, water has inherent self-organising properties such as strong local interactions, time-dependent spread of activation to distant areas, inherent stability to a wide variety of inputs, and high complexity. Water achieves this “for free”, and does so without the time-consuming computation required by realistic neural models. An analogy is made between water molecules and neurons in a recurrent neural network.}
 }
 
+@article{PCG64,
+	title         = {PCG: A family of simple fast space-efficient statistically good algorithms for random number generation},
+	author        = {O’neill, Melissa E},
+	year          = 2014,
+	journal       = {ACM Transactions on Mathematical Software}
+}
+
 @article{PerpendicularMagnetizationASI,
 	title         = {Perpendicular Magnetization and Generic Realization of the Ising Model in Artificial Spin Ice},
 	author        = {Zhang, Sheng and Li, Jie and Gilbert, Ian and Bartell, Jason and Erickson, Michael J. and Pan, Yu and Lammert, Paul E. and Nisoli, Cristiano and Kohli, K. K. and Misra, Rajiv and Crespi, Vincent H. and Samarth, Nitin and Leighton, C. and Schiffer, Peter},
@@ -1632,6 +1667,17 @@
 	year          = 2007,
 	booktitle     = {ACM SIGGRAPH 2007 papers},
 	pages         = {78--es}
+}
+
+@article{SciPy,
+	title         = {{{SciPy} 1.0: Fundamental Algorithms for Scientific Computing in Python}},
+	author        = {Virtanen, Pauli and Gommers, Ralf and Oliphant, Travis E. and Haberland, Matt and Reddy, Tyler and Cournapeau, David and Burovski, Evgeni and Peterson, Pearu and Weckesser, Warren and Bright, Jonathan and {van der Walt}, St{\'e}fan J. and Brett, Matthew and Wilson, Joshua and Millman, K. Jarrod and Mayorov, Nikolay and Nelson, Andrew R. J. and Jones, Eric and Kern, Robert and Larson, Eric and Carey, C J and Polat, {\.I}lhan and Feng, Yu and Moore, Eric W. and {VanderPlas}, Jake and Laxalde, Denis and Perktold, Josef and Cimrman, Robert and Henriksen, Ian and Quintero, E. A. and Harris, Charles R. and Archibald, Anne M. and Ribeiro, Ant{\^o}nio H. and Pedregosa, Fabian and {van Mulbregt}, Paul and {SciPy 1.0 Contributors}},
+	year          = 2020,
+	journal       = {Nature Methods},
+	volume        = 17,
+	pages         = {261--272},
+	doi           = {10.1038/s41592-019-0686-2},
+	adsurl        = {https://rdcu.be/b08Wh}
 }
 
 @article{ren2007simplified,
@@ -2091,6 +2137,19 @@
 	year          = 2007,
 	journal       = {New directions in statistical signal processing: From systems to brain},
 	pages         = {127--154}
+}
+
+@article{XORWOW,
+	title         = {Xorshift RNGs},
+	author        = {Marsaglia, George},
+	year          = 2003,
+	journal       = {Journal of Statistical Software},
+	volume        = 8,
+	number        = 14,
+	pages         = {1–6},
+	doi           = {10.18637/jss.v008.i14},
+	url           = {https://www.jstatsoft.org/index.php/jss/article/view/v008i14},
+	abstract      = {Description of a class of simple, extremely fast random number generators (RNGs) with periods 2k - 1 for k = 32, 64, 96, 128, 160, 192. These RNGs seem to pass tests of randomness very well.}
 }
 
 @article{ZeroPointEntropy,
