@@ -646,18 +646,37 @@ This kernel is needed only once, to calculate the initial value of $\left. E_{\m
 The underlying equation for this one is also very similar to \cref{eq:2:Kernel_detailed}, but now with $u_x^{(ab)} \rightarrow -u_y^{(ab)}$ and $u_y^{(ab)} \rightarrow u_x^{(ab)}$ substituted.
 It is used in the same way as the kernel $\vc{\mathcal{K}}^{(q)}$ in \cref{eq:2:Kernel_init}.
 
-\subsubsection{Numerical error with cut-off kernel} % TODO: expand + FIGURE
-A performance improvement presents itself by cutting off the magnetostatic kernel at a certain distance, though only in the case of open BC.
-Due to the underlying grid, the most natural way of achieving this is to simply reduce the size of the kernel from $2L-1 \times 2L-1$ to a smaller $2K-1 \times 2K-1$ central region.
-Note that the number of cells has to remain odd for the convolution to still place the magnet in the center. \par
-However, this will result in inaccurate interaction energies being stored.
-When multiple magnets switch, this error will accumulate.
-Luckily, the error introduced in this manner is bounded from above: whenever a magnet switches back, the error its original switch introduced is cancelled (barring some remaining floating-point error).
+\subsubsection{Numerical error with cut-off kernel}
+Since the kernel is nearly 4 times larger than the simulation domain, a straightforward performance improvement presents itself: truncating the magnetostatic interaction at a certain distance.
+Due to the underlying grid, the most natural way of achieving this is to reduce the size of the kernel from $2L-1 \times 2L-1$ to a smaller $2K-1 \times 2K-1$ central region, $1 < K < L$.
+Note that the kernel size has to remain odd for the convolution to still place the switching magnet in the centre. \par
+However, such truncation will result in inaccurate calculation of the interaction energies: whenever a magnet switches, $E_\mathrm{MS}$ of distant magnets will not be updated.
+As an increasing number of magnets switch, this error will accumulate, as shown in \cref{fig:2:Kernel_cutoff} for the particular case of a pinwheel ASI with a $41 \times 41$ truncated kernel.
+After a certain amount of switches, however, the error is observed to stagnate.
+The reason for this is that, whenever a magnet switches back, the error introduced by its original switch gets cancelled, apart from some residual floating-point error.
+This also explains why the plateau starts after $\approx N$ switches ($N=5000$ magnets in the figure): at that point, each magnet will have switched once on average and will begin randomly switching back.
+The figure shows that the absolute error $E_\mathrm{err}$ for a truncated kernel of size $41 \times 41$ is on the order of \SIrange{5}{10}{\percent} (for this particular system), which is non-negligible.
+
+\xfig[1.0]{2_Hotspice/Kernel_cutoff.pdf}{
+	\label{fig:2:Kernel_cutoff}
+	Accumulation of error in the magnetostatic energy $E_\mathrm{MS}$ when using a truncated $41 \times 41$ kernel for a simulation of $100 \times 100$ pinwheel ASI at high temperature, starting from a uniform state.
+	\textbf{(a)} Mean and maximum error of the magnetostatic energy $E_\mathrm{MS}$ throughout the ASI, as a function of the number of switches after initialising the system in the uniform state.
+	\textbf{(b)} Final situation at the right edge of panel (a), i.e. after $\approx \SI{5e6}{}$ random switches.
+	The absolute error $E_\mathrm{err}$ is the difference between the simulations with (``Approximation'') and without (``Exact $E_\mathrm{MS}$'') a truncated kernel.
+}
+
+Note that PBC require extra attention when the magnetostatic kernel is truncated, as this procedure cuts off the eight offset kernel images.
+Previously, \cref{eq:2:Kernel_update} was applied when a magnet switches, where the kernel was cut-out appropriately to the size of the ASI to allow a pointwise multiplication.
+With open boundaries, the truncated kernel presents no issue, but with PBC the cut-out should be applied with care, such that it properly wraps around the edges.
+This wrapping can instead also be achieved by performing a circular convolution of the truncated kernel with an $L_x \times L_y$ array whose only non-zero element is at the position of the switching magnet.
 
 \subsection{Multi-switching in Metropolis-Hastings} \label{sec:2:MultiSwitch}
 The standard Metropolis-Hastings algorithm selects a magnet at random and subsequently decides whether or not to switch it.
 Since this algorithm is designed primarily for sampling equilibrium states rather than capturing the temporal evolution of the system, a straightforward performance improvement can be achieved by selecting multiple magnets simultaneously rather than sequentially.
-This allows for better usage of the parallel processing capabilities of the GPU, as the magnetostatic energy can then be updated using a convolution.
+This allows for better usage of the parallel processing capabilities of the GPU, as the magnetostatic energy can then be updated using a convolution. \par
+Previously, when only a single magnet switched at once, the magnetostatic energy was updated by \cref{eq:2:Kernel_update}, which appropriately cut out a piece of the kernel for pointwise multiplication.
+This process is no longer usable if we intend to use multi-switching as a method to efficiently parallelise Metropolis-Hastings iterations: not much performance can be gained if this every switching magnet requires a different cut-out.
+Instead, a far more efficient method to calculate the change in magnetostatic energy whenever multiple magnets switch is to perform a convolution of the kernel with an $L_x \times L_y$ array whose only non-zero elements are the values $s_i$ at the positions of the switching magnets.
 
 \subsubsection{Minimal distance between sampled magnets} % Derive equation
 Since all magnets affect each other through the magnetostatic interaction, simultaneously switching nearby magnets that significantly affect each other's switching energy may result in unphysical behaviour.
