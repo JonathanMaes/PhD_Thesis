@@ -77,12 +77,7 @@ def run(N: float = 10, size: int = 51, monopoles: list[float] = None, PBC: bool 
 
 def inset_ax(ax: plt.Axes, fig: plt.Figure = None, ASI_type: hotspice.ASI.IP_ASI = hotspice.ASI.IP_Square):
     if fig is None: fig = plt.gcf()
-    bbox = ax.get_window_extent().transformed(fig.dpi_scale_trans.inverted())
-    width, height = bbox.width, bbox.height # Width and height of ax in inches
-    inset_height = height # Height of inset ax in inches
     on_left = (ASI_type == hotspice.ASI.IP_Square)
-    # inset_ax: plt.Axes = inset_axes(ax, width=inset_height, height=inset_height, loc='upper left' if on_left else 'upper right',
-    #                     bbox_to_anchor=(0, 1) if on_left else (1, 1), bbox_transform=ax.transAxes, borderpad=0)
     inset_ax: plt.Axes = fig.add_axes([0, 0, 1, 1])
     inset_ax.set_aspect('equal', adjustable='datalim')
     inset_ax.axis('off')
@@ -120,6 +115,7 @@ def plot(data_dir=None):
     min1, max1, min2, max2 = 0, 6.1, 28.5, 45
     ratio = (max2 - min2)/(max1 - min1)
     fig, axes = plt.subplots(nrows=1, ncols=2, width_ratios=(1,ratio), sharey=True, facecolor='w', squeeze=True, figsize=(thesis_utils.page_width*0.6, 2.2))
+    axes: tuple[plt.Axes, plt.Axes]
     (ax1, ax2) = axes
     for ax in (ax1, ax2):
         for k, monopole in enumerate(monopoles):
