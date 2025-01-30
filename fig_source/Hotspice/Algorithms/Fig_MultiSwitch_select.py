@@ -113,7 +113,10 @@ def run(n_samples: int=100000, L:int=400, r:float=16, PBC:bool=True, ASI_type:ty
                 bin_counts = xp.bincount(xp.clip(xp.floor(near_distances/r*(n_bins/scale)), 0, n_bins-1).astype(int))
                 distances_binned[:bin_counts.size] += bin_counts
             field_local += calculate_any_neighbours(all_pos, (mm.ny*(1+mm.PBC), mm.nx*(1+mm.PBC)), center=r*scale)
-            spectrum += xp.log(xp.abs(xp.fft.fftshift(xp.fft.fft2(choices)))) # Not sure if this should be done always or only if more than 1 sample exists
+            
+            fft = xp.abs(xp.fft.fftshift(xp.fft.fft2(choices)))
+            fft = xp.where(fft == 0, 1, fft)
+            spectrum += xp.log(fft) # Not sure if this should be done always or only if more than 1 sample exists
         
     field_local[r*scale, r*scale] = 0 # set center value to zero
     t = time.perf_counter() - t
@@ -149,7 +152,6 @@ def plot(data_dir=None):
     ## Initialise plot
     thesis_utils.init_style()
     fig = plt.figure(figsize=(thesis_utils.page_width, thesis_utils.page_width/2))
-    gs = fig.add_gridspec(2, 4, width_ratios=[2, .5, 1, 1], height_ratios=[1,1], hspace=0.7, wspace=0)
     
     cmap = colormaps['viridis'].copy()
     cmap.set_under(color='black')
@@ -197,8 +199,6 @@ def plot(data_dir=None):
     c2 = plt.colorbar(im2, extend='min', location="top")
     c2.ax.set_title("Prob. dens. of neighbours\naround any sample", fontsize=11)
 
-    gs_inner = gridspec.GridSpecFromSubplotSpec(1, 3, width_ratios=[1, 0.5, 1], subplot_spec=gs[1,2:])
-
     # PLOT 3: PROBABILITY OF CHOOSING EACH CELL
     # ax3 = fig.add_subplot(gs_inner[0,0])
     ax3 = fig.add_subplot(2, 4, 7)
@@ -244,5 +244,5 @@ def plot(data_dir=None):
 
 if __name__ == "__main__":
     PBC = True
-    # run(L=400, n_samples=1000000, r=16, ASI_type=hotspice.ASI.OOP_Square, PBC=PBC, method="grid")
+    # run(L=400, n_samples=1000000, r=16, ASI_type=hotspice.ASI.OOP_Square, PBC=PBC, method="poisson")
     thesis_utils.replot_all(plot)
