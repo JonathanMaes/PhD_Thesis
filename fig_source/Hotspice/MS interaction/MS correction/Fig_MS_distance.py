@@ -181,7 +181,7 @@ def show_MS_distance_fig():
         ax.plot(data_i['distances'], data_i['dumbbell']/scale_y, label="Dumbbell" + (f" $d={get_data_kwargs['dumbbell_ratio']:.1f}l$" if get_data_kwargs['dumbbell_ratio'] != 1 else ""), linestyle=(0,(3,3)) if dumbbell_is_dipole else '-')
         ax.plot(data_i['distances'], data_i['mumax']/scale_y, label="mumax³", color='k')
         # ax.set_title(title, fontsize=10)
-        if i == 0: ax.set_ylabel(r"$|E_\mathrm{MS}|/\mu^2$ [a.u.]" if get_data_kwargs['scale'] else r"$E_{MC}$ (J)")
+        if i == 0: ax.set_ylabel(r"$|E_\mathrm{MS}|/\mu^2$ [a.u.]" if get_data_kwargs['scale'] else r"$E_{MS}$ (J)")
         ax.set_xlabel([r"$r_{ij}/2r$", r"$r_{ij}/l$", r"$r_{ij}/w$"][i])
         ax.axvline(1, linestyle=':', color='grey', linewidth=1)
         ax.set_xlim(right=data_i['distances'].max())

@@ -510,7 +510,7 @@ Finally, we briefly discuss the structure of the software package and the functi
 This choice was made based on the trade-off between calculation efficiency and the freedom to place magnets arbitrarily.
 We opted to prioritise efficiency and accept the geometrical restriction, as most ASI research focuses on periodic lattices.
 All quantities are therefore stored in 2D matrices of size $L_x \times L_y$, upon which operations can be performed efficiently.
-We will denote these matrices with bold upright capitalised symbols: e.g., $\vc{S}$ contains the states $s_i$, $\vc{E_\mathrm{MC}}$ the magnetostatic energies, $\vc{\upmu}$ the magnitudes of magnetic moments... \par % Q: other suggestions? I can not capitalise the magnitudes of magnetic moments, because that would just be capital M which is too reminiscent of the magnetisation (in H = B/mu0 - M). So I just put it upright. Is that sufficient?
+We will denote these matrices with bold upright capitalised symbols: e.g., $\vc{S}$ contains the states $s_i$, $\vc{E_\mathrm{MS}}$ the magnetostatic energies, $\vc{\upmu}$ the magnitudes of magnetic moments... \par % Q: other suggestions? I can not capitalise the magnitudes of magnetic moments, because that would just be capital M which is too reminiscent of the magnetisation (in H = B/mu0 - M). So I just put it upright. Is that sufficient?
 Despite the seemingly restrictive nature of the rectilinear grid,~\cref{fig:2:ASIs} illustrates its versatility in forming various periodic lattices, with only the Cairo lattices requiring grid non-uniformity.
 As a bonus, real-time visualisation is simple and efficient using this approach, as the underlying matrix can directly be cast to a pixel image. \par
 By leveraging the unit cell concept in periodic lattices and the efficient indexation of a rectilinear grid in computer memory, several aspects of the calculation can be performed more efficiently than for free-form ASI.
@@ -577,20 +577,20 @@ So, in the figure, these are the elements in kernel A shown to contain a grey ma
 }. \par
 The concept is illustrated a second time, now for the red magnet in the pinwheel ASI, which instead occupies position $q=\mathrm{B}$ in the unit cell and therefore uses a different kernel; the red kernel $\vc{\mathcal{K}}^\mathrm{(B)}$. \\\par
 
-This construction can be used to efficiently update the magnetostatic energy $E_\mathrm{MC}$ of all magnets whenever a magnet switches.
+This construction can be used to efficiently update the magnetostatic energy $E_\mathrm{MS}$ of all magnets whenever a magnet switches.
 Recall that the grid stores the state $s_i$ of all magnets in a matrix $\vc{S}$ and the size of their magnetic moment $\mu_i$ in $\vc{\upmu}$.
 When a magnet at unit cell index $q$ switches, the change of magnetostatic energy for all other magnets can be calculated by shifting $\vc{S}$ in the same way as the ASI was shifted in \cref{fig:2:Kernel_IP_Pinwheel}, and performing a pointwise multiplication (Hadamard product, denoted by $\odot$) with the respective elements of the kernel $\vc{\mathcal{K}}^{(q)}$.
 Denoting the grid index of the switching $q$-site magnet as $(x,y)$ and using the states $\vc{S}$ after the switch, this yields a new matrix
 \begin{equation}
 	\label{eq:2:Kernel_update}
-	\Delta \vc{E_\mathrm{MC}} = 2\mu_{xy} s_{xy}\vc{\upmu} \odot \vc{S} \odot \ab(\vc{\mathcal{K}}^{(q)}_{ab})_{\substack{L_x < a + x \leq 2L_x \\ L_y < a + y \leq 2L_y}} \quad\mathrm{,}
+	\Delta \vc{E_\mathrm{MS}} = 2\mu_{xy} s_{xy}\vc{\upmu} \odot \vc{S} \odot \ab(\vc{\mathcal{K}}^{(q)}_{ab})_{\substack{L_x < a + x \leq 2L_x \\ L_y < a + y \leq 2L_y}} \quad\mathrm{,}
 \end{equation}
-containing the change in magnetostatic energy $\Delta E_\mathrm{MC}$ for each grid point, which can then simply be added to the current values of $E_\mathrm{MC}$. \par
+containing the change in magnetostatic energy $\Delta E_\mathrm{MS}$ for each grid point, which can then simply be added to the current values of $E_\mathrm{MS}$. \par
 The kernel is also used to initialise the magnetostatic energy $\left. E_\mathrm{MS} \right|_{t=0}$ of each magnet at the start of the simulation.
 This is done by performing a convolution ($*$) rather than a pointwise multiplication:
 \begin{equation}
 	\label{eq:2:Kernel_init}
-	\left. \vc{E_\mathrm{MC}} \right|_{t=0} = \sum_q \vc{Q_q} \odot \vc{\upmu} \odot \vc{S} \odot \ab((\vc{\upmu} \odot \vc{S}) * \vc{\mathcal{K}}^{(q)}) \mathrm{,}
+	\left. \vc{E_\mathrm{MS}} \right|_{t=0} = \sum_q \vc{Q_q} \odot \vc{\upmu} \odot \vc{S} \odot \ab((\vc{\upmu} \odot \vc{S}) * \vc{\mathcal{K}}^{(q)}) \mathrm{,}
 \end{equation}
 where only the central $L_x \times L_y$ area of the convolution is calculated and the matrix $\vc{Q_q}$ contains 1 at sites with unit cell index $q$, otherwise 0. \\\par
 
@@ -638,11 +638,11 @@ Due to the rapid $1/r^3$ decline of the magnetostatic interaction over distance,
 \subsubsection{Perpendicular magnetostatic kernel} % If not yet explained in detail earlier, talk about the perpendicular kernel etc. here
 If the simulation accounts for the asymmetric energy barrier, as detailed in \cref{sec:2:E_B_eff}, then two additional kernels are needed for each site in the unit cell. \par
 The first is calculated for a situation where the central magnet maintains its usual orientation while all other magnets are rotated counter-clockwise by \ang{90}.
-This kernel will be used whenever a magnet switches, to update the perpendicular magnetostatic energy $\left. E_{\mathrm{MC}} \right|_{\perp}$ of all other magnets.
+This kernel will be used whenever a magnet switches, to update the perpendicular magnetostatic energy $\left. E_{\mathrm{MS}} \right|_{\perp}$ of all other magnets.
 The underlying equation is very similar to \cref{eq:2:Kernel_detailed}, but with $u_x^{(q)} \rightarrow -u_y^{(q)}$ and $u_y^{(q)} \rightarrow u_x^{(q)}$ substituted.
 It is used in the same way as the kernel $\vc{\mathcal{K}}^{(q)}$ in \cref{eq:2:Kernel_update}. \par
 The second additional kernel is the opposite of the first one; the central magnet is rotated \ang{90} counter-clockwise while all other magnets maintain their usual orientation.
-This kernel is needed only once, to calculate the initial value of $\left. E_{\mathrm{MC}} \right|_{\perp}$ for all magnets.
+This kernel is needed only once, to calculate the initial value of $\left. E_{\mathrm{MS}} \right|_{\perp}$ for all magnets.
 The underlying equation for this one is also very similar to \cref{eq:2:Kernel_detailed}, but now with $u_x^{(ab)} \rightarrow -u_y^{(ab)}$ and $u_y^{(ab)} \rightarrow u_x^{(ab)}$ substituted.
 It is used in the same way as the kernel $\vc{\mathcal{K}}^{(q)}$ in \cref{eq:2:Kernel_init}.
 
@@ -948,7 +948,7 @@ A graphical user interface (GUI) is available for \hotspice, which allows the us
 The state of the ASI is prominently displayed, and the bottom left panel shows a few useful statistics such as the elapsed time. The ASI display is controlled by the central bottom panel, which changes between 4 display modes.
 By default, the magnetisation is shown as an averaged field, with the averaging method determined by the ASI lattice.
 The second mode displays individual arrows, which either show each magnet's magnetisation direction $s_i \vc{u}_i$ or the effective field $\vc{B}_{\mathrm{eff},i}$ it experiences.
-In the third mode, the energy contributions ($E_\mathrm{MC}$, $E_\mathrm{Z}$, $E_\mathrm{Exch}$ and their sum $E_i$) and the resulting effective energy barrier $\EBeff$ for each magnet can be shown, both along the easy and hard axis.
+In the third mode, the energy contributions ($E_\mathrm{MS}$, $E_\mathrm{Z}$, $E_\mathrm{Exch}$ and their sum $E_i$) and the resulting effective energy barrier $\EBeff$ for each magnet can be shown, both along the easy and hard axis.
 The last option is to show the spatial distribution (i.e., the value for each magnet) of some parameters like the temperature $T$, shape anisotropy $\EB$ and size of the magnetic moment $\mu$. \par
 Buttons in the sidebar on the right allow the user to interact with the ASI by progressing through time, setting an initial state, or --- for more complex simulations --- apply custom functions.
 By clicking with the mouse on the ASI plot, it is also possible to interact with the ASI at a granular level, switching one or multiple magnets. Finally, the red box in the bottom right controls the update algorithm.
