@@ -164,7 +164,7 @@ def plot(data_dir=None):
         ax1.set_xlabel("Distance to nearest neighbour (binned)")
         data1_left = hotspice.utils.asnumpy(distances_binned/xp.sum(distances_binned))/(bin_width/r)
         ax1.fill_between(distance_bins, data1_left, step='post', edgecolor=color_left, facecolor=color_left, alpha=0.7)
-        ax1.set_ylabel("Probability density [$r^{-1}$]", color=color_left)
+        ax1.set_ylabel(r"Probability density [$r^{-1}_\mathrm{min}$]", color=color_left)
         ax1.tick_params(axis='y', labelcolor=color_left)
 
         ax1_right = ax1.twinx() # instantiate a second axes that shares the same x-axis
@@ -185,7 +185,7 @@ def plot(data_dir=None):
         ax1.set_ylabel("# occurences")
     ax1.set_xlim([0, max_dist_bin])
     ax1.set_xticks([r*n for n in range(scale+1)])
-    ax1.set_xticklabels(["0", "r"] + [f"{n}r" for n in range(2, scale+1)])
+    ax1.set_xticklabels(["0", r"$r_\mathrm{min}$"] + [f"{n}" + r"$r_\mathrm{min}$" for n in range(2, scale+1)])
     ax1.axvline(r, color='black', linestyle=':', linewidth=1, label=None)
 
     # PLOT 2: PROBABILITY DENSITY OF NEIGHBOURS AROUND ANY SAMPLE
