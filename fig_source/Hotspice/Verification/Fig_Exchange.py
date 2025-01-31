@@ -135,7 +135,7 @@ if __name__ == "__main__":
     for N in Ns:
         print(N)
         # run(N=N, size=size, scheme=scheme, outdir_name=f"N_sweep/size={size}/N={N:.0f}")
-    plot_args = [{'label': f"N={N:.0f}"} for N in Ns]
+    plot_args = [{'label': f"{N:.0f} MCS"} for N in Ns]
     
     dir = os.path.splitext(__file__)[0] + ".out"
     for i, N in enumerate(Ns): plot(f"{dir}/N_sweep/size={size}/N={N:.0f}", plot_args=plot_args[i])

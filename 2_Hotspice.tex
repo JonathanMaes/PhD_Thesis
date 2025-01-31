@@ -1142,7 +1142,7 @@ When an external magnetic field of magnitude $B$ is applied to a non-interacting
 The 2D square-lattice exchange-coupled Ising model is one of the few exactly solvable systems in statistical physics~\cite{ExactlySolvedModelsStatMech}.
 An analytical solution is known for the temperature-dependence of its average magnetisation
 \begin{equation}
-	M = \sqrt[8]{1 - \sinh^{-4}(2J/\kBT)} \mathrm{,}
+	\langle M \rangle = \sqrt[8]{1 - \sinh^{-4}(2J/\kBT)} \mathrm{,}
 	\label{eq:2:Verification_exchange_M}
 \end{equation}
 with $J$ the exchange coupling constant~\cite{Correlations2DIsing,IsingSpontaneousMagnetization,coey2010magnetism}.
@@ -1152,7 +1152,7 @@ This implies that the system exhibits a second-order phase transition at the cri
 \end{equation}
 Furthermore, an analytical solution is available for the nearest-neighbour correlation
 \begin{equation}
-	\langle \sigma_{1} \sigma_{2} \rangle = 
+	\langle S_i S_{i+1} \rangle = 
 	\begin{cases}
 		\sqrt{1+k} \ab[\frac{1-k}{\pi}K(k) + \frac{1}{2} \ab] &\text{for } T < T_c \mathrm{,} \\ 
 		\sqrt{1+k} \ab[\frac{1-k}{\pi k}K(1/k) + \frac{1}{2} \ab] &\text{for } T > T_c \mathrm{.} \\ 
@@ -1162,20 +1162,21 @@ with $K$ the complete elliptic integral of the first kind and $k=\sinh^{-2}(2J/\
 
 The result of a \hotspice simulation of this Ising system is shown in \cref{fig:2:Verification_exchange}, as calculated for an $800 \times 800$ lattice.
 Maximal multi-sampling ($Q=+\infty$) for the Metropolis-Hastings algorithm was used to verify that --- at least for systems with such short-range coupling --- this sort of extreme multi-sampling still converges to the correct solution.
-Since the theoretical curves for $M$ and $\langle \sigma_{1} \sigma_{2} \rangle$ are monotonically decreasing~\cite{MCinStatPhys}, the final state from the previous temperature step was retained as the starting point for the next step. This preserves progress already made towards equilibrium and avoids the disruption that resetting to the uniform state would cause. \par
+Since the theoretical curves for $\langle M \rangle$ and $\langle S_i S_{i+1} \rangle$ are monotonically decreasing, the final state from the previous temperature step was retained as the starting point for the next step. This preserves progress already made towards equilibrium and avoids the disruption that resetting to the uniform state would cause~\cite{MCinStatPhys}. \par
 
 \xfig{2_Hotspice/Verification/OOP_Exchange.pdf}{
 	\label{fig:2:Verification_exchange}
 	\textbf{(a)} Average magnetisation and \textbf{(b)} nearest-neighbour (NN) correlation as a function of temperature.
 	Markers show the \hotspice result for an $800 \times 800$ OOP square-lattice exchange-coupled Ising system using the Metropolis-Hastings algorithm with maximal multi-switching.
-	The simulation was performed for 3 values of $N$ --- the number of Monte Carlo steps per site performed at each temperature step.
-	Discrepancies due to critical slowing down above $T_c$ improve with increasing $N$.
+	The simulation was performed 3 times --- for different amounts of MCS (Monte Carlo steps per site) for each temperature step.
+	Discrepancies due to critical slowing down above $T_c$ improve with increasing MCS.
 }
 
 The \hotspice result corresponds well to the theoretical predictions both below $T_c$ and in the high-temperature limit.
-However, just above $T_c$, the average magnetisation evolves only slowly towards the expected value.
-Increasing the number of Monte Carlo sweeps per temperature step brings the system closer to the theoretical equilibrium and reduces the temperature range above $T_c$ where the system has not yet reached equilibrium again.
-This slow convergence near the critical point is a symptom of the well-known phenomenon called ``critical slowing down''.
+However, just above $T_c$, the average magnetisation $\langle M \rangle$ evolves only slowly towards the expected value.
+Increasing the number of MCS per temperature step brings the system closer to the theoretical equilibrium and reduces the temperature range above $T_c$ where the simulated system is not at equilibrium.
+However, this has diminishing returns, as every additional MC step converges more slowly towards the equilibrium.
+This slow convergence near the critical point is a symptom of the well-known phenomenon called ``critical slowing down'', which makes simulations at or near second-order phase transitions very inefficient~\cite{NumericalDynamicalNiedermayer,StatisticalMechanicsAlgorithmsComputations}.
 % TODO: ? why the discrepancy in the correlation?
 
 \subsubsection{Critical slowing down}
@@ -1202,6 +1203,7 @@ Consistent with the theoretical predictions of~\ccite{StripedDipolarIsing}, for 
 In the range $0.85 < \delta < 2.65$, stripe domains with a width of 1 row are preferred, leading to $\langle S_i S_{i+1} \rangle = 0$.
 Beyond $\delta=2.65$, a 2-row width becomes preferable with $\langle S_i S_{i+1} \rangle = 0.5$.
 Increasing $\delta$ further leads to ever wider stripe domains, and in the limit $\delta \rightarrow +\infty$ the correlation approaches $\langle S_i S_{i+1} \rangle \rightarrow 1$.
+The phenomenon of CSD is also present here, albeit less severely.
 
 \subsection{Square-to-pinwheel transition angle}\label{sec:2:Verification_IP_SquarePinwheel}
 The in-plane square and pinwheel ASI lattices can be continuously transformed into each other by rotating each individual magnet by \ang{45}.
