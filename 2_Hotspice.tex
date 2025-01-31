@@ -819,8 +819,9 @@ Normal SJG sampling divides the domain into strata --- typically squares --- and
 Since this procedure does not guarantee a minimal distance between samples, a restricted SJG must be used instead, where samples are only taken from from the centre area of each square-shaped stratum, as discussed and illustrated in~\ccite{SamplingPolyominoes}. \par % Fig. 3b in SamplingPolyominoes is restricted SJG
 To apply this in \hotspice, the simulation is divided into square subregions of $R_x \times R_y$ grid cells, with $R_x$ and $R_y$ chosen such that each subregion has a physical size of at least $\rmin \times \rmin$.
 These subregions form a ``super-grid'' throughout the simulation domain.
-A quarter of the subregions are then chosen such that they are non-adjacent --- sharing no edges nor corners --- and a single magnet is sampled from each of them.
-This ensures that these sampled magnets are at least a distance $\rmin$ apart, though they will have an average spacing of $2\rmin$. 
+A quarter of the subregions are then chosen such that they are non-adjacent --- sharing no edges nor corners --- and a single magnet is sampled from each of them. % Q: do we need a simple figure for this? And for the hybrid method?
+This ensures that these sampled magnets are at least a distance $\rmin$ apart, though they will have an average spacing of $2\rmin$.
+By choosing a random quarter of subregions each time, all magnets are equally likely to be chosen.
 
 \xfig[1.0]{2_Hotspice/MultiSwitch_select_Grid.pdf}{
 	\label{fig:2:MultiSwitch_select_Grid}
@@ -848,8 +849,10 @@ This, and several other edge cases or considerations that had to be addressed to
 	In the example, this would mean that the last subregions along the odd axis are not used.
 	To ensure uniform coverage and proper sampling near the edges, the super-grid then has to be randomly shifted over the simulation domain.
 	Note that PBC can make it impossible to maintain a spacing $>r$ in very small systems, or with small $Q$ values; in such cases, we resort to selecting a single magnet.
-	\item The size of the subregions must be lower bounded by $R_x \geq 2$ and $R_y \geq 2$ to avoid forming artefacts in highly ordered systems by keeping sufficient randomness for small $\rmin$.
-	Think for example of an exchange-coupled OOP square ASI in the uniform state: if $R_x = R_y = 1$, a simultaneous switch would switch one quarter of all magnets without introducing any spatial variation, which would be non-physical.
+	\item The size of the subregions must be lower bounded by $R_x \geq 2$ and $R_y \geq 2$ to avoid forming artefacts in highly ordered systems.
+	In the extreme case where $R_x = R_y = 1$, nearly all randomness would be removed, and only 4 possible multi-samples would remain (one for each quarter of subregions).
+	Think for example of an exchange-coupled OOP square ASI in the uniform state: a regularly-spaced quarter of all magnets would switch simultaneously, without introducing additional spatial variation, which would be non-physical.
+	Avoiding this situation retains sufficient randomness for small $\rmin$.
 	\item The size of a subregion is constrained to an integer amount of unit cells, such that all subregions have an identical pattern of (un)occupied grid cells within them.
 	This way, the sampling of magnets can be done in parallel for all subregions without sampling any unoccupied grid points.
 	\item Whereas Poisson disc sampling can take a spatially dependent $\rmin$ into account (e.g. due to a local variation of $\mu$), this is not possible with this approach, so we have to assume a worst-case $\rmin$ across the lattices (as was already assumed in the derivation of~\cref{eq:2:MultiSwitch_inequality}).
