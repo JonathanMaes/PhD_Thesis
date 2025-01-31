@@ -357,6 +357,7 @@ as has previously been described by \textit{Tannous and Gieraltowski}~\cite{Ston
 This is the exact solution that was shown in grey in~\cref{fig:2:EB_meanbarrier}.
 However, since OOP magnets are not ellipsoidal as assumed by the transcendental equation that originally led to \cref{eq:2:EB_exact_transcendental}, the relevance of \cref{eq:2:EB_exact} remains questionable.
 
+\newpage % For better alignment
 \section{Dynamics}\label{sec:2:Dynamics}
 A Monte Carlo simulator would not be complete without an algorithm to change the state of the system.
 Since any magnet in the ASI may spontaneously switch to the opposite magnetisation state due to thermal fluctuations, \hotspice evaluates the time evolution of the ASI in a stepwise manner using an update algorithm that determines which magnet should switch next. \par
@@ -653,9 +654,11 @@ Note that the kernel size has to remain odd for the convolution to still place t
 However, such truncation will result in inaccurate calculation of the interaction energies: whenever a magnet switches, $E_\mathrm{MS}$ of distant magnets will not be updated.
 As an increasing number of magnets switch, this error will accumulate, as shown in \cref{fig:2:Kernel_cutoff} for the particular case of a pinwheel ASI with a $41 \times 41$ truncated kernel.
 After a certain amount of switches, however, the error is observed to stagnate.
-The reason for this is that, whenever a magnet switches back, the error introduced by its original switch gets cancelled, apart from some residual floating-point error.
+The reason for this is that, whenever a magnet switches back, the error introduced by its original switch gets cancelled, leaving only some residual floating-point error in its wake.
 This also explains why the plateau starts after $\approx N$ switches ($N=5000$ magnets in the figure): at that point, each magnet will have switched once on average and will begin randomly switching back.
-The figure shows that the absolute error $E_\mathrm{err}$ for a truncated kernel of size $41 \times 41$ is on the order of \SIrange{5}{10}{\percent} (for this particular system), which is non-negligible.
+The error is highly dependent on the situation and size of the severity of the truncation.
+The closer to equilibrium the system is initialised, the smaller the error will be while the simulation explores this equilibrium.
+For example, the figure shows that the absolute error $E_\mathrm{err}$ for this particular situation with a $41 \times 41$ truncated kernel is on the order of \SIrange{5}{10}{\percent} of $E_\mathrm{MS}$.
 
 \xfig[1.0]{2_Hotspice/Kernel_cutoff.pdf}{
 	\label{fig:2:Kernel_cutoff}
@@ -684,17 +687,7 @@ Take for example the extreme case where it would be allowed to switch all magnet
 In a less extreme case, convergence to a low-energy or equilibrium state may be slowed down significantly. \par
 Therefore, to avoid such issues, we enforce a minimum distance $\rmin$ between selected magnets.
 The particular criterion we will use is as follows: two simultaneously sampled magnets should never be able to affect each other's switching probability by more than some user-adjustable factor $0 < Q \leq 1$, where we commonly use $Q=0.01$.
-This principle is illustrated in~\cref{fig:2:MultiSwitch_proof}.
-
-\xfig[1.0]{2_Hotspice/MultiSwitch_proof.pdf}{
-	\label{fig:2:MultiSwitch_proof}
-	Consider two states: the initial state `i' (top), and the final state `f' where magnet 1 has switched (bottom).
-	The surrounding magnets stay unchanged.
-	In both states, magnet 2 has a certain acceptance probability for switching $P_2$ if it is selected by the Metropolis-Hastings algorithm, determined by the associated energy change $\Delta E$.
-	This switch of magnet 1 induces a change in switching probability $\Delta P_2$ of magnet 2.
-	The limitation that we impose, is that the Metropolis-Hastings algorithm is only allowed to simultaneously sample magnet 1 and 2 if $\abs{\Delta P_2} = \abs{P_2^{(f)} - P_2^{(i)}} \leq Q$.
-}
-
+This principle is illustrated schematically in~\cref{fig:2:MultiSwitch_proof}.
 We will now derive an inequality for the minimal distance $\rmin$ as a function of $Q$.
 \newtheorem{inequality}{Inequality}
 \begin{inequality}
@@ -704,6 +697,15 @@ We will now derive an inequality for the minimal distance $\rmin$ as a function 
 		\label{eq:2:MultiSwitch_inequality}
 	\end{equation}
 \end{inequality}
+
+\xfig[1.0]{2_Hotspice/MultiSwitch_proof.pdf}{
+	\label{fig:2:MultiSwitch_proof}
+	Consider two states: the initial state `i' (top), and the final state `f' where magnet 1 has switched (bottom).
+	The surrounding magnets stay unchanged.
+	In both states, magnet 2 has a certain acceptance probability for switching $P_2$ if it is selected by the Metropolis-Hastings algorithm, determined by the associated energy change $\Delta E$.
+	This switch of magnet 1 induces a change in switching probability $\Delta P_2$ of magnet 2.
+	The limitation that we impose, is that the Metropolis-Hastings algorithm is only allowed to simultaneously sample magnet 1 and 2 if $\abs{\Delta P_2} = \abs{P_2^{(f)} - P_2^{(i)}} \leq Q$.
+}
 
 \begin{proof}
 	Consider~\cref{fig:2:MultiSwitch_proof}.
@@ -818,13 +820,7 @@ Since this procedure does not guarantee a minimal distance between samples, a re
 To apply this in \hotspice, the simulation is divided into square subregions of $R_x \times R_y$ grid cells, with $R_x$ and $R_y$ chosen such that each subregion has a physical size of at least $\rmin \times \rmin$.
 These subregions form a ``super-grid'' throughout the simulation domain.
 A quarter of the subregions are then chosen such that they are non-adjacent --- sharing no edges nor corners --- and a single magnet is sampled from each of them.
-This ensures that these sampled magnets are at least a distance $\rmin$ apart, though they will have an average spacing of $2\rmin$. \\\par
-
-Similar to the figure for Poisson disc sampling,~\cref{fig:2:MultiSwitch_select_Grid} shows an analysis of the spatial distribution of the grid-select method.
-The contrast with Poisson disc sampling is striking, as was to be expected.
-The spatial distribution and periodogram are highly anisotropic, with magnets being most likely to be sampled $(2iR_x, 2iR_y), \forall i,j$ relative to each other.
-This may lead to undesirable correlations in the system, though such effects have not been observed at present, even for very low $\rmin$.
-The distance to the nearest neighbours is on average slightly further than for Poisson disc sampling, but is still mostly concentrated between $\rmin \leq r \leq 2\rmin$.
+This ensures that these sampled magnets are at least a distance $\rmin$ apart, though they will have an average spacing of $2\rmin$. 
 
 \xfig[1.0]{2_Hotspice/MultiSwitch_select_Grid.pdf}{
 	\label{fig:2:MultiSwitch_select_Grid}
@@ -836,6 +832,11 @@ The distance to the nearest neighbours is on average slightly further than for P
 	\textbf{(d)} Periodogram, i.e. the spatial Fourier transform of simultaneously sampled magnets, averaged over all iterations of the selection algorithm.
 }
 
+Similar to the figure for Poisson disc sampling,~\cref{fig:2:MultiSwitch_select_Grid} shows an analysis of the spatial distribution of the grid-select method.
+The contrast with Poisson disc sampling is striking, as was to be expected.
+The spatial distribution and periodogram are highly anisotropic, with magnets being most likely to be sampled $(2iR_x, 2iR_y), \forall i,j$ relative to each other.
+This may lead to undesirable correlations in the system, though such effects have not been observed at present, even for very low $\rmin$.
+The distance to the nearest neighbours is on average slightly further than for Poisson disc sampling, but is still mostly concentrated between $\rmin \leq r \leq 2\rmin$.
 \crefSubFigRef{fig:2:MultiSwitch_select_Grid}{c} shows that all cells in the simulation are equally likely to be sampled with this method, once again ensuring detailed balance is satisfied.
 However, achieving this required additional attention in the case of PBC.
 This, and several other edge cases or considerations that had to be addressed to implement this algorithm in \hotspice, are listed below.
@@ -865,8 +866,6 @@ This was implemented by selecting subregions using the Poisson disc algorithm, r
 An adapted version of the Poisson disc sampling was used, tailored to just select non-adjacent subregions.
 Once the subregions have been selected, everything proceeds as in the normal grid-select method: magnets are sampled in parallel, one in each subregion, making use of the fact that the occupation of the underlying grid is identical for each subregion. \par
 Similar to the previous figures,~\cref{fig:2:MultiSwitch_select_Hybrid} shows the spatial distribution of the hybrid grid-Poisson method.
-The sample distribution shown in~\crefSubFigRef{fig:2:MultiSwitch_select_Hybrid}{a} is in every way a hybrid of the spatial distribution of both earlier methods.
-The average distance to a nearest neighbour is, however, larger than both methods, and now extends up to $r \leq 3 \rmin$, resulting in a lower amount of magnets being sampled simultaneously. \par
 
 \xfig[1.0]{2_Hotspice/MultiSwitch_select_Hybrid.pdf}{
 	\label{fig:2:MultiSwitch_select_Hybrid}
@@ -878,6 +877,8 @@ The average distance to a nearest neighbour is, however, larger than both method
 	\textbf{(d)} Periodogram, i.e. the spatial Fourier transform of simultaneously sampled magnets, averaged over all iterations of the selection algorithm.
 }
 
+The sample distribution shown in~\crefSubFigRef{fig:2:MultiSwitch_select_Hybrid}{a} is in every way a hybrid of the spatial distribution of both earlier methods.
+The average distance to a nearest neighbour is, however, larger than both methods, and now extends up to $r \leq 3 \rmin$, resulting in a lower amount of magnets being sampled simultaneously. \par
 This hybrid grid-Poisson method is half as fast as the modified SJG method, which is still a substantial improvement over the Poisson disc sampling --- due to the optimised Poisson sampler for non-adjacent subregions --- and has a more natural-looking distribution of neighbouring magnets than the grid-select method.
 As such, it is up to user preference which method to use, with modified SJG being the default in \hotspice to prioritise performance.
 
@@ -1069,16 +1070,32 @@ Buttons in the sidebar on the right allow the user to interact with the ASI by p
 By clicking with the mouse on the ASI plot, it is also possible to interact with the ASI at a granular level, switching one or multiple magnets. Finally, the red box in the bottom right controls the update algorithm.
 
 \subsection{Advantages and disadvantages of the \hotspice approach} % Hindsight is 20/20
-\subsubsection{Grid} % TODO: expand
+\subsubsection{Grid} % TODO: write more nicely and add stuff
+Throughout this section, it has become clear that the usage of a grid has far-reaching implications to the workings of \hotspice, in both positive and negative sense.
+On the one hand, the grid allows efficient calculation of the magnetostatic interaction by using kernels, and can do so in a memory-efficient manner while accounting for all the interactions throughout the ASI.
+The computational cost of taking all interactions into account is limited when using the GPU; for example, performance only starts to decline for systems larger than $800 \times 800$ on the setup used for this thesis.
+On the other hand, the grid restricts the usage of \hotspice to ASI which can be put on a regular grid.
+Irregular ASI, like the evolutionary ASI developed by \textit{Penty and Tufte}~\cite{ASI_Evolutionary_ALife}, can not be simulated with this software.
+Furthermore, it is unclear whether the grid has a net positive or negative impact on the calculation efficiency of the magnetostatic interaction.
+While the grid easily allows the magnetostatic interaction between all magnets to be taken into account, limiting the magnetostatic interaction to a maximum interaction distance may not noticeably affect ASI dynamics.
+For example, the flatspin~\cite{flatspin} simulator does not employ a grid, but instead stores the interaction strength between a magnet and its neighbours that lay within a certain radius.
+This approach seems to yield comparable performance.
+On the other hand, selecting multiple sufficiently spaced magnets in an irregular ASI may be more cumbersome and require a virtual underlying grid anyway, while the grid in \hotspice readily supports multi-sampling with a minimal distance requirement.
 \subsubsection{Input/output RC}
+\hotspice contains a module \python{hotspice.io} which provides various basic input and readout methods.
+These were mostly written before several aspects of \hotspice were finished, and are therefore limited in their scope.
+During development of \hotspice, the PRCpy package~\cite{PRCpy} has become available, which can determine reservoir computing metrics.
+This package appears preferable over the builtin \python{hotspice.experiments} module, as it is more broadly applicable.
 \subsubsection{GPU/CPU}
-In hindsight, for the purposes of this thesis it was not necessary to go through all the effort to port \hotspice to the GPU.
-In~\cref{ch:Applications}, I rarely use large systems, and often use the N\'eel algorithm for which multi-switching was not implemented.
-Therefore, the vast majority of calculations in that chapter will be performed on CPU. 
-In hindsight, we mostly worked on small systems with the N\'eel algorithm (to simulate RC in OOP ASI), making all the effort of allowing \hotspice to run on the GPU unnecessary. Still, the effort was not wasted as it has expanded the envelope of applicability for \hotspice, particularly when using the Metropolis-Hastings algorithm.
-The fact that the current implementation requires making the choice to use GPU or CPU before the \python{import hotspice} statement can be limiting in specific situations. A spiritual successor to \hotspice should address this limitation.
+In hindsight, it was not necessary to port \hotspice to the GPU for the purposes of this thesis.
+In~\cref{ch:Applications}, large systems are rarely used, if ever.
+Most often, small systems are simulated with the N\'eel algorithm, which does not benefit from the multi-switching implementation.
+Therefore, the vast majority of calculations in that chapter will be performed on CPU.
+Still, the efforts of implementing GPU operation and a multi-switching procedure were not wasted as they have expanded the envelope of situations where \hotspice can be used, particularly when using the Metropolis-Hastings algorithm. \par
+One particular issue that remains, is that the current implementation requires making the choice to use GPU or CPU before the \python{import hotspice} statement.
+While this presents no issues in the vast majority of cases, it is a limitation that is not strictly necessary.
 
-\section{Verification} % See paper
+\section{Verification} \label{sec:2:Verification}
 Now that we know the ins and outs of the model used by \hotspice, all that remains is to verify its correct implementation.
 To this end, we simulate several systems of increasing complexity for which analytical solutions are available.
 The examples discussed here are all equilibrium problems, so we will use the Metropolis-Hastings algorithm to verify that it indeed samples the equilibrium state space.
@@ -1171,7 +1188,7 @@ Although cluster algorithms like the Wolff algorithm~\cite{Wolff} can mitigate t
 \subsection{Exchange- and magnetostatically-coupled Ising system}
 Including long-range magnetostatic interactions into an exchange-coupled square-lattice Ising system significantly alters its behaviour.
 While the temperature $T$ remains an important system parameter, now another determining factor is the ratio $\delta = E_{\mathrm{exch},i,j}/E_{\mathrm{MS},i,j}$ ($j \in \mathcal{N}_i$), which represents the balance between the exchange coupling and magnetostatic interaction for nearest neighbours.
-Analytical predictions remain possible in this system at zero temperature: for $\delta < 0.85$, the magnetostatic coupling dominates, leading to a checkerboard state.
+Analytical predictions remain possible in this system at zero temperature: for $\delta < 0.85$, the magnetostatic coupling dominates, leading to a checkerboard state~\cite{AgingIsingDipolar}.
 As $\delta$ increases, the ever-stronger exchange coupling leads to the formation of ferromagnetic domains, which organize into stripes due to the magnetostatic interaction, with the stripe width determined by $\delta$~\cite{StripedDipolarIsing}.
 
 \xfig{2_Hotspice/Verification/OOP_Dipolar.pdf}{
