@@ -495,9 +495,7 @@ The two common choices for the acceptance probability, $P_\mathrm{MH}$ and $P_\m
 Both $P_\mathrm{MH}$ and $P_\mathrm{GD}$ result in an algorithm that satisfies ergodicity and detailed balance, so they both yield the same statistical values for quantities like the average magnetisation.
 However, Glauber dynamics is always more likely to reject a switch --- especially for small $\Delta E / \kBT$ --- since $P_\mathrm{GD}(\Delta E) < P_\mathrm{MH}(\Delta E), \forall \Delta E$.
 Therefore, \hotspice uses the Metropolis-Hastings acceptance probability.
-
-\subsection{Other Monte Carlo algorithms} % Not implemented, explain why Wolff could be useful but why it's not in Hotspice
-For a broader overview of Monte Carlo methods, we refer to Ref.~\cite{IntroductionMC}, which may also clarify the at times confusing naming present throughout literature. % TODO: combine this mention of IntroductionMC and Wolff etc. with the Critical Slowing Down discussion
+For a broader overview of Monte Carlo methods, we refer to Ref.~\cite{IntroductionMC}, which may also clarify the at times confusing naming present throughout literature.
 
 \section{Implementation}\label{sec:2:Implementation}
 Now that the physics underlying the simulator have been extensively discussed, we turn our attention to the software implementation. \par
@@ -1098,6 +1096,7 @@ Still, the efforts of implementing GPU operation and a multi-switching procedure
 One particular issue that remains, is that the current implementation requires making the choice to use GPU or CPU before the \python{import hotspice} statement.
 While this presents no issues in the vast majority of cases, it is a limitation that is not strictly necessary.
 
+\newpage % For consistent formatting
 \section{Verification} \label{sec:2:Verification}
 Now that we know the ins and outs of the model used by \hotspice, all that remains is to verify its correct implementation.
 To this end, we simulate several systems of increasing complexity for which analytical solutions are available.
@@ -1145,20 +1144,21 @@ When an external magnetic field of magnitude $B$ is applied to a non-interacting
 The 2D square-lattice exchange-coupled Ising model is one of the few exactly solvable systems in statistical physics~\cite{ExactlySolvedModelsStatMech}.
 An analytical solution is known for the temperature-dependence of its average magnetisation
 \begin{equation}
-	\langle M \rangle = \sqrt[8]{1 - \sinh^{-4}(2J/\kBT)} \mathrm{,}
 	\label{eq:2:Verification_exchange_M}
+	\langle M \rangle = \sqrt[8]{1 - \sinh^{-4}(2J/\kBT)} \mathrm{,}
 \end{equation}
 with $J$ the exchange coupling constant~\cite{Correlations2DIsing,IsingSpontaneousMagnetization,coey2010magnetism}.
 This implies that the system exhibits a second-order phase transition at the critical temperature~\cite{ExactlySolvedModelsStatMech}
 \begin{equation}
-	T_c = \frac{2J}{\kB \ln(1 + \sqrt{2})} \mathrm{.}
+	T_\mathrm{c} = \frac{2J}{\kB \ln(1 + \sqrt{2})} \mathrm{.}
 \end{equation}
 Furthermore, an analytical solution is available for the nearest-neighbour correlation
 \begin{equation}
+	\label{eq:2:Verification_exchange_corr}
 	\langle S_i S_{i+1} \rangle = 
 	\begin{cases}
-		\sqrt{1+k} \ab[\frac{1-k}{\pi}K(k) + \frac{1}{2} \ab] &\text{for } T < T_c \mathrm{,} \\ 
-		\sqrt{1+k} \ab[\frac{1-k}{\pi k}K(1/k) + \frac{1}{2} \ab] &\text{for } T > T_c \mathrm{.} \\ 
+		\sqrt{1+k} \ab[\frac{1-k}{\pi}K(k) + \frac{1}{2} \ab] &\text{for } T < T_\mathrm{c} \mathrm{,} \\ 
+		\sqrt{1+k} \ab[\frac{1-k}{\pi k}K(1/k) + \frac{1}{2} \ab] &\text{for } T > T_\mathrm{c} \mathrm{.} \\ 
 	\end{cases}
 \end{equation}
 with $K$ the complete elliptic integral of the first kind and $k=\sinh^{-2}(2J/\kBT)$~\cite{Correlations2DIsing}. \\\par
@@ -1174,34 +1174,48 @@ Since the theoretical curves for $\langle M \rangle$ and $\langle S_i S_{i+1} \r
 	The simulation was performed 3 times --- for different amounts of MCS (Monte Carlo steps per site) for each temperature step.
 	Discrepancies due to critical slowing down above $T_c$ improve with increasing MCS.
 }
-
-The \hotspice result corresponds well to the theoretical predictions both below $T_c$ and in the high-temperature limit.
-However, just above $T_c$, the average magnetisation $\langle M \rangle$ evolves only slowly towards the expected value.
-Increasing the number of MCS per temperature step brings the system closer to the theoretical equilibrium and reduces the temperature range above $T_c$ where the simulated system is not at equilibrium.
-However, this has diminishing returns, as every additional MC step converges more slowly towards the equilibrium.
-This slow convergence near the critical point is a symptom of the well-known phenomenon called ``critical slowing down'', which makes simulations at or near second-order phase transitions very inefficient~\cite{NumericalDynamicalNiedermayer,StatisticalMechanicsAlgorithmsComputations}.
 % TODO: ? why the discrepancy in the correlation?
 
-\subsubsection{Critical slowing down}
-Critical slowing down (CSD) originates from a divergence in the autocorrelation time $\tau$ near a critical point, causing subsequent Monte Carlo configurations to be highly correlated~\cite{NumericalDynamicalNiedermayer,CompStatPhys,StatisticalMechanicsAlgorithmsComputations}.
-As a result, the system explores the phase space very slowly, particularly with single-spin flip algorithms like Metropolis-Hastings~\cite{StatisticalMechanicsAlgorithmsComputations}.
-Although cluster algorithms like the Wolff algorithm~\cite{Wolff} can mitigate this effect, they are not intended for application beyond the 2D Ising system.
-% TODO: expand CSD discussion
-% Relevant quotes: ``It is above all in the critical region that the Metropolis-Hastings algorithm is less accurate, because update moves based on single-spin flips are no longer physically relevant in this region,'' and ``Reworded differently, critical slowing down is particularly stark in the context of Metropolis-Hastings algorithms owing to the drastically low pace at which the Markov chain explores the whole phase space when two successive states differ by at most one spin value.'' from the thesis `Phase Transitions in Long-range Spin Models: The Power of Generalized Ensembles'. The book StatisticalMechanicsAlgorithmsComputations says ``Around the critical temperature, the local Monte Carlo algorithm is increasingly slow. This is because the distribution of the total magnetization becomes wide: between the high-temperature regime where it is sharply peaked at zero magnetization, and the low-temperature regime with its double peak structure, the system passes through a regime where the probability distribution of the magnetization is essentially flat for almost all values of M (see Fig. 5.15). Such a distribution is extremely difficult to sample with a single spin-flip algorithm.''
+The \hotspice result corresponds well to the theoretical predictions of~\cref{eq:2:Verification_exchange_M} and~\cref{eq:2:Verification_exchange_corr}, both below $T_\mathrm{c}$ and in the high-temperature limit.
+The average magnetisation $\langle M \rangle$ follows the theoretical curve more closely than the NN correlation $\langle S_i S_{i+1} \rangle$.
+However, just above $T_\mathrm{c}$, the average magnetisation $\langle M \rangle$ evolves only slowly towards the expected value.
+Increasing the number of MCS per temperature step brings the system closer to the theoretical equilibrium and reduces the temperature range above $T_\mathrm{c}$ where the simulated system is not at equilibrium.
+However, this yields diminishing returns, as every additional MC step converges more slowly towards the equilibrium.
+This slow convergence near the critical point is due to a well-known phenomenon known as ``critical slowing down''.
+
+\paragraph{Critical slowing down}
+As the correlation length $\xi$ diverges at a second-order phase transition, the autocorrelation time $\tau$ will increase as $L^z$ in finite systems of linear size $L$~\cite{NumericalDynamicalNiedermayer}.
+The dynamical critical exponent $z$ is typically $\gtrsim 2$ for local dynamics --- \textit{Niedermayer}~\cite{niedermayer1988general} notes that this is intuitively analogous to the problem of a random walk, where $\order{R^2}$ steps are required to traverse a distance $R$.
+The significant rise in the autocorrelation time causes successive Monte Carlo configurations to be highly correlated, resulting in a very slow exploration of the phase space that impedes convergence towards equilibrium~\cite{NumericalDynamicalNiedermayer,CompStatPhys,StatisticalMechanicsAlgorithmsComputations}. \par
+
+This phenomenon, termed \textit{critical slowing down} in second-order phase transitions (supercritical slowing down is an analogous phenomenon for discontinuous transitions), is particularly problematic for single-spin flip algorithms like Metropolis-Hastings, as single-spin flips are no longer physically relevant in this region~\cite{PhD_Reynal}.
+Such local-update Monte Carlo algorithms only change a small portion of the system in each step, resulting in minimal differences between successive states.
+Consequently, even after many MCS, the number of statistically independent configurations remains low, with the effective number of independent samples given by $N_\mathrm{eff} = N_\mathrm{sweep}/\tau$~\cite{niedermayer1988general,BeatCriticalSlowingDown1990}. \par
+
+While CSD is to some degree an inherent property of the physical system --- physical quantities like $\xi$ and $\tau$ diverge near the phase transition --- the choice of simulation algorithm also has a significant impact~\cite{PhD_Reynal}.
+Because CSD originates from long-range correlations, the Metropolis-Hastings algorithm exacerbates the issue due to its single-spin flip nature.
+Other algorithms have been devised that alleviate CSD by nonlocal spin updates, thereby acting on collective modes~\cite{BeatCriticalSlowingDown1990}.
+Among these are the group of cluster algorithms --- first the Swendsen-Wang~\cite{SwendsenWang} and later the Niedermayer~\cite{niedermayer1988general} and Wolff~\cite{Wolff} algorithms --- which construct clusters of magnets and flip all magnets in the cluster simultaneously. % Also multi-grid Monte Carlo~\cite{edwards1991multi}
+This generates more distinct states and, if the clusters are constructed correctly, reduces the autocorrelation time.
+The clusters are constructed by starting from a `seed' magnet and adding its neighbours to the cluster with a certain probability.
+For these cluster algorithms, the dynamical critical exponent $z \approx 0$ in the 2D exchange-coupled Ising system~\cite{NumericalDynamicalNiedermayer}, as compared to $z\approx2.17$ with the Metropolis-Hastings algorithm~\cite{DynamicExponentMetropolis}.
+However, in a system with long-range interactions, like the magnetostatic interaction, all magnets are ``neighbours'', and it generating an appropriate cluster becomes nontrivial.
+While methods exist to generate clusters in systems with long-range interactions~\cite{MC_spinLongRange}, they are not easily applied to a general system.
+Since CSD will not present significant issues in this thesis, the Wolff algorithm has only been implemented in \hotspice for exchange-coupled systems.
 
 \subsection{Exchange- and magnetostatically-coupled Ising system}
 Including long-range magnetostatic interactions into an exchange-coupled square-lattice Ising system significantly alters its behaviour.
 While the temperature $T$ remains an important system parameter, now another determining factor is the ratio $\delta = E_{\mathrm{exch},i,j}/E_{\mathrm{MS},i,j}$ ($j \in \mathcal{N}_i$), which represents the balance between the exchange coupling and magnetostatic interaction for nearest neighbours.
 Analytical predictions remain possible in this system at zero temperature: for $\delta < 0.85$, the magnetostatic coupling dominates, leading to a checkerboard state~\cite{AgingIsingDipolar}.
-As $\delta$ increases, the ever-stronger exchange coupling leads to the formation of ferromagnetic domains, which organize into stripes due to the magnetostatic interaction, with the stripe width determined by $\delta$~\cite{StripedDipolarIsing}.
+As $\delta$ increases, the ever-stronger exchange coupling leads to the formation of ferromagnetic domains, which organize into stripes due to the magnetostatic interaction, with the stripe width determined by $\delta$~\cite{StripedDipolarIsing}. \par
+The average stripe width is reflected in the NN correlation $\langle S_i S_{i+1} \rangle$, as shown in~\cref{fig:2:Verification_dipolar} for a \hotspice simulation.
+Because the analytical theory is valid at zero temperature, but we are using the Metropolis-Hastings algorithm which requires non-zero temperature, we will be using a sufficiently low temperature (\SI{50}{\kelvin}) for this simulation.
 
 \xfig{2_Hotspice/Verification/OOP_Dipolar.pdf}{
 	\label{fig:2:Verification_dipolar}
 	Nearest-neighbour (NN) correlation in an exchange-coupled system with long-range magnetostatic interactions included, as a function of relative NN magnetostatic/exchange coupling $\delta$. Transitions occur at $\delta=0.85$ and 2.65, indicated by dotted lines. Insets show the magnetisation state with growing stripe domains: white corresponds to spin `up', black to `down'.
 }
 
-The average stripe width is reflected in the NN correlation $\langle S_i S_{i+1} \rangle$, as shown in~\cref{fig:2:Verification_dipolar} for a \hotspice simulation.
-Because the analytical theory is valid at zero temperature, but we are using the Metropolis-Hastings algorithm which requires non-zero temperature, we will be using a sufficiently low temperature (\SI{50}{\kelvin}) for this simulation.
 Consistent with the theoretical predictions of~\ccite{StripedDipolarIsing}, for $\delta < 0.85$ a checkerboard state exists with $\langle S_i S_{i+1} \rangle = -1$.
 In the range $0.85 < \delta < 2.65$, stripe domains with a width of 1 row are preferred, leading to $\langle S_i S_{i+1} \rangle = 0$.
 Beyond $\delta=2.65$, a 2-row width becomes preferable with $\langle S_i S_{i+1} \rangle = 0.5$.
