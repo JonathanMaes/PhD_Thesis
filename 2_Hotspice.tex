@@ -1070,31 +1070,33 @@ The last option is to show the spatial distribution (i.e., the value for each ma
 Buttons in the sidebar on the right allow the user to interact with the ASI by progressing through time, setting an initial state, or --- for more complex simulations --- apply custom functions.
 By clicking with the mouse on the ASI plot, it is also possible to interact with the ASI at a granular level, switching one or multiple magnets. Finally, the red box in the bottom right controls the update algorithm.
 
-\subsection{Advantages and disadvantages of the \hotspice approach} % Hindsight is 20/20
-\subsubsection{Grid} % TODO: write more nicely and add stuff
-Throughout this section, it has become clear that the usage of a grid has far-reaching implications to the workings of \hotspice, in both positive and negative sense.
-On the one hand, the grid allows efficient calculation of the magnetostatic interaction by using kernels, and can do so in a memory-efficient manner while accounting for all the interactions throughout the ASI.
-The computational cost of taking all interactions into account is limited when using the GPU; for example, performance only starts to decline for systems larger than $800 \times 800$ on the setup used for this thesis.
-On the other hand, the grid restricts the usage of \hotspice to ASI which can be put on a regular grid.
-Irregular ASI, like the evolutionary ASI developed by \textit{Penty and Tufte}~\cite{ASI_Evolutionary_ALife}, can not be simulated with this software.
-Furthermore, it is unclear whether the grid has a net positive or negative impact on the calculation efficiency of the magnetostatic interaction.
-While the grid easily allows the magnetostatic interaction between all magnets to be taken into account, limiting the magnetostatic interaction to a maximum interaction distance may not noticeably affect ASI dynamics.
-For example, the flatspin~\cite{flatspin} simulator does not employ a grid, but instead stores the interaction strength between a magnet and its neighbours that lay within a certain radius.
-This approach seems to yield comparable performance.
-On the other hand, selecting multiple sufficiently spaced magnets in an irregular ASI may be more cumbersome and require a virtual underlying grid anyway, while the grid in \hotspice readily supports multi-sampling with a minimal distance requirement.
-\subsubsection{Input/output RC}
-\hotspice contains a module \python{hotspice.io} which provides various basic input and readout methods.
-These were mostly written before several aspects of \hotspice were finished, and are therefore limited in their scope.
-During development of \hotspice, the PRCpy package~\cite{PRCpy} has become available, which can determine reservoir computing metrics.
-This package appears preferable over the builtin \python{hotspice.experiments} module, as it is more broadly applicable.
+\subsection{Retrospective on the \hotspice implementation}
+\subsubsection{Grid}
+Throughout this section, we have seen that the use of a regular grid has significant implications to the efficiency, applicability and implementation of \hotspice.
+On the positive side, the grid enables fast and memory‐efficient calculation of the magnetostatic interaction because all unit cells can use common kernels.
+With this approach, the magnetostatic interaction need not be truncated at a certain distance to prevent excessive memory usage, though the benefit of considering interactions across the entire system may be negligible.
+For instance, the \texttt{flatspin} ASI simulator~\cite{flatspin} has no underlying grid, and therefore only stores interaction strengths within a certain radius, which does not significantly affect dynamics.
+Still, when using the GPU, the performance with a full kernel only starts to decline for systems on a grid larger than $800 \times 800$. \par
+On the other hand, the grid restricts the usage of \hotspice to periodic ASI configurations which can be put on a regular lattice.
+In theory, simulations of up to a few hundred randomly placed magnets should nonetheless be possible, though very inefficiently.
+This precludes the simulation of irregular ASI such as the evolutionary ASI developed by \textit{Penty and Tufte}~\cite{ASI_Evolutionary_ALife}. \par
+Multi-sampling in the Metropolis-Hastings scheme benefits greatly from the grid, as it enables efficient selection algorithms that maintain a minimal distance between samples.
+In irregular ASI, selecting sufficiently distant magnets would be far more difficult and likely necessitate the use of an underlying `virtual' grid regardless.
+
+\subsubsection{Reservoir computing}
+\hotspice includes the \python{hotspice.io} module, which provides basic input and readout methods.
+These routines were developed in the early stages of development and therefore have a limited scope.
+The same can be said for the \python{hotspice.experiments} module, which can determine reservoir computing metrics.
+Since then, the \texttt{PRCpy} package~\cite{PRCpy} has become available, which focuses on calculating reservoir computing metrics.
+This package is more broadly applicable and is now preferable over the built-in \python{hotspice.experiments} module.
+
 \subsubsection{GPU/CPU}
-In hindsight, it was not necessary to port \hotspice to the GPU for the purposes of this thesis.
-In~\cref{ch:Applications}, large systems are rarely used, if ever.
-Most often, small systems are simulated with the N\'eel algorithm, which does not benefit from the multi-switching implementation.
-Therefore, the vast majority of calculations in that chapter will be performed on CPU.
-Still, the efforts of implementing GPU operation and a multi-switching procedure were not wasted as they have expanded the envelope of situations where \hotspice can be used, particularly when using the Metropolis-Hastings algorithm. \par
-One particular issue that remains, is that the current implementation requires making the choice to use GPU or CPU before the \python{import hotspice} statement.
-While this presents no issues in the vast majority of cases, it is a limitation that is not strictly necessary.
+In retrospect, porting \hotspice to the GPU was unnecessary for this thesis, as the ASI in \cref{ch:Applications} are relatively small.
+The simulations in that chapter most often use the N\'eel algorithm, which does not benefit from the multi-switching implementation either, so the majority of computations are performed on the CPU. \par
+Nonetheless, GPU support has broadened the range of systems that \hotspice can efficiently simulate, in particular for the Metropolis-Hastings algorithm.
+One remaining limitation is that the current implementation requires the user to choose between GPU and CPU before the \python{import hotspice} statement.
+This is a remnant from early development since GPU support was not planned from the start.
+Even though this rarely poses an issue, it is an unnecessary limitation that could be addressed in the future.
 
 \newpage % For consistent formatting
 \section{Verification} \label{sec:2:Verification}
