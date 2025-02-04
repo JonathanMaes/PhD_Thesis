@@ -669,7 +669,10 @@ For example, the figure shows that the absolute error $E_\mathrm{err}$ for this 
 Note that PBC require extra attention when the magnetostatic kernel is truncated, as this procedure cuts off the eight offset kernel images.
 Previously, \cref{eq:2:Kernel_update} was applied when a magnet switches, where the kernel was cut-out appropriately to the size of the ASI to allow a pointwise multiplication.
 With open boundaries, the truncated kernel presents no issue, but with PBC the cut-out should be applied with care, such that it properly wraps around the edges.
-This wrapping can instead also be achieved by performing a circular convolution of the truncated kernel with an $L_x \times L_y$ array whose only non-zero element is at the position of the switching magnet.
+This wrapping can instead also be achieved by performing a circular convolution of the truncated kernel with an $L_x \times L_y$ array whose only non-zero element is at the position of the switching magnet. \par
+For a single switch, convolution with a truncated kernel is far slower than the original pointwise multiplication of \eqref{eq:2:Kernel_update}.
+In fact, with the hardware used for this thesis, only for $\gtrapprox 20$ simultaneous switches does a convolution of truncated kernels become more performant than a sequential sum of offset non-truncated kernels.
+Therefore, \hotspice allows the user to fine-tune both the size of the truncated kernel as well as this threshold between sum and convolution to optimise performance on a particular system.
 
 \subsection{Multi-switching in Metropolis-Hastings} \label{sec:2:MultiSwitch}
 The standard Metropolis-Hastings algorithm selects a magnet at random and subsequently decides whether or not to switch it.
@@ -1029,32 +1032,39 @@ For GPU calculations, NVIDIA's \code{cuRAND} library provides several random num
 The performance of these various types of GPU RNG depends on the amount of random values being generated in parallel (i.e., the size of the ASI) and the details of the GPU architecture used~\cite{RNG_GPU_evaluation}.
 In \hotspice, no significant effect on performance was noticed by changing the RNG type.
 
-\subsection{Package structure} % Structure of Hotspice, explain all modules (core, ASI, energies, (config? with GPU)...)
+\subsection{Package structure} % Q: should I put all the information of this section earlier already, at points where these subjects are discussed? I could e.g. create a custom "API" environment to explain different parts of the package in to show code outside the main text.
 Hotspice is written as a Python 3.10 package and can perform simulations on either the CPU or GPU.
 The optimal hardware choice depends on the size of the ASI and the update scheme used.
 By default, \hotspice runs on the CPU using the popular NumPy~\cite{NumPy} and SciPy~\cite{SciPy} libraries.
 For GPU-accelerated array manipulation, the CuPy v11.4~\cite{CuPy} library is used, but this is an optional dependency. \par
 \paragraph{\python{hotspice.config}: GPU/CPU choice}
-By default, \hotspice runs on the CPU. To run on the GPU, the environment variable \python{HOTSPICE_USE_GPU} must be set to \python{"true"} before the the \hotspice package is loaded in a Python script with \python{import hotspice}. It is not possible to switch between GPU/CPU within a script.
+To run on the GPU, the environment variable \python{HOTSPICE_USE_GPU} must be set to \python{"true"} before the the \hotspice package is loaded in a Python script with \python{import hotspice}.
+It is not possible to switch between GPU/CPU within a script.
 \subsubsection{ASI}
+The \python{hotspice.Magnets} class implements all the core functionality of a simulation.
+It controls the various technical aspects of the topics discussed earlier, like the multi-sampling methods, choice of KMC algorithm and the calculation of $\EBeff$, as well as more technical parameters such as the size of the truncated kernel.
+
 \paragraph{\python{hotspice.ASI}: predefined ASI lattices}
-This module provides two abstract classes from which all ASIs should inherit: \python{hotspice.ASI.IP_ASI} or \python{hotspice.ASI.OOP_ASI}.
-Various lattices are available, as previously shown in~\cref{fig:2:ASIs}.
-These all follow the same pattern: \python{hotspice.ASI.<ASI_name>(a, n, **kwargs)}, with two positional arguments.
-The first argument is the lattice parameter, as defined by the red indicator in \cref{fig:2:ASIs}.
-The second argument is the size of the underlying grid (one can also specify \python{nx} and \python{ny} separately).
-For the predefined lattices in the \python{hotspice.ASI} module, these two parameters are enough information to create a rudimentary ASI.
+To create an ASI, several attributes of the \python{Magnets} class have to be set appropriately.
+To this end, the \python{hotspice.ASI} module provides two abstract classes, \python{IP_ASI} and \python{OOP_ASI}, which can be used to define a particular ASI lattice through inheritance, as is done for the built-in lattices shown in~\cref{fig:2:ASIs}.
+Two parameters suffice to make a rudimentary ASI: the lattice parameter $a$ (the red indicator in~\cref{fig:2:ASIs}) and the size of the underlying grid $N_x \times N_y$.
+
 \paragraph{Energies}\label{sec:2:API_energies}
-Three predefined energy contributions are provided in the \python{hotspice.energies} module, though they can be accessed from the main \python{hotspice} namespace because they are used so often.
-The magnetostatic interaction is implemented by the \python{hotspice.DipolarEnergy} or \python{hotspice.DiMonopolarEnergy} classes, with the latter using the monopole approximation to calculate the interaction.
-By default, an ASI object takes only the \python{hotspice.DipolarEnergy} into account.
+The three energy contributions in \eqref{eq:2:E} are provided in the \python{hotspice.energies} module and can be accessed from the main \python{hotspice} namespace.
+Choosing between the dipole and monopole representations for the magnetostatic energy is currently done by using the \python{DipolarEnergy} and \python{DiMonopolarEnergy} classes, respectively.
+By default, an ASI object uses only a \python{DipolarEnergy}.
 When relevant, the user has to explicitly add a \python{ZeemanEnergy} or \python{ExchangeEnergy}.
-It is possible to set longer-range exchange interactions (next-nearest neighbour etc.) by manually setting the \python{local_interaction} field of an \python{ExchangeEnergy} object.
-% Q: should I put all the information of this section earlier already, at points where these subjects are discussed? I could e.g. create a custom "API" environment to explain different parts of the package in to show code outside the main text.
-\subsubsection{RC} % io and experiments modules
-\subsubsection{Utilities} % Explain utils module (but only those functions/classes relevant to users) and perhaps mention the existence of plottools
+By manually setting the \python{local_interaction} field of an \python{ExchangeEnergy}, longer-range exchange interactions can be applied.
+\subsubsection{Reservoir computing} % io and experiments modules
+The \python{hotspice.io} module provides input and readout routines for ASI, but these were implemented in the early stages of development and therefore have limited scope.
+The same is true for the \python{hotspice.experiments} module, which provides routines to determine kernel-rank and task-agnostic RC metrics.
+Since then, the \texttt{PRCpy} package~\cite{PRCpy} has become available, which is more broadly applicable and therefore preferable for calculating RC metrics. \par
+Besides this, the \python{experiments} module provides a \python{Sweep} class, which will be used in \cref{ch:Applications} in conjunction with the \python{utils.ParallelJobs} method to determine RC metrics during parameter sweeps on multiple GPUs or CPUs.
+\subsubsection{Utilities}
 \paragraph{GUI}
-A graphical user interface (GUI) is available for \hotspice, which allows the user to directly interact with the ASI and observe changes in real-time. It can be run by calling \python{hotspice.gui.show(mm)}, with \python{mm} the ASI object, resulting in the window shown in~\cref{fig:2:GUI}.
+A graphical user interface (GUI) is available for \hotspice, which allows the user to directly interact with the ASI and observe changes in real-time.
+It can be run by calling \python{hotspice.gui.show(mm)}, with \python{mm} the ASI object, resulting in the window shown in~\cref{fig:2:GUI}.
+This supersedes the deprecated \python{hotspice.plottools} module.
 
 \xfig[1.0]{2_Hotspice/GUI.png}{
 	The \hotspice graphical user interface.
@@ -1062,13 +1072,19 @@ A graphical user interface (GUI) is available for \hotspice, which allows the us
 	\label{fig:2:GUI}
 }
 
-The state of the ASI is prominently displayed, and the bottom left panel shows a few useful statistics such as the elapsed time. The ASI display is controlled by the central bottom panel, which changes between 4 display modes.
-By default, the magnetisation is shown as an averaged field, with the averaging method determined by the ASI lattice.
-The second mode displays individual arrows, which either show each magnet's magnetisation direction $s_i \vc{u}_i$ or the effective field $\vc{B}_{\mathrm{eff},i}$ it experiences.
-In the third mode, the energy contributions ($E_\mathrm{MS}$, $E_\mathrm{Z}$, $E_\mathrm{Exch}$ and their sum $E_i$) and the resulting effective energy barrier $\EBeff$ for each magnet can be shown, both along the easy and hard axis.
-The last option is to show the spatial distribution (i.e., the value for each magnet) of some parameters like the temperature $T$, shape anisotropy $\EB$ and size of the magnetic moment $\mu$. \par
-Buttons in the sidebar on the right allow the user to interact with the ASI by progressing through time, setting an initial state, or --- for more complex simulations --- apply custom functions.
-By clicking with the mouse on the ASI plot, it is also possible to interact with the ASI at a granular level, switching one or multiple magnets. Finally, the red box in the bottom right controls the update algorithm.
+The state of the ASI is prominently displayed, with some useful statistics shown in the bottom left panel.
+The ASI display is controlled by the central bottom panel, which changes between 4 display modes.
+By default, the magnetisation is shown using an averaging method appropriate for the ASI lattice.
+The second mode displays individual magnets' magnetisation direction $s_i \vc{u}_i$ or the effective field $\vc{B}_{\mathrm{eff},i}$ they experience.
+In the third mode, all energy contributions ($E_\mathrm{MS}$, $E_\mathrm{Z}$, $E_\mathrm{Exch}$, their sum $E_i$ and resulting $\EBeff$) are shown for each magnet, along both the easy and hard axis.
+The last mode shows the spatial distribution of some parameters like the temperature $T$, shape anisotropy $\EB$ and size of the magnetic moment $\mu$. \par
+The user can interact with the ASI via buttons in the rightmost panels, e.g. progressing through time, setting an initial state, or applying custom functions for more complex simulations.
+Specific magnets can be switched by clicking on the ASI plot with the mouse. Finally, the red box in the bottom right controls the update algorithm.
+
+\paragraph{\python{hotspice.utils}}
+While most functions in the \python{utils} module are used internally, some are useful for users.
+The \python{asnumpy} method is particularly useful for GPU/CPU-agnostic code, as it converts an array to CPU if necessary.
+For long simulations, the \python{free_gpu_memory} method can be useful as Python's garbage collector may not collect GPU objects.
 
 \subsection{Retrospective on the \hotspice implementation}
 \subsubsection{Grid}
@@ -1082,13 +1098,6 @@ In theory, simulations of up to a few hundred randomly placed magnets should non
 This precludes the simulation of irregular ASI such as the evolutionary ASI developed by \textit{Penty and Tufte}~\cite{ASI_Evolutionary_ALife}. \par
 Multi-sampling in the Metropolis-Hastings scheme benefits greatly from the grid, as it enables efficient selection algorithms that maintain a minimal distance between samples.
 In irregular ASI, selecting sufficiently distant magnets would be far more difficult and likely necessitate the use of an underlying `virtual' grid regardless.
-
-\subsubsection{Reservoir computing}
-\hotspice includes the \python{hotspice.io} module, which provides basic input and readout methods.
-These routines were developed in the early stages of development and therefore have a limited scope.
-The same can be said for the \python{hotspice.experiments} module, which can determine reservoir computing metrics.
-Since then, the \texttt{PRCpy} package~\cite{PRCpy} has become available, which focuses on calculating reservoir computing metrics.
-This package is more broadly applicable and is now preferable over the built-in \python{hotspice.experiments} module.
 
 \subsubsection{GPU/CPU}
 In retrospect, porting \hotspice to the GPU was unnecessary for this thesis, as the ASI in \cref{ch:Applications} are relatively small.
