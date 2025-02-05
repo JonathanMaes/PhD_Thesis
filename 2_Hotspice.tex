@@ -13,23 +13,23 @@
 	    	\newblock \emph{ArXiV}, arXiv:\penalty0 2409.05580, 2024.
 	    \end{itemize}
     \end{adjustwidth}
-    \vspace{0.5em}
+    \vspace{.5em}
     \begin{center}
         \centering\rule{0.7\linewidth}{0.4pt}
     \end{center}
-    \vspace{.5em}
+    \vspace{.0em}
     \begin{center}
     	The \hotspice simulator discussed in this chapter\\
-    	is open-source and available on \href{https://github.com/bvwaeyen/Hotspice}{GitHub}. \\
+    	is open-source and available on \href{https://github.com/bvwaeyen/Hotspice}{GitHub}.
     \end{center}
-    %\vspace{0.5em}
+    %\vspace{0em}
     \begin{center}
     \centering\rule{0.7\linewidth}{0.4pt}
     \end{center}
     \vspace{1em}
 \end{adjustwidth}
 
-To assess the potential of \xref{Reservoir Computing} in (perpendicular-anisotropy) \xref{Artificial Spin Ice}, as is the main topic of this thesis, a simulation framework is needed that allows efficient exploration of the impact that various system parameters and input methods have on the reservoir performance. \\\par
+To assess the potential of \xref{Reservoir Computing} in (perpendicular-anisotropy) \xref{Artificial Spin Ice}, as is the main topic of this thesis, a simulation framework is needed to efficiently explore the impact of various system parameters and input methods on reservoir performance. \\\par
 
 Nanomagnetic systems are often simulated using micromagnetic codes, such as the finite-difference-based \mumax~\cite{mumax3} and \oommf~\cite{OOMMF} or the finite-element-based \nmag~\cite{Nmag}, which capture the magnetisation dynamics of individual nanomagnets in great detail. \par
 However, the time between successive switches of a nanomagnet is not necessarily similar to the timescale of micromagnetics.
@@ -40,7 +40,7 @@ When the simulated time extends beyond several microseconds, as is typically the
 To address these limitations, specialised ASI simulation tools have been developed.
 An example of this is the flatspin simulator~\cite{flatspin}, which implements deterministic spin flipping via a Stoner-Wohlfarth model~\cite{StonerWohlfarth2008}.
 Using such higher-level approximations enables the study of collective behaviour in much larger systems and over far longer timescales than is feasible with micromagnetic codes, though at the cost of no longer simulating the internal magnetisation structure of individual nanomagnets in detail.
-Additionally, Monte Carlo methods are often used to simulate spin ices, including ASI, but these are typically specialised to a select few lattice geometries and often only account for nearest-neighbour interactions, whose strength is often arbitrarily set or calculated separately using micromagnetic codes.~\cite{MeltingASI,sklenar2019field,gilbert2014emergent,zhang2013crystallites} \\\par % REFS: 'gilbert2014emergent': MC sims based on a vertex model and interacting magnetic charges. 'zhang2013crystallites': uses monopoles and NN couplings to model kagome ASI with Metropolis and loop update. 'moller2006artificial': bit broader using dipolar interaction, though seemingly still only for nearest neighbors. 'mengotti2011kagome' use a full dipole model with Ewald summation for PBC. 'lou2023competing': dipole model for half-occupation IP Ising. 'sendetskyi2019continuous': dipole model for square ASI. 'EngineeringRelaxationComputation': KMC on dipole model, seemingly for square arrays. 'sklenar2019field': NN interactions calculated by mumax on quadrupole lattice. 'MeltingASI': 16-vertex ice model
+Additionally, Monte Carlo methods are often used to simulate spin ices, including ASI, but these are typically specialised to a select few lattice geometries and often only account for nearest-neighbour interactions, whose strength is often arbitrarily set or calculated separately using micromagnetic codes.~\cite{MeltingASI,sklenar2019field,gilbert2014emergent,zhang2013crystallites} \\\par % REFS: 'gilbert2014emergent': Monte Carlo sims based on a vertex model and interacting magnetic charges. 'zhang2013crystallites': uses monopoles and NN couplings to model kagome ASI with Metropolis and loop update. 'moller2006artificial': bit broader using dipolar interaction, though seemingly still only for nearest neighbors. 'mengotti2011kagome' use a full dipole model with Ewald summation for PBC. 'lou2023competing': dipole model for half-occupation IP Ising. 'sendetskyi2019continuous': dipole model for square ASI. 'EngineeringRelaxationComputation': KMC on dipole model, seemingly for square arrays. 'sklenar2019field': NN interactions calculated by mumax on quadrupole lattice. 'MeltingASI': 16-vertex ice model
 
 Our goal was to blend these two approaches, resulting in \hotspice: a versatile Monte Carlo simulator meant to capture ASI physics with minimal arbitrary parameters, allowing various lattice configurations to be evaluated. \par
 This software approximates each single-domain nanomagnet as a single Ising spin, associating energies with the various ASI states by accounting for the magnetostatic interaction between all magnets.
@@ -362,7 +362,7 @@ However, since OOP magnets are not ellipsoidal as assumed by the transcendental 
 \section{Dynamics}\label{sec:2:Dynamics}
 A Monte Carlo simulator would not be complete without an algorithm to change the state of the system.
 Since any magnet in the ASI may spontaneously switch to the opposite magnetisation state due to thermal fluctuations, \hotspice evaluates the time evolution of the ASI in a stepwise manner using an update algorithm that determines which magnet should switch next. \par
-To achieve this, \hotspice uses kinetic Monte Carlo (KMC) algorithms, sometimes also referred to as Dynamic Monte Carlo.
+To achieve this, \hotspice uses kinetic Monte Carlo (KMC) algorithms, sometimes also referred to as dynamic Monte Carlo.
 KMC algorithms can typically be divided into two distinct classes: rejection-free and rejection KMC.
 \hotspice implements algorithms of both types.
 These techniques go by many names, but in the context of ASI we shall refer to them as \textit{N\'eel-Arrhenius switching} and \textit{Metropolis-Hastings}, respectively~\cite{PhysicalTimeKMC}.
@@ -592,7 +592,8 @@ This is done by performing a convolution ($*$) rather than a pointwise multiplic
 	\label{eq:2:Kernel_init}
 	\left. \vc{E_\mathrm{MS}} \right|_{t=0} = \sum_q \vc{Q_q} \odot \vc{\upmu} \odot \vc{S} \odot \ab((\vc{\upmu} \odot \vc{S}) * \vc{\mathcal{K}}^{(q)}) \mathrm{,}
 \end{equation}
-where only the central $L_x \times L_y$ area of the convolution is calculated and the matrix $\vc{Q_q}$ contains 1 at sites with unit cell index $q$, otherwise 0. \\\par
+where only the central $L_x \times L_y$ area of the convolution is calculated and the matrix $\vc{Q_q}$ contains 1 at sites with unit cell index $q$, otherwise 0.
+Such a convolution can be calculated very efficiently by using the fast Fourier transform (FFT). \\\par
 
 The exact values stored in the kernel depend on whether any finite-size corrections to the magnetostatic interaction (\cref{sec:2:finite}) were used and whether the ASI is of the IP or OOP type. For example, an IP kernel using the point dipole approximation contains elements
 \begin{equation}
@@ -1016,7 +1017,7 @@ We hypothesise that this is due to exceeding a CPU cache size. \par
 % Hypothesis 3: The size of the dipole kernel at this point is around 220kB. Doesn't seem to match up with anything.
 % TODO: ? revisit this at some point, it is odd that on another CPU (Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz) the cut-off happens at the same system size, indicating that it is not cache-size-related because that CPU has 256kB L2 and 32kB L1, both different from the UGent laptop.
 The GPU, on the other hand, hits its stride for exactly those systems that are too large for the CPU to handle.
-Around $70 \times 70$, the sampling rate increases rapidly, resulting in an increased number of MC sweeps per second (MCS/s) that reach a local maximum for $200 \times 200$ magnets.
+Around $70 \times 70$, the sampling rate increases rapidly, resulting in an increased number of Monte Carlo sweeps per second (MCS/s) that reach a local maximum for $200 \times 200$ magnets.
 Beyond this, the sampling rate stagnates, eventually settling at around \SI{150e3}{samples\per\second}, corresponding to an ever decreasing MCS/s as the parallelism of the GPU gets exhausted.
 
 \subsubsection{RNG}
@@ -1192,7 +1193,7 @@ The \hotspice result corresponds well to the theoretical predictions of~\cref{eq
 The average magnetisation $\langle M \rangle$ follows the theoretical curve more closely than the NN correlation $\langle S_i S_{i+1} \rangle$.
 However, just above $T_\mathrm{c}$, the average magnetisation $\langle M \rangle$ evolves only slowly towards the expected value.
 Increasing the number of MCS per temperature step brings the system closer to the theoretical equilibrium and reduces the temperature range above $T_\mathrm{c}$ where the simulated system is not at equilibrium.
-However, this yields diminishing returns, as every additional MC step converges more slowly towards the equilibrium.
+However, this yields diminishing returns, as every additional Monte Carlo step converges more slowly towards the equilibrium.
 This slow convergence near the critical point is due to a well-known phenomenon known as ``critical slowing down''.
 
 \paragraph{Critical slowing down}
