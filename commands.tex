@@ -7,20 +7,20 @@
 
 \newcommand{\colorcode}{(Color code on page \pageref{colorcode}.)\xspace}
 
-\newcommand{\jonathanskip}{\smallskip}
 \newcommand{\idx}[1]{\emph{#1}\index{#1}\label{#1}\label{#1s}} 					%%no xspace
-\newcommand{\indexlabel}[1]{\index{#1}\label{#1}}
-\newcommand{\xlabel}[1]{#1\index{#1}\label{#1}}
+\newcommand{\indexlabel}[1]{\index{#1}\label{#1}\label{#1s}}
+\newcommand{\xlabel}[1]{#1\index{#1}\label{#1}\label{#1s}}
+\newcommand{\xref}[1]{\hyperref[#1]{#1}\xspace}
+\newcommand{\xrefs}[2]{\hyperref[#2]{#1#2}\xspace} %% meervoud etc, add {s}
+\newcommand{\link}[2]{\hyperref[#1]{#2}\xspace}
 
+\newcommand{\jonathanskip}{\smallskip}
 \newcommand{\numberthis}{\addtocounter{equation}{1}\tag{\theequation}} % Numbers a single line in a no-numbering multiline equation* or align*
 \newcommand{\numeq}[2]{\stackrel{\scriptscriptstyle(\mkern-1.5mu#1\mkern-1.5mu)}{#2}} % Number above mathematical symbol (usage: \numeq{<eq_number>}{<symbol>})
 
 %\newcommand{\debug}[1]{}
 %\newcommand{\debug}[1]{{\tiny{(\pageref{#1})}}\normalsize}
 
-\newcommand{\xref}[1]{\hyperref[#1]{#1}\xspace}
-\newcommand{\xrefs}[2]{\hyperref[#2]{#1#2}\xspace} %% meervoud etc, add {s}
-\newcommand{\link}[2]{\hyperref[#1]{#2}\xspace}
 \newcommand{\crefSubFigRef}[2]{\namecref{#1}~\hyperref[#1]{\ref{#1}#2}}
 \newcommand{\ccite}[1]{Ref.~\cite{#1}} % Ref. [1] instead of [1]
 \newcommand{\Py}{\xref{permalloy}}
