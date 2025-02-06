@@ -7,9 +7,9 @@
 
 \newcommand{\colorcode}{(Color code on page \pageref{colorcode}.)\xspace}
 
-\newcommand{\idx}[1]{\emph{#1}\index{#1}\label{#1}\label{#1s}} 					%%no xspace
 \newcommand{\indexlabel}[1]{\index{#1}\label{#1}\label{#1s}}
-\newcommand{\xlabel}[1]{#1\index{#1}\label{#1}\label{#1s}}
+\newcommand{\idx}[1]{\emph{#1}\indexlabel{#1}} %no xspace
+\newcommand{\xlabel}[1]{#1\indexlabel{#1}}
 \newcommand{\xref}[1]{\hyperref[#1]{#1}\xspace}
 \newcommand{\xrefs}[2]{\hyperref[#2]{#1#2}\xspace} %% meervoud etc, add {s}
 \newcommand{\link}[2]{\hyperref[#1]{#2}\xspace}
@@ -45,6 +45,7 @@
 \newcommand{\clockwise}{\boldsymbol{\circlearrowright}}
 \newcommand{\counterclockwise}{\boldsymbol{\circlearrowleft}}
 \newcommand{\rmin}{r_\mathrm{min}}
+\newcommand{\bigmu}{\makebox{\Large\ensuremath{\upmu}}}
 
 % \newcommand{\abs}[1]{\ensuremath{\left| #1 \right|}\xspace}
 \newcommand{\diff}[2]{\frac{\partial #1}{\partial #2}}			    %% derivative
