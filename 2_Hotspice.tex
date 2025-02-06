@@ -33,7 +33,7 @@ To assess the potential of \xref{Reservoir Computing} in (perpendicular-anisotro
 
 Nanomagnetic systems are often simulated using \indexlabel{micromagnetic simulations}micromagnetic codes, such as the finite-difference-based \mumax~\cite{mumax3} and \oommf~\cite{OOMMF} or the finite-element-based \nmag~\cite{Nmag}, which capture the magnetisation dynamics of individual nanomagnets in great detail. \par
 However, the time between successive switches of a nanomagnet is not necessarily similar to the timescale of micromagnetics.
-Furthermore, determining RC metrics requires applying many input cycles --- on the order of 100 for the task-agnostic metrics --- to get a statistically valid result.
+Furthermore, determining RC metrics requires applying many input cycles --- on the order of 100 for the task-agnostic metrics --- to get a statistically valid result~\cite{RC_TaskAgnosticMetrics_v2}.
 In this timeframe, many switches occur.
 When the simulated time extends beyond several microseconds, as is typically the case, simulating even a modest number of magnets --- on the order of several dozen --- becomes computationally unfeasible~\cite{leo2021chiral}. \\\par
 
@@ -1065,7 +1065,7 @@ By manually setting the \python{local_interaction} field of an \python{ExchangeE
 
 \paragraph{Reservoir computing} % io and experiments modules
 The \python{hotspice.io} module provides input and readout routines for ASI, but these were implemented in the early stages of development and therefore have limited scope.
-The same is true for the \python{hotspice.experiments} module, which provides routines to determine kernel-rank and task-agnostic RC metrics.
+The same is true for the \python{hotspice.experiments} module, which provides routines to determine kernel-rank~\cite{RC_ASI} and task-agnostic~\cite{RC_TaskAgnosticMetrics_v2} RC metrics.
 Since then, the \texttt{PRCpy} package~\cite{PRCpy} has become available, which is more broadly applicable and therefore preferable for calculating RC metrics. \par
 Besides this, the \python{experiments} module provides a \python{Sweep} class, which will be used in \cref{ch:Applications} in conjunction with the \python{utils.ParallelJobs} method to determine RC metrics during parameter sweeps on multiple GPUs or CPUs.
 
