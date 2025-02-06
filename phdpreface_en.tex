@@ -1,10 +1,22 @@
 \chapter*{Preface}
 % TODO END: write preface
 
-Chapter \ref{ch:Introduction} contains ... \\
+This thesis is about ... \\
 
-In Chapter \ref{ch:Hotspice} we present ... \\
+\cref{ch:Introduction} introduces several key concepts ... \\
 
-In Chapter \ref{ch:Applications}, ... \\
+\cref{ch:Hotspice} presents the open-source \hotspice Monte Carlo simulator for artificial spin ice, developed with the intent to evaluate reservoir computing strategies and to determine optimal system parameters.
+It uses an Ising-like model: each magnet in the ASI is represented by a point dipole that can switch between two stable states.
+Several model variants are presented, whose accuracy in simulating the behaviour of ASI is then compared and discussed.
+These variants explore three key aspects of the simulation:
+\begin{itemize}[noitemsep,nolistsep] % With enumitem package
+	\item the choice of Monte Carlo spin-flip algorithm for simulating system dynamics,
+	\item accounting for the finite size of magnets when calculating magnetostatic interactions,
+	\item estimating the effective energy barrier that separates the stable states of a nanomagnet.
+\end{itemize}
+In the second half of the chapter, implementation details are discussed, in particular the calculation of the magnetostatic interaction between all magnets, alongside other strategies to improve performance of the Monte Carlo simulation.
+The chapter ends by briefly verifying the software, through comparison of simulations against analytical solutions for several solvable systems. \\
 
-In Chapter \ref{ch:Conclusion} ...
+In \cref{ch:Applications}, ... \\
+
+In \cref{ch:Conclusion} ...

@@ -1,9 +1,21 @@
 \chapter*{Samenvatting (in Dutch)}
 % TODO END: samenvatting schrijven
 
-Hoofdstuk \ref{ch:Introduction} bevat ... \\
+Deze thesis gaat over ... \\
 
-In hoofdstuk \ref{ch:Hotspice} presenteren we ... \\
+Hoofdstuk \ref{ch:Introduction} introduceert enkele belangrijke concepten ... \\
+
+Hoofdstuk \ref{ch:Hotspice} stelt de open-source \hotspice Monte Carlo-simulator voor, die de dynamica van artificieel spin-ijs simuleert met als doel om reservoir computing-strategieën te evalueren en optimale systeemparameters te bepalen.
+Er wordt een Ising-achtig model gebruikt: elke magneet in het ASI wordt voorgesteld als een punt-dipool die kan wisselen tussen twee stabiele toestanden.
+Verschillende varianten op dit model worden voorgesteld, wiens nauwkeurigheid wordt vergeleken met betrekking tot de simulatie van het dynamische gedrag van ASI.
+Drie soorten varianten worden besproken:
+\begin{itemize}[noitemsep,nolistsep] % With enumitem package
+	\item de keuze van Monte Carlo spin-flip-algoritme voor het simuleren van systeemdynamica,
+	\item manieren om de eindige grootte van nanomagneten in rekening te brengen voor de berekening van onderlinge magnetostatische interacties,
+	\item afschattingen van de effectieve energiebarri\`ere die de twee stabiele toestanden van een nanomagneet scheidt.
+\end{itemize}
+In de tweede helft van het hoofdstuk worden implementatiedetails besproken, met name de berekening van de magnetostatische interactie tussen alle magneten, evenals andere strategie\"en om de effici\"entie van de Monte Carlo-simulatie te verbeteren.
+Het hoofdstuk eindigt met een korte verificatie van de software, door simulaties te vergelijken met analytische oplossingen voor enkele oplosbare systemen. \\
 
 In hoofdstuk \ref{ch:Applications}, ... \\
 
