@@ -698,7 +698,7 @@ We will now derive an inequality for the minimal distance $\rmin$ as a function 
 \begin{inequality}
 	The minimal distance $\rmin$ between magnets 1 and 2, such that the \xref{acceptance probability} $P(\Delta E)$ of one of them can not change by more than $0 < Q \leq 1$ when the other switches, is upper bounded by
 	\begin{equation}
-		r_{12} \geq \sqrt[3]{\frac{2 \mu_0 \, \underset{i}{\max}(\mu_i)}{\pi Q} \cdot \, \underset{\Delta E}{\max} \abs{\frac{\partial P}{\partial \Delta E}}} \triangleq \rmin \mathrm{.}
+		r_{12} \geq \sqrt[3]{\frac{2 \mu_0 \, \max(\mu^2)}{\pi Q} \cdot \, \underset{\Delta E}{\max} \abs{\frac{\partial P}{\partial \Delta E}}} \triangleq \rmin \mathrm{.}
 		\label{eq:2:MultiSwitch_inequality}
 	\end{equation}
 \end{inequality}
@@ -730,23 +730,23 @@ We will now derive an inequality for the minimal distance $\rmin$ as a function 
 	We do not consider any \link{sec:2:finite}{finite-size corrections}, since their long-range effects are negligible and any reasonable value of $Q$ will result in a value $\rmin$ far larger than the magnet size.
 	The magnetostatic energy in the \link{point dipole model}{point-dipole approximation} is bounded by
 	\begin{equation}
-		\abs{E_{\mathrm{MS},1,2}} \leq \frac{\mu_0 \abs{\vc{\mu}_1} \abs{\vc{\mu}_2}}{2 \pi r_{12}^3} = \frac{\mu_0 \max(\mu_1, \mu_2)}{2 \pi r_{12}^3} \mathrm{,}
+		\abs{E_{\mathrm{MS},1,2}} \leq \frac{\mu_0 \abs{\vc{\mu}_1} \abs{\vc{\mu}_2}}{2 \pi r_{12}^3} \mathrm{,}
 		\label{eq:2:MultiSwitch_proof_EMS_leq}
 	\end{equation}
 	with this extremum being achieved for two dipoles $\vc{\mu}_1$ and $\vc{\mu}_2$ aligned in the same direction along their common axis $\vc{r}_{12}$.
 	From the symmetry of the magnetostatic interaction, and considering the states in~\cref{fig:2:MultiSwitch_proof}, the unknown term in~\cref{eq:2:MultiSwitch_proof_leq_Q} can be expanded as 
 	\begin{align*}
 		\abs{\Delta E^{(f)} - \Delta E^{(i)}} &= \abs{-\cancel{2 \sum_{k=3}^N E_{\mathrm{MS},2,k}^{(f)}} -2 E_{\mathrm{MS},2,1}^{(f)} +\cancel{2 \sum_{k=3}^N E_{\mathrm{MS},2,k}^{(i)}} +2 E_{\mathrm{MS},2,1}^{(i)}} \\
-		&= 2\abs{E_{\mathrm{MS},2,1}^{(f)} + E_{\mathrm{MS},2,1}^{(i)}} = 4 \abs{E_{\mathrm{MS},2,1}^{(i)}} \numeq{\ref{eq:2:MultiSwitch_proof_EMS_leq}}{\leq} \frac{2 \mu_0 \max(\mu_1, \mu_2)}{\pi r_{12}^3} \mathrm{,}
+		&= 2\abs{E_{\mathrm{MS},2,1}^{(i)} - E_{\mathrm{MS},2,1}^{(f)}} = 4 \abs{E_{\mathrm{MS},2,1}^{(i)}} \numeq{\ref{eq:2:MultiSwitch_proof_EMS_leq}}{\leq} \frac{2 \mu_0 \abs{\vc{\mu}_1} \abs{\vc{\mu}_2}}{\pi r_{12}^3} \mathrm{,}
 	\end{align*}
 	since only magnet 1 is different between the initial and final states, hence $E_{\mathrm{MS},2,1}^{(f)} = - E_{\mathrm{MS},2,1}^{(i)}$.
 	Combining this with \eqref{eq:2:MultiSwitch_proof_leq_Q} gives the sufficient condition
 	\begin{equation}
-		\frac{2 \mu_0 \max(\mu_1, \mu_2)}{\pi r_{12}^3} \cdot \, \underset{\Delta E}{\max} \abs{\frac{\partial P}{\partial \Delta E}} \leq Q \mathrm{.}
+		\frac{2 \mu_0 \abs{\vc{\mu}_1} \abs{\vc{\mu}_2}}{\pi r_{12}^3} \cdot \, \underset{\Delta E}{\max} \abs{\frac{\partial P}{\partial \Delta E}} \leq Q \mathrm{.}
 	\end{equation}
-	To get a single value for $\rmin$ that is valid throughout the ASI, replacing $\max(\mu_1, \mu_2)$ by $\underset{i}{\max}(\mu_i)$ finally yields the expected expression for $\rmin$:
+	To get a single value for $\rmin$ that is valid throughout the ASI, replacing $\abs{\vc{\mu}_1} \abs{\vc{\mu}_2}$ by $\max(\mu^2)$ finally yields the expected expression for $\rmin$:
 	\begin{equation*}
-		r_{12} \geq \sqrt[3]{\frac{2 \mu_0 \, \underset{i}{\max}(\mu_i)}{\pi Q} \cdot \, \underset{\Delta E}{\max} \abs{\frac{\partial P}{\partial \Delta E}}} \triangleq \rmin \mathrm{.} \tag{\ref*{eq:2:MultiSwitch_inequality}}
+		r_{12} \geq \sqrt[3]{\frac{2 \mu_0 \, \max(\mu^2)}{\pi Q} \cdot \, \underset{\Delta E}{\max} \abs{\frac{\partial P}{\partial \Delta E}}} \triangleq \rmin \mathrm{.} \tag{\ref*{eq:2:MultiSwitch_inequality}}
 	\end{equation*}
 \end{proof}
 This equation is an upper bound for $\rmin$ throughout the entire ASI.
@@ -761,7 +761,7 @@ Since
 \end{equation}
 this finally gives
 \begin{equation}
-	r_{12} \geq \sqrt[3]{\frac{2 \mu_0 M_{sat}^2 V^2}{\pi Q k_B T}} = \rmin \mathrm{.}
+	r_{12} \geq \sqrt[3]{\frac{2 \mu_0 \max(\mu^2)}{\pi Q k_B T}} = \rmin \mathrm{.}
 \end{equation}
 Recall that we are using the Metropolis-Hastings acceptance probability in \hotspice's rejection-based \xref{kinetic Monte Carlo} algorithm (\cref{sec:2:Dynamics_MH}) rather than the \xref{Glauber dynamics} acceptance probability $P_\mathrm{GD}(\Delta E, T) = \frac{\exp(-\Delta E/k_B T)}{1+\exp(-\Delta E/k_B T)}$, because they both satisfy \xref{ergodicity} and \xref{detailed balance} but the Glauber acceptance probability is always more likely to reject a switch~\cite{bit-player_MCvsGlauber}.
 However, we can now see that the Glauber acceptance probability is not all bad when \xref{multi-switching} is used, as the extremum of its derivative is 4 times smaller than for the Metropolis-Hastings acceptance probability.
