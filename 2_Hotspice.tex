@@ -38,7 +38,7 @@ In this timeframe, many switches occur.
 When the simulated time extends beyond several microseconds, as is typically the case, simulating even a modest number of magnets --- on the order of several dozen --- becomes computationally unfeasible~\cite{leo2021chiral}. \\\par
 
 To address these limitations, specialised ASI simulation tools have been developed.
-An example of this is the flatspin simulator~\cite{flatspin}, which implements deterministic spin flipping via a \idx{Stoner-Wohlfarth} model~\cite{StonerWohlfarth2008}.
+An example of this is the flatspin simulator~\cite{flatspin}, which implements deterministic spin flipping via a \xlabel{Stoner-Wohlfarth} model~\cite{StonerWohlfarth2008}.
 Using such higher-level approximations enables the study of collective behaviour in much larger systems and over far longer timescales than is feasible with micromagnetic simulations, though at the cost that the internal magnetisation structure of individual nanomagnets is no longer simulated in detail.
 Additionally, Monte Carlo methods are often used to simulate spin ices, including ASI, but these are typically specialised to a select few lattice geometries and often only account for nearest-neighbour interactions, whose strength is often arbitrarily set or calculated separately using micromagnetic codes.~\cite{MeltingASI,sklenar2019field,gilbert2014emergent,zhang2013crystallites} \\\par % REFS: 'gilbert2014emergent': Monte Carlo sims based on a vertex model and interacting magnetic charges. 'zhang2013crystallites': uses monopoles and NN couplings to model kagome ASI with Metropolis and loop update. 'moller2006artificial': bit broader using dipolar interaction, though seemingly still only for nearest neighbors. 'mengotti2011kagome' use a full dipole model with Ewald summation for PBC. 'lou2023competing': dipole model for half-occupation IP Ising. 'sendetskyi2019continuous': dipole model for square ASI. 'EngineeringRelaxationComputation': KMC on dipole model, seemingly for square arrays. 'sklenar2019field': NN interactions calculated by mumax on quadrupole lattice. 'MeltingASI': 16-vertex ice model
 
@@ -293,6 +293,7 @@ The simple \xref{mean-barrier model} is insufficient for many IP ASI.
 In real nanomagnets, reversal by \xref{coherent rotation} can occur via two pathways; clockwise ($\clockwise$) or counter-clockwise ($\counterclockwise$) rotation of the magnetisation.
 In an asymmetrical environment --- when the \xref{effective field} has a non-zero component perpendicular to the \xref{easy axis} --- one of these two rotation directions will be preferred~\cite{leo2021chiral,DirectionalEnergyBarrier}.
 Take for example the pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a}): any two neighbouring magnets form a T-shape, so the magnet pointing into the side of the other will greatly influence whether the other magnet prefers $\clockwise$ or $\counterclockwise$ rotation~\cite{DirectionalEnergyBarrier}. % Q: does this need a figure?
+% The mean-barrier model would take the energy difference $\Delta e$ between the two states; for two magnets in a T-shape, $\Delta E = 0$ for both, resulting in an unchanged energy barrier $\EB$ which is clearly incorrect in this situation.
 Such an asymmetry can not occur in OOP ASI, so the asymmetric barrier is only applicable to IP ASI.
 Accounting for the existence of these separate chiral switching channels profoundly affects the switching rates and transition kinetics, since switching will occur predominantly via the more favourable pathway~\cite{leo2021chiral}. \\\par
 
@@ -450,7 +451,7 @@ In particular, the Metropolis-Hastings algorithm repeats the steps outlined in~\
 			\Delta t = -\frac{\exp\ab(\EBeff\big/\kBT\ab) \ln{\chi}}{N \nu} \mathrm{,}
 			\label{eq:Metropolis_time}
 		\end{equation}
-		with $N$ the number of magnets in the system and $\chi$ a uniformly distributed random variable in $(0,1]$.~\cite{PhysicalTimeKMC}
+		with $N$ the number of magnets in the system and $\chi$ a uniformly distributed random variable in $(0,1]$.~\cite{PhysicalTimeKMC} % Q: which \EBeff to use in the asymmetric barrier case? Hotspice uses the smallest barrier. Can also use an exponentially weighted average like in the first-switch method (\exp(x) = \frac{1}{\exp(-a) + exp(-b)}).
 	\end{enumerate}
 \end{algorithm}
 For enhanced performance, multiple sufficiently distant magnets can be selected simultaneously, as will be explored in~\cref{sec:2:MultiSwitch}.
@@ -483,18 +484,19 @@ For a MCMC algorithm to sample the equilibrium state space, it must satisfy two 
 	This can be expressed mathematically as $\pi_i P_{ij} = \pi_j P_{ji}, \forall i,j$, with $P_{ij}$ the Markov transition probability from state $i$ to $j$, and with $\pi_i$ and $\pi_j$ the equilibrium probabilities of these states appearing.
 	Since all magnets are equally likely to be chosen in step 1 of~\cref{alg:2:MetropolisHastingsSingle}, it can be shown that both $P_\mathrm{MH}$ and $P_\mathrm{GD}$ result in an algorithm that satisfies detailed balance~\cite{kyimba2006comparisonIsingAlgorithms}.
 	\item To guarantee that a Monte Carlo Markov chain algorithm will eventually reach this equilibrium, it must be \textit{ergodic}, i.e. from a given state it must be possible to reach any other state via some route~\cite{kyimba2006comparisonIsingAlgorithms}.
-	This is clearly satisfied by~\cref{alg:2:MetropolisHastingsSingle}, for both $P_\mathrm{MH}$ and $P_\mathrm{GD}$, as the acceptance probability is strictly positive.
+	This is clearly satisfied by~\cref{alg:2:MetropolisHastingsSingle}, for both $P_\mathrm{MH}$ and $P_\mathrm{GD}$, as the acceptance probability is strictly positive at non-zero temperatures.
 \end{itemize}
-As such, \cref{alg:2:MetropolisHastingsSingle} is guaranteed to reach equilibrium eventually, though the rate of convergence may vary, as noted in~\cref{sec:2:Verification_OOP_Exchange}~\cite{jang2004stochastic}. \par
+As such, \cref{alg:2:MetropolisHastingsSingle} is guaranteed to reach equilibrium eventually, though the rate of convergence may vary, as noted in~\cref{sec:2:Verification_OOP_Exchange}~\cite{jang2004stochastic}. % MH seems to be the most physically accurate from a theoretical point of view, though a point can be made for either of them depending on the physics of the problem~\cite{jang2004stochastic}.
 
-These two common choices for the acceptance probability, $P_\mathrm{MH}$ and $P_\mathrm{GD}$, are compared in~\cref{fig:2:RejectionKMC}.
 \sidefig{2_Hotspice/RejectionKMC.pdf}{
 	\label{fig:2:RejectionKMC}
 	Acceptance probability used by Metropolis-Hastings and Glauber dynamics, as a function of the \xref{switching energy} $\Delta E$.
 	\newline\newline\newline % Newlines center the caption w.r.t. plot
 }
+
+These two common choices for the acceptance probability, $P_\mathrm{MH}$ and $P_\mathrm{GD}$, are compared in~\cref{fig:2:RejectionKMC}.
 Both $P_\mathrm{MH}$ and $P_\mathrm{GD}$ result in an algorithm that satisfies ergodicity and detailed balance, so they both yield the same statistical values for quantities like the average magnetisation.
-However, Glauber dynamics is always more likely to reject a switch --- especially for small $\Delta E / \kBT$ --- since $P_\mathrm{GD}(\Delta E) < P_\mathrm{MH}(\Delta E), \forall \Delta E$.
+However, Glauber dynamics explores the state space more slowly because it is always more likely to reject a switch --- especially for small $\Delta E / \kBT$ --- since $P_\mathrm{GD}(\Delta E) < P_\mathrm{MH}(\Delta E), \forall \Delta E$.
 Therefore, \hotspice uses the Metropolis-Hastings acceptance probability.
 For a broader overview of Monte Carlo methods, we refer to Ref.~\cite{IntroductionMC}, which may further clarify the at times confusing naming present throughout literature.
 
@@ -532,7 +534,7 @@ Due to the fact that magnets are placed on a \xref{rectilinear grid}, the kernel
 For example, $\vc{K}^{(i)}_{2,3}$ stores the interaction strength between magnet $i$ and the magnet at index\footnote{The indexation used throughout this section starts counting at 1, as is typical for matrix notation. This is not to be confused with indexation in source code, which starts at 0.} $(2,3)$ on the grid.
 If no magnet was placed at index $(a,b)$ on the grid, then $\vc{K}^{(i)}_{ab} = 0, \forall i$. \\\par
 
-However, storing such a kernel for all magnets $i$ would require storing $\order{N^2}$ values in memory.
+However, storing such a kernel for all magnets $i$ would require storing $\order{N^2}$ values in memory. % Furthermmore, many values would be zero, though the same (but less extreme) can be said of the unit cell kernel. Note: small \vc{k} has no zeros if a lookup table is used to assign an index to each magnet.
 By leveraging \link{unit cell}{unit cells}, this storage requirement can be reduced to $\order{N}$.
 Each occupied grid point in the unit cell is assigned a unique index $q = 1,\dots,\widetilde{N}$, with $\widetilde{N}$ the number of magnets in a single unit cell.
 Hence, each magnet in the ASI is associated with a specific value of $q$. \par
@@ -794,12 +796,12 @@ Therefore, rather than randomly placing a point inside the annulus at an integer
 
 \xfig[1.0]{2_Hotspice/MultiSwitch_select_Poisson.pdf}{
 	\label{fig:2:MultiSwitch_select_Poisson}
-	Characteristics of \link{Bridson's algorithm}{Bridson's} \xref{Poisson disc sampling} algorithm, based on $\approx \SI{e6}{}$ samples.
+	Characteristics of \link{Bridson's algorithm}{Bridson's} \xref{Poisson disc sampling} algorithm with PBC, based on $\approx \SI{e6}{}$ samples.
 	\textbf{(a)} Probability density of \link{multi-switching}{simultaneously sampling} the magnet at the centre of the figure (white circle) and at any other point in the figure.
-	The imposed minimal distance $\rmin$ is indicated by the dashed white circle.
-	\textbf{(b)} Distribution of nearest-neighbour distances between sampled points, alongside the corresponding cumulative probability density.
-	\textbf{(c)} Number of times each cell in the ASI was sampled, which must not display any obvious pattern.
-	\textbf{(d)} \link{periodogram}{Periodogram}, i.e. the spatial Fourier transform of simultaneously sampled magnets, averaged over all iterations of the selection algorithm.
+	The imposed minimal distance $\rmin=16$ cells is indicated by the dashed white circle.
+	\textbf{(b)} Binned (cumulative) probability density of nearest-neighbour distance for simultaneously sampled points.
+	\textbf{(c)} Sample distribution over the simulation domain. This must not display any obvious pattern.
+	\textbf{(d)} \link{periodogram}{Periodogram}, i.e. spatial Fourier transform of simultaneously sampled magnets, averaged over all iterations of the selection algorithm.
 }
 
 \crefSubFigRef{fig:2:MultiSwitch_select_Poisson}{a} shows the probability density of sampling a point in the plane, if a point is also sampled at the centre in the small white circle.
@@ -830,12 +832,12 @@ By choosing a random quarter of subregions each time, all magnets are equally li
 \vspace{-3em}
 \xfig[1.0]{2_Hotspice/MultiSwitch_select_Grid.pdf}{
 	\label{fig:2:MultiSwitch_select_Grid}
-	Characteristics of the restricted \xref{stratified jittered grid} selection algorithm, based on $\approx \SI{e6}{}$ samples.
+	Characteristics of the restricted \xref{stratified jittered grid} selection algorithm with PBC, based on $\approx \SI{e6}{}$ samples.
 	\textbf{(a)} Probability density of \link{multi-switching}{simultaneously sampling} the magnet at the centre of the figure (white circle) and at any other point in the figure.
-	The imposed minimal distance $\rmin$ is indicated by the dashed white circle.
-	\textbf{(b)} Distribution of nearest-neighbour distances between sampled points, alongside the corresponding cumulative probability density.
-	\textbf{(c)} Number of times each cell in the ASI was sampled, which must not display any obvious pattern.
-	\textbf{(d)} \link{periodogram}{Periodogram}, i.e. the spatial Fourier transform of simultaneously sampled magnets, averaged over all iterations of the selection algorithm.
+	The imposed minimal distance $\rmin=16$ cells is indicated by the dashed white circle.
+	\textbf{(b)} Binned (cumulative) probability density of nearest-neighbour distance for simultaneously sampled points.
+	\textbf{(c)} Sample distribution over the simulation domain. This must not display any obvious pattern.
+	\textbf{(d)} \link{periodogram}{Periodogram}, i.e. spatial Fourier transform of simultaneously sampled magnets, averaged over all iterations of the selection algorithm.
 }
 
 Similar to the figure for Poisson disc sampling,~\cref{fig:2:MultiSwitch_select_Grid} shows an analysis of the spatial distribution of the restricted SJG method.
@@ -877,12 +879,12 @@ Similar to the previous figures,~\cref{fig:2:MultiSwitch_select_Hybrid} shows th
 
 \xfig[1.0]{2_Hotspice/MultiSwitch_select_Hybrid.pdf}{
 	\label{fig:2:MultiSwitch_select_Hybrid}
-	Characteristics of the hybrid grid-Poisson selection algorithm, based on $\approx \SI{e6}{}$ samples.
+	Characteristics of the hybrid grid-Poisson selection algorithm with PBC, based on $\approx \SI{e6}{}$ samples.
 	\textbf{(a)} Probability density of \link{multi-switching}{simultaneously sampling} the magnet at the centre of the figure (white circle) and at any other point in the figure.
-	The imposed minimal distance $\rmin$ is indicated by the dashed white circle.
-	\textbf{(b)} Distribution of nearest-neighbour distances between sampled points, alongside the corresponding cumulative probability density.
-	\textbf{(c)} Number of times each cell in the ASI was sampled, which must not display any obvious pattern.
-	\textbf{(d)} \link{periodogram}{Periodogram}, i.e. the spatial Fourier transform of simultaneously sampled magnets, averaged over all iterations of the selection algorithm.
+	The imposed minimal distance $\rmin=16$ cells is indicated by the dashed white circle.
+	\textbf{(b)} Binned (cumulative) probability density of nearest-neighbour distance for simultaneously sampled points.
+	\textbf{(c)} Sample distribution over the simulation domain. This must not display any obvious pattern.
+	\textbf{(d)} \link{periodogram}{Periodogram}, i.e. spatial Fourier transform of simultaneously sampled magnets, averaged over all iterations of the selection algorithm.
 }
 
 The sample distribution visible in~\crefSubFigRef{fig:2:MultiSwitch_select_Hybrid}{a} is in every way a hybrid of the spatial distribution of both earlier methods.
@@ -1183,7 +1185,7 @@ Furthermore, an analytical solution is available for the nearest-neighbour corre
 \end{equation}
 with $K$ the complete elliptic integral of the first kind and $k=\sinh^{-2}(2J/\kBT)$~\cite{Correlations2DIsing}. \\\par
 
-The result of a \hotspice simulation of this Ising system is shown in \cref{fig:2:Verification_exchange}, as calculated for an $800 \times 800$ lattice.
+The result of a \hotspice simulation of this Ising system is shown in \cref{fig:2:Verification_exchange}, as calculated for an $800 \times 800$ lattice at various temperatures $T$.
 Maximal \xref{multi-switching} ($Q=+\infty$) during \xref{Metropolis-Hastings sampling} was used to verify that --- at least for systems with such short-range coupling --- this sort of extreme multi-switching still converges to the correct solution.
 Since the theoretical curves for $\langle M \rangle$ and $\langle S_i S_{i+1} \rangle$ are monotonically decreasing, the final state from the previous temperature step was retained as the starting point for the next step. This preserves progress already made towards equilibrium and avoids the disruption that resetting to the uniform state would cause~\cite{MCinStatPhys}. \par
 
@@ -1226,8 +1228,13 @@ Since CSD will not present significant issues in this thesis, the Wolff algorith
 \subsection{Exchange- and magnetostatically-coupled Ising system}
 Including long-range \xref{magnetostatic interactions} into an exchange-coupled square-lattice Ising system significantly alters its behaviour.
 While the temperature $T$ remains an important system parameter, now another determining factor is the ratio $\delta = E_{\mathrm{exch},i,j}/E_{\mathrm{MS},i,j}$ ($j \in \mathcal{N}_i$), which represents the balance between the \xref{exchange coupling} and magnetostatic interaction for nearest neighbours.
+In terms of \hotspice parameters, we can write
+\begin{equation}
+	\delta = \frac{8 \pi J a^3}{\mu_0 \mu^2} \mathrm{,}
+\end{equation}
+with the magnetic moment $\mu$ constant for all magnets, and $a$ the NN distance in the square lattice.
 Analytical predictions remain possible in this system at zero temperature: for $\delta < 0.85$, the magnetostatic coupling dominates, leading to a \idx{checkerboard state}~\cite{AgingIsingDipolar}.
-As $\delta$ increases, the ever-stronger exchange coupling leads to the formation of ferromagnetic domains, which organise into stripes due to the magnetostatic interaction, with the stripe width determined by $\delta$~\cite{StripedDipolarIsing}. \par
+As $\delta$ increases, the ever-stronger exchange coupling leads to the formation of ferromagnetic domains, which organise into stripes due to the magnetostatic interaction, with the stripe width determined by $\delta$~\cite{StripedDipolarIsing,FMmonolayer1993}. \par
 The average stripe width is reflected in the \idx{nearest-neighbour correlation} $\langle S_i S_{i+1} \rangle$, as shown in~\cref{fig:2:Verification_dipolar} for a \hotspice simulation.
 The analytical theory is valid at zero temperature, but we are using the \link{Metropolis-Hastings sampling}{Metropolis-Hastings algorithm} which requires non-zero temperature, so we will be using a sufficiently low temperature (\SI{50}{\kelvin}) for this simulation.
 
