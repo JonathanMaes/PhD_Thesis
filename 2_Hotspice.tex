@@ -1118,6 +1118,13 @@ One remaining limitation is that the current implementation requires the user to
 This is a remnant from early development since GPU support was not planned from the start.
 Even though this rarely poses an issue, it is an unnecessary limitation that could be addressed in the future.
 
+\subsubsection{Ensembles}
+In many cases, simulations are performed multiple times for statistical averaging or parameter variations.
+With the current \hotspice implementation, these simulations must be performed separately.
+By ``stacking'' simulations in memory --- extending the underlying 2D arrays to 3D --- such ensembles could be simulated far more efficiently.
+This could particularly enhance GPU performance for small systems.
+Although this would require extensive changes to the core of \hotspice, it can be a useful consideration when developing future software.
+
 \newpage % For consistent formatting
 \section{Verification} \label{sec:2:Verification}
 Now that we know the ins and outs of the model used by \hotspice, all that remains is to verify its correct implementation.
