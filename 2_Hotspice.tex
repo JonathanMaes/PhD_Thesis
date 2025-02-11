@@ -822,8 +822,8 @@ If this can be implemented, the number of sequential operations could be reduced
 
 \paragraph{Restricted stratified jittered grid}
 To improve performance, we can use a restricted ``\xlabel{stratified jittered grid}'' (SJG) selection algorithm.
-Normal SJG sampling divides the domain into strata --- typically squares --- and selects a random point in each \xlabel{stratum}.
-Since this procedure does not guarantee a minimal distance between samples, a restricted SJG must be used instead, where samples are only taken from from the centre area of each square-shaped stratum, as discussed and illustrated in~\ccite{SamplingPolyominoes}. \par % Fig. 3b in SamplingPolyominoes is restricted SJG
+Normal SJG sampling divides the domain into strata --- typically squares --- and selects a random point in each \xlabel{stratum}~\cite{ProgressiveMultiJittered}.
+Since this procedure does not guarantee a minimal distance between samples, a restricted SJG is used instead, where samples are only taken from from the centre area of each square-shaped stratum, as discussed and illustrated in~\ccite{SamplingPolyominoes}. \par % Fig. 3b in SamplingPolyominoes is restricted SJG
 To apply this in \hotspice, the simulation is divided into square subregions of $R_x \times R_y$ grid cells, with $R_x$ and $R_y$ chosen such that each subregion has a physical size of at least $\rmin \times \rmin$.
 These subregions form a ``super-grid'' throughout the simulation domain.
 A quarter of the subregions are then chosen such that they are non-adjacent --- sharing no edges nor corners --- and a single magnet is sampled from each of them. % Q: do we need a simple figure for this? And for the hybrid method?
@@ -1102,7 +1102,7 @@ Specific magnets can be switched by clicking on the ASI plot with the mouse.
 Throughout this section, we have seen that the use of a \xref{rectilinear grid} has significant implications on the efficiency, applicability and implementation of \hotspice.
 On the positive side, the grid enables fast and memory‐efficient calculation of the \xref{magnetostatic interaction} because all \xref{unit cells} can use \link{unit cell kernel}{common kernels}.
 With this approach, the magnetostatic interaction need not be \link{truncated kernel}{truncated} at a certain distance to prevent excessive memory usage, though the benefit of considering interactions across the entire system may be negligible.
-For instance, the \texttt{flatspin} ASI simulator~\cite{flatspin} has no underlying grid, so it only stores interaction strengths within a certain radius, which does not significantly affect dynamics.
+For instance, the \texttt{flatspin} ASI simulator~\cite{flatspin} has no underlying grid, so it only considers interactions within a certain radius, which does not significantly affect dynamics.
 Still, when using the GPU, the performance with a full kernel only starts to decline for systems on a grid larger than $800 \times 800$. \par
 On the other hand, the grid restricts the usage of \hotspice to \link{fig:2:ASIs}{periodic ASI} configurations which can be put on a regular lattice.
 In theory, simulations of up to a few hundred randomly placed magnets should nonetheless be possible, though very inefficiently.
@@ -1119,10 +1119,10 @@ This is a remnant from early development since GPU support was not planned from 
 Even though this rarely poses an issue, it is an unnecessary limitation that could be addressed in the future.
 
 \subsubsection{Ensembles}
-In many cases, simulations are performed multiple times for statistical averaging or parameter variations.
-With the current \hotspice implementation, these simulations must be performed separately.
+In many cases, simulations are repeated for statistical averaging or parameter variations.
+With the current \hotspice implementation, these runs must be simulated separately.
 By ``stacking'' simulations in memory --- extending the underlying 2D arrays to 3D --- such ensembles could be simulated far more efficiently.
-This could particularly enhance GPU performance for small systems.
+This could particularly enhance GPU performance for small systems using the first-switch method~\cite{GillespieParallel}.
 Although this would require extensive changes to the core of \hotspice, it can be a useful consideration when developing future software.
 
 \newpage % For consistent formatting
@@ -1224,7 +1224,7 @@ Consequently, even after many MCS, the number of statistically independent confi
 While CSD is to some extent an inherent property of the physical system --- physical quantities like $\xi$ and $\tau$ diverge near the \xref{phase transition} --- the choice of simulation algorithm also has a significant impact~\cite{PhD_Reynal}.
 Because CSD originates from long-range correlations, the \link{Metropolis-Hastings sampling}{Metropolis-Hastings algorithm} exacerbates the issue due to its single-spin flip nature.
 Other algorithms have been devised that alleviate CSD by non-local spin updates, thereby acting on collective modes~\cite{BeatCriticalSlowingDown1990}.
-Among these are the group of \idx{cluster algorithms} --- first the \idx{Swendsen-Wang}~\cite{SwendsenWang} and later the \idx{Niedermayer}~\cite{niedermayer1988general} and \idx{Wolff}~\cite{Wolff} algorithms --- which construct clusters of magnets and flip all magnets in the cluster simultaneously. % Also multi-grid Monte Carlo~\cite{edwards1991multi}
+Among these are the group of \idx{cluster algorithms} --- first the \idx{Swendsen-Wang}~\cite{SwendsenWang} and later the \idx{Niedermayer}~\cite{niedermayer1988general} and \idx{Wolff}~\cite{Wolff} algorithms --- which construct clusters of magnets and flip all magnets in the cluster simultaneously~\cite{CompStatPhys}. % Also multi-grid Monte Carlo~\cite{edwards1991multi}
 This generates more distinct states and, if the clusters are constructed correctly, reduces the autocorrelation time.
 The clusters are constructed by starting from a `seed' magnet and adding its neighbours to the cluster with a certain probability.
 For these cluster algorithms, the dynamical critical exponent $z \approx 0$ in the 2D \link{exchange coupling}{exchange-coupled} Ising system~\cite{NumericalDynamicalNiedermayer}, as compared to $z\approx2.17$ with the Metropolis-Hastings algorithm~\cite{DynamicExponentMetropolis}.

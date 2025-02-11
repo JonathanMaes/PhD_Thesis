@@ -128,6 +128,21 @@
 	keywords      = {Finite element methods;Micromagnetics;Anisotropic magnetoresistance;Software packages;Automatic programming;Dynamic programming;Equations;Geometry;Solid modeling;Computational modeling;Finite elements;micromagnetism;multiphysics simulations}
 }
 
+@article{GillespieParallel,
+	title         = {Accelerating the Gillespie Exact Stochastic Simulation Algorithm Using Hybrid Parallel Execution on Graphics Processing Units},
+	author        = {Komarov, Ivan AND D'Souza, Roshan M.},
+	year          = 2012,
+	month         = 11,
+	journal       = {PLOS ONE},
+	publisher     = {Public Library of Science},
+	volume        = 7,
+	number        = 11,
+	pages         = {1--9},
+	doi           = {10.1371/journal.pone.0046693},
+	url           = {https://doi.org/10.1371/journal.pone.0046693},
+	abstract      = {The Gillespie Stochastic Simulation Algorithm (GSSA) and its variants are cornerstone techniques to simulate reaction kinetics in situations where the concentration of the reactant is too low to allow deterministic techniques such as differential equations. The inherent limitations of the GSSA include the time required for executing a single run and the need for multiple runs for parameter sweep exercises due to the stochastic nature of the simulation. Even very efficient variants of GSSA are prohibitively expensive to compute and perform parameter sweeps. Here we present a novel variant of the exact GSSA that is amenable to acceleration by using graphics processing units (GPUs). We parallelize the execution of a single realization across threads in a warp (fine-grained parallelism). A warp is a collection of threads that are executed synchronously on a single multi-processor. Warps executing in parallel on different multi-processors (coarse-grained parallelism) simultaneously generate multiple trajectories. Novel data-structures and algorithms reduce memory traffic, which is the bottleneck in computing the GSSA. Our benchmarks show an 8×−120× performance gain over various state-of-the-art serial algorithms when simulating different types of models.}
+}
+
 @inproceedings{NARMA10_Jaeger,
 	title         = {Adaptive Nonlinear System Identification with Echo State Networks},
 	author        = {Jaeger, Herbert},
@@ -1595,6 +1610,17 @@
 	url           = {https://link.aps.org/doi/10.1103/PhysRevLett.59.845},
 	issue         = 8,
 	numpages      = {0}
+}
+
+@inproceedings{ProgressiveMultiJittered,
+	title         = {Progressive multi-jittered sample sequences},
+	author        = {Christensen, Per and Kensler, Andrew and Kilpatrick, Charlie},
+	year          = 2018,
+	booktitle     = {Computer Graphics Forum},
+	volume        = 37,
+	number        = 4,
+	pages         = {21--33},
+	organization  = {Wiley Online Library}
 }
 
 @article{RC_RapidTimeSeries,
