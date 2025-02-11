@@ -25,18 +25,32 @@
 \subsubsection{Why physical systems can be used for RC}
 \subsubsection{Physical platforms suitable for RC}
 \paragraph{Magnetic} % Rings and ASI
+In the context of the \spinengine project, three types of magnetic systems were considered.
+These are the magnetic nanorings~\cite{DynamicEmergence_NanomagneticSystem}, focused on by the University of Sheffield, in-plane (IP) artificial spin ice (ASI)~\cite{RC_ASI}, researched by NTNU, and out-of-plane (OOP) ASI~\cite{KUR-24}, the primary interest of ETHZ.
+Meanwhile, Ghent University provided simulation support for these magnetic systems.
+All three present their own advantages and challenges. \par
+The nanoring ensembles show promising RC performance, but did not provide straightforward on-chip input and readout methods as would be desirable for applications.
+Using anisotropic magnetoresistance (AMR) only provides a single readout value --- thereby obscuring a lot of the system's dynamics --- and requires the use of lock-in amplifiers~\cite{ArchitecturesNanoringRC,Vidamour2023}.
+Readout using ferromagnetic resonance (FMR) can provide a higher-dimensional readout in the form of spin-wave spectra~\cite{swindells2024fingerprinting}, but requires bulky waveguides. \par
+The potential for RC in IP ASI has been demonstrated numerically~\cite{RC_ASI}, but the experimental application of input and state readout is not straightforward.
+An external field is often used for input, though this is undesirable for on-chip applications; instead, it appears possible to use SOT~\cite{SOT_switching_IP}.
+Efficient read-out of IP ASI remains challenging, due to the symmetry of the system coupled with the discontinuous nature of the ASI. \par % TODO END: cite roadmap and include more info
+Finally, for the OOP ASI efficient input (SOT) and read-out (AMR) mechanisms had been demonstrated experimentally, but their potential for RC had not.
+Therefore, this thesis will fill this gap in knowledge and assess the viability of RC with OOP ASI by making use of numerical simulations.
 \paragraph{Electronic}
 \paragraph{Water bucket}
 
 \section{Artificial spin ice}\label{sec:1:ASI}\indexlabel{artificial spin ice} % TODO END: decide how exactly to use these labels, which words to label like this. Perhaps a good rule of thumb is to label the list of abbreviations, for easy reference to their first occurrence in the text.
 \subsection{Nanomagnet(ism)}
 \subsubsection{Physics} % See masterproef for this, IP vs. OOP also
-\subsection{I/O for RC}
+\subsection{I/O for RC}\label{sec:1:ASI_IO}
 \subsubsection{Input}
 \paragraph{SOT}
+\cite{SOT_FM_AFM,SOTswitchingCoPt,SOT_Roadmap,vlasov2022optimal}
 \paragraph{STT} % Briefly
 \subsubsection{Output}
 \paragraph{AHE}
+\cite{AHE,AHE_Culcer}
 \paragraph{AMR} % Briefly
 \paragraph{FMR} % Briefly
 \paragraph{SHE} % Briefly
@@ -45,7 +59,3 @@
 \paragraph{MFM}
 \paragraph{PEEM}
 
-\section{Simulations}\label{sec:1:sim}
-\subsection{(Markov chain) Monte Carlo algorithms}
-\subsubsection{Ergodicity and detailed balance}
-\subsubsection{Glauber vs. Metropolis}
