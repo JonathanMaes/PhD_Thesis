@@ -1,18 +1,69 @@
 \chapter{Applications}\label{ch:Applications}
-\glijbaantje{If you find that you're spending almost all your time on theory, start turning some attention to practical things; it will improve your theories. If you find that you're spending almost all your time on practice, start turning some attention to theoretical things; it will improve your practice.}{Donald Knuth}
+\glijbaantje{If you find that you're spending almost all your time on theory,\\ start turning some attention to practical things; it will improve your theories.\\ If you find that you're spending almost all your time on practice,\\ start turning some attention to theoretical things; it will improve your practice.}{Donald Knuth}
+
+\begin{adjustwidth}{2em}{2em} % TODO END: update once published.
+	\begin{center}
+		\textbf{Material from this chapter has also been published in:} \\
+	\end{center}
+	\vspace{1em}
+	\begin{adjustwidth}{0em}{1.5em}
+		\begin{itemize}
+			\item[\cite{KUR-24}] A.~Kurenkov, J.~Maes, A.~Pac, G.~M.~Macauley, B.~Van~Waeyenberge, A.~Hrabec, and L.~J.~Heyderman.
+			\newblock Perpendicular-anisotropy artificial spin ice with spontaneous ordering: a platform for neuromorphic computing with flexible timescales.
+			\newblock \emph{ArXiV}, arXiv:\penalty0 2408.12182, 2024.
+		\end{itemize}
+	\end{adjustwidth}
+	\vspace{.5em}
+	\begin{center}
+		\centering\rule{0.7\linewidth}{0.4pt}
+	\end{center}
+	\vspace{1em}
+\end{adjustwidth}
 
 Our main focus will be on out-of-plane systems. First, however, we will rather briefly discuss several in-plane cases.
 
 \section{In-plane systems}
 \subsection{Pinwheel reversal}\label{sec:3:IP_Pinwheel_reversal}
-\subsection{Kagome reversal}
+\subsection{Kagome reversal} % Q: move these reversals to the Hotspice chapter?
 \subsection{RC by clocking in Pinwheel ASI}
 
-\section{Out-of-plane systems}
+\section{Reservoir computing in out-of-plane systems}
+The main factor that attracted attention towards OOP ASI for RC, was that they allow very efficient and relatively simple input and read-out methods to be used.
+Early on in the \spinengine project, methods to read the state of OOP ASI had already been demonstrated experimentally on a small scale by ETHZ/PSI.
+However, their potential for RC had not yet been investigated.
+As \hotspice is well-suited for the simulation of OOP ASI, this presented an appropriate use-case for the software developed in~\cref{ch:Hotspice}. % Furthermore, the other simulator developed by the consortium (flatspin) only supports in-plane magnetisation. Furthermore, \hotspice is more accurate for OOP ASI than IP ASI due to the high degree of symmetry in the former.
+\par
+Therefore, in this section \hotspice will be used to assess the viability and characteristics of a couple of methods to achieve RC in OOP ASI.
+It will be shown that RC is indeed possible in such systems by using an appropriate input and readout protocol.
+This section starts with a discussion of the basic properties of OOP ASI and the motivation for researching them.
+Then, the section is divided into two main parts, discussing frozen and thermally active ASI. % At first, the fabricated OOP ASI were not thermally active, though ASI which spontaneously relaxed to a checkerboard state was achieved later.
 \subsection{Characteristics of OOP ASI}
 \subsubsection{Motivation} % Input and output
+While it is possible to use an external field to switch both IP and OOP nanomagnets, this is undesirable in a real device due to stray fields and the need for bulky magnets.
+The main allure of OOP ASI stems from the existence of efficient input and readout mechanisms for such OOP magnets.
+Input can be applied via spin-orbit torque (SOT)~\cite{SOT_FM_AFM,SOTswitchingCoPt}, and the system can be read out using the anomalous Hall effect (AHE)~\cite{AHE}.
+Both of these only require a current to be passed through an underlayer that is electrically connected to the sample, and were explained earlier in the introduction (\cref{sec:1:ASI_IO}).
+% Nonetheless, external fields are often used for input anyway in the lab during the first stages of development, because they are easier to handle than the more complicated methods that would be used in a real device. By the end of the project, Alex had used SOT in his actual devices.
+
 \subsubsection{Fabrication} % Co/Pt multilayer, energy contributions
+Where IP magnets mostly rely on shape anisotropy to create an easy axis, OOP magnets can be realised using interfacial anisotropy between the ferromagnetic material and the substrate.
+One example of this is found at the interface between \ce{Co} and \ce{Pt}, as was used in the experimental OOP ASI fabricated within the context of the \spinengine project.
+This \idx{perpendicular magnetic anisotropy} (PMA) acts in the immediate vicinity of the interface, where the magnetisation then prefers to align perpendicular to said interface. \par
+Typically, a number of \ce{Co}-\ce{Pt} interfaces are stacked vertically, with the number and thickness of \ce{Co} layers then controlling the OOP anisotropy.
+The ferromagnetic layers in such stacks are typically made to be very thin for two main reasons.
+Firstly, since the PMA only acts at the interface it does not increase for thicker layers.
+Secondly, recall that the energy associated with \xref{shape anisotropy} increases with volume ($\EB=K_\mathrm{u}V$), so a maximal number of layers for a given amount of ferromagnetic material is preferable for PMA to counteract shape anisotropy. \par
+
+%The anisotropy is also non-linearly dependent on the thickness of the \ce{Pt} layer, due to the RKKY interaction, pinholes, and in the case of a spin ice also the cross-DD interaction between adjacent stacks, among other minor effects. More details are available in~\cite{PerpendicularMagnetizationASI}, where \ce{Co}/\ce{Pt} stacks were used as well: in the supplementary info, they say ``our samples were fabricated from multilayer stacks with structure \ce{Ti}(\SI{2}{\nano\metre}) / \ce{Pt}(\SI{10}{\nano\metre}) / [\ce{Co}(\SI{0.3}{\nano\metre})/\ce{Pt}(\SI{1}{\nano\metre})]8 and total thickness of \SI{22.4}{\nano\metre}, deposited via electron beam evaporation onto electron-beam patterned bi-layer resist. The \ce{Co}-\ce{Co} coupling through the \ce{Pt} interlayer is thought to occur via the RKKY mechanism, with significant similarities to better known cases such as \ce{Fe}/\ce{Cr} and \ce{Co}/\ce{Cu} GMR systems. The difference in the \ce{Co}/\ce{Pt} case is that the \ce{Pt} is so close to satisfying the Stoner criterion, and is thus so susceptible, that the proximity to the \ce{Co} induces a small moment on the \ce{Pt} atoms. This renders the interlayer coupling positive (i.e., ferromagnetic) at all reasonable thicknesses, meaning that the usual oscillatory AF/FM coupling is destabilized.'' \par
+% TODO: expand
+
 \subsubsection{Characteristics} % Ground state is AFM etc.
+The ground state of any system being used for RC is of utmost importance; it dictates which input methods will induce desirable dynamics in the system and which input protocols will fall flat.
+The ground state of most OOP spin ices is some form of anti-ferromagnetic (AFM) ordering, because the dipolar interaction will always encourage opposite magnetisation between any two neighbouring OOP magnets.
+Depending on the particular lattice upon which the OOP magnets are placed, this may (e.g. triangle/Cairo; \crefSubFigRef{fig:2:ASIs}{j,l}) or may not (e.g. square/honeycomb; \crefSubFigRef{fig:2:ASIs}{i,k}) induce frustration in the system.
+If no frustration is present, the symmetry of the system imposes exactly two opposite ground states.
+If frustration is present, no real ground state exists apart from local interactions, though the simple two-fold symmetry will still be present, as in any ASI.
+For the OOP square-lattice ASI in particular, which is the lattice we will consider throughout this chapter, the ground state is an AFM checkerboard pattern of `up' ($\uparrow$) and `down' ($\downarrow$) magnetisation.
 
 \subsection{RC in frozen OOP square ASI}
 \subsubsection{Considerations for devising an appropriate input scheme}
@@ -23,8 +74,22 @@ Our main focus will be on out-of-plane systems. First, however, we will rather b
 
 \subsection{RC in thermally active OOP square ASI}
 \subsubsection{Concept} % Lessons learnt from frozen ASI
-\paragraph{Input and output torques: representation in Hotspice}
+\paragraph{Input torques: representation in \hotspice}
+The input --- in reality applied through spin-orbit torque --- was applied in the simulations in the form of an OOP magnetic field $B_z(t)$ acting on the entire system.
+The field was scaled such that its OOP component extends from $B_0$ (minimum) to $B_1$ (maximum), i.e. $B_0 \leq B_z \leq B_1$.
+
 \paragraph{Readout method}
+In our paper~\cite{KUR-24}, \textit{A. Kurenkov} experimentally demonstrated electrical readout of the average magnetisation $\mavg$ using the anomalous Hall effect~\cite{AHE}.
+Therefore, $\mavg$ can be used as the primary magnetic state readout in the simulations.
+However, for reservoir computing purposes, multiple readout values are beneficial, so the average magnetisation of each lattice column was used for the readout $y_i(t)$. % Fig. 6a
+
+A discussion about the experimental feasibility of such a grid of local readouts is given in Supplementary Information 7 of our paper~\cite{KUR-24}.
+In short, by adding more electrodes to the Hall bar --- the layer underneath the ASI used to measure the magnetic state through the AHE --- inhomogeneities in the current density distribution result in different currents flowing through the different nanomagnets.
+This consequently results in unequal contributions to the Hall resistance, providing a way to differentiate between the different magnets.
+Individual states of the nanomagnets, not just $\mavg$, can be extracted through a set of linear operations as detailed in the aforementioned Supplementary Information.
+In the context of reservoir computing, this means that the use of this readout approach with multiple electrodes can be computationally equivalent to knowing the exact magnetic configuration of the system. \par
+The inverse mean squared error (1/MSE) between o(t) and the desired result (the sawtooth) was used as a performance metric.
+
 \subsubsection{Logarithmic relaxation}
 \paragraph{Relaxation}
 \paragraph{Fitted values for logarithmic behavior}
