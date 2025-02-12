@@ -29,7 +29,7 @@
     \vspace{1em}
 \end{adjustwidth}
 
-To assess the potential of \xref{Reservoir Computing} in (perpendicular-anisotropy) \xref{Artificial Spin Ice}, as is the main topic of this thesis, a simulation framework is needed to efficiently explore the impact of various system parameters and input methods on reservoir performance. \\\par
+To assess the potential of \link{reservoir computing}{Reservoir Computing} in (perpendicular-anisotropy) \link{artificial spin ice}{Artificial Spin Ice}, as is the main topic of this thesis, a simulation framework is needed to efficiently explore the impact of various system parameters and input methods on reservoir performance. \\\par
 
 Nanomagnetic systems are often simulated using \indexlabel{micromagnetic simulations}micromagnetic codes, such as the finite-difference-based \mumax~\cite{mumax3} and \oommf~\cite{OOMMF} or the finite-element-based \nmag~\cite{Nmag}, which capture the magnetisation dynamics of individual nanomagnets in great detail. \par
 However, the time between successive switches of a nanomagnet is not necessarily similar to the timescale of micromagnetics.
@@ -200,7 +200,7 @@ The minus sign in the equation appears because north and south poles have opposi
 \subsubsection{Comparison}
 To assess whether these two corrections constitute an improvement to the resulting \link{magnetostatic interaction}{magnetostatic energy}, we must quantify their impact by comparing them against a known solution.
 For this, we use the \link{micromagnetic simulations}{micromagnetic simulation} package \mumax~\cite{mumax3}, which can determine the magnetostatic interaction energy for a given arrangement of ferromagnetic material.
-While this solution is not exact, as \mumax uses a \xlabel{finite difference} (FD) discretisation, the result will approach the true value for sufficiently small FD cell sizes. \\\par
+While this solution is not exact, as \mumax uses a \xlabel{finite-difference} (FD) discretisation, the result will approach the true value for sufficiently small FD cell sizes. \\\par
 
 \cref{fig:2:MS_distance} compares the original \link{point dipole model}{point dipole approximation} and the two corrections (``\link{finite dipole model}{finite dipole}'' and ``\link{dumbbell model}{dumbbell}'') against the solution obtained with \mumax.
 The figure shows 3 typical arrangements of neighbouring magnets in an ASI: two circular OOP magnets and two elliptical IP neighbours aligned along their \link{easy axis}{easy} and hard axes.
@@ -461,7 +461,7 @@ While the \xref{first-switch method} relies on an explicit calculation of the el
 Therefore, the last step of~\cref{alg:2:MetropolisHastingsSingle} --- the calculation of the elapsed time --- is optional. \par
 For a long time, the notion of a well-defined measure for the elapsed time in rejection KMC was controversial~\cite{nfoldMCalgorithm,GlauberTimescale_sadiq1984,MCSim_StatPhys}. % Refs: `nfoldMCalgorithm` mentions both GD & MH acceptance prob., but says that GD can have a timescale (their equation looks a lot like in PhysicalTimeKMC) yet Metropolis cannot (due to the max()?), which is no longer true. `GlauberTimescale_sadiq1984' uses a less rigorously defined yet similar expression as in `PhysicalTimeKMC`. Don't use this reference when referring to the lack of a timescale, because this one seems to be one of the better solutions presented in literature, yet not very rigorous. Also `Lattice Kinetic Descriptions for Bulk Reaction-Diffusion Processes: Application to Alloys under Irradiation' p.215 says that ``The relationship between the simulation time and the physical time has been widely debated [MCSim_StatPhys], and it is sometimes assumed that the two time scales are proportional.''
 Often, the number of performed \xref{Monte Carlo sweeps}\footnote{
-	A Monte Carlo \textit{step} refers to attempting to switch a single magnet. By a \idx{Monte Carlo sweep} (MCS), we refer to $N$ attempted switches when the simulation contains $N$ magnets~\cite{NumericalDynamicalNiedermayer}. Note that no distinction between attempted switches and actual switches exists in the \xref{first-switch} method.
+	A Monte Carlo \textit{step} refers to attempting to switch a single magnet. By a \idx{Monte Carlo sweep} (MCS), we refer to $N$ attempted switches when the simulation contains $N$ magnets~\cite{NumericalDynamicalNiedermayer}. Note that no distinction between attempted switches and actual switches exists in the \xref{first-switch method}.
 } was used as a crude measure, but eventually a formal derivation for the physical time scale in rejection KMC was presented by \textit{Serebrinsky}~\cite{PhysicalTimeKMC}, who derived~\cref{eq:Metropolis_time}. \par
 Note that the \xref{effective energy barrier} $\EBeff$ only appears in the optional calculation of the elapsed time.
 Energy barriers do not affect the \xref{acceptance probability} in the Metropolis-Hastings algorithm because they have no effect on the equilibrium state~\cite{DynamicalGlassyBehaviour}.
@@ -632,7 +632,7 @@ This is illustrated in~\cref{fig:2:Kernel_PBC} for an example of pinwheel ASI. \
 This construction works because elements near the edge of a kernel represent interactions between distant magnets on opposite sides of the ASI, which are the interactions most affected by PBC.
 Since the middle region of the open-boundary \link{unit cell kernel}{kernel} already stores the interaction between nearby magnets, PBC can be applied by re-using these central values and moving the kernel by $\pm L_x$ and/or $\pm L_y$. \\\par
 
-This approach has the advantage that PBC do not impact performance, as they are baked into the kernel, contrary to the alternative of using a \xlabel{circular convolution}.
+This approach has the advantage that PBC do not impact performance, as they are baked into the kernel, contrary to the alternative of using a circular convolution.
 However, this method is limited to ASI consisting of an integer number of \xref{unit cells} as systems with truncated unit cells along an edge can not properly be tiled.
 Higher-order PBC --- beyond only the 8 nearest copies --- can not be calculated based on an open-boundary kernel since it does not include interactions with such distant magnets.
 Due to the rapid $1/r^3$ decline of the \xref{magnetostatic interaction} over distance, the use for such higher-order PBC would be very limited, and they were therefore not implemented.
@@ -812,7 +812,7 @@ Nearly all nearest neighbours are at a distance $\rmin \leq r \leq 2\rmin$, as e
 The probability density is rather spiky, due to the sampling occurring on a rectilinear grid in \hotspice.
 \crefSubFigRef{fig:2:MultiSwitch_select_Poisson}{c} checks that the sampling method does not sample any part of the ASI at a higher rate than another part, which result in a violation of detailed balance.
 Luckily, this panel is very boring, so detailed balance is still satisfied.
-Finally, \crefSubFigRef{fig:2:MultiSwitch_select_Poisson}{d} shows the average spatial Fourier spectrum of a set of sampled points, called a \idx{periodogram}.\indexlabel{fast Fourier transform}
+Finally, \crefSubFigRef{fig:2:MultiSwitch_select_Poisson}{d} shows the average spatial Fourier spectrum of a set of sampled points, called a \idx{periodogram}.
 This metric is often used to compare the various methods for generating Poisson disc distributions~\cite{PoissonDiskComparison}.
 An ideal blue noise point set exhibits weak low-frequency energy~\cite{EfficientBlueNoisePointSets}, as is the case here in the centre of the periodogram.
 An cross-shaped artefact is visible in the centre, once again due to the \xref{rectilinear grid} upon which \hotspice samples, which is not expected for continuous Poisson disc distributions. \par
@@ -851,7 +851,7 @@ This, and several other edge cases or considerations that had to be addressed to
 \begin{itemize}
 	\item Special attention must be given to PBC with this method.
 	Consider for example a situation where an odd number of subregions exist along one axis, resulting in simultaneous sampling in the first and last subregions along this axis.
-	With PBC, this may result in \link{multi-sampling}{simultaneous sampling} of magnets which are physically closer than $\rmin$, but computationally separated by the edge.
+	With PBC, this may result in \link{multi-switching}{simultaneous sampling} of magnets which are physically closer than $\rmin$, but computationally separated by the edge.
 	To prevent this, the super-grid of subregions is taken to be slightly smaller than the ASI.
 	In the example, this would mean that the last subregions along the odd axis are not used.
 	To ensure uniform coverage and proper sampling near the edges, the super-grid then has to be randomly shifted over the simulation domain and wrap around the edges.
@@ -1113,7 +1113,7 @@ In irregular ASI, selecting sufficiently distant magnets would be far more diffi
 \subsubsection{GPU/CPU}
 In retrospect, porting \hotspice to the GPU was not necessary for this thesis, as the ASI used later in \cref{ch:Applications} are relatively small and are most often simulated using the \xref{first-switch method}.
 Since rejection-free KMC does not support \xref{multi-switching}, the majority of computations in that chapter are performed on the CPU. \par
-Nonetheless, GPU support has broadened the range of systems that \hotspice can efficiently simulate, in particular for the \link{Metropolis-Hasting sampling}{Metropolis-Hastings algorithm}.
+Nonetheless, GPU support has broadened the range of systems that \hotspice can efficiently simulate, in particular for the \link{Metropolis-Hastings sampling}{Metropolis-Hastings algorithm}.
 One remaining limitation is that the current implementation requires the user to choose between GPU and CPU before the \python{import hotspice} statement.
 This is a remnant from early development since GPU support was not planned from the start.
 Even though this rarely poses an issue, it is an unnecessary limitation that could be addressed in the future.
