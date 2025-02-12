@@ -165,6 +165,7 @@ This results in a second-order correction
 where $E_{\mathrm{MS},i,j}^\mathrm{(0)}$ is the original \link{point dipole model}{point dipole} \xref{magnetostatic interaction} given by~\cref{eq:2:E_MS}. \par
 The second-order correction can be written as
 \begin{equation}
+	\label{eq:2:E_MS_order2}
 	E_{\mathrm{MS},i,j}^\mathrm{(2)} = \frac{\mu_0}{4\pi} \frac{3\mathcal{I}_{ij}}{2} \Bigg[3\frac{\vc{\mu}_i^\mathrm{OOP} \bcdot \vc{\mu}_j^\mathrm{OOP}}{\abs{\vc{r}_{ij}}^5} + \frac{\vc{\mu}_i^\mathrm{IP} \bcdot \vc{\mu}_j^\mathrm{IP}}{\abs{\vc{r}_{ij}}^5} -5\frac{(\vc{\mu}_i^\mathrm{IP} \bcdot \vc{r}_{ij}) (\vc{\mu}_j^\mathrm{IP} \bcdot \vc{r}_{ij})}{\abs{\vc{r}_{ij}}^7} \Bigg] \mathrm{,}
 \end{equation}
 where $\vc{\mu}_i$ was split into its IP and OOP components, conveniently leading to separate IP and OOP terms as implemented in the two types of ASI in \hotspice. \par
@@ -250,6 +251,8 @@ All of them make use of the switching energy $\Delta E$ between the current and 
 We will omit the subscript $i$ for the remainder of this section; it is implied that the following discussion and equations apply to each magnet individually.
 
 \subsubsection{Intrinsic barrier due to \xlabel{shape anisotropy}} % TODO END: is any of this more relevant in the introduction?
+% TODO: elaborate about the anisotropy constant: demag tensor with form factor $\mathcal{N}$ of a cylinder etc.
+\label{sec:2:shape_anisotropy}
 An isolated single-domain nanomagnet often exhibits two stable magnetisation states separated by energy barriers.
 In IP ASI, these states usually arise from \textit{shape anisotropy}, which originates from the \xlabel{demagnetising field} of the magnet itself.
 This imposes an additional energy cost when the magnetisation does not point along the preferential \idx{easy axis}, which is usually the longest axis of the magnet's geometry~\cite{PhD_Leliaert}. \par
