@@ -101,9 +101,8 @@ In the context of reservoir computing, this means that the use of this readout a
 \subsection{Thermally active OOP ASI}
 \subsubsection{Energy contributions}
 Thermally active OOP ASI are hard to manufacture, because they must balance several strong energy contributions to end up with an effective energy barrier of only several tens of $\kBT$ at most.
-To appreciate this difficulty, we must first take a closer look at the various energy contributions in the system and their dependence on the geometrical structure of the OOP magnets. \par
-
-The following energies act in an OOP ASI, ranging from local anisotropy to large-scale interactions:
+To appreciate this difficulty, we must first take a closer look at the various energy contributions in the system and their dependence on the geometrical structure of the OOP magnets.
+These contributions range from local anisotropy to large-scale interactions:
 \begin{enumerate}
 	\item \textbf{Perpendicular magnetic anisotropy} of interfacial origin is a major contributor to the OOP anisotropy.
 	Its origin and characteristics have been discussed earlier in this chapter (see \cref{sec:3:OOP_nanomagnet_PMA}). % Anisot E: \approx\SI{1.1e-16}{\joule}
@@ -112,7 +111,7 @@ The following energies act in an OOP ASI, ranging from local anisotropy to large
 	This contribution was also discussed earlier, see~\cref{sec:2:shape_anisotropy}~and~\ref{sec:3:OOP_nanomagnet_PMA}. % Demag E: \approx\SI{-1.6e-16}{\joule}
 	\item \textbf{Inter-layer magnetostatic interaction}.
 	The separate FM layers within a single stack also interact, as they can be considered as separate vertically stacked magnets.
-	This vertical stacking provides an additional contribution to the OOP anisotropy because the magnetisation prefers to point along the axis connecting separate magnets.
+	This vertical stacking provides an additional contribution to the OOP anisotropy because, in general, the magnetisation of separate magnets prefers to point along the axis connecting those magnets.
 	One can think of this effect as being similar to the shape anisotropy, but on the scale of separate layers rather than individual atomic magnetic moments.
 	This contribution aids the PMA in stabilising the OOP anisotropy, counteracting the demagnetising field, but is smaller in magnitude. % Cross MS E: \approx\SI{0.5e-16}{\joule}
 	\item \textbf{Inter-magnet magnetostatic interaction}.
@@ -121,23 +120,16 @@ The following energies act in an OOP ASI, ranging from local anisotropy to large
 	\item \textbf{Input}.
 	In simulations, the Zeeman interaction is used as a proxy to model SOT. \\
 \end{enumerate}
+For a system to be thermally active, the first three components should mostly cancel out, to the level where their combined influence is of the same order of magnitude as the inter-magnet MS interaction --- which is usually at least an order of magnitude weaker than the other contributions.
 
-For a system to be thermally active, the first three components should mostly cancel out to the level where their combined influence is of the same order of magnitude as the inter-magnet MS interaction, which is usually at least an order of magnitude weaker than the other contributions.
-
+\paragraph{Magnet geometry}
 % The geometry of nanomagnets in an OOP ASI is shown schematically in~\cref{fig:3:OOP_geometry}.
 % TODO: make own figure of nanomagnets?
 
 The magnets we consider here are round with a diameter $D_\mathrm{NM}$ and consist of $N_{\ce{Co}}$ layers of \ce{Co} of thickness $t_{\ce{Co}}$, separated by \ce{Pt} layers of thickness $t_{\ce{Pt}}$.
 In an ASI, the spacing between magnets is $S_\mathrm{ASI}$, so the lattice parameter in a square lattice is $a=D_\mathrm{NM}+S_\mathrm{ASI}$.
-These five geometrical parameters significantly affect the balance between PMA anisotropy, shape anisotropy and the magnetostatic interaction with neighbouring magnets. \par
-
-% However, Alex said that the energy barriers calculated with Mathematica in this manner did not seem to be very accurate: in the simulation, they were several tens of \SI{}{\electronvolt} (read: many $k_B T$), while in reality he saw thermal relaxation upon removal of an external saturating stimulus.
-
-This balance makes the system quite hard to control; making the islands just a tiny touch bigger or smaller results in a vastly different dipolar coupling, often inhibiting the formation of a checkerboard pattern. \par
-In the particular case of the OOP ASI fabricated within the \spinengine project, the nanomagnets consist of $n_{\ce{Co}}=7$ \ce{Co} layers of $D_\mathrm{NM}=\SI{170}{\nano\metre}$ diameter and $t_{\ce{Co}} \approx \SI{1.45}{\nano\metre}$ thickness, with $t_{\ce{Pt}} \approx \SI{0.8}{\nano\metre}$ spacing layers in between.
-The edge-to-edge spacing between neighbouring magnets is \SI{30}{\nano\metre}, unless specified otherwise, with a saturation magnetisation $M_\mathrm{sat}=\SI{1063}{\kilo\ampere\per\metre}$.
-%An island, which is hence a stack of pancakes, is affectionately referred to as a `mastercake'.
-
+These five geometrical parameters significantly affect the balance between the aforementioned energy contributions.
+This balance makes the system quite hard to control; making the islands just a tiny touch bigger or smaller results in a vastly different magnetostatic coupling, often inhibiting the formation of a checkerboard pattern. \par
 These five geometrical parameters are constrained by the following limitations and other considerations:
 \begin{itemize}
 	\item \textbf{FM layer thickness} $t_{\ce{Co}} \lesssim \SI{1.45}{\nano\metre}$.\newline
@@ -189,9 +181,13 @@ The dependence of all energy contributions on these geometrical parameters is su
 	\end{tabular}
 }
 
+In the particular case of the OOP ASI fabricated within the \spinengine project, the nanomagnets consist of $n_{\ce{Co}}=7$ \ce{Co} layers of $D_\mathrm{NM}=\SI{170}{\nano\metre}$ diameter and $t_{\ce{Co}} \approx \SI{1.45}{\nano\metre}$ thickness, with $t_{\ce{Pt}} \approx \SI{0.8}{\nano\metre}$ spacing layers in between.
+The edge-to-edge spacing between neighbouring magnets is \SI{30}{\nano\metre}, unless specified otherwise, with a saturation magnetisation $M_\mathrm{sat}=\SI{1063}{\kilo\ampere\per\metre}$.
+
 \subsubsection{Logarithmic relaxation}
 % TODO: extend this intro by saying that simple calculations based on the cosines and sines of the four interactions (recall: this was calculated by Alex using Mathematica) does not give a thermally active energy barrier. See the following comment for more details.
 % In absence of the neighbors (i.e. no \code{externalddE}, their combined energy barrier is $\approx\SI{-3.6e-18}{\joule}=\SI{-22.5}{\electronvolt}=-871k_BT$ which is far too large to get thermal switching, and on top of that it is negative which means that the magnet would rather sit in-plane which is obviously not observed in reality. Curiously, Alex observes thermal relaxation nonetheless. The energy barrier discrepancy between Mathematica and reality could be due to non-coherent reversal, resulting in a lower energy barrier in reality.
+% However, Alex said that the energy barriers calculated with Mathematica in this manner did not seem to be very accurate: in the simulation, they were several tens of \SI{}{\electronvolt} (read: many $k_B T$), while in reality he saw thermal relaxation upon removal of an external saturating stimulus.
 \paragraph{Relaxation}
 \paragraph{Fitted values for logarithmic behavior}
 \paragraph{Exchange-coupled system} % Could be omitted if not sufficiently worked out
