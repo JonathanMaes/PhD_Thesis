@@ -100,89 +100,90 @@ In the context of reservoir computing, this means that the use of this readout a
 
 \subsection{Thermally active OOP ASI}
 \subsubsection{Energy contributions}
-Thermally active OOP ASI are hard to manufacture, because they must balance several strong energy contributions to end up with an effective energy barrier of only several tens of $\kBT$ at most.
-To appreciate this difficulty, we must first take a closer look at the various energy contributions in the system and their dependence on the geometrical structure of the OOP magnets.
-These contributions range from local anisotropy to large-scale interactions:
+Thermally active OOP ASI are hard to manufacture, because they must strike a delicate balance between several strong energy contributions to end up in an OOP state with a net energy barrier of only several tens of $\kBT$ at most.
+To appreciate this difficulty, let us first take a closer look at the various energy contributions in the system --- ranging from local anisotropy to large-scale interactions --- and their dependence on the geometrical structure of the OOP magnets.
 \begin{enumerate}
-	\item \textbf{Perpendicular magnetic anisotropy} of interfacial origin is a major contributor to the OOP anisotropy.
-	Its origin and characteristics have been discussed earlier in this chapter (see \cref{sec:3:OOP_nanomagnet_PMA}). % Anisot E: \approx\SI{1.1e-16}{\joule}
-	\item \textbf{Shape anisotropy} caused by the demagnetising field of each layer.
+	\item \textbf{Perpendicular magnetic anisotropy} constitutes the largest contribution to the total OOP anisotropy.
+	Its interfacial origin and characteristics have been discussed earlier in this chapter (see \cref{sec:3:OOP_nanomagnet_PMA}). % Anisot E: \approx\SI{1.1e-16}{\joule}
+	\item \textbf{Shape anisotropy} of each layer due to their \xref{demagnetising field}.
 	It is of a similar order of magnitude as the PMA, but of opposite sign, favouring an IP magnetisation rather than OOP.
 	This contribution was also discussed earlier, see~\cref{sec:2:shape_anisotropy}~and~\ref{sec:3:OOP_nanomagnet_PMA}. % Demag E: \approx\SI{-1.6e-16}{\joule}
 	\item \textbf{Inter-layer magnetostatic interaction}.
-	The separate FM layers within a single stack also interact, as they can be considered as separate vertically stacked magnets.
+	The separate FM layers within a single stack also interact, as they can all be considered as separate vertically stacked magnets.
 	This vertical stacking provides an additional contribution to the OOP anisotropy because, in general, the magnetisation of separate magnets prefers to point along the axis connecting those magnets.
 	One can think of this effect as being similar to the shape anisotropy, but on the scale of separate layers rather than individual atomic magnetic moments.
-	This contribution aids the PMA in stabilising the OOP anisotropy, counteracting the demagnetising field, but is smaller in magnitude. % Cross MS E: \approx\SI{0.5e-16}{\joule}
-	\item \textbf{Inter-magnet magnetostatic interaction}.
-	This is the only contribution that distinguishes between the $\uparrow$ and $\downarrow$ magnetisation states.
-	All other energy contributions are internal to individual OOP magnets, making the MS interaction the sole reason for the AFM ground state of the OOP ASI. % E_MS: \lesssim\SI{1.1e-17}{\joule}
+	This contribution aids the PMA in stabilising the OOP anisotropy, counteracting the \xref{demagnetising field}, but is smaller in magnitude. % Cross MS E: \approx\SI{0.5e-16}{\joule}
+	\item \textbf{Inter-magnet magnetostatic interaction} is the only contribution --- besides external input --- that distinguishes between the $\uparrow$ and $\downarrow$ magnetisation states.
+	All aforementioned energy contributions are internal to individual OOP magnets, making the \xref{magnetostatic interaction} the sole reason for the AFM ground state of the OOP ASI. % E_MS: \lesssim\SI{1.1e-17}{\joule}
 	\item \textbf{Input}.
-	In simulations, the Zeeman interaction is used as a proxy to model SOT. \\
+	In simulations, an \xref{external magnetic field} is used as a proxy to model SOT.
 \end{enumerate}
-For a system to be thermally active, the first three components should mostly cancel out, to the level where their combined influence is of the same order of magnitude as the inter-magnet MS interaction --- which is usually at least an order of magnitude weaker than the other contributions.
+For a system to be thermally active, the first three of these contributions should mostly cancel out --- to the level where their combined influence is of the same order of magnitude as the inter-magnet magnetostatic interaction, which is usually at least an order of magnitude weaker than the other contributions separately.
 
 \paragraph{Magnet geometry}
 % The geometry of nanomagnets in an OOP ASI is shown schematically in~\cref{fig:3:OOP_geometry}.
 % TODO: make own figure of nanomagnets?
 
-The magnets we consider here are round with a diameter $D_\mathrm{NM}$ and consist of $N_{\ce{Co}}$ layers of \ce{Co} of thickness $t_{\ce{Co}}$, separated by \ce{Pt} layers of thickness $t_{\ce{Pt}}$.
-In an ASI, the spacing between magnets is $S_\mathrm{ASI}$, so the lattice parameter in a square lattice is $a=D_\mathrm{NM}+S_\mathrm{ASI}$.
-These five geometrical parameters significantly affect the balance between the aforementioned energy contributions.
-This balance makes the system quite hard to control; making the islands just a tiny touch bigger or smaller results in a vastly different magnetostatic coupling, often inhibiting the formation of a checkerboard pattern. \par
-These five geometrical parameters are constrained by the following limitations and other considerations:
-\begin{itemize}
-	\item \textbf{FM layer thickness} $t_{\ce{Co}} \lesssim \SI{1.45}{\nano\metre}$.\newline
-	This upper bound was experimentally determined~\cite{KUR-24} and is imposed by shape anisotropy.
-	As mentioned earlier, the shape anisotropy increases linearly with volume, and therefore with $t_{\ce{Co}}$, while the PMA remains constant. % t_{\ce{Co}} controls the demag compensation of $K_u$.
-	For the magnets to remain OOP, the layers must therefore be sufficiently thin. \par
-	The closer the thickness is to this upper bound, the lower the effective OOP anisotropy will be.
-	Therefore, non-volatile ASI must steer clear of this limit, while thermally active ASI generally try to approach this limit as close as possible.
-	As such, this geometrical parameter is often key for balancing the energy landscape.
-	\item \textbf{Separation between magnets} $S_\mathrm{ASI} \gtrapprox \SI{20}{\nano\metre}$.
-	This constraint is of a practical nature, as the minimal size of lateral geometrical features is limited by the accuracy of the lithographic process. \par
-	The separation only affects the strength of the magnetostatic interaction between neighbouring magnets, as approximated in \hotspice by \cref{eq:2:E_MS} and the second-order correction of \cref{eq:2:E_MS_order2}.
-	In an ASI, it is often preferable to have a strong MS interaction, such that $S_\mathrm{ASI}$ is chosen as small as the lithography allows.
-	\item \textbf{Number of layers} $n_{Co} \lesssim 8$.
-	This limit is of a practical nature as well, caused by property drift during deposition of successive layers. \par
-	Vertically stacked FM layers will create a slight preference for the magnetic moment to point vertically as well, due to the magnetostatic coupling between layers, thereby slightly increasing the effective OOP anisotropy.
-	Note that the number of layers does not affect the balance between PMA and shape anisotropy, as the number of interfaces per amount of magnetic material remains constant.
-	\item \textbf{Diameter} $D_\mathrm{NM} \lesssim \SI{200}{\nano\metre}$.
-	For magnets wider than this limit, the magnets were observed to take on multi-domain states~\cite{KUR-24}, because the demagnetisation energy increases rapidly, $\propto D_\mathrm{NM}^4$.
-	Even though in-plane magnets without uniform magnetisation have been used for computation~\cite{gartside2022reconfigurable}, it was not our intent to use this in the OOP systems.
-	Furthermore, the \hotspice simulator assumes a uniform magnetisation for its Ising-like model to be applicable. \par
-	The diameter affects the magnetostatic coupling 
-	\item \textbf{Spacer layer thickness} $t_{\ce{Pt}} \approx \SI{0.8}{\nano\metre}$.
-	This thickness must be chosen appropriately to promote FM coupling between layers within a magnet, accounting for e.g. RKKY coupling.
-\end{itemize}
-
-These geometrical parameters all affect the magnetostatic coupling between magnets, which depends on the volume of FM material $V \propto n_{\ce{Co}} t_{\ce{Co}} D_\mathrm{NM}^2$ and the separation between magnets.
-The dependence of all energy contributions on these geometrical parameters is summarised in~\cref{tab:3:interactions_geometry}.
+The magnets considered here are round with a diameter $D_\mathrm{NM}$ and consist of $N_{\ce{Co}}$ layers of \ce{Co} with a thickness $t_{\ce{Co}}$, separated and surrounded by \ce{Pt} layers of thickness $t_{\ce{Pt}}$.
+They are placed in an ASI where the lateral spacing between magnets is $S_\mathrm{ASI}$ --- resulting in a lattice parameter $a=D_\mathrm{NM}+S_\mathrm{ASI}$ in a square lattice. \par
+These five geometrical parameters have a profound effect on the balance between the aforementioned energy contributions, as summarised in~\cref{tab:3:interactions_geometry}.
+The polynomial dependence of some of these relations makes the system quite hard to control: a slight manufacturing difference can yield a vastly different net OOP anisotropy, possibly inhibiting the spontaneous formation of a checkerboard ground state.
+Note that the magnetostatic interactions depend on the square of the ferromagnetic volume $V=n_{\ce{Co}} t_{\ce{Co}} D_\mathrm{NM}^2$.
 
 \xtable[tab:3:interactions_geometry]{
 	Dependence of the energy components present in OOP ASI on the geometrical parameters.
-	Empty cells indicate no significant dependence.
+	$x$ represents the parameter above the column.
+	The magnet centre-to-centre distance $r = D_\mathrm{NM} + S_\mathrm{ASI}$.
 	PMA depends non-trivially on $t_{\ce{Pt}}$.
-	Magnet centre-to-centre distance $r = D_\mathrm{NM} + S_\mathrm{ASI}$.
+	Empty cells indicate no significant dependence.
 }{
 	\begin{tabular}{r|c|c|c|c|c}
 		\multicolumn{1}{r}{} & \multicolumn{1}{c}{$t_{\ce{Co}}$} & \multicolumn{1}{c}{$n_{\ce{Co}}$} & \multicolumn{1}{c}{$D_\mathrm{NM}$} & \multicolumn{1}{c}{$t_{\ce{Pt}}$} & \multicolumn{1}{c}{$S_\mathrm{ASI}$} \\
 		\hline \hline
 		PMA (interfacial anisotropy) &  & $x$ & $x^2$ & $\aquarius$ &  \\
 		\hline
-		Demagnetisation energy & $x^2$ & $x$ & $x^4$ &  &  \\
+		Shape anisotropy (demag) & $x^2$ & $x$ & $x^4$ &  &  \\
 		\hline
-		Inter-layer MS interaction & $x^2$ & $x^2$ & $x^4$ & $x^{-3}$ &  \\
+		Inter-layer MS interaction & $x^2$ & $x^2$ & $x^4$ & $x^{(< -3)}$ &  \\
 		\hline
-		Inter-magnet MS interaction & $x^2$ & $x^2$ & $x^4$ &  & $>r^{-3} + \frac{3}{16}D_\mathrm{NM}^2 r^{-5} $ \\
+		Inter-magnet MS interaction & $x^2$ & $x^2$ & $x^4$ &  & $r^{(< -3)}$ \\ % S_ASI: $>r^{-3} + \frac{3}{16}D_\mathrm{NM}^2 r^{-5} $
 		\hline
-		Input (Zeeman energy) & $x$ & $x$ & $x^2$ &  &  \\
+		Input (external field) & $x$ & $x$ & $x^2$ &  &  \\
 		\hline
 	\end{tabular}
 }
 
-In the particular case of the OOP ASI fabricated within the \spinengine project, the nanomagnets consist of $n_{\ce{Co}}=7$ \ce{Co} layers of $D_\mathrm{NM}=\SI{170}{\nano\metre}$ diameter and $t_{\ce{Co}} \approx \SI{1.45}{\nano\metre}$ thickness, with $t_{\ce{Pt}} \approx \SI{0.8}{\nano\metre}$ spacing layers in between.
-The edge-to-edge spacing between neighbouring magnets is \SI{30}{\nano\metre}, unless specified otherwise, with a saturation magnetisation $M_\mathrm{sat}=\SI{1063}{\kilo\ampere\per\metre}$.
+These five geometrical parameters are bounded by several physical and practical constraints.
+Note that the numerical values of the limits given below are only indicative and may depend on the exact values of the other geometrical parameters.
+\begin{itemize}
+	\item \textbf{FM layer thickness} $\boldsymbol{t_{\ce{Co}}} \lesssim \SI{1.45}{\nano\metre}$. \newline
+	This upper bound was experimentally determined~\cite{KUR-24} and is imposed by shape anisotropy.
+	As mentioned earlier, the \xref{shape anisotropy} increases linearly with volume, and therefore with $t_{\ce{Co}}$, while the PMA is mostly independent of $t_{\ce{Co}}$. % t_{\ce{Co}} controls the demag compensation of $K_u$.
+	For the magnets to remain OOP, the layers must therefore be sufficiently thin. \par
+	The closer the thickness is to this upper bound, the lower the effective OOP anisotropy will be.
+	Therefore, non-volatile ASI must steer clear of this limit, while thermally active ASI generally try to approach this limit as close as possible.
+	As such, this geometrical parameter is often key for balancing the energy landscape.
+	\item \textbf{Separation between magnets} $\boldsymbol{S_\mathrm{ASI}} \gtrsim \SI{20}{\nano\metre}$. \newline
+	This constraint is of a practical nature, as the minimal size of lateral geometrical features is limited by the accuracy of the lithographic process. \par
+	The separation only affects the strength of the magnetostatic interaction between neighbouring magnets, as approximated in \hotspice by \cref{eq:2:E_MS} and the second-order correction of \cref{eq:2:E_MS_order2}.
+	In ASI, a strong MS coupling --- hence low $S_\mathrm{ASI}$ --- is often preferred.
+	However, for thermally active ASI we will soon see that excessively strong MS coupling is detrimental, resulting in a ``sweet spot'' of MS coupling energies.
+	\item \textbf{Number of layers} $\boldsymbol{n_{\ce{Co}}} \lesssim 8$. \newline
+	This limit is of a practical nature as well, caused by property drift during deposition of successive layers. \par
+	Note that the number of layers does not affect the balance between PMA and shape anisotropy, as the number of interfaces per amount of magnetic material remains constant.
+	However, since MS interactions grow $\propto n_{\ce{Co}}^2$, the inter-layer coupling --- and with it the net OOP anisotropy --- becomes increasingly significant for a large number of layers.
+	\item \textbf{Diameter} $\boldsymbol{D_\mathrm{NM}} \lesssim \SI{200}{\nano\metre}$. \newline
+	Magnets wider than this limit were observed to take on multi-domain states~\cite{KUR-24}, as their demagnetisation energy becomes dominant due to its rapid $\propto D_\mathrm{NM}^4$ growth.
+	Even though in-plane magnets without uniform magnetisation have been used for computation~\cite{gartside2022reconfigurable}, we did not intend to use this in the OOP systems.
+	Furthermore, the \hotspice simulator requires a single-domain magnetisation state for its Ising-like model to be applicable. \par
+	The diameter can be used to control the relative strength between PMA and shape anisotropy and greatly affects the inter-magnet MS coupling.
+	\item \textbf{Spacer layer thickness} $\boldsymbol{t_{\ce{Pt}}} \approx \SI{0.8}{\nano\metre}$. \newline
+	The spacer thickness must be chosen appropriately to promote FM coupling between layers while maintaining the interfacial anisotropy. % Accounting for various effects such as RKKY coupling
+	A thin spacer is beneficial to the net OOP anisotropy due to the $\approx t_{\ce{Pt}}^{-3}$ inter-layer MS coupling dependence.
+\end{itemize}
+
+In the particular case of the thermally active OOP ASI fabricated within the \spinengine project, the nanomagnets consist of $n_{\ce{Co}}=7$ ferromagnetic layers of $D_\mathrm{NM}=\SI{170}{\nano\metre}$ diameter and $t_{\ce{Co}} \approx \SI{1.45}{\nano\metre}$ thickness, with $t_{\ce{Pt}} \approx \SI{0.8}{\nano\metre}$ spacing layers in between.
+The edge-to-edge spacing between neighbouring magnets is \SI{30}{\nano\metre}, unless specified otherwise, with a saturation magnetisation $M_\mathrm{sat}=\SI{1063}{\kilo\ampere\per\metre}$~\cite{Msat_Co}.
 
 \subsubsection{Logarithmic relaxation}
 % TODO: extend this intro by saying that simple calculations based on the cosines and sines of the four interactions (recall: this was calculated by Alex using Mathematica) does not give a thermally active energy barrier. See the following comment for more details.
