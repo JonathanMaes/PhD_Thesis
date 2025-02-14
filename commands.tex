@@ -7,9 +7,12 @@
 
 \newcommand{\colorcode}{(Color code on page \pageref{colorcode}.)\xspace}
 
-\newcommand{\indexlabel}[1]{\index{#1}\label{#1}\label{#1s}}
-\newcommand{\idx}[1]{\emph{#1}\indexlabel{#1}} %no xspace
-\newcommand{\xlabel}[1]{#1\indexlabel{#1}}
+%% Index labels.
+% To avoid multiply-defined labels, but allow multiple pages in the index, use e.g. \idx[nolabel]{...} after the first \idx{...}. 
+\newcommand{\indexlabel}[2][]{\index{#2}\ifthenelse{\equal{#1}{nolabel}}{}{\label{#2}\label{#2s}}}
+\newcommand{\idx}[2][]{\emph{#2}\indexlabel[#1]{#2}} %no xspace
+\newcommand{\xlabel}[2][]{#2\indexlabel[#1]{#2}}
+%% Index references.
 \newcommand{\xref}[1]{\hyperref[#1]{#1}\xspace}
 \newcommand{\xrefs}[2]{\hyperref[#2]{#1#2}\xspace} %% meervoud etc, add {s}
 \newcommand{\link}[2]{\hyperref[#1]{#2}\xspace}
