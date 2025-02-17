@@ -3,6 +3,7 @@ matplotlib.use("Agg")
 
 import hotspice
 import inspect
+import traceback
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -45,9 +46,8 @@ def replot_all(plot_function):
     for data_dir in outdir.iterdir():
         try:
             plot_function(data_dir)
-        except Exception as e:
-            print(e)
-            pass
+        except Exception:
+            print(traceback.format_exc())
 
 def label_ax(ax: plt.Axes, i: int = None, form: str = "(%s)", offset: tuple[float, float] = (0,0), fontsize: float = 11, **kwargs):
     """ To add a label to `ax`, pass either `i` or `form` (or both).
