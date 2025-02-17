@@ -95,12 +95,12 @@ def plot(data_dir=None):
     ## Load data
     if data_dir is None: data_dir = thesis_utils.get_last_outdir()
     params, data = hotspice.utils.load_results(data_dir)
+
     varx_name, vary_name = params["varx_name"], params["vary_name"]
     varx_values, vary_values = np.asarray(params["varx_values"]), np.asarray(params["vary_values"])
     t_max, samples = params["t_max"], params["samples"]
     times, m_avgs, corr_NN, corr_2NN, corr_3NN = data["times"], data["m_avg"], data["corr_NN"], data["corr_2NN"], data["corr_3NN"]
     final_states, mm = data["final_states"], data["mm"]
-    N_switches = times.shape[3]
     
     ## Initialise plot
     thesis_utils.init_style(style="default")
@@ -131,11 +131,11 @@ def plot(data_dir=None):
     C0_dark, C1_dark = colors.to_hex(colors.hsv_to_rgb(C0_dark)), colors.to_hex(colors.hsv_to_rgb(C1_dark))
     # Setup figure
     figsize = (thesis_utils.page_width, thesis_utils.page_width*.8)
-    fig1, axes = plt.subplots(vary_values.size, varx_values.size, figsize=figsize, sharex=SAME_XAXIS_RANGE, sharey=True)
-    fig1.subplots_adjust(left=0.16, top=0.88, bottom=0.09, wspace=0.12, hspace=0.2) #! Already here, because insets require knowledge of final aspect ratio
-    fig1.suptitle(varx_text(0).split("\n")[0] if len(varx_text(0).split("\n")) > 1 else "", fontsize=fontsize_headers, x=0.53) # 0.03 to the right to be centered on the subplots
-    fig1.supylabel(vary_text(0).split("\n")[0] if len(vary_text(0).split("\n")) > 1 else "", fontsize=fontsize_headers, x=0.005, y=0.47) # 0.005 to not be right at the edge but not too far to the right either
-    fig1.supxlabel("Elapsed time (s)", fontsize=fontsize_labels, x=0.56)
+    fig, axes = plt.subplots(vary_values.size, varx_values.size, figsize=figsize, sharex=SAME_XAXIS_RANGE, sharey=True)
+    fig.subplots_adjust(left=0.16, top=0.88, bottom=0.09, wspace=0.12, hspace=0.2) #! Already here, because insets require knowledge of final aspect ratio
+    fig.suptitle(varx_text(0).split("\n")[0] if len(varx_text(0).split("\n")) > 1 else "", fontsize=fontsize_headers, x=0.53) # 0.03 to the right to be centered on the subplots
+    fig.supylabel(vary_text(0).split("\n")[0] if len(vary_text(0).split("\n")) > 1 else "", fontsize=fontsize_headers, x=0.005, y=0.47) # 0.005 to not be right at the edge but not too far to the right either
+    fig.supxlabel("Elapsed time (s)", fontsize=fontsize_labels, x=0.56)
     
     insets_x = np.array([[0.8, 0.6, 0.8], [0.45, 0.35, 0.8], [0.8, 0.8, 0.8]])
     insets_y = np.ones((3,3))*.5
@@ -163,8 +163,8 @@ def plot(data_dir=None):
                 text = vary_text(vary).split("\n")[-1]
                 ax.annotate(text + "\n" + r"$\downarrow$"*DOWNARROW, fontsize=fontsize_headers, xy=(0, 0.5), xytext=(-ax.yaxis.labelpad - 4*pad, 0),
                             xycoords=ax.yaxis.label, textcoords='offset points', ha='center', va='center', rotation=90)
-                if i == len(vary_values)//2: ax.set_ylabel(r"Average magnetization $m_\mathrm{avg}$", color=C0_dark, fontsize=fontsize_labels)
-                else: ax.set_ylabel(r"Average magnetization $m_\mathrm{avg}$", alpha=0, fontsize=fontsize_labels) # Otherwise the row-labels are no longer aligned with eachother
+                if i == len(vary_values)//2: ax.set_ylabel(r"Average magnetisation $m_\mathrm{avg}$", color=C0_dark, fontsize=fontsize_labels)
+                else: ax.set_ylabel(r"Average magnetisation $m_\mathrm{avg}$", alpha=0, fontsize=fontsize_labels) # Otherwise the row-labels are no longer aligned with eachother
             elif j == varx_values.size - 1:
                 if i == len(vary_values)//2: ax_right.set_ylabel(r"Local AFM parameter $q_\mathrm{NN}$", color=C1_dark, fontsize=fontsize_labels, rotation=270, labelpad=2*pad+6, va='baseline')
             if j < varx_values.size - 1:
@@ -198,9 +198,10 @@ def plot(data_dir=None):
             ds = [{"var": m_avg, "label": r"$m_\mathrm{avg}$", "color": "C0"}, {"var": q_NN, "label": r"$q_\mathrm{NN}$", "color": "C1"}]
             if HIGHER_CORRS: ds += [{"var": q_2NN, "label": r"$q_\mathrm{2NN}$", "color": "C3"}, {"var": q_3NN, "label": r"$q_\mathrm{3NN}$", "color": "C6"}]
             X = np.logspace(np.log10(np.min(x_vals)), np.log10(np.max(x_vals)), 200)
+            lns: list[plt.Line2D] = []
             for d in ds:
                 mean, std, perc_low, perc_high = mean_std(X, x_vals, d["var"])
-                p1, = ax.plot(X, mean, label=d["label"], color=d["color"])
+                lns.append(ax.plot(X, mean, label=d["label"], color=d["color"])[0])
                 ax.fill_between(X, mean - std, mean + std, color=d["color"], edgecolor="none", alpha=0.5)
                 ax.fill_between(X, perc_low, perc_high, color=d["color"], edgecolor="none", alpha=0.5)
             # alpha = max(0.87**(samples/2+2), 0.01)
@@ -224,55 +225,15 @@ def plot(data_dir=None):
             ## Add final magnetisation state to this axis
             if SHOW_STATES:
                 x, y = insets_x[i,j], insets_y[i,j]
-                cutout_data = data['final_states'][i,j,:,:]
+                cutout_data = final_states[i,j,:,:]
                 inset_ax(ax, x, y, insets_d, cutout_data)
-            
 
     # Finish the figure
     if HIGHER_CORRS: # Then a legend is advised
-        fig1.legend(lns := [p1, p2, p3, p4], [l.get_label() for l in lns], loc='upper left', ncol=2)
-    figs.append(fig1)
-    
-    # if SHOW_STATES:
-    #     ## PLOT 2: SHOW MAGNETIZATION STATES
-    #     # Setup figure
-    #     figsize = (min(14, varx_values.size*2.3), min(7, vary_values.size*3+1))
-    #     fig2, axes = plt.subplots(vary_values.size, varx_values.size, figsize=figsize, sharex=SAME_XAXIS_RANGE, sharey=True)
-    #     fig2.suptitle(varx_text(varx).split("\n")[0] if len(varx_text(varx).split("\n")) > 1 else "", fontsize=fontsize_headers, x=0.54) # 0.03 to the right to be centered on the subplots
-    #     fig2.supylabel(vary_text(vary).split("\n")[0] if len(vary_text(vary).split("\n")) > 1 else "", fontsize=fontsize_headers, x=0.02, y=0.47) # 0.005 to not be right at the edge but not too far to the right either
-    #     fig2.supxlabel(r"$t=1000\,\mathrm{s}$", fontsize=fontsize_labels, x=0.54) # To put subplots in exactly the same place as for fig1
-    #     for i, vary in enumerate(vary_values):
-    #         for j, varx in enumerate(varx_values):
-    #             ax: plt.Axes = np.asarray(axes).flat[i*len(varx_values) + j]
-    #             hotspice.plottools.plot_simple_ax(ax, mm, m=final_states[i,j,:,:], mode='avg', avg='point', cmap='gray')
-    #             # Hide X and Y axes label marks
-    #             ax.xaxis.set_tick_params(labelbottom=False)
-    #             ax.yaxis.set_tick_params(labelleft=False)
-    #             ax.set_xticks([])
-    #             ax.set_yticks([])
-    #             for axis in ['top','bottom','left','right']: ax.spines[axis].set_linewidth(linewidths)
-    #             # Labels etc.
-    #             if i == 0:
-    #                 text = varx_text(varx).split("\n")[-1]
-    #                 ax.annotate(text + "\n" + r"$\downarrow$"*DOWNARROW, fontsize=fontsize_headers, xy=(0.5, 1), xytext=(0, 2*pad),
-    #                             xycoords='axes fraction', textcoords='offset points', ha='center', va='baseline')
-    #             # elif i == vary_values.size - 1:
-    #             #     ax.set_xlabel("x [µm]")
-    #             if j == 0:
-    #                 text = vary_text(vary).split("\n")[-1]
-    #                 ax.annotate(text + "\n" + r"$\downarrow$"*DOWNARROW, fontsize=fontsize_headers, xy=(0, 0.5), xytext=(-ax.yaxis.labelpad - 3*pad, 0),
-    #                             xycoords=ax.yaxis.label, textcoords='offset points', ha='center', va='center', rotation=90)
-    #                 # ax.set_ylabel("y [µm]")
+        fig.legend(lns, [l.get_label() for l in lns], loc='upper left', ncol=2)
 
-    #             t = ax.text(0, 1, f" \n  {i*len(varx_values) + j + 1:d}  ", bbox=dict(boxstyle='square,pad=0', facecolor='#000', edgecolor='#000'),
-    #                     color='w', fontsize=fontsize_ticks*.65, fontfamily='DejaVu Sans', weight='bold', linespacing=0.01, ha='left', va='bottom', transform=ax.transAxes, zorder=-1)
-
-    #     # Finish the figure
-    #     fig2.subplots_adjust(left=0.17, top=0.83, wspace=0.10, hspace=0.16)
-    #     figs.append(fig2)
-
-    ## SAVE SIMULATION (METADATA, SCRIPT CODE, AND PLOT)
-    hotspice.utils.save_results(figures={"OOP_relaxation": figs[0]}, outdir=data_dir, copy_script=False)
+    ## SAVE PLOT
+    hotspice.utils.save_results(figures={"OOP_relaxation": fig}, outdir=data_dir, copy_script=False)
 
 
 def inset_ax(ax: plt.Axes, x, y, d, state: np.array):
