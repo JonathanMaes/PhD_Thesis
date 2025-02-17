@@ -185,9 +185,9 @@ Note that the numerical values of the limits given below are only indicative and
 In the particular case of the thermally active OOP ASI fabricated within the \spinengine project, the nanomagnets consist of $n_{\ce{Co}}=7$ ferromagnetic layers of $D_\mathrm{NM}=\SI{170}{\nano\metre}$ diameter and $t_{\ce{Co}} \approx \SI{1.45}{\nano\metre}$ thickness, with $t_{\ce{Pt}} \approx \SI{0.8}{\nano\metre}$ spacing layers in between.
 The edge-to-edge spacing between neighbouring magnets is \SI{30}{\nano\metre}, unless specified otherwise, with a saturation magnetisation $M_\mathrm{sat}=\SI{1063}{\kilo\ampere\per\metre}$~\cite{Msat_Co}.
 
-\subsubsection{Logarithmic relaxation}
-To better inform our choices for RC in thermally active ASI, it is essential to familiarize ourselves with its relaxation dynamics.
-In this section, we numerically investigate this relaxation process with \hotspice by initializing an OOP ASI in a uniform ($\uparrow$) state and subsequently observing its decay towards the checkerboard ground state over a certain timespan.
+\subsubsection{Relaxation characteristics}
+To better inform our choices for RC in thermally active ASI, it is essential to familiarize ourselves with its spontaneous relaxation process.
+In this section, we numerically investigate this process with \hotspice by initializing an OOP ASI in a uniform ($\uparrow$) state and subsequently observing its decay towards the checkerboard ground state over a certain timespan.
 In the Ising-like model used by \hotspice, two essential system parameters remain, denoted as
 \begin{itemize}[leftmargin=4.1em]
 	\item[$\boldsymbol{\EEA}$ ---] the energy barrier of a single non-interacting OOP magnet due to the net OOP anisotropy.
@@ -196,17 +196,24 @@ In the Ising-like model used by \hotspice, two essential system parameters remai
 	This is responsible for the relaxation to the ground state.
 \end{itemize}
 Due to the N\'eel-Arrhenius switching law~\eqref{eq:2:Néel}, it is more appropriate to write dimensionless energies ($\EEA/\kBT$ and $\EMC/\kBT$), as it is only this ratio --- not the absolute value of the energies or temperature --- that controls the switching time. \par
-In real ASI, imperfections introduced during manufacturing will cause the geometry of separate magnets to differ slightly, which can significantly affect the net OOP anisotropy of various magnets.
+In real ASI, imperfections introduced during manufacturing will cause the geometry of separate magnets to differ slightly, which can yield significant variation in the net OOP anisotropy of different magnets.
 In simulations, this will be modelled by a Gaussian spread on the net anisotropy $\EEA$: unless otherwise specified, a standard deviation $\sigma(\EEA) = \SI{5}{\percent}$ will be used.
 This provides pinning sites for domain walls, which can make the relaxation process more reproducible.
-Such ``consistent variation'' within a particular ASI could ultimately be beneficial to RC by providing a richer output space. \\\par
+Such ``consistent variation'' within a particular ASI could ultimately be beneficial to RC by providing a richer output space. \par
+In total, the effective energy barrier $\EBeff$ of a magnet can be written symbolically as
+\begin{equation}
+	\label{eq:3:OOP_relaxation_EBeff}
+	\EBeff{}_{,i}(t) = \EEA \Big(1 + \sigma\ab(\EEA) \hat{\chi}_i \Big) + \EMC \sum_j s_i(t) D_{ij} s_j(t) 
+	% TODO: use structure from the paper, that will be better and more scientific like.
+\end{equation}
+with $\hat{\chi}_i$ a random value from a standard normal distribution and $D_{ij}$ a factor proportional to the magnetostatic interaction energy between magnets $i$ and $j$ when $s_i=s_j=+1$. \\\par
 
 The relaxation process can be tracked by the average magnetisation $\mavg$ and the local antiferromagnetic order parameter $\qNN = (1 - \langle S_i S_{i+1} \rangle)/2$.
-In the uniform state --- where all magnets collectively point $\uparrow$ --- their values will be $\mavg=1$ and $\qNN=0$.
-During relaxation, they will transition to the opposite value: $\mavg=0$ and $\qNN=1$.
-While a random state has an AFM order $\qNN \approx 0.5$, a state with a value of $\qNN=0.5$ is not necessarily random. \par
+In the uniform state --- where all magnets collectively point $\uparrow$ --- their values are $\mavg=1$ and $\qNN=0$.
+During relaxation, they transition to $\mavg=0$ and $\qNN=1$, corresponding to the checkerboard ground state.
+Note that, while for a random state $\qNN \approx 0.5$, a value of $\qNN=0.5$ does not necessarily imply a random state. \par
 \cref{fig:3:OOP_relaxation} shows relaxation profiles for several combinations of $\EEA$ and $\EMC$.
-For each combination, the relaxation was run 200 times, with each run performing at most $40N$ switches with the first-switch method, or stopping if the maximum time $t_\mathrm{max}=\SI{1e4}{\second}$ (the right edge of each panel) is reached.
+For each combination, the relaxation was run 200 times, with each run performing at most $40N$ switches using the first-switch method, or stopping if the maximum time $t_\mathrm{max}=\SI{e4}{\second}$ (the right edge of each panel) is reached.
 In the figure, each trace consists of 3 areas: the mean, standard deviation and 1st/99th percentile of these 200 runs at any given time. 
 This variance is partially due to the randomness of N\'eel-Arrhenius switching, but also because each run used unique randomly sampled $\EEA$ for individual magnets, in accordance with the $\sigma(\EEA) = \SI{5}{\percent}$ variation.
 
@@ -217,6 +224,7 @@ This variance is partially due to the randomness of N\'eel-Arrhenius switching, 
 	The ASI is initialised in a uniform magnetic state with all spins pointing `up' and is released at $t = 0$, after which the lattice relaxes to lower energies.
 	Blue traces show the evolution of the absolute value of the average magnetisation $\mavg$ while orange traces represent the local antiferromagnetic parameter $\qNN$.
 	Each trace shows the mean (central line), standard deviation (central shaded area), and 1st/99th percentile (outer shaded area) of 200 repeated relaxations with randomly sampled $\EEA$ profiles.
+	At most $40N$ switches are simulated for each relaxation.
 	The green shaded region highlights the second stage of ordering, during which the slope of $\qNN$ decreases due to domain wall formation.
 	The simulations were stopped after \SI{1e4}{\second} and the resulting final magnetic states are shown in \textbf{the insets}, where white (black) indicates up (down) spins.
 }
