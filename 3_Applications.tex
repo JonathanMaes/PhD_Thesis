@@ -200,7 +200,7 @@ In real ASI, imperfections introduced during manufacturing will cause the geomet
 In simulations, this will be modelled by a Gaussian spread on the net anisotropy $\EEA$: unless otherwise specified, a standard deviation $\sigma(\EEA) = \SI{5}{\percent}$ will be used.
 This provides pinning sites for domain walls, which can make the relaxation process more reproducible.
 Such ``consistent variation'' within a particular ASI could ultimately be beneficial to RC by providing a richer output space. \par
-In total, the effective energy barrier $\EBeff$ of a magnet can be written symbolically as
+In total, the effective energy barrier $\EBeff$ of a magnet $i$ can be written symbolically as
 \begin{equation}
 	\label{eq:3:OOP_relaxation_EBeff}
 	\EBeff{}_{,i}(t) = \EEA \Big(1 + \sigma\ab(\EEA) \hat{\chi}_i \Big) + \EMC \sum_j s_i(t) D_{ij} s_j(t) 
@@ -260,19 +260,19 @@ The effects of $\EMC$ and $\EEA$ can be captured by fitting a logarithmic curve 
 
 \paragraph{Two-phase relaxation}
 While $\mavg$ follows a nearly perfect logarithmic relaxation, the local AFM parameter $\qNN$ changes slope at some point --- most strikingly in panel 6 and 9 of~\cref{fig:3:OOP_relaxation}.
-This slope change marks the transition between what we call phase $\circled{1}$ and phase $\circled{2}$ of the relaxation.
-In the figure, phase $\circled{2}$ is indicated by the green shaded area. \par
+This slope change marks the transition between what we call stage $\circled{1}$ and stage $\circled{2}$ of the relaxation.
+In the figure, stage $\circled{2}$ is indicated by the green shaded area. \par
 This is to a large extent dictated by the net magnetisation of the four NN of each magnet in the system.
 Magnets will prefer a magnetisation that points opposite to the majority of their nearest neighbours. 
-During phase $\circled{1}$, a significant amount of magnets still have three or four nearest neighbours (NN) which have not yet switched --- see for example the final state (at \SI{e4}{\second}) of panel 2, shown in its inset: most magnets still point `up' (white).
+During stage $\circled{1}$, a significant amount of magnets still have three or four nearest neighbours (NN) which have not yet switched --- see for example the final state (at \SI{e4}{\second}) of panel 2, shown in its inset: most magnets still point `up' (white).
 In such a state, most magnets would still very much prefer to switch, and the aforementioned near-linear decrease of $\max(\EBeff)$ persists.
-This is no longer the case in a system which has reached phase $\circled{2}$ --- in panel 3, which has barely reached the second phase, very few magnets with $\geq 3$ NN of the same orientation remain.
-In phase $\circled{2}$, most magnets have reached a stable local checkerboard ground state.
+This is no longer the case in a system which has reached stage $\circled{2}$ --- in panel 3, which has barely reached the second stage, very few magnets with $\geq 3$ NN of the same orientation remain.
+In stage $\circled{2}$, most magnets have reached a stable local checkerboard ground state.
 However, as the ground state is twofold degenerate, the random initial switching will cause domains of both types to nucleate, ultimately separated by domain walls.
 These domain walls are composed of magnets with $<4$ oppositely-magnetised NN, giving them a higher $\EMC$ than magnets in the ground state.
 As such, the domain wall magnets will switch fastest, causing the domain walls to perform a random walk through the system, eventually disappearing at the edges of the ASI.
 This is what occurs between panels 5 and 8 of~\cref{fig:3:OOP_relaxation}.
-Unlike the constantly changing global environment of phase $\circled{1}$, domain wall magnets typically have only 1 or 2 oppositely-oriented NN and are embedded within checkerboard domains.
+Unlike the constantly changing global environment of stage $\circled{1}$, domain wall magnets typically have only 1 or 2 oppositely-oriented NN and are embedded within checkerboard domains.
 Therefore, the environment of these domain walls does not significantly change over time, unless they randomly encounter the edge of the system or annihilate each other.
 As such, the order parameter does not increase logarithmically, but rather as a power-law typical for a random walk.
 In~\cref{fig:3:OOP_relaxation}, the logarithmic time axis means this power-law shows up as a rather abrupt increase of $\qNN$ at some point in time.
@@ -290,9 +290,10 @@ The low dipolar coupling of panel 7 causes domain walls to never truly disappear
 
 \xfig{3_OOP/OOP_relaxation_continuous.pdf}{
 	\label{fig:3:OOP_relaxation_continuous}
-	Phase diagrams of the average magnetization $\mavg$ and the local antiferromagnetic parameter $\qNN$ as a function of net out-of-plane anisotropy $\EEA$ and nearest-neighbour magnetostatic coupling $\EMC$ at $t=\SI{e4}{\second}$.
+	Phase diagrams of the average magnetisation $\mavg$ and the local antiferromagnetic parameter $\qNN$ as a function of net out-of-plane anisotropy $\EEA$ and nearest-neighbour magnetostatic coupling $\EMC$ at $t=\SI{e4}{\second}$.
 	Five regions can be distinguished: $\mathrm{I}$ -- frozen state, $\mathrm{II}$ -- transient states, $\mathrm{III}$ -- state with domains and domain boundaries, $\mathrm{IV}$ -- checkerboard ordering, $\mathrm{V}$ -- superparamagnetic state.
-	The white (black) dotted line corresponds to $\mavg = 0.05$ ($\qNN = 0.95$).
+	The white and black dotted line respectively correspond to $\mavg = 0.05$ and $\qNN = 0.95$.
+	The nine panels of~\cref{fig:3:OOP_relaxation} are indicated by grey crosses.
 	The three symbols correspond to the experimental lattices shown in~\cref{fig:3:OOP_relaxation_fit} with nanomagnet diameter $D_\mathrm{NM} = \SI{170}{\nano\metre}$, \ce{Co} thickness $t_{\ce{Co}} = \SI{1.45}{\nano\metre}$ and nanomagnet separations $S_\mathrm{ASI} = \SI{20}{\nano\metre}$ (circle), $S_\mathrm{ASI} = \SI{25}{\nano\metre}$ (triangle), $S_\mathrm{ASI} = \SI{30}{\nano\metre}$ (cross). % TODO: create and reference that figure
 }
 
