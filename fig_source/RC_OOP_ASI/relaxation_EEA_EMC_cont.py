@@ -97,7 +97,7 @@ def plot(data_dir=None):
         # for axis in ['top', 'bottom', 'left', 'right']:
         #     ax.spines[axis].set_linewidth(linewidths)
         for j, marker in enumerate(markers):
-            ax.annotate(marker_labels[j], marker, color=marker_colors[j][i], va='center', ha='center',
+            ax.annotate(marker_labels[j], marker, color=marker_colors[j][i], va='center_baseline', ha='center',
                         weight='bold', fontproperties='serif', fontsize=16, annotation_clip=False)
 
         # Fitted MFM parameter markers
@@ -106,6 +106,11 @@ def plot(data_dir=None):
         fit_symbols = ['o', 'x', '^']
         for EEA, EMC, symbol in zip(fit_E_EA, fit_E_MC, fit_symbols):
             ax.scatter(EMC, EEA, s=50, marker=symbol, facecolor='white', edgecolor='black', linewidth=1, zorder=100)
+        
+        # 9 panels markers
+        E_MC_ratios = [1.25, 2.5, 10]
+        E_EA_ratios = [40, 30, 20]
+        ax.scatter(*np.meshgrid(E_MC_ratios, E_EA_ratios), s=20, marker="+", facecolor='grey', linewidth=1, zorder=100)
 
     fs_labels = 11
     fig.supxlabel(r"NN magnetostatic coupling $E_\mathrm{MC}/k_\mathrm{B}T$", fontsize=fs_labels, x=0.485) # To put subplots in exactly the same place as for fig1
