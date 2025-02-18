@@ -212,14 +212,25 @@ The relaxation process can be tracked by the average magnetisation $\mavg$ and t
 In the uniform state --- where all magnets collectively point $\uparrow$ --- their values are $\mavg=1$ and $\qNN=0$.
 During relaxation, they transition to $\mavg=0$ and $\qNN=1$, corresponding to the checkerboard ground state.
 Note that, while for a random state $\qNN \approx 0.5$, a value of $\qNN=0.5$ does not necessarily imply a random state. \par
-\cref{fig:3:OOP_relaxation} shows relaxation profiles for several combinations of $\EEA$ and $\EMC$.
-For each combination, the relaxation was run 200 times, with each run performing at most $40N$ switches using the first-switch method, or stopping if the maximum time $t_\mathrm{max}=\SI{e4}{\second}$ (the right edge of each panel) is reached.
-In the figure, each trace consists of 3 areas: the mean, standard deviation and 1st/99th percentile of these 200 runs at any given time. 
-This variance is partially due to the randomness of N\'eel-Arrhenius switching, but also because each run used unique randomly sampled $\EEA$ for individual magnets, in accordance with the $\sigma(\EEA) = \SI{5}{\percent}$ variation.
 
-\paragraph{Logarithmic relaxation}
-A lot of insight into the relaxation process can be gained from~\cref{fig:3:OOP_relaxation}.
-Most strikingly, both $\mavg$ and (to a lesser extent) $\qNN$ trace a very straight line during relaxation when the time axis uses a logarithmic scale.
+\paragraph{Two-stage relaxation}
+\cref{fig:3:OOP_relaxation} shows relaxation profiles for a few combinations of $\EEA$ and $\EMC$, providing some insight into the relaxation process.
+Each panel shows the mean, standard deviation and 1st/99th percentile of $\mavg$ and $\qNN$ over 200 relaxations --- showing variance due to the randomness of N\'eel-Arrhenius switching and because each relaxation used unique randomly sampled $\EEA$ for individual magnets, in accordance with the $\sigma(\EEA) = \SI{5}{\percent}$ variation.
+Each relaxation consisted of at most $40N$ switches using the first-switch method.
+
+\xfig{3_OOP/OOP_relaxation.pdf}{
+	\label{fig:3:OOP_relaxation}
+	Dependence of the ordering timescale on the energy balance between net OOP anisotropy $\EEA$ and nearest-neighbour magnetostatic coupling $\EMC$ in an OOP square-lattice ASI with $11 \times 11$ spins. % This system size was chosen because it matched the size of our fabricated systems discussed later.
+	The ASI is initialised in a uniform magnetic state with all spins pointing `up' and is released at $t = 0$, after which the lattice relaxes to lower energies.
+	Blue traces show the absolute value of the average magnetisation $\mavg$ while orange traces represent the local antiferromagnetic parameter $\qNN$.
+	Each trace shows the mean (central line), standard deviation (central shaded area), and 1st/99th percentile (outer shaded area) of 200 repeated relaxations with randomly sampled $\EEA$ profiles.
+	At most $40N$ switches are simulated for each relaxation.
+	The green shaded region highlights the second stage of ordering.
+	The simulations were stopped after \SI{e4}{\second} and the resulting final magnetic states are shown in \textbf{the insets}, where white (black) indicates up (down) spins.
+}
+
+\subparagraph{Stage 1: logarithmic relaxation}
+Most strikingly, both $\mavg$ and (to a lesser extent) $\qNN$ trace a very straight line during relaxation when using a logarithmic scale for the time axis.
 Because of this logarithmic relaxation, the first switches occur on a vastly different timescale than the last --- each subsequent switch occurs on average $x$ times later than the previous switch ($t_{i+1} = x t_i \Rightarrow t_n = t_0 x^n$). \par
 The cause of this is the magnetostatic interaction\footnote{
 	Without the \xref{magnetostatic interaction}, the system would simply be a non-interacting ensemble of nanomagnets, which is known to relax to the ground state exponentially.
@@ -229,36 +240,9 @@ Initially, all magnets are in a high-energy state as they all point in the same 
 After a certain amount of time, a first magnet will switch, thereby slightly stabilising all other magnets in the ASI to some degree according to the second term of~\cref{eq:3:OOP_relaxation_EBeff}.
 Whichever magnet randomly switches next will therefore experience a slightly higher effective energy barrier $\EBeff$ than before.
 On average, this means that the effective barrier $\max(\EBeff)$ for the most unstable magnets in the system --- those most eager to switch next --- will increase linearly with the amount of switched magnets.
-Due to the N\'eel-Arrhenius equation~\eqref{eq:2:Néel}, this translates to an exponentially increasing switching time. \\\par
-This also explains the general trend of a less inclined slope for higher magnetostatic coupling $\EMC$: high coupling means a greater energy change per switch, and therefore a greater exponential increase in the switching time.
-Meanwhile, the net OOP anisotropy $\EEA$ also affects the relaxation, but only its timescale: changing $\EEA$ does not affect the aforementioned slope but simply shifts the relaxation curves along the (logarithmic) time axis.
-Therefore, accurate control of $\EEA$ on a scale of $\sim 10\kBT$ is required to manufacture an ASI that exhibits a particular relaxation timescale. \par
-%Note that the change in slope and the offset compensate to some extent such that the final switches (near $\mavg \rightarrow 0$ occur around the same time, nearly independently of $\EMC$). \par
-The effects of $\EMC$ and $\EEA$ can be captured by fitting a logarithmic curve to the mean relaxation curves of the nine panels in ~\cref{fig:3:OOP_relaxation}, yielding the general trends
-\begin{equation}
-	\mavg = a \log_{10}(t \nu_0) + b \quad \mathrm{with} \quad \begin{cases}
-		a \approx -\frac{\kBT}{2\EMC} \, \mathrm{,} \\
-		b \approx \frac{\kBT}{6\EMC}(\frac{\EEA}{\kBT} - 1.5) - 0.05 \, \mathrm{.}
-	\end{cases}
-\end{equation} % TODO: more rigorous fit?
-%As such, the intercept of the fit for $\mavg=0$ is
-%\begin{equation}
-%	t_{\mavg=0} = \frac{10^{-b/a}}{\nu_0} = \frac{10^{\frac{\EEA - 0.3 \EMC}{3\kBT} - 0.5}}{\nu_0}
-%\end{equation}
+Due to the N\'eel-Arrhenius equation~\eqref{eq:2:Néel}, this translates to an exponentially increasing switching time.
 
-\xfig{3_OOP/OOP_relaxation.pdf}{
-	\label{fig:3:OOP_relaxation}
-	Dependence of the ordering timescale on the energy balance between net OOP anisotropy $\EEA$ and nearest-neighbour magnetostatic coupling $\EMC$ in an OOP square-lattice ASI with $11 \times 11$ spins.
-	%This system size was chosen because it matched the size of our fabricated systems discussed later.
-	The ASI is initialised in a uniform magnetic state with all spins pointing `up' and is released at $t = 0$, after which the lattice relaxes to lower energies.
-	Blue traces show the evolution of the absolute value of the average magnetisation $\mavg$ while orange traces represent the local antiferromagnetic parameter $\qNN$.
-	Each trace shows the mean (central line), standard deviation (central shaded area), and 1st/99th percentile (outer shaded area) of 200 repeated relaxations with randomly sampled $\EEA$ profiles.
-	At most $40N$ switches are simulated for each relaxation.
-	The green shaded region highlights the second stage of ordering, during which the slope of $\qNN$ decreases due to domain wall formation.
-	The simulations were stopped after \SI{1e4}{\second} and the resulting final magnetic states are shown in \textbf{the insets}, where white (black) indicates up (down) spins.
-}
-
-\paragraph{Two-phase relaxation}
+\subparagraph{Stage 2: domain wall motion}
 While $\mavg$ follows a nearly perfect logarithmic relaxation, the local AFM parameter $\qNN$ changes slope at some point --- most strikingly in panel 6 and 9 of~\cref{fig:3:OOP_relaxation}.
 This slope change marks the transition between what we call stage $\circled{1}$ and stage $\circled{2}$ of the relaxation.
 In the figure, stage $\circled{2}$ is indicated by the green shaded area. \par
@@ -288,6 +272,26 @@ This is mostly an illusion due to the steep slope of the relaxation for low $\EM
 Panels 7 and 8 were stopped prematurely as they exhibit a great number of switches already at the timescale of \SI{1}{\second} --- completing the simulation until \SI{e4}{\second} would take a prohibitively long time without added benefit.
 The low dipolar coupling of panel 7 causes domain walls to never truly disappear from the system: the local AFM parameter gets stuck around $\qNN \approx 0.8$.
 
+\paragraph{Effect of $\EEA$ and $\EMC$}
+In~\cref{fig:3:OOP_relaxation}, there is also a general trend where the slope becomes less inclined for higher magnetostatic coupling $\EMC$.
+Following the previous discussion, this can now be understood because high coupling means a greater energy change per switch, and therefore a greater exponential increase in the switching time.
+Meanwhile, the net OOP anisotropy $\EEA$ also affects the relaxation, but only its timescale: changing $\EEA$ does not affect the aforementioned slope but simply shifts the relaxation curves along the (logarithmic) time axis.
+Therefore, accurate control of $\EEA$ on a scale of $\sim 10\kBT$ is required to manufacture an ASI that exhibits a particular relaxation timescale. \par
+%Note that the change in slope and the offset compensate to some extent such that the final switches (near $\mavg \rightarrow 0$ occur around the same time, nearly independently of $\EMC$). \par
+The effects of $\EMC$ and $\EEA$ can be captured by fitting a logarithmic curve to the mean relaxation curves of the nine panels in ~\cref{fig:3:OOP_relaxation}, yielding the general trends
+\begin{equation}
+	\mavg = a \log_{10}(t \nu_0) + b \quad \mathrm{with} \quad \begin{cases}
+		a \approx -\frac{\kBT}{2\EMC} \, \mathrm{,} \\
+		b \approx \frac{\kBT}{6\EMC}(\frac{\EEA}{\kBT} - 1.5) - 0.05 \, \mathrm{.}
+	\end{cases}
+\end{equation} % TODO: more rigorous fit?
+%As such, the intercept of the fit for $\mavg=0$ is
+%\begin{equation}
+%	t_{\mavg=0} = \frac{10^{-b/a}}{\nu_0} = \frac{10^{\frac{\EEA - 0.3 \EMC}{3\kBT} - 0.5}}{\nu_0}
+%\end{equation}
+
+While~\cref{fig:3:OOP_relaxation} only showed 9 particular combinations of $(\EMC,\EEA)$, the phase diagrams of~\cref{fig:3:OOP_relaxation_continuous} summarise the dependence of $\mavg$ and $\qNN$ on $\EEA$ and $\EMC$  at $t = \SI{e4}{\second}$, i.e. their final values in \cref{fig:3:OOP_relaxation}.
+
 \xfig{3_OOP/OOP_relaxation_continuous.pdf}{
 	\label{fig:3:OOP_relaxation_continuous}
 	Phase diagrams of the average magnetisation $\mavg$ and the local antiferromagnetic parameter $\qNN$ as a function of net out-of-plane anisotropy $\EEA$ and nearest-neighbour magnetostatic coupling $\EMC$ at $t=\SI{e4}{\second}$.
@@ -296,6 +300,19 @@ The low dipolar coupling of panel 7 causes domain walls to never truly disappear
 	The nine panels of~\cref{fig:3:OOP_relaxation} are indicated by grey crosses.
 	The three symbols correspond to the experimental lattices shown in~\cref{fig:3:OOP_relaxation_fit} with nanomagnet diameter $D_\mathrm{NM} = \SI{170}{\nano\metre}$, \ce{Co} thickness $t_{\ce{Co}} = \SI{1.45}{\nano\metre}$ and nanomagnet separations $S_\mathrm{ASI} = \SI{20}{\nano\metre}$ (circle), $S_\mathrm{ASI} = \SI{25}{\nano\metre}$ (triangle), $S_\mathrm{ASI} = \SI{30}{\nano\metre}$ (cross). % TODO: create and reference that figure
 }
+
+In Region $\mathrm{I}$, neither $\mavg$ nor $\qNN$ experience a significant change compared to the initial state due to the strong anisotropy and weak magnetostatic coupling (corresponding to Panel 1 in~\cref{fig:3:OOP_relaxation}).
+Increase of the $\EMC/\EEA$ ratio shifts the system though the transient Region $\mathrm{II}$, characterised by decreasing average magnetization and increasing ordering (corresponding to Panel 2 in~\cref{fig:3:OOP_relaxation}).
+Further increase of $\EMC/\EEA$ shifts the system to Region $\mathrm{III}$ with $\mavg \approx 0$ and $\qNN$ still not 1, characteristic for the stage $\circled{2}$ of ordering (corresponding to Panel 6 of~\cref{fig:3:OOP_relaxation}).
+Any further increase of $\EMC/\EEA$ does not affect the average magnetization or ordering at $t = \SI{e4}{\second}$. \par
+Achieving the high ordering of Region $\mathrm{IV}$, given by the dotted black line that envelops a region with $\qNN \geq 0.95$ in~\cref{fig:3:OOP_relaxation_continuous} (exemplified by Panels 8 and 9 in~\cref{fig:3:OOP_relaxation}), requires lowering both $\EMC$ and $\EEA$ below a certain threshold.
+The narrow Region $\mathrm{V}$ (enclosed by a vertical box in~\cref{fig:3:OOP_relaxation_continuous}) is the regime in which the spins are superparamagnetic at the chosen timescale.
+The border between Regions $\mathrm{V}$ and $\mathrm{I}$ at $\EMC = 0$ is therefore a transition between the superparamagnetic and frozen regimes.
+This border is located at $\EEA \approx 32 \kBT$ because nanomagnets with such an effective anisotropy have an average switching time of $\approx \SI{e4}{\second}$ (the time point of these diagrams).
+Region $\mathrm{IV}$ with $\qNN \approx 1$ is, therefore, constrained from the left by the superparamagnetic regime, from the top by the frozen regime, and from the right by states in which switching spins in domain boundaries is too energetically expensive. \par
+The phase diagrams in~\cref{fig:3:OOP_relaxation_continuous} are snapshots at $t = \SI{e4}{\second}$ and, with increasing time, the boundaries between the different regions will shift.
+Because of this, if the observation is long enough and $\EMC$ is non-negligible, a system located in the frozen region at $t = \SI{e4}{\second}$ may eventually find itself in the more ordered Regions $\mathrm{II}$, $\mathrm{III}$ or $\mathrm{IV}$. % TODO: decide whether to include a similar figure for t ~ 27 months. Maybe as panel a (10000s) and b (27mo)? Should maybe use 1000 seconds in all figures as final state...
+The state of the array is therefore defined by $\EEA$, $\EMC$ and $t$, meaning that practical applications exploiting systems with specific dynamics require careful adjustment of the lattice and nanomagnet dimensions. 
 
 \paragraph{Summary}
 In summary, two main trends were observed.
