@@ -67,15 +67,19 @@ def plot(data_dir=None):
     fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(thesis_utils.page_width, thesis_utils.page_width/2), constrained_layout=True, sharey=True)
     axes: list[plt.Axes]
     ax1, ax2 = axes
+    cmap = plt.get_cmap('inferno')
     E_MC_mesh, E_EA_mesh = np.meshgrid(E_MC_range, E_EA_range)
-    for ax, val in [(ax1, m_avg), (ax2, q_NN)]:
-        pmesh = ax.pcolormesh(E_MC_mesh, E_EA_mesh, val.T, vmin=0, vmax=1, shading='gouraud', cmap='inferno', rasterized=True)
-        ax.grid(which='both', axis='both', alpha=0.2, color='#444')
-    cb = fig.colorbar(pmesh, ax=axes, location='right', aspect=10)
     
-    # Contour
-    for ax, val, level, color in [(ax1, m_avg, 0.05, 'white'), (ax2, q_NN, 0.95, 'black')]:
-        pmesh = ax.pcolormesh(E_MC_mesh, E_EA_mesh, val.T, vmin=0, vmax=1, shading='gouraud', cmap='inferno', rasterized=True)
+    markers = [(3, 70), (17, 65), (30, 30), (10, 10), (-2, 20)] # (E_MC, E_EA) combinations [kBT]
+    marker_colors = [('black', 'white'), ('white', 'white'), ('white', 'black'), ('white', 'black'), ('black', 'black')] # (m_avg, q_NN) combinations
+    marker_labels = ['Ⅰ', 'Ⅱ', 'Ⅲ', 'Ⅳ', 'Ⅴ']
+    for a, (ax, val, level, color) in enumerate([(ax1, m_avg, 0.05, 'white'), (ax2, q_NN, 0.95, 'black')]):
+        # Phase space heatmap
+        pmesh = ax.pcolormesh(E_MC_mesh, E_EA_mesh, val.T, vmin=0, vmax=1, shading='gouraud', cmap=cmap, rasterized=True)
+        ax.grid(which='both', axis='both', alpha=0.2, color='#444')
+        if a == 0: cb = fig.colorbar(pmesh, ax=axes, location='right', aspect=10)
+        
+        # Contour
         smoothed = gaussian_filter(val, 1)
         ax.contour(E_MC_mesh, E_EA_mesh, smoothed.T, [level], colors=color, linestyles='dotted')
         cb.ax.axhline(level, color=color, linestyle='dotted')
@@ -83,21 +87,14 @@ def plot(data_dir=None):
         # Box around region V
         y = np.log(t_max/1e-10)
         ax.add_artist(Rectangle((0,0), 1.5, y, facecolor='none', edgecolor=color))
-    
-    
-    # Markers
-    markers = [(3, 70), (17, 65), (30, 30), (10, 10), (-2, 20)] # (E_MC, E_EA) combinations [kBT]
-    marker_colors = [('black', 'white'), ('white', 'white'), ('white', 'black'), ('white', 'black'), ('black', 'black')] # (m_avg, q_NN) combinations
-    marker_labels = ['Ⅰ', 'Ⅱ', 'Ⅲ', 'Ⅳ', 'Ⅴ']
-    for i, ax in enumerate(axes):
+
+        # Markers
         ax.xaxis.set_major_locator(MultipleLocator(20))
         ax.xaxis.set_minor_locator(MultipleLocator(10))
         ax.yaxis.set_major_locator(MultipleLocator(40))
         ax.yaxis.set_minor_locator(MultipleLocator(10))
-        # for axis in ['top', 'bottom', 'left', 'right']:
-        #     ax.spines[axis].set_linewidth(linewidths)
-        for j, marker in enumerate(markers):
-            ax.annotate(marker_labels[j], marker, color=marker_colors[j][i], va='center_baseline', ha='center',
+        for i, marker in enumerate(markers):
+            ax.annotate(marker_labels[i], marker, color=marker_colors[i][a], va='center_baseline', ha='center',
                         weight='bold', fontproperties='serif', fontsize=16, annotation_clip=False)
 
         # Fitted MFM parameter markers
@@ -110,7 +107,12 @@ def plot(data_dir=None):
         # 9 panels markers
         E_MC_ratios = [1.25, 2.5, 10]
         E_EA_ratios = [40, 30, 20]
-        ax.scatter(*np.meshgrid(E_MC_ratios, E_EA_ratios), s=20, marker="+", facecolor='grey', linewidth=1, zorder=100)
+        for i, EMC in enumerate(E_MC_ratios):
+            dEMC = [-.5,.7,0][i]
+            for j, EEA in enumerate(E_EA_ratios):
+                scatter_kwargs = dict(facecolor='grey', zorder=100)
+                ax.scatter(EMC+dEMC, EEA+3, s=30, marker=f"${1 + i + j*len(E_EA_ratios):d}$", linewidth=0.8, **scatter_kwargs)
+                ax.scatter(EMC, EEA, s=20, marker="+", linewidth=1.414, **scatter_kwargs)
 
     fs_labels = 11
     fig.supxlabel(r"NN magnetostatic coupling $E_\mathrm{MC}/k_\mathrm{B}T$", fontsize=fs_labels, x=0.485) # To put subplots in exactly the same place as for fig1
