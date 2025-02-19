@@ -195,32 +195,31 @@ In the Ising-like model used by \hotspice, two essential system parameters remai
 	\item[$\boldsymbol{\EMC}$ ---] the magnetostatic coupling energy between nearest neighbours.
 	This is responsible for the relaxation to the ground state.
 \end{itemize}
-Due to the N\'eel-Arrhenius switching law~\eqref{eq:2:Néel}, it is more appropriate to write dimensionless energies ($\EEA/\kBT$ and $\EMC/\kBT$), as it is only this ratio --- not the absolute value of the energies or temperature --- that controls the switching time. \par
-In real ASI, imperfections introduced during manufacturing will cause the geometry of separate magnets to differ slightly, which can yield significant variation in the net OOP anisotropy of different magnets.
-In simulations, this will be modelled by a Gaussian spread on the net anisotropy $\EEA$: unless otherwise specified, a standard deviation $\sigma(\EEA) = \SI{5}{\percent}$ will be used.
-This provides pinning sites for domain walls, which can make the relaxation process more reproducible.
-Such ``consistent variation'' within a particular ASI could ultimately be beneficial to RC by providing a richer output space. \par
-In total, the effective energy barrier $\EBeff$ of a magnet $i$ can be written symbolically as
+Due to the N\'eel-Arrhenius switching law~\eqref{eq:2:Néel}, it is more appropriate to write dimensionless energies ($\EEA/\kBT$ and $\EMC/\kBT$), as it is only this ratio --- not the absolute value of the energies or temperature --- that controls the switching times. \par
+In real ASI, manufacturing inevitably introduces imperfections.
+Slight geometrical variations can result in a significant variance of the net OOP anisotropy between magnets.
+In simulations, this will be modelled by sampling $\EEA$ from a normal distribution: unless otherwise specified, a standard deviation $\sigma(\EEA) = \SI{5}{\percent}$ is used.
+This provides pinning sites for domain walls, making the relaxation process more reproducible: such ``consistent variation'' within an ASI could ultimately be beneficial for RC by providing a richer output space. \par
+The effective energy barrier $\EBeff$ of a magnet $i$ can then symbolically be written as
 \begin{equation}
 	\label{eq:3:OOP_relaxation_EBeff}
-	\EBeff{}_{,i}(t) = \EEA \Big(1 + \sigma\ab(\EEA) \hat{\chi}_i \Big) + \EMC \sum_j s_i(t) D_{ij} s_j(t) 
-	% TODO: use structure from the paper, that will be better and more scientific like.
+	\EBeff{}_{,i}(t) = \EEA \Big(1 + \sigma\ab(\EEA) \hat{\chi}_i \Big) + \EMC \sum_j s_i(t) D_{ij} s_j(t)
 \end{equation}
-with $\hat{\chi}_i$ a random value from a standard normal distribution and $D_{ij}$ a factor proportional to the magnetostatic interaction energy between magnets $i$ and $j$ when $s_i=s_j=+1$. \\\par
+with $\hat{\chi}_i$ a random value from a standard normal distribution and $D_{ij}$ a factor proportional to the magnetostatic interaction energy between magnets $i$ and $j$. \\\par
 
-The relaxation process can be tracked by the average magnetisation $\mavg$ and the local antiferromagnetic order parameter $\qNN = (1 - \langle S_i S_{i+1} \rangle)/2$.
-In the uniform state --- where all magnets collectively point $\uparrow$ --- their values are $\mavg=1$ and $\qNN=0$.
-During relaxation, they transition to $\mavg=0$ and $\qNN=1$, corresponding to the checkerboard ground state.
+The relaxation process can be tracked by the average magnetisation $\mavg$ and the local antiferromagnetic parameter $\qNN = (1 - \langle S_i S_{i+1} \rangle)/2$.
+In the uniform state --- where all magnetic moments point `up' --- their values are $\mavg=1$ and $\qNN=0$.
+During relaxation, they transition to $\mavg=0$ and $\qNN=1$, corresponding to a checkerboard ground state.
 Note that, while for a random state $\qNN \approx 0.5$, a value of $\qNN=0.5$ does not necessarily imply a random state. \par
 
-\paragraph{Two-stage relaxation}
 \cref{fig:3:OOP_relaxation} shows relaxation profiles for a few combinations of $\EEA$ and $\EMC$, providing some insight into the relaxation process.
-Each panel shows the mean, standard deviation and 1st/99th percentile of $\mavg$ and $\qNN$ over 200 relaxations --- showing variance due to the randomness of N\'eel-Arrhenius switching and because each relaxation used unique randomly sampled $\EEA$ for individual magnets, in accordance with the $\sigma(\EEA) = \SI{5}{\percent}$ variation.
-Each relaxation consisted of at most $40N$ switches using the first-switch method.
+Each panel shows the mean, standard deviation and 1st/99th percentile of $\mavg$ and $\qNN$ over 200 relaxations --- this variance is both due to the randomness of N\'eel-Arrhenius switching and because each relaxation used unique randomly sampled $\EEA$ for individual magnets, in accordance with the $\sigma(\EEA) = \SI{5}{\percent}$ variation.
+Each relaxation consisted of at most $40N$ switches using the first-switch method, as this is sufficient for the system to achieve equilibrium.
+The size of the ASI does not significantly affect the relaxation process, apart from reducing the spread on these traces.
 
 \xfig{3_OOP/OOP_relaxation.pdf}{
 	\label{fig:3:OOP_relaxation}
-	Dependence of the ordering timescale on the energy balance between net OOP anisotropy $\EEA$ and nearest-neighbour magnetostatic coupling $\EMC$ in an OOP square-lattice ASI with $11 \times 11$ spins. % This system size was chosen because it matched the size of our fabricated systems discussed later.
+	Dependence of the ordering timescale on the energy balance between net OOP anisotropy $\EEA$ and nearest-neighbour magnetostatic coupling $\EMC$ in an $11 \times 11$ OOP square-lattice ASI. % This system size was chosen because it matched the size of our fabricated systems discussed later.
 	The ASI is initialised in a uniform magnetic state with all spins pointing `up' and is released at $t = 0$, after which the lattice relaxes to lower energies.
 	Blue traces show the absolute value of the average magnetisation $\mavg$ while orange traces represent the local antiferromagnetic parameter $\qNN$.
 	Each trace shows the mean (central line), standard deviation (central shaded area), and 1st/99th percentile (outer shaded area) of 200 repeated relaxations with randomly sampled $\EEA$ profiles.
