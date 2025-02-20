@@ -118,7 +118,8 @@ To appreciate this difficulty, let us first take a closer look at the various en
 	\item \textbf{Input}.
 	In simulations, an \xref{external magnetic field} is used as a proxy to model SOT.
 \end{enumerate}
-For a system to be thermally active, the first three of these contributions should mostly cancel out --- to the level where their combined influence is of the same order of magnitude as the inter-magnet magnetostatic interaction, which is usually at least an order of magnitude weaker than the other contributions separately.
+For a system to exhibit spontaneous switching, the first three of these contributions should mostly cancel out --- to the level where their combined influence is of the same order of magnitude as the inter-magnet magnetostatic interaction, which is usually at least an order of magnitude weaker than the other contributions separately.
+As we will see in~\cref{sec:3:relaxation}, achieving spontaneous thermal ordering to the ground state may require even finer control.
 
 \paragraph{Magnet geometry}
 % The geometry of nanomagnets in an OOP ASI is shown schematically in~\cref{fig:3:OOP_geometry}.
@@ -158,8 +159,7 @@ Note that the numerical values of the limits given below are only indicative and
 \begin{itemize}
 	\item \textbf{FM layer thickness} $\boldsymbol{t_{\ce{Co}}} \lesssim \SI{1.45}{\nano\metre}$. \newline
 	This upper bound was experimentally determined~\cite{KUR-24} and is imposed by shape anisotropy.
-	As mentioned earlier, the \xref{shape anisotropy} increases linearly with volume, and therefore with $t_{\ce{Co}}$, while the PMA is mostly independent of $t_{\ce{Co}}$. % t_{\ce{Co}} controls the demag compensation of $K_u$.
-	For the magnets to remain OOP, the layers must therefore be sufficiently thin. \par
+	Layers must be sufficiently thin to maintain OOP anisotropy, as \xref{shape anisotropy} is proportional to volume (and hence $\propto t_{\ce{Co}}$) while the PMA is mostly independent of $t_{\ce{Co}}$. \par % t_{\ce{Co}} controls the demag compensation of $K_u$.
 	The closer the thickness is to this upper bound, the lower the effective OOP anisotropy will be.
 	Therefore, non-volatile ASI must steer clear of this limit, while thermally active ASI generally try to approach this limit as close as possible.
 	As such, this geometrical parameter is often key for balancing the energy landscape.
@@ -169,7 +169,7 @@ Note that the numerical values of the limits given below are only indicative and
 	In ASI, a strong MS coupling --- hence low $S_\mathrm{ASI}$ --- is often preferred.
 	However, for thermally active ASI we will soon see that excessively strong MS coupling is detrimental, resulting in a ``sweet spot'' of MS coupling energies.
 	\item \textbf{Number of layers} $\boldsymbol{n_{\ce{Co}}} \lesssim 8$. \newline
-	This limit is of a practical nature as well, caused by property drift during deposition of successive layers. \par
+	This limit is of a practical nature as well --- property drift during deposition of successive layers makes it harder to achieve small $S_\mathrm{ASI}$ for increasingly tall stacks. \par
 	Note that the number of layers does not affect the balance between PMA and shape anisotropy, as the number of interfaces per amount of magnetic material remains constant.
 	However, since MS interactions grow $\propto n_{\ce{Co}}^2$, the inter-layer coupling --- and with it the net OOP anisotropy --- becomes increasingly significant for a large number of layers.
 	\item \textbf{Diameter} $\boldsymbol{D_\mathrm{NM}} \lesssim \SI{200}{\nano\metre}$. \newline
@@ -177,9 +177,10 @@ Note that the numerical values of the limits given below are only indicative and
 	Even though in-plane magnets without uniform magnetisation have been used for computation~\cite{gartside2022reconfigurable}, we did not intend to use this in the OOP systems.
 	Furthermore, the \hotspice simulator requires a single-domain magnetisation state for its Ising-like model to be applicable. \par
 	The diameter can be used to control the relative strength between PMA and shape anisotropy and greatly affects the inter-magnet MS coupling.
-	\item \textbf{Spacer layer thickness} $\boldsymbol{t_{\ce{Pt}}} \approx \SI{0.8}{\nano\metre}$. \newline
-	The spacer thickness must be chosen appropriately to promote FM coupling between layers while maintaining the interfacial anisotropy. % Accounting for various effects such as RKKY coupling
-	A thin spacer is beneficial to the net OOP anisotropy due to the $\approx t_{\ce{Pt}}^{-3}$ inter-layer MS coupling dependence.
+	\item \textbf{Spacer layer thickness} $\boldsymbol{t_{\ce{Pt}}} \gtrsim \SI{0.4}{\nano\metre}$. \newline
+	Thinner layers may become discontinuous, which is detrimental to the PMA.
+	On the other hand, a thin spacer layer maximises the net OOP anisotropy due to the $\approx t_{\ce{Pt}}^{-3}$ inter-layer MS coupling dependence.
+	Note that $t_{\ce{Pt}}$ must still be chosen appropriately to promote FM coupling between layers while maintaining the interfacial anisotropy. % Accounting for various effects such as RKKY coupling
 \end{itemize}
 
 In the particular case of the thermally active OOP ASI fabricated within the \spinengine project, the nanomagnets consist of $n_{\ce{Co}}=7$ ferromagnetic layers of $D_\mathrm{NM}=\SI{170}{\nano\metre}$ diameter and $t_{\ce{Co}} \approx \SI{1.45}{\nano\metre}$ thickness, with $t_{\ce{Pt}} \approx \SI{0.8}{\nano\metre}$ spacing layers in between.
@@ -207,7 +208,7 @@ The effective energy barrier $\EBeff$ of a magnet $i$ can then symbolically be w
 \end{equation}
 with $\hat{\chi}_i$ a random value from a standard normal distribution and $D_{ij}$ a factor proportional to the magnetostatic interaction energy between magnets $i$ and $j$. \\\par
 
-The relaxation process can be tracked by the average magnetisation $\mavg$ and the local antiferromagnetic parameter $\qNN = (1 - \langle S_i S_{i+1} \rangle)/2$.
+The relaxation process can be tracked by the average magnetisation $\mavg$ and the local antiferromagnetic parameter $\qNN = (1 - \langle s_i s_{i+1} \rangle)/2$.
 In the uniform state --- where all magnetic moments point `up' --- their values are $\mavg=1$ and $\qNN=0$.
 During relaxation, they transition to $\mavg=0$ and $\qNN=1$, corresponding to a checkerboard ground state.
 Note that, while for a random state $\qNN \approx 0.5$, a value of $\qNN=0.5$ does not necessarily imply a random state. \par
@@ -296,7 +297,7 @@ Five distinct regions can be distinguished.
 In region $\mathrm{I}$ (panel 1), weak coupling and high anisotropy result in a non-volatile system --- as used in the previous section --- where no spontaneous switches occur and $\mavg = 1$ and $\qNN = 0$ remain unchanged.
 Increasing the $\EMC/\EEA$ ratio shifts the system though the transient region $\mathrm{II}$ (panel 2), characterised by decreasing $\mavg$ and increased ordering.
 Further increase of $\EMC/\EEA$ shifts the system to region $\mathrm{III}$ (panel 6) with $\mavg \approx 0$ but $\qNN \neq 1$, characteristic of stage $\circled{2}$.
-Any further increase of $\EMC/\EEA$ does not affect the average magnetisation or ordering at $t = \SI{e4}{\second}$ --- unless both $\EEA$ and $\EMC$ are sufficiently small, as in regions $\mathrm{IV}$ and $\mathrm{V}$. \par
+Any further increase of $\EMC/\EEA$ does not affect the average magnetisation or ordering at $t = \SI{e4}{\second}$ --- unless both $\EEA$ and $\EMC$ are sufficiently small, as in regions $\mathrm{IV}$ and $\mathrm{V}$.
 
 \xfig{3_OOP/OOP_relaxation_continuous.pdf}{
 	\label{fig:3:OOP_relaxation_continuous}
