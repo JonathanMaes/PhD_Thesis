@@ -122,6 +122,7 @@ For a system to exhibit spontaneous switching, the first three of these contribu
 As we will see in~\cref{sec:3:relaxation}, achieving spontaneous thermal ordering to the ground state may require even finer control.
 
 \paragraph{Magnet geometry}
+\label{sec:3:OOP_geometry}
 % The geometry of nanomagnets in an OOP ASI is shown schematically in~\cref{fig:3:OOP_geometry}.
 % TODO: make own figure of nanomagnets?
 
@@ -187,6 +188,7 @@ In the particular case of the thermally active OOP ASI fabricated within the \sp
 The edge-to-edge spacing between neighbouring magnets is \SI{30}{\nano\metre}, unless specified otherwise, with a saturation magnetisation $M_\mathrm{sat}=\SI{1063}{\kilo\ampere\per\metre}$~\cite{Msat_Co}.
 
 \subsubsection{Relaxation characteristics}
+\label{sec:3:relaxation}
 To better inform our choices for RC in thermally active ASI, it is essential to familiarize ourselves with its spontaneous relaxation process.
 In this section, we numerically investigate this process with \hotspice by initializing an OOP ASI in a uniform ($\uparrow$) state and subsequently observing its decay towards the checkerboard ground state over a certain timespan.
 In the Ising-like model used by \hotspice, two essential system parameters remain, denoted as
@@ -317,6 +319,7 @@ The phase diagrams in~\cref{fig:3:OOP_relaxation_continuous} are snapshots at $t
 Therefore, if the observation is long enough and $\EMC$ is non-negligible, a system located in the frozen region at $t = \SI{e4}{\second}$ may eventually find itself in the more ordered Regions $\mathrm{II}$, $\mathrm{III}$ or $\mathrm{IV}$.
 However, due the exponential character of the N\'eel-Arrhenius law, this shift will be minimal and region $\mathrm{IV}$ will not become much bigger than in~\cref{fig:3:OOP_relaxation_continuous} for any realistic timescale~\cite{KUR-24}.
 
+\paragraph{Exchange-coupled system} % TODO: expand, could be omitted if not sufficiently worked out
 
 \paragraph{Summary}
 The state of an OOP ASI is defined by the net OOP anisotropy $\EEA$, magnetostatic coupling $\EMC$ and elapsed time $t$.
@@ -325,12 +328,30 @@ Meanwhile, $\EEA$ controls the timescale of the relaxation but does not affect t
 For reservoir computing purposes, a sufficiently low $\EEA$ and $\EMC$ are required --- but not too low, to maintain OOP anisotropy and a ground-state checkerboard ordering, respectively.
 Therefore, practical applications exploiting systems with specific dynamics will require careful adjustment of the lattice and nanomagnet dimensions~\cite{KUR-24}.
 
-\paragraph{Exchange-coupled system} % TODO: expand, could be omitted if not sufficiently worked out
-
 \subsubsection{Fitting MFM images}\label{sec:3:OOP:MFM}
-% TODO: extend this intro by saying that simple calculations based on the cosines and sines of the four interactions (recall: this was calculated by Alex using Mathematica) do not give a thermally active energy barrier. See the following comment for more details.
-% In absence of the neighbors (i.e. no \code{externalddE}, their combined energy barrier is $\approx\SI{-3.6e-18}{\joule}=\SI{-22.5}{\electronvolt}=-871k_BT$ which is far too large to get thermal switching, and on top of that it is negative which means that the magnet would rather sit in-plane which is obviously not observed in reality. Curiously, Alex observes thermal relaxation nonetheless. The energy barrier discrepancy between Mathematica and reality could be due to non-coherent reversal, resulting in a lower energy barrier in reality.
-% However, Alex said that the energy barriers calculated with Mathematica in this manner did not seem to be very accurate: in the simulation, they were several tens of \SI{}{\electronvolt} (read: many $k_B T$), while in reality he saw thermal relaxation upon removal of an external saturating stimulus.
+Based only on the magnet geometry --- determined by the various geometrical parameters discussed earlier in~\cref{sec:3:OOP_geometry} --- it is hard to predict the net OOP anisotropy $\EEA$ and magnetostatic coupling $\EMC$ of a manufactured ASI.
+For typical nanomagnet dimensions (7 layers of $t_{\ce{Co}} \approx \SI{1.45}{\nano\metre}$ with $D_\mathrm{NM} \approx \SI{170}{\nano\metre}$), some of the aforementioned energy contributions are on the order of several $1000 \kBT$, as discussed in more detail in our paper~\cite{KUR-24}. % --- especially PMA and shape anisotropy, which have opposite sign and therefore mostly cancel out.
+Since manufactured systems will always exhibit defects, the discrepancy between theoretical estimates of these energy contributions and their real magnitudes may easily exceed $100 \kBT$. % Theoretically, $\EEA$ of an isolated magnet (as manufactured by Alex and observed to be part of a thermally relaxing OOP ASI) is $\approx\SI{-3.6e-18}{\joule} = \SI{-22.5}{\electronvolt} = -871\kBT$ which is far too large to get thermal switching. Furthermore, it is negative, implying an IP magnetisation. This discrepancy between Mathematica and reality could be due to non-coherent reversal, lowering the real energy barrier.
+However, we previously saw that $\EEA$ and $\EMC$ must not exceed several tens of $\kBT$ if a system is to spontaneously reach the checkerboard ground state.
+It is therefore inappropriate to calculate $\EEA$ and $\EMC$ theoretically --- they must be empirically determined from manufactured ASI. \par
+For this reason, \textit{A. Kurenkov} measured the state of various manufactured lattices at different moments in time using MFM.
+For each of these MFM images, the values of $\mavg$ and $\qNN$ can be determined.
+The knowledge of these quantities at different moments in time can then be used to fit simulated relaxations, like the ones in~\cref{fig:3:OOP_relaxation}, to this data by varying simulation parameters like $\EEA$ and $\EMC$. \par
+Any fitting procedure requires an appropriate metric $\eta$ to determine the quality of the fit.
+For this, we will use the random distribution of both $\mavg$ and $\qNN$ at a given moment $t$, as previously seen in~\cref{fig:3:OOP_relaxation}.
+These distributions are each characterised by a mean and standard deviation, which can be determined from repeated simulations --- we embrace the Monte Carlo nature of \hotspice.
+Therefore, each experimental datapoint corresponds to some probability density in this simulated distribution.
+As a fit metric, we will use the product of these probability densities over each experimental $\mavg$ and $\qNN$ at each measured time $t$.
+Mathematically:
+\begin{equation}
+	\eta = \prod_t \prod_{x \in \left\{\substack{\mavg\\\qNN\\\qNN[2]\\\qNN[3]}\right.} \exp\ab[- \ab(\frac{\langle x_\mathrm{sim}(t) \rangle - x_\mathrm{MFM}(t)}{4 \sigma\big(x_\mathrm{sim}(t)\big)})^2]
+\end{equation}
+where a superscript `sim' indicates the simulated value, while `MFM' indicates the measured value from MFM images taken at various times $t$.
+For a more accurate fit, we also used the longer-range order parameters $\qNN[2]$ and $\qNN[3]$, defined similar to $\qNN = (1 - \langle s_i s_{i+1} \rangle)/2$ but instead with a correlation between next-nearest neighbours\footnote{2NN in OOP square ASI are diagonally adjacent magnets} and third-nearest neighbours\footnote{3NN in OOP square ASI are magnets two lattice units apart horizontally or vertically}. \\\par
+
+With this fit metric $\eta$, the optimum combination of $\EEA$, $\EMC$ and $J$ can be determined.
+Because it is non-trivial to calculate the distribution of relaxations, $\eta$ is an expensive metric to compute, so a method must be used that can find the optimum by evaluating $\eta$ only a limited number of times.
+\idx{Bayesian optimisation} (BO) is one such method~\cite{bayesopt_package,BayesOpt_Mockus1975}.
 \paragraph{Bayesian optimisation}
 \paragraph{Results} % E_B etc.
 
