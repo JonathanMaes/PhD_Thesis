@@ -75,7 +75,7 @@ def plot(data_dir=None):
     marker_labels = ['Ⅰ', 'Ⅱ', 'Ⅲ', 'Ⅳ', 'Ⅴ']
     for a, (ax, val, level, color) in enumerate([(ax1, m_avg, 0.05, 'white'), (ax2, q_NN, 0.95, 'black')]):
         # Phase space heatmap
-        pmesh = ax.pcolormesh(E_MC_mesh, E_EA_mesh, val.T, vmin=0, vmax=1, shading='gouraud', cmap=cmap, rasterized=True)
+        pmesh = ax.pcolormesh(E_MC_mesh, E_EA_mesh, val.T, vmin=0, vmax=1, shading='gouraud', cmap=cmap, rasterized=False)
         ax.grid(which='both', axis='both', alpha=0.2, color='#444')
         if a == 0: cb = fig.colorbar(pmesh, ax=axes, location='right', aspect=10)
         
@@ -122,7 +122,7 @@ def plot(data_dir=None):
     ax2.yaxis.set_tick_params(labelleft=False)
     
     ## SAVE PLOT
-    hotspice.utils.save_results(figures={"OOP_relaxation_continuous": fig}, outdir=data_dir, copy_script=False)
+    hotspice.utils.save_results(figures={"OOP_relaxation_continuous": fig}, outdir=data_dir, copy_script=False, figure_format=('.pdf', '.png'))
 
 
 if __name__ == "__main__":
