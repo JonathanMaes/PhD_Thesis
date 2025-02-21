@@ -251,6 +251,7 @@ Meanwhile, the net OOP anisotropy $\EEA$ only affects the timescale of the relax
 Therefore, to achieve an ASI that exhibits a particular relaxation timescale, accurate control of $\EEA$ on a scale of $\sim 10\kBT$ is required. \par
 The effects of $\EMC$ and $\EEA$ can be quantified by fitting a logarithmic curve to the mean relaxation curves of the nine panels in ~\cref{fig:3:OOP_relaxation}, yielding the general trends
 \begin{equation}
+	\label{eq:3:relaxation_fit_ab}
 	\mavg = a \log_{10}(t \nu_0) + b \quad \mathrm{with} \quad \begin{cases}
 		a \approx -\frac{\kBT}{2\EMC} \, \mathrm{,} \\
 		b \approx \frac{\kBT}{6\EMC}(\frac{\EEA}{\kBT} - 1.5) - 0.05 \, \mathrm{.}
@@ -330,30 +331,49 @@ Therefore, practical applications exploiting systems with specific dynamics will
 
 \subsubsection{Fitting MFM images}\label{sec:3:OOP:MFM}
 Based only on the magnet geometry --- determined by the various geometrical parameters discussed earlier in~\cref{sec:3:OOP_geometry} --- it is hard to predict the net OOP anisotropy $\EEA$ and magnetostatic coupling $\EMC$ of a manufactured ASI.
-For typical nanomagnet dimensions (7 layers of $t_{\ce{Co}} \approx \SI{1.45}{\nano\metre}$ with $D_\mathrm{NM} \approx \SI{170}{\nano\metre}$), some of the aforementioned energy contributions are on the order of several $1000 \kBT$, as discussed in more detail in our paper~\cite{KUR-24}. % --- especially PMA and shape anisotropy, which have opposite sign and therefore mostly cancel out.
-Since manufactured systems will always exhibit defects, the discrepancy between theoretical estimates of these energy contributions and their real magnitudes may easily exceed $100 \kBT$. % Theoretically, $\EEA$ of an isolated magnet (as manufactured by Alex and observed to be part of a thermally relaxing OOP ASI) is $\approx\SI{-3.6e-18}{\joule} = \SI{-22.5}{\electronvolt} = -871\kBT$ which is far too large to get thermal switching. Furthermore, it is negative, implying an IP magnetisation. This discrepancy between Mathematica and reality could be due to non-coherent reversal, lowering the real energy barrier.
-However, we previously saw that $\EEA$ and $\EMC$ must not exceed several tens of $\kBT$ if a system is to spontaneously reach the checkerboard ground state.
-It is therefore inappropriate to calculate $\EEA$ and $\EMC$ theoretically --- they must be empirically determined from manufactured ASI. \par
-For this reason, \textit{A. Kurenkov} measured the state of various manufactured lattices at different moments in time using MFM.
+For typical nanomagnet dimensions (7 layers of $t_{\ce{Co}} \approx \SI{1.45}{\nano\metre}$ with $D_\mathrm{NM} \approx \SI{170}{\nano\metre}$), some of the aforementioned energy contributions are on the order of several $1000 \kBT$, as we discuss in more detail in~\ccite{KUR-24} (Supp. 4). % --- especially PMA and shape anisotropy, which have opposite sign and therefore mostly cancel out.
+Due to manufacturing defects, the discrepancy between theoretical estimates of these energy contributions and their real magnitudes can easily exceed $100 \kBT$. % Theoretically, $\EEA$ of an isolated magnet (as manufactured by Alex and observed to be part of a thermally relaxing OOP ASI) is $\approx\SI{-3.6e-18}{\joule} = \SI{-22.5}{\electronvolt} = -871\kBT$ which is far too large to get thermal switching. Furthermore, it is negative, implying an IP magnetisation. This discrepancy between Mathematica and reality could be due to non-coherent reversal, lowering the real energy barrier.
+However, we just saw that $\EEA$ and $\EMC$ must not exceed several tens of $\kBT$ if a system is to spontaneously reach the checkerboard ground state.
+It is therefore inappropriate to calculate $\EEA$ and $\EMC$ theoretically --- they must be empirically determined from manufactured ASI. \\\par
+For this reason, \textit{A. Kurenkov} measured the state of manufactured ASI at different moments in time using MFM.
 For each of these MFM images, the values of $\mavg$ and $\qNN$ can be determined.
-The knowledge of these quantities at different moments in time can then be used to fit simulated relaxations, like the ones in~\cref{fig:3:OOP_relaxation}, to this data by varying simulation parameters like $\EEA$ and $\EMC$. \par
-Any fitting procedure requires an appropriate metric $\eta$ to determine the quality of the fit.
-For this, we will use the random distribution of both $\mavg$ and $\qNN$ at a given moment $t$, as previously seen in~\cref{fig:3:OOP_relaxation}.
-These distributions are each characterised by a mean and standard deviation, which can be determined from repeated simulations --- we embrace the Monte Carlo nature of \hotspice.
-Therefore, each experimental datapoint corresponds to some probability density in this simulated distribution.
-As a fit metric, we will use the product of these probability densities over each experimental $\mavg$ and $\qNN$ at each measured time $t$.
-Mathematically:
-\begin{equation}
-	\eta = \prod_t \prod_{x \in \left\{\substack{\mavg\\\qNN\\\qNN[2]\\\qNN[3]}\right.} \exp\ab[- \ab(\frac{\langle x_\mathrm{sim}(t) \rangle - x_\mathrm{MFM}(t)}{4 \sigma\big(x_\mathrm{sim}(t)\big)})^2]
-\end{equation}
-where a superscript `sim' indicates the simulated value, while `MFM' indicates the measured value from MFM images taken at various times $t$.
-For a more accurate fit, we also used the longer-range order parameters $\qNN[2]$ and $\qNN[3]$, defined similar to $\qNN = (1 - \langle s_i s_{i+1} \rangle)/2$ but instead with a correlation between next-nearest neighbours\footnote{2NN in OOP square ASI are diagonally adjacent magnets} and third-nearest neighbours\footnote{3NN in OOP square ASI are magnets two lattice units apart horizontally or vertically}. \\\par
+The knowledge of these quantities at different moments in time can then be used to fit this data to simulated relaxations, like the ones in~\cref{fig:3:OOP_relaxation}, by varying simulation parameters like $\EEA$ and $\EMC$. \par
 
-With this fit metric $\eta$, the optimum combination of $\EEA$, $\EMC$ and $J$ can be determined.
-Because it is non-trivial to calculate the distribution of relaxations, $\eta$ is an expensive metric to compute, so a method must be used that can find the optimum by evaluating $\eta$ only a limited number of times.
-\idx{Bayesian optimisation} (BO) is one such method~\cite{bayesopt_package,BayesOpt_Mockus1975}.
 \paragraph{Bayesian optimisation}
-\paragraph{Results} % E_B etc.
+Any fitting procedure requires an appropriate metric $\eta$ to determine the quality of the fit.
+For this, we will use the random distribution of both $\mavg$ and $\qNN$ at the times of measurement $t_i$, as previously seen in~\cref{fig:3:OOP_relaxation}.
+These distributions\footnote{
+	Since the random relaxation is governed by the N\'eel-Arrhenius equation~\eqref{eq:2:Néel}, quantities like $\mavg$ which are bounded in the range $[0,1]$ most likely follow a binomial distribution, which can be well approximated by a normal distribution for a large number (here: $> 100$) of magnets in the system.
+} are each characterised by a mean and standard deviation, which can be determined from repeated simulations --- typically, 20 relaxations suffice. % We embrace the Monte Carlo nature of \hotspice. 
+Therefore, each experimental data-point is some amount of standard deviations away from the mean of this simulated distribution.
+As fit metric $\eta$, we will use the square of this number of standard deviations, summed over each experimental $\mavg$ and $\qNN$ at each measured time $t$.
+In a sense, this is related to the relative probability that the MFM measurement can be explained by a simulation using certain system parameters.
+Mathematically,
+\begin{equation}
+	\eta = -\frac{1}{2} \bigsum_{t_i} \bigsum_{x \in \left\{\substack{\mavg\\\qNN\\\qNN[2]\\\qNN[3]}\right.} \ab(\frac{\langle x_\mathrm{sim}(t_i) \rangle - x_\mathrm{MFM}(t_i)}{\sigma\big(x_\mathrm{sim}(t_i)\big)})^2 \mathrm{,}
+\end{equation}
+where a superscript `sim' indicates the simulated value, while `MFM' indicates the measured value from MFM images taken at various times $t_i$.
+For a more accurate fit, we also used the longer-range order parameters $\qNN[2]$ and $\qNN[3]$, defined similar to $\qNN = (1 - \langle s_i s_{i+1} \rangle)/2$ but instead with a correlation between next-nearest neighbours\footnote{
+	2NN in OOP square ASI are diagonally adjacent magnets.
+} and third-nearest neighbours\footnote{
+	3NN in OOP square ASI are magnets two lattice units apart horizontally or vertically.
+}. \par
+With this fit metric $\eta$, the optimum combination of $\EEA$ and $\EMC$ can be determined.
+We will also allow the exchange coupling $J$ to be varied during fitting --- if the fit yields a significantly non-zero value of $J$, this can indicate that the system contains defects in the form of interconnected magnets. \\\par
+
+The fit metric $\eta$ is rather expensive to compute, because calculating the distribution of relaxations takes a non-negligible amount of time.
+Therefore, an optimisation method must be used that can find the optimum with a limited number of $\eta$-evaluations.
+\idx{Bayesian optimisation} (BO)~\cite{bayesopt_package,BayesOpt_Mockus1975} is one such method that can find the extremum of an expensive-to-compute function in a low-dimensional space (here, we only search the $\EEA \times \EMC \times J$-space).
+It is an iterative method that starts from an initial guess --- estimated values of $\EEA$ and $\EMC$ can be determined based on the experimentally measured $\mavg(t)$ by using the inverse of~\cref{eq:3:relaxation_fit_ab}.
+While BO may not be the most performant method, as it converges rather slowly and its computational complexity scales with the number of iterations $n$ as $\order{n^3}$, it is sufficient for our purposes.
+More extensive parameter searches may benefit from using other optimisation techniques like LIPO~\cite{LIPO}. \\\par % Good explanation in http://blog.dlib.net/2017/12/a-global-optimization-algorithm-worth.html
+
+Due to the logarithmic relaxation, an accurate fit requires measurements separated by multiple orders of magnitude in time.
+For this reason, the samples were measured soon ($\approx \SI{e3}{\second}$) after initialisation, and again after 2 years $\approx \SI{7e7}{\second}$, providing sufficiently distinct timescales for a successful fit.
+While two measurements are insufficient to prove that the relaxation indeed follows a logarithmic behaviour as predicted by simulation, this was verified using multiple measurements over a shorter timescale as discussed in~\ccite{KUR-24} (Supp. 5.4).
+
+\paragraph{Results} % EEA etc.
+% TODO: present the results of this BO procedure, possibly in combination with the `simple' vs. `parabolic' energy barrier and the infinitesimal spin vs. the finite spin approximation in the DD energy calculation, and how these affect the best fit (and coupling this back to verifying which approximations are beneficial and which are not).
 
 \subsection{RC in thermally active OOP square ASI}
 \subsubsection{Concept} % Lessons learnt from non-volatile ASI
