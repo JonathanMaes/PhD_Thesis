@@ -106,7 +106,6 @@ def plot(data_dir=None):
     thesis_utils.init_style(style="default")
 
     ## PLOT 1: BUNCH OF SUBPLOTS SHOWING metric(t) or metric(switches), WITHOUT AVERAGING THE SAMPLES
-    figs = []
     CLIP_RANGES =          True # If True, axes and magnitudes are clipped to realistic ranges for the OOP ASI paper.
     # Plot parameters/switches
     HIGHER_CORRS =         False # Plots q_2NN and q_3NN as well. NOTE: these are not implemented in paper-quality, just in the legend
@@ -204,13 +203,6 @@ def plot(data_dir=None):
                 lns.append(ax.plot(X, mean, label=d["label"], color=d["color"])[0])
                 ax.fill_between(X, mean - std, mean + std, color=d["color"], edgecolor="none", alpha=0.5)
                 ax.fill_between(X, perc_low, perc_high, color=d["color"], edgecolor="none", alpha=0.5)
-            # alpha = max(0.87**(samples/2+2), 0.01)
-            # for s in range(samples): # Show the various samples as lighter lines
-            #     ax.plot(x_vals[s,:], m_avg[s,:], color="C0", alpha=alpha, linewidth=1)
-            #     ax_right.plot(x_vals[s,:], q_NN[s,:], color="C1", alpha=alpha, linewidth=1)
-            #     if HIGHER_CORRS:
-            #         ax_right.plot(x_vals[s,:], q_2NN[s,:], color="C3", alpha=alpha, linewidth=1)
-            #         ax_right.plot(x_vals[s,:], q_3NN[s,:], color="C6", alpha=alpha, linewidth=1)
             if CLIP_RANGES:
                 for a in [ax, ax_right]:
                     a.set_xlim(xmin=max(1e-10, np.min(x_vals)/2), xmax=min(t_max, np.max(x_vals)*2))
