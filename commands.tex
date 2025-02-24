@@ -33,9 +33,6 @@
 \newcommand{\circled}[1]{\raisebox{.5pt}{\textcircled{\raisebox{-.9pt} {#1}}}}
 \newcommand{\sub}[1]{\ensuremath{_{\mathrm{#1}}}}
 \newcommand{\super}[1]{\ensuremath{^{\mathrm{#1}}}}
-\newcommand{\av}[1]{\langle #1 \rangle}
-\newcommand{\sav}[1]{\langle\hspace{-0.4mm}\langle #1 \rangle\hspace{-0.4mm}\rangle}
-%\newcommand{\sav}[1]{\left<\hspace{-0.4mm}\left< #1 \right>\hspace{-0.4mm}\right>}
 \newcommand{\tpar}[1]{\frac{\partial #1}{\partial t}}%partial derivative to time
 \newcommand{\tder}[1]{\frac{\mathrm{d} #1}{\mathrm{dt}}}%full derivative to time
 
@@ -57,6 +54,8 @@
 % \newcommand{\abs}[1]{\ensuremath{\left| #1 \right|}\xspace}
 \newcommand{\bigsum}{\mathop{\scalebox{2}{\(\sum\)}}}
 \newcommand{\bigprod}{\mathop{\scalebox{2}{\(\prod\)}}}
+\newcommand{\llangle}{\langle\hspace{-0.4mm}\langle}
+\newcommand{\rrangle}{\rangle\hspace{-0.4mm}\rangle}
 \newcommand{\diff}[2]{\frac{\partial #1}{\partial #2}}			    %% derivative
 \newcommand{\dispdiff}[2]{{\partial #1}/{\partial #2}}			    %% derivative
 \newcommand{\difff}[2]{\frac{\partial^2 #1}{\partial #2^2}}			%% second derivative

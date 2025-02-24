@@ -67,7 +67,7 @@ def plot(data_dir=None):
     ax1.axvline(0.85, linestyle=':', color='black') # Theoretical transition point
     ax1.axvline(2.65, linestyle=':', color='black') # Theoretical transition point (approximate)
     ax1.set_xlabel(r"Relative exchange/MS coupling $\delta$")
-    ax1.set_ylabel("NN correlation\n" + r"$\langle S_i S_{i+1} \rangle$", labelpad=-5)
+    ax1.set_ylabel("NN correlation\n" + r"$\langle s_i s_{i+1} \rangle$", labelpad=-5)
     ax1.set_yticks([-1, -.5, 0, .5, 1])
     ax1.set_xlim([data['delta_range'].min()-.005, data['delta_range'].max()+.005])
     ax1.set_ylim([-1.05, 1.05])

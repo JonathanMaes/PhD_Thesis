@@ -1161,8 +1161,9 @@ test_hexagon() # OK
 
 When an \xref{external magnetic field} of magnitude $B$ is applied to a non-interacting ensemble of Ising spins, it follows directly from the partition function that the average magnetisation follows the relation
 \begin{equation}
-	\frac{\langle M \rangle}{M_0} = \tanh\ab(\frac{\mu B}{\kBT}) \mathrm{.}
+	\frac{\langle M \rangle}{M_0} = \tanh\ab(\frac{\mu B}{\kBT}) \mathrm{,}
 \end{equation}
+with $M = \sum_i \mu_i s_i$ the total magnetic moment of the system and $M_0 = \sum_i \mu_i$.
 \cref{fig:2:Noninteracting} demonstrates that \hotspice{} correctly reproduces the expected result.
 
 \sidefig{2_Hotspice/Verification/Noninteracting_IP.pdf}{
@@ -1177,7 +1178,7 @@ The 2D square-lattice \link{exchange coupling}{exchange-coupled} Ising model is 
 An analytical solution is known for the temperature-dependence of its average magnetisation
 \begin{equation}
 	\label{eq:2:Verification_exchange_M}
-	\langle M \rangle = \sqrt[8]{1 - \sinh^{-4}(2J/\kBT)} \mathrm{,}
+	\frac{\langle M \rangle}{M_0} = \sqrt[8]{1 - \sinh^{-4}(2J/\kBT)} \mathrm{,}
 \end{equation}
 with $J$ the \xref{exchange coupling} constant~\cite{Correlations2DIsing,IsingSpontaneousMagnetization,coey2010magnetism}.
 This implies that the system exhibits a second-order \xlabel{phase transition} at the critical temperature~\cite{ExactlySolvedModelsStatMech}
@@ -1187,7 +1188,7 @@ This implies that the system exhibits a second-order \xlabel{phase transition} a
 Furthermore, an analytical solution is available for the nearest-neighbour correlation
 \begin{equation}
 	\label{eq:2:Verification_exchange_corr}
-	\langle S_i S_{i+1} \rangle = 
+	\langle s_i s_{i+1} \rangle = 
 	\begin{cases}
 		\sqrt{1+k} \ab[\frac{1-k}{\pi}K(k) + \frac{1}{2} \ab] &\text{for } T < T_\mathrm{c} \mathrm{,} \\ 
 		\sqrt{1+k} \ab[\frac{1-k}{\pi k}K(1/k) + \frac{1}{2} \ab] &\text{for } T > T_\mathrm{c} \mathrm{.} \\ 
@@ -1197,7 +1198,7 @@ with $K$ the complete elliptic integral of the first kind and $k=\sinh^{-2}(2J/\
 
 The result of a \hotspice simulation of this Ising system is shown in \cref{fig:2:Verification_exchange}, as calculated for an $800 \times 800$ lattice at various temperatures $T$.
 Maximal \xref{multi-switching} ($Q=+\infty$) during \xref{Metropolis-Hastings sampling} was used to verify that --- at least for systems with such short-range coupling --- this sort of extreme multi-switching still converges to the correct solution.
-Since the theoretical curves for $\langle M \rangle$ and $\langle S_i S_{i+1} \rangle$ are monotonically decreasing, the final state from the previous temperature step was retained as the starting point for the next step. This preserves progress already made towards equilibrium and avoids the disruption that resetting to the uniform state would cause~\cite{MCinStatPhys}. \par
+Since the theoretical curves for $\langle M \rangle / M_0$ and $\langle s_i s_{i+1} \rangle$ are monotonically decreasing, the final state from the previous temperature step was retained as the starting point for the next step. This preserves progress already made towards equilibrium and avoids the disruption that resetting to the uniform state would cause~\cite{MCinStatPhys}. \par
 
 \xfig{2_Hotspice/Verification/OOP_Exchange.pdf}{
 	\label{fig:2:Verification_exchange}
@@ -1209,8 +1210,8 @@ Since the theoretical curves for $\langle M \rangle$ and $\langle S_i S_{i+1} \r
 % TODO: ? why the discrepancy in the correlation?
 
 The \hotspice result corresponds well to the theoretical predictions of~\cref{eq:2:Verification_exchange_M} and~\cref{eq:2:Verification_exchange_corr}, both below $T_\mathrm{c}$ and in the high-temperature limit.
-The average magnetisation $\langle M \rangle$ follows the theoretical curve more closely than the NN correlation $\langle S_i S_{i+1} \rangle$.
-However, just above $T_\mathrm{c}$, the average magnetisation $\langle M \rangle$ evolves only slowly towards the expected value.
+The average magnetisation $\langle M \rangle / M_0$ follows the theoretical curve more closely than the NN correlation $\langle s_i s_{i+1} \rangle$.
+However, just above $T_\mathrm{c}$, the average magnetisation $\langle M \rangle / M_0$ evolves only slowly towards the expected value.
 Increasing the number of MCS per temperature step brings the system closer to the theoretical equilibrium and reduces the temperature range above $T_\mathrm{c}$ where the simulated system is not at equilibrium.
 However, this yields diminishing returns, as every additional Monte Carlo step converges more slowly towards the equilibrium.
 This slow convergence near the critical point is due to a well-known phenomenon known as ``\xref{critical slowing down}''.
@@ -1245,7 +1246,7 @@ In terms of \hotspice parameters, we can write
 with the magnetic moment $\mu$ constant for all magnets, and $a$ the NN distance in the square lattice.
 Analytical predictions remain possible in this system at zero temperature: for $\delta < 0.85$, the magnetostatic coupling dominates, leading to a \idx{checkerboard state}~\cite{AgingIsingDipolar}.
 As $\delta$ increases, the ever-stronger exchange coupling leads to the formation of ferromagnetic domains, which organise into stripes due to the magnetostatic interaction, with the stripe width determined by $\delta$~\cite{StripedDipolarIsing,FMmonolayer1993}. \par
-The average stripe width is reflected in the \idx{nearest-neighbour correlation} $\langle S_i S_{i+1} \rangle$, as shown in~\cref{fig:2:Verification_dipolar} for a \hotspice simulation.
+The average stripe width is reflected in the \idx{nearest-neighbour correlation} $\langle s_i s_{i+1} \rangle$, as shown in~\cref{fig:2:Verification_dipolar} for a \hotspice simulation.
 The analytical theory is valid at zero temperature, but we are using the \link{Metropolis-Hastings sampling}{Metropolis-Hastings algorithm} which requires non-zero temperature, so we will be using a sufficiently low temperature (\SI{50}{\kelvin}) for this simulation.
 
 \xfig{2_Hotspice/Verification/OOP_Dipolar.pdf}{
@@ -1253,10 +1254,10 @@ The analytical theory is valid at zero temperature, but we are using the \link{M
 	\link{nearest-neighbour correlation}{Nearest-neighbour (NN) correlation} in an \link{exchange coupling}{exchange-coupled} system with long-range \xref{magnetostatic interactions} included, as a function of relative NN magnetostatic/exchange coupling $\delta$. Transitions occur at $\delta=0.85$ and 2.65, indicated by dotted lines. Insets show the magnetisation state with growing \xlabel{stripe domains}: white corresponds to spin `up', black to `down'.
 }
 
-Consistent with the theoretical predictions of~\ccite{StripedDipolarIsing}, for $\delta < 0.85$ a \xref{checkerboard state} exists with $\langle S_i S_{i+1} \rangle = -1$.
-In the range $0.85 < \delta < 2.65$, \xref{stripe domains} with a width of 1 row are preferred, leading to $\langle S_i S_{i+1} \rangle = 0$.
-Beyond $\delta=2.65$, a 2-row width becomes preferable with $\langle S_i S_{i+1} \rangle = 0.5$.
-Increasing $\delta$ further leads to ever wider stripe domains, and in the limit $\delta \rightarrow +\infty$ the correlation approaches $\langle S_i S_{i+1} \rangle \rightarrow 1$.
+Consistent with the theoretical predictions of~\ccite{StripedDipolarIsing}, for $\delta < 0.85$ a \xref{checkerboard state} exists with $\langle s_i s_{i+1} \rangle = -1$.
+In the range $0.85 < \delta < 2.65$, \xref{stripe domains} with a width of 1 row are preferred, leading to $\langle s_i s_{i+1} \rangle = 0$.
+Beyond $\delta=2.65$, a 2-row width becomes preferable with $\langle s_i s_{i+1} \rangle = 0.5$.
+Increasing $\delta$ further leads to ever wider stripe domains, and in the limit $\delta \rightarrow +\infty$ the correlation approaches $\langle s_i s_{i+1} \rangle \rightarrow 1$.
 The phenomenon of CSD is also present here, albeit less severely.
 
 \subsection{Square-to-pinwheel transition angle}\label{sec:2:Verification_IP_SquarePinwheel}

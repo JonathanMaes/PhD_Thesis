@@ -12,8 +12,9 @@
 \section*{List of symbols}
 \subsection*{Mathematical operators}
 \begin{longtable}[l]{p{60pt} p{350pt}}
-	$\langle \cdot \rangle$ & Spatial average over the ASI \\
+	$\langle \cdot \rangle$ & Ensemble average of a quantity \\
 	$\langle \cdot \cdot \rangle$ & Correlation over the ASI \\
+	$\llangle \cdot \rrangle$ & Spatial average over the ASI \\
 	$\odot$ & Hadamard product (element-wise matrix multiplication) \\
 	$*$ & Convolution \\
 	% $\overline{a}$& time average\\
@@ -68,7 +69,8 @@
 	$L_y$ & Number of cells in the simulation along the y-direction \\
 	&\\
 
-	$M$ & Average magnetisation of ASI \\
+	$M$ & Total magnetic moment of ASI \\
+	$M_0$ & Total magnetic moment of ASI in uniform state \\
 	$M_\parallel$ & Average magnetisation of ASI along the direction of the external field $\vc{B}_\mathrm{ext}$ \\
 	$\vc{M}$ & Magnetisation \\
 	$M_\mathrm{sat}$ & Saturation magnetisation \\
@@ -95,7 +97,7 @@
 
 	$s_i$ & State of a magnet ($\pm 1$) along the easy axis $\vc{u}_i$ \\
 	$\vc{s}$ & Column vector containing all $s_i$ \\
-	$\langle S_i S_{i+1} \rangle$ & Nearest-neighbour correlation \\
+	$\langle s_i s_{i+1} \rangle$ & Nearest-neighbour correlation \\
 	&\\
 
 	$t$ & Time \\

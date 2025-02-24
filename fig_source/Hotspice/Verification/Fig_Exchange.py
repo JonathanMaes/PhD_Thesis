@@ -101,7 +101,7 @@ def plot(data_dirs=None, plot_args: list[dict] = None):
     ax1.set_ylim([-0.01, 1])
     ax2: plt.Axes = axes[0,1]
     ax2.set_xlabel("Temperature $T/T_c$")
-    ax2.set_ylabel(r"NN correlation $\langle S_i S_{i+1} \rangle$")
+    ax2.set_ylabel(r"NN correlation $\langle s_i s_{i+1} \rangle$")
     ax2.set_yticks([0.5, 0.7, 0.9])
     ax2.set_xlim(*T_lim)
     ax2.set_ylim([0.5, 0.9])

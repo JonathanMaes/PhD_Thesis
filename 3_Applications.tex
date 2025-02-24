@@ -78,8 +78,8 @@ This is a crude approximation to fit SOT into the Ising-like model; the modelled
 % In the case without symmetry breaking, the effect may be modelled as a temporary reduction of the PMA, as in reality a sufficiently strong SOT (applied over multiple $\tau_0$) will push the magnetic moment in-plane~\cite{SOT_Roadmap}, after which it falls back randomly (with higher likelihood to the lowest energy state, I suppose). But this approach raises multiple additional questions: is it meaningful to reduce the barrier only slightly?
 
 \paragraph{Readout by anomalous Hall effect}
-In our paper~\cite{KUR-24}, \textit{A. Kurenkov} experimentally demonstrated electrical readout of the average magnetisation $\mavg$ using the anomalous Hall effect~\cite{AHE}.
-Therefore, $\mavg$ can be used as a magnetic state readout in the simulations.
+In our paper~\cite{KUR-24}, \textit{A. Kurenkov} experimentally demonstrated electrical readout of the average magnetisation $\llangle s \rrangle$ using the anomalous Hall effect~\cite{AHE}.
+This can therefore be used as a magnetic state readout in the simulations.
 However, for reservoir computing purposes, multiple readout values are beneficial, so the average magnetisation of each lattice column was used for the readout $y_i(t)$. % Fig. 6a
 
 A discussion about the experimental feasibility of such a grid of local readouts is given in Supplementary Information 7 of our paper~\cite{KUR-24}.
@@ -210,7 +210,7 @@ The effective energy barrier $\EBeff$ of a magnet $i$ can then symbolically be w
 \end{equation}
 with $\sampi$ a random value from a standard normal distribution and $D_{ij}$ a factor proportional to the magnetostatic interaction energy between magnets $i$ and $j$. \\\par
 
-The relaxation process can be tracked by the average magnetisation $\mavg$ and the local antiferromagnetic parameter $\qNN = (1 - \langle s_i s_{i+1} \rangle)/2$.
+The relaxation process can be tracked by the normalised average magnetisation $\mavg = \abs{\llangle s \rrangle}$ and the local antiferromagnetic parameter $\qNN = (1 - \langle s_i s_{i+1} \rangle)/2$.
 In the uniform state --- where all magnetic moments point `up' --- their values are $\mavg=1$ and $\qNN=0$.
 During relaxation, they transition to $\mavg=0$ and $\qNN=1$, corresponding to a checkerboard ground state.
 Note that, while for a random state $\qNN \approx 0.5$, a value of $\qNN=0.5$ does not necessarily imply a random state. \par
@@ -224,7 +224,7 @@ The size of the ASI does not significantly affect the relaxation process, apart 
 	\label{fig:3:OOP_relaxation}
 	Dependence of the ordering timescale on the energy balance between net OOP anisotropy $\EEA$ and nearest-neighbour magnetostatic coupling $\EMC$ in an $11 \times 11$ OOP square-lattice ASI. % This system size was chosen because it matched the size of our fabricated systems discussed later.
 	The ASI is initialised in a uniform magnetic state with all spins pointing `up' and is released at $t = 0$, after which the lattice relaxes to lower energies.
-	Blue traces show the absolute value of the average magnetisation $\mavg$ while orange traces represent the local antiferromagnetic parameter $\qNN$.
+	Blue traces show the absolute value of the normalised average magnetisation $\mavg$ while orange traces represent the local antiferromagnetic parameter $\qNN$.
 	Each trace shows the mean (central line), standard deviation (central shaded area), and 1st/99th percentile (outer shaded area) of 200 repeated relaxations with randomly sampled $\EEA$ profiles.
 	At most $40N$ switches are simulated for each relaxation.
 	The green shaded region highlights the second stage of ordering.
@@ -304,7 +304,7 @@ Any further increase of $\EMC/\EEA$ does not affect the average magnetisation or
 
 \xfig{3_OOP/OOP_relaxation_continuous.pdf}{
 	\label{fig:3:OOP_relaxation_continuous}
-	Phase diagrams of the average magnetisation $\mavg$ and the local antiferromagnetic parameter $\qNN$ as a function of net out-of-plane anisotropy $\EEA$ and nearest-neighbour magnetostatic coupling $\EMC$ at $t=\SI{e4}{\second}$.
+	Phase diagrams of the normalised average magnetisation $\mavg$ and the local antiferromagnetic parameter $\qNN$ as a function of net out-of-plane anisotropy $\EEA$ and nearest-neighbour magnetostatic coupling $\EMC$ at $t=\SI{e4}{\second}$.
 	Five regions can be distinguished: $\mathrm{I}$ -- frozen state, $\mathrm{II}$ -- transient states, $\mathrm{III}$ -- state with domains and domain boundaries, $\mathrm{IV}$ -- checkerboard ordering, $\mathrm{V}$ -- superparamagnetic state.
 	The white and black dotted line respectively correspond to $\mavg = 0.05$ and $\qNN = 0.95$.
 	The nine panels of~\cref{fig:3:OOP_relaxation} are indicated by grey crosses.
