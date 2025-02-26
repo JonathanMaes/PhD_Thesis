@@ -185,7 +185,7 @@ Note that the numerical values of the limits given below are only indicative and
 \end{itemize}
 
 In the particular case of the thermally active OOP ASI fabricated within the \spinengine project, the nanomagnets consist of $n_{\ce{Co}}=7$ ferromagnetic layers of $D_\mathrm{NM}=\SI{170}{\nano\metre}$ diameter and $t_{\ce{Co}} \approx \SI{1.45}{\nano\metre}$ thickness, with $t_{\ce{Pt}} \approx \SI{0.8}{\nano\metre}$ spacing layers in between.
-The edge-to-edge spacing between neighbouring magnets is $S_\mathrm{ASL}=\SI{30}{\nano\metre}$, unless specified otherwise, with a saturation magnetisation $M_\mathrm{sat}=\SI{1063}{\kilo\ampere\per\metre}$~\cite{Msat_Co}.
+The edge-to-edge spacing between neighbouring magnets is $S_\mathrm{ASI}=\SI{30}{\nano\metre}$, unless specified otherwise, with a saturation magnetisation $M_\mathrm{sat}=\SI{1063}{\kilo\ampere\per\metre}$~\cite{Msat_Co}.
 
 \subsubsection{Relaxation characteristics}
 \label{sec:3:relaxation}
@@ -308,7 +308,7 @@ Any further increase of $\EMC/\EEA$ does not affect the average magnetisation or
 	Five regions can be distinguished: $\mathrm{I}$ -- frozen state, $\mathrm{II}$ -- transient states, $\mathrm{III}$ -- state with domains and domain boundaries, $\mathrm{IV}$ -- checkerboard ordering, $\mathrm{V}$ -- superparamagnetic state.
 	The white and black dotted line respectively correspond to $\mavg = 0.05$ and $\qNN = 0.95$.
 	The nine panels of~\cref{fig:3:OOP_relaxation} are indicated by grey crosses.
-	The three symbols correspond to the experimental lattices shown in~\cref{fig:3:OOP_relaxation_fit} with nanomagnet diameter $D_\mathrm{NM} = \SI{170}{\nano\metre}$, \ce{Co} thickness $t_{\ce{Co}} = \SI{1.45}{\nano\metre}$ and nanomagnet separations $S_\mathrm{ASI} = \SI{20}{\nano\metre}$ (circle), $S_\mathrm{ASI} = \SI{25}{\nano\metre}$ (triangle), $S_\mathrm{ASI} = \SI{30}{\nano\metre}$ (cross). % TODO: create and reference that figure
+	The three symbols correspond to the experimental lattices shown in~\cref{fig:3:MFM_grid} with nanomagnet diameter $D_\mathrm{NM} = \SI{170}{\nano\metre}$, \ce{Co} thickness $t_{\ce{Co}} = \SI{1.45}{\nano\metre}$ and nanomagnet separations $S_\mathrm{ASI} = \SI{20}{\nano\metre}$ (circle), $S_\mathrm{ASI} = \SI{25}{\nano\metre}$ (triangle), $S_\mathrm{ASI} = \SI{30}{\nano\metre}$ (cross).
 }
 
 Region $\mathrm{IV}$ (panel 9) is the only region where the system spontaneously achieves the checkerboard ground state.
@@ -372,13 +372,38 @@ It then explores a region in $\EEA \times \EMC \times J$-space by choosing new p
 While BO may not be the most performant method, as it converges rather slowly and its computational complexity scales with the number of iterations $n$ as $\order{n^3}$, it is sufficient for our purposes.
 More extensive parameter searches may benefit from using other optimisation techniques like LIPO~\cite{LIPO,LIPO_dlib}. \\\par % Good explanation in http://blog.dlib.net/2017/12/a-global-optimization-algorithm-worth.html
 
+\paragraph{Results} 
+This fitting procedure was used to determine the energy balance in real ASI with different magnet separations $S_\mathrm{ASI}$.
 Due to the logarithmic relaxation, an accurate fit requires measurements separated by multiple orders of magnitude in time.
 Because $\mavg \approx a \log_{10}(t \nu_0) + b$, two measurements should suffice to fit this kind of curve to experimental data.
-While two measurements are insufficient to prove that the relaxation indeed follows a logarithmic behaviour as predicted by simulation, this was verified using multiple measurements over a shorter timescale as discussed in~\ccite{KUR-24} (Supp. 5.4).
-For this reason, the samples were measured soon ($\approx \SI{e3}{\second}$) after initialisation, and again after 2 years $\approx \SI{7e7}{\second}$, providing two sufficiently distinct timescales for a successful fit.
+However, two measurements are insufficient to prove that the relaxation is indeed logarithmic, as predicted by simulation.
+This logarithmic behaviour was separately verified using multiple measurements over a shorter timescale, as discussed in our paper~\cite{KUR-24} (Supp. 5.4). \par
+Consequently, samples were measured soon after initialisation ($\approx \SI{e3}{\second}$, since MFM measurements are not instantaneous) and again after about 2 years $\approx \SI{7e7}{\second}$.
+This provides two sufficiently distinct timescales for a successful fit.
+In the meantime, the arrays were kept in a field-free environment at room temperature in ambient atmosphere.
+The acquired MFM images are shown in~\crefSubFigRef{fig:3:MFM_grid}{a}: magnets that are still in the initial `up' state appear black, while spontaneously switched magnets (`down') are white. \par
+After \SI{1000}{\second}, multiple switches have occurred, but the system is still far from the highly ordered state with $\qNN=1$ and $\mavg=0$.
+Note that more switches occur in closely-packed lattices (low $S_\mathrm{ASI}$) due to the stronger coupling between magnets.
+After $\approx 27$ months (\SI{7e7}{\second}), several more magnets were observed to have switched, as indicated by the yellow circles in~\crefSubFigRef{fig:3:MFM_grid}{a}.
+Only switches from the initial `up' (black) to the `down' (white) state were observed: none of the magnets that had already switched after \SI{e3}{\second} had switched back to the initial state after \SI{7e7}{\second}. \par
+From each of these MFM images, $\mavg$, $\qNN$, $\qNN[2]$ and $\qNN[3]$ were determined.
+Their values are indicated by the dots at $t=\SI{e3}{\second}$ and \SI{7e7}{\second} in~\crefSubFigRef{fig:3:MFM_grid}{b}.
+This figure shows the optimal fits through these points --- based on $\gtrsim 1000$ iterations of Bayesian optimisation --- with the corresponding values of $\EEA$, $\EMC$ and $J$ listed in the top right corner of each panel.
+These combinations of $\EEA$ and $\EMC$ have also been indicated in~\cref{fig:3:OOP_relaxation_continuous} as circles ($S_\mathrm{ASI}=\SI{20}{\nano\metre}$), triangles ($S_\mathrm{ASI}=\SI{25}{\nano\metre}$) and crosses ($S_\mathrm{ASI}=\SI{30}{\nano\metre}$).
 
-\paragraph{Results} % EEA etc.
-% TODO: present the results of this BO procedure, possibly in combination with the `simple' vs. `parabolic' energy barrier and the infinitesimal spin vs. the finite spin approximation in the DD energy calculation, and how these affect the best fit (and coupling this back to verifying which approximations are beneficial and which are not).
+\xfig{3_OOP/MFM_grid.pdf}{
+	\label{fig:3:MFM_grid}
+	Determining system parameters (net OOP anisotropy $\EEA$, NN MS coupling $\EMC$ and exchange coupling $J$) for lattices with different magnet separation $S_\mathrm{ASI}$.
+	All magnets have the same geometry with $t_{\ce{Co}} = \SI{1.45}{\nano\metre}$ and $D_\mathrm{NM} = \SI{170}{\nano\metre}$.
+	All systems were initialised in a uniform magnetic state with an \SI{0.9}{\tesla} out-of-plane magnetic field before the measurements.
+	\textbf{(a)} MFM images by \textit{A. Kurenkov}~\cite{KUR-24} of the lattices observed at $t \sim \SI{1000}{\second}$ and $t \sim \SI{7e7}{\second}$ (27 months) after initialisation and kept at room temperature.
+	Black magnets remain in the initial magnetic state while white magnets have switched.
+	Yellow circles indicate magnets that have switched between these two moments.
+	\textbf{(b)} Evolution of normalised average magnetisation $\mavg$ and local antiferromagnetic parameters $\qNN$, $\qNN[2]$, $\qNN[3]$.
+	Each trace shows the average of 200 simulated relaxations (central line) and their standard deviation (shaded area).
+}
+
+However, one should not blindly trust the optimal parameter combination that BO provides: it is possible that a fit of similar quality could be obtained for different $\EEA$, $\EMC$ or $J$.
 
 \subsection{RC in thermally active OOP square ASI}
 \subsubsection{Concept} % Lessons learnt from non-volatile ASI
