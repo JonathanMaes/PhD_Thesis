@@ -223,7 +223,7 @@ def plot_all_iterations(path: str|Path, legend_title: str = r"$S_\mathrm{ASI}$",
             if not iterations: alphas = [1] # Otherwise empty array won't have a symbol in the legend
             color = [(*set_lightness(color, 0.5 if path.is_dir() else 0), alpha) for alpha in alphas] # Apply alpha to see more easily
             ax.scatter(param_values, probs, s=5+30*(probs/(np.max(probs) if iterations else 1))**.25,
-                       c=color, edgecolors='none',
+                       c=color, edgecolors='none', marker=thesis_utils.marker_cycle[i],
                        label=None if v != 0 else (file.parent.name if not file.parent.name.endswith('nm') else (file.parent.name[:-2] + "$\,$nm")))
             if iterations: ax.vlines([param_values[0]], [min_prob], [probs[0]], colors=[color[0]], linestyles='dashed')
             
