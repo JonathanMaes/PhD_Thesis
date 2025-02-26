@@ -70,11 +70,10 @@ def label_ax(ax: plt.Axes, i: int = None, form: str = "(%s)", offset: tuple[floa
     if isinstance(i, int):
         s = 'abcdefghijklmnopqrstuvwxyz'[i]
         form = form % s
-    kwargs = dict(color='k', weight='bold', fontfamily='DejaVu Sans') | kwargs
+    kwargs = dict(ha='left', va='bottom', color='k', weight='bold', fontfamily='DejaVu Sans') | kwargs
     t = ax.text(0 + offset[0], 1 + offset[1], form, fontsize=fontsize,
                 bbox=dict(boxstyle='square,pad=3', facecolor='none', edgecolor='none'),
-                ha='left', va='bottom', transform=ax.transAxes, zorder=1000,
-                **kwargs)
+                transform=ax.transAxes, zorder=1000, **kwargs)
 
 def get_last_outdir(subdir: str = None):
     script = Path(inspect.stack()[1].filename) # The caller script, i.e. the one where __name__ == "__main__"
