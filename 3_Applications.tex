@@ -404,6 +404,52 @@ These combinations of $\EEA$ and $\EMC$ have also been indicated in~\cref{fig:3:
 }
 
 However, one should not blindly trust the optimal parameter combination that BO provides: it is possible that a fit of similar quality could be obtained for different $\EEA$, $\EMC$ or $J$.
+For this reason, \cref{fig:3:MFM_fitquality} is also provided, which shows the fit quality $\eta$ for all guesses made by the optimiser, as a function of these three parameters.
+This provides more insight on whether a high fit quality can only be obtained in a narrow parameter range.
+
+\xfig{3_OOP/MFM_fitquality.pdf}{
+	\label{fig:3:MFM_fitquality}
+	Fitting simulated relaxations to the experimental data, accounting for non-zero \xref{exchange coupling} $J$ and \link{finite dipole model}{finite magnet size} using the \xref{mean-barrier model}.
+	Each dot represents one guess by the Bayesian optimiser.
+	The fit quality $\eta$ indicates how well the Monte Carlo simulation fits the experimental data at a given $\EEA$, $\EMC$ and $J$ value: brighter dots represent better guesses.
+	The greyed-out area in the right panel represents antiferromagnetic coupling ($J<0$), which is considered non-physical in this system. 
+}
+
+Besides the aforementioned $S_\mathrm{ASL} = \SI{20}{\nano\metre}$, \SI{25}{\nano\metre} and \SI{30}{\nano\metre} samples, \cref{fig:3:MFM_fitquality} also shows results for a \SI{40}{\nano\metre} system (red crosses).
+In contrast to $S_\mathrm{ASI} = \SIrange{20}{30}{\nano\metre}$ --- for which the best fits are concentrated in a narrow range of $\EEA$, $\EMC$ and $J$ --- the $S_\mathrm{ASI} = \SI{40}{\nano\metre}$ system yielded inconclusive fits, with the fit quality $\eta$ being quite independent of the system parameters.
+For this reason, no conclusive estimates of $\EEA$, $\EMC$ and $J$ can be given for this system.
+The reason for this is unclear; see the supplementary information of our paper~\cite{KUR-24} for a further discussion of the $S_\mathrm{ASI} = \SI{40}{\nano\metre}$ and similarly inconclusive $\SI{35}{\nano\metre}$ samples. \\\par
+
+The three other systems (20, 25 and \SI{30}{\nano\metre}) all end up with a similar estimate of the net OOP anisotropy $\EEA \approx 60 \kBT$, as was to be expected since they were all deposited in the same manner.
+More surprisingly, $\EEA$ only differs by $< 10 \kBT$ between these systems.
+This indicates that the anisotropy might be easier to control than initially thought --- recall that analytical calculations, assuming coherent reversal, estimated $\EEA \gg 100 \kBT$ (\ccite{KUR-24} Supp. 4) --- or that it is at least reproducible for identically processed samples. \par
+The reason for allowing the optimiser to adjust the exchange coupling $J$ is now also clear: for $S_\mathrm{ASI} = \SI{20}{\nano\metre}$, the optimal fit yields a clear non-zero $J = 6.5 \kBT$.
+High-$\eta$ guesses are also limited to a very narrow $J$-range (\cref{fig:3:MFM_fitquality}), lending further credibility to the existence of exchange coupling in this system.
+For systems with larger spacing, a near-zero exchange coupling is found.
+This may indicate that manufacturing defects caused incomplete separation of neighbouring nanomagnets in the bottom \ce{Co} layer for the smallest $S_\mathrm{ASI}$, while complete separation was achieved for $S_\mathrm{ASI} \geq \SI{25}{\nano\metre}$.
+Such defects could explain why a better fit quality $\eta$ could be achieved for $S_\mathrm{ASI} = \SI{25}{nm}$ and \SI{30}{\nano\metre} than for $S_\mathrm{ASI} = \SI{20}{nm}$. \par
+Both $S_\mathrm{ASI} = \SI{25}{\nano\metre}$ and $\SI{30}{\nano\metre}$ are estimated to have very similar $\EMC \approx 10 \kBT$, which is in line with expectations since the difference between these two spacings is small compared to the magnet diameter $D_\mathrm{NM} = \SI{170}{\nano\metre}$.
+For the interconnected system ($S_\mathrm{ASI} = \SI{20}{\nano\metre}$), the fitted MS coupling is also much larger, because it is hard to distinguish between exchange coupling and MS coupling.
+The only difference between these couplings is that the MS coupling extends further out, but since its strength decreases rapidly with distance its main effect is similar to that of the exchange coupling.
+Therefore, part of the exchange coupling gets absorbed by the estimated magnetostatic coupling. \par
+The same effect is responsible for the two high-$\eta$ clusters that can be distinguished in~\cref{fig:3:MFM_fitquality} for $S_\mathrm{ASI} = \SI{25}{\nano\metre}$.
+One cluster is concentrated near $J=0$ with high MS coupling, while a second cluster with slightly lower fit quality $\eta$ exists at a non-physical\footnote{
+	Given our interpretation of the exchange coupling as being an indicator of defects in the form of interconnected magnets, we consider a negative coupling to be non-physical as interconnections would promote parallel ordering ($J > 0$) through the ferromagnetic exchange interaction.
+} $J < 0$ compensated by lower MS coupling.
+The second cluster also corresponds to slightly higher $\EEA$, because an exchange-coupled system will relax slightly faster and the optimiser compensates for this by increasing $\EEA$ to maintain a decent fit to the experimental data.
+The higher fit quality $\eta$ and $J \approx 0$ lend more credibility to the first cluster. \\\par
+
+The obtained values of $\EEA$ and $\EMC$ can be compared to the phase diagrams of~\cref{fig:3:OOP_relaxation_continuous}, where they are indicated by circles, triangles and crosses for $S_\mathrm{ASI} = \SI{20}{\nano\metre}$, \SI{25}{\nano\metre} and \SI{30}{\nano\metre}, respectively.
+We find that $\EMC \approx 10 \kBT$ is of an acceptable magnitude, but perfect ordering is inhibited by the high value of $\EEA \approx 60 \kBT$.
+While $\EEA$ is already far smaller than predicted by analytical models, further control of the total energy barrier is needed to achieve a system that spontaneously reaches the checkerboard ground state in a reasonable timeframe. \\\par
+
+The fits shown in these figures used \hotspice simulations with \link{finite dipole model}{finite magnets} and the \xref{mean-barrier model}.
+We also attempted fits with simulations that used the exact barrier $\EBeff$ of~\cref{eq:2:EB_exact}.
+These yielded less conclusive results, though there is no single factor that definitively invalidates them.
+They still more or less agreed on the approximate values of $\EEA$, $\EMC$ and the requirement of a nonzero exchange coupling for $S_\mathrm{ASI} = \SI{20}{\nano\metre}$.
+However, fits using the exact barrier were more inclined to assign $J < 0$ and did not yield a clear high-$\eta$ peak as in~\cref{fig:3:MFM_fitquality}.
+Because of this, we may conclude that the exact barrier is less accurate than the mean-barrier model in this case, possibly indicating that reversal occurs through a non-coherent process.
+This would also explain why the effective anisotropy is on the order of $60 \kBT$, rather than the $\approx 1000 \kBT$ predicted by analytical calculations that also assume a coherent reversal (\ccite{KUR-24} Supp. 4).
 
 \subsection{RC in thermally active OOP square ASI}
 \subsubsection{Concept} % Lessons learnt from non-volatile ASI
