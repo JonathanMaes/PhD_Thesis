@@ -42,7 +42,7 @@ An example of this is the flatspin simulator~\cite{flatspin}, which implements d
 Using such higher-level approximations enables the study of collective behaviour in much larger systems and over far longer timescales than is feasible with micromagnetic simulations, though at the cost that the internal magnetisation structure of individual nanomagnets is no longer simulated in detail.
 Additionally, Monte Carlo methods are often used to simulate spin ices, including ASI, but these are typically specialised to a select few lattice geometries and often only account for nearest-neighbour interactions, whose strength is often arbitrarily set or calculated separately using micromagnetic codes.~\cite{MeltingASI,sklenar2019field,gilbert2014emergent,zhang2013crystallites} \\\par % REFS: 'gilbert2014emergent': Monte Carlo sims based on a vertex model and interacting magnetic charges. 'zhang2013crystallites': uses monopoles and NN couplings to model kagome ASI with Metropolis and loop update. 'moller2006artificial': bit broader using dipolar interaction, though seemingly still only for nearest neighbors. 'mengotti2011kagome' use a full dipole model with Ewald summation for PBC. 'lou2023competing': dipole model for half-occupation IP Ising. 'sendetskyi2019continuous': dipole model for square ASI. 'EngineeringRelaxationComputation': KMC on dipole model, seemingly for square arrays. 'sklenar2019field': NN interactions calculated by mumax on quadrupole lattice. 'MeltingASI': 16-vertex ice model
 
-Our goal was to blend these two approaches, resulting in \hotspice: a versatile Monte Carlo simulator meant to capture ASI physics with minimal arbitrary parameters, allowing various lattice configurations to be evaluated.
+Our goal was to blend these two approaches, resulting in \hotspice: a versatile Monte Carlo simulator meant to capture ASI physics with minimal parameters, allowing various lattice configurations to be evaluated.
 This software approximates each single-domain nanomagnet as a single Ising spin, associating energies with the various ASI states by accounting for the \link{magnetostatic interaction}{magnetostatic (MS) interaction} between all magnets.
 \hotspice supports both in-plane (IP) and out-of-plane (OOP) ASI, which may contain thousands of magnets. Simulations can span arbitrary timescales, as determined by the switching time of magnets in the system. \\\par
 
@@ -50,17 +50,18 @@ In this chapter, we discuss several model variants that have been implemented, a
 These variants differ in their choice of Monte Carlo spin-flip algorithm and their calculation of the magnetostatic interactions and energy barriers. \\\par
 
 \section{Model}\indexlabel{point dipole model}
-In single-domain IP nanomagnets, the magnetisation prefers to align along the fixed \xref{easy axis} of the geometry, while for OOP magnets a strong interfacial anisotropy causes a preferential orientation along the $z$-axis.
+In single-domain IP nanomagnets, the magnetisation prefers to align along the fixed \xref{easy axis} of the geometry, while for OOP magnets a strong interfacial anisotropy with the substrate causes a preferential orientation along the $z$-axis.
 Either way, it is natural to use an Ising-like approximation for simulating such single-domain nanomagnets.
 The easy axis, position $\vc{r}_i$ and size of the magnetic moment\footnote{
 	\label{fn:2:moment_integral}
-	The size of the magnetic moment $\mu_i$ corresponds to the total ground state magnetic moment $\abs{\int_{\Omega_i} \vc{M}(\vc{r})d\vc{r}}$, with $\Omega_i$ the shape of magnet $i$ and $\vc{M}(\vc{r})$ its magnetisation in the twofold degenerate ground state. Due to edge relaxation effects, this value is slightly smaller than $M_\mathrm{sat} V_i$.
+	The size of the magnetic moment $\mu_i$ corresponds to the total ground state magnetic moment $\abs{\int_{\Omega_i} \vc{M}(\vc{r})d\vc{r}}$, with $\Omega_i$ the geometry of magnet $i$ and $\vc{M}(\vc{r})$ its magnetisation in the twofold degenerate ground state.
+	Due to edge relaxation effects, this value is slightly smaller than $M_\mathrm{sat} V_i$.
 } $\mu_i$ of each magnet $i$ are fixed and they are only allowed to switch between the `up' ($\uparrow$, $s_i=1$) and `down' ($\downarrow$, $s_i=-1$) magnetisation states along the easy axis.
 Thus, the total magnetic moment vector $\vc{\mu}_i$ of magnet $i$ can be expressed as
 \begin{equation}
 	\vc{\mu}_i = s_i \mu_i \vc{u}_i \mathrm{,}
 \end{equation}
-where $s_i = \pm 1$ and $\vc{u}_i$ is a fixed unit vector parallel to the easy axis. \par
+where $s_i = \pm 1$, and $\vc{u}_i$ is a fixed unit vector parallel to the easy axis. \par
 The switching rate between these two states is determined by the \xref{effective energy barrier} $\EBeff$ that separates them, as well as the temperature $T$.
 For an isolated nanomagnet, the energy barrier $\EB$ originates from its \xref{shape anisotropy}.
 Interactions with other magnets or \xref{external magnetic fields} modify the energy landscape, leading to an effective barrier which we denote as $\EBeff$~\cite{leo2021chiral}.
@@ -90,7 +91,7 @@ The Cairo lattice (h) can be continuously deformed into the Shakti lattice~\cite
 The remaining four IP and four OOP lattices are also related: the magnets in the OOP lattices (i)-(l) are positioned at the vertices where magnets meet in their respective IP counterparts (e)-(h).
 
 \section{Energy calculation}
-The energy of the system is the driving force behind these Monte Carlo simulations.
+The energy of the system is an essential quantity in these Monte Carlo simulations.
 In this section, we will list the various energy contributions used in \hotspice, explain how we may account for the finite size of real nanomagnets within this Ising-like model, and show how the effective energy barrier $\EBeff$ is calculated.
 
 \subsection{Energy contributions}
@@ -106,7 +107,7 @@ Three \idx{energy contributions} have been implemented\footnote{
 	with $\mu_0$ the vacuum permeability and $\vc{r}_{ij} = \vc{r}_j - \vc{r}_i$ the vector connecting the two magnetic dipoles $\vc{\mu}_i$ and $\vc{\mu}_j$. \par
 	This is the main interaction dictating how separate nanomagnets influence each other, causing the typical properties of the various ASI lattices, e.g. superferromagnetism in the pinwheel lattice~\cite{li2018pinwheel}.
 	Because of its importance, this is the only interaction \hotspice considers by default when an ASI is created.
-	Any other energy contributions must explicitly be added to an ASI; see \cref{sec:2:API}.
+	An ASI stores a list of energy contributions: when needed, the user must explicitly add other energy contributions to this list; see \cref{sec:2:API}.
 	This avoids wasting calculations on energies not relevant to the simulation.
 	
 	\item The \idx{Zeeman energy} of an \xlabel{external magnetic field} $\vc{B}_\mathrm{ext}$ interacting with magnet $i$
@@ -137,7 +138,7 @@ where $\mathcal{N}_i$ is the collection of nearest neighbours of magnet $i$.
 Which magnets are included in this collection depends on the ASI lattice and which site of the unit cell magnet $i$ is in, and can be defined separately for each ASI lattice. \\\par
 Note that all terms in \cref{eq:2:E} simply change sign\footnote{
 	Energy contributions which are independent of the state $s_i$, such as the magnetostatic self-energy (i.e., the energy due to the magnetisation profile $\vc{M}(\vc{r})$ throughout the magnet), are not included in \cref{eq:2:E} because they are constant and therefore do not affect the ASI dynamics.
-} when magnet $i$ switches ($\vc{\mu}_i \rightarrow -\vc{\mu}_i$): if the switch occurs at time $t$, then $E_i(t^+) = -E_i(t^-)$.
+} when magnet $i$ switches ($\vc{\mu}_i \rightarrow -\vc{\mu}_i$): if the switch occurs at time $t$, then $E_i(t + dt) = -E_i(t - dt)$.
 %As such, $E_i$ represents the total interaction energy of a magnet with its `neighbours',\footnote{
 %	In this context, a `neighbour' of a magnet can be interpreted more broadly as all magnets it interacts with through a particular energy contribution. For example, the magnetostatic interaction considers all magnets to be `neighbours', unless the user has explicitly set a maximum interaction distance.
 %}.
@@ -146,7 +147,7 @@ This is called the \idx{switching energy}, and we will see in the next few secti
 It is therefore very advantageous that the switching energy is so cheap to compute. \\\par
 When the simulation is initialised, the energy contributions are calculated for all magnets.
 Each magnet therefore stores a value in memory for each of the terms in \cref{eq:2:E}.
-Whenever a magnet switches, the energies of its `neighbours' are updated appropriately, which constitutes a major part of the calculation effort required for every step in the simulation.
+Whenever a magnet switches, the energies of all magnets it interacts with are updated appropriately, which constitutes a major part of the calculation effort required for every step in the simulation.
 
 \subsection{Finite-size corrections to the magnetostatic energy}\label{sec:2:finite}
 \cref{eq:2:E_MS,eq:2:E_Z,eq:2:E_exch} approximate each nanomagnet as a \link{point dipole model}{point dipole}, but real nanomagnets have a finite spatial extent.
@@ -243,7 +244,7 @@ All of them make use of the switching energy $\Delta E$ between the current and 
 	\textbf{(a)} Effective energy barrier $\EBeff$ as function of \xref{switching energy} $\Delta E$ for these approximations.
 	\textbf{(b)} Energy landscape between the two stable states (black filled circles) for several values of the switching energy $\Delta E$.
 	The energy landscapes without and with shape anisotropy are shown as dotted black and solid grey lines, respectively.
-	An open circle indicates the halfway point, while a star is put at the top of the exact energy barrier.
+	An open circle indicates the halfway point between both stable states, while a star is put at the top of the exact energy barrier.
 	On each landscape, the height of the barrier in the different approximations is indicated by a dotted horizontal line, indicating how they use different values on the energy landscape for their estimate.
 	\label{fig:2:EB_meanbarrier}
 }
@@ -332,7 +333,7 @@ For IP ASI, this uniquely defines $\vc{B}_\mathrm{eff}$ since all vectors lay in
 
 \subsubsection{Exact solution}
 The effective energy barrier $\EBeff$ can be calculated exactly if an analytical expression is known for the energy as a function of magnetisation angle $\theta$ relative to the magnet's \xref{easy axis}.
-The \xref{shape anisotropy} creates a basic \xref{energy landscape} with two minima at $\theta=0$ and $\theta=\pi$, but the exact form of this landscape depends on the magnet's shape.
+The \xref{shape anisotropy} creates an \xref{energy landscape} with two minima at $\theta=0$ and $\theta=\pi$, but the exact form of this landscape depends on the magnet's shape.
 For ellipsoidal magnets, the \xref{energy landscape} is $-\frac{E_\mathrm{B}}{2} \cos{2\theta}$~\cite{neel1949theorie}.
 Assuming a uniform magnetisation in each magnet\footnote{
 	Only perfectly ellipsoidal magnets have uniform magnetisation in a uniform \xref{external magnetic field}~\cite{EllipsoidDemag,MaxwellElectricityMagnetism}.
@@ -358,7 +359,7 @@ Solving \cref{eq:2:EB_exact_transcendental} and applying the double-angle identi
 \end{equation}
 as has previously been described by \textit{Tannous and Gieraltowski}~\cite{StonerWohlfarth2008}.
 This is the exact solution that was shown in grey in~\cref{fig:2:EB_meanbarrier}.
-However, since OOP magnets are not ellipsoidal as assumed by the transcendental equation that originally led to \cref{eq:2:EB_exact_transcendental}, the relevance of \cref{eq:2:EB_exact} remains questionable.
+However, since OOP magnets are not ellipsoidal as assumed by the transcendental equation that originally led to \cref{eq:2:EB_exact_transcendental}, the applicability of \cref{eq:2:EB_exact} remains questionable.
 
 \newpage % For better alignment
 \section{Dynamics}\label{sec:2:Dynamics}
@@ -385,20 +386,19 @@ This yields the total switching rate as presented by \textit{Koraltan et al.}~\c
 	\label{eq:2:Néel_2}
 \end{equation}
 where a halved attempt frequency $\nu_0/2$ was assigned to either switching channel such that~\cref{eq:2:Néel_2} reduces to~\cref{eq:2:Néel} in the case of $\EBeffLeft=\EBeffRight$~\cite{leo2021chiral}.
-Note that it does not matter which barrier corresponds to clockwise or counter-clockwise rotation; only the height of both barriers matters when determining the switching rate of a magnet. \par
+% Note that it does not matter which barrier corresponds to clockwise or counter-clockwise rotation; only the height of both barriers matters when determining the switching rate of a magnet.
 
 \paragraph{Attempt frequency}\indexlabel{attempt frequency}
 An estimate of $\nu_0$ for coherent magnetisation reversal can be obtained from the limit $\EB \rightarrow 0$, where the \xref{switching rate} $\nu$ should approach the \xlabel{gyromagnetic precession frequency} of the magnetisation of a nanomagnet.
 This is reported to be on the order of \qtyrange{e9}{e10}{\hertz}~\cite{BrownThermalFluctuations,bean1959superparamagnetism}.
 As $\EB \rightarrow 0$, \cref{eq:2:Néel} implies that $\nu \rightarrow \nu_0$, so we use $\nu_0=\qty{e10}{\hertz}$~\cite{JM_Masterproef}. \par % Each oscillation is an attempt to leave this energy minimum.
-A more precise value for $\nu_0$ for a particular simulation could be achieved by comparing with a similar experiment.
+If necessary, a more precise value for $\nu_0$ can be obtained from experiments.
 However, an order-of-magnitude estimate often suffices because any small (i.e., $\sim \kBT$) change of $\EB$ will translate to an exponential change of the switching rate.
 As discussed in~\cref{sec:2:E_B_eff}, our approximations of $\EBeff$ are imperfect, thus rendering an accurate value of $\nu_0$ irrelevant.
 Furthermore, $\nu_0$ only affects the absolute value of the elapsed time, not the switching order, so its overall importance to the simulation is limited. \par
 The values for $\nu_0$ on the order of \SI{e10}{\hertz} are valid for reversal by \xref{coherent rotation}, as was already assumed in \hotspice during the calculation of the \link{effective energy barrier}{effective barriers}.
 For other reversal processes, e.g. domain wall-mediated reversal, the attempt frequency could be many orders of magnitude faster because its interpretation as a rotation frequency then no longer holds~\cite{ArrheniusPrefactor}. % Another ref: 45 in leo2021chiral
-It must also be noted that the attempt frequency can significantly depend on other system parameters.
-For example, the energy barrier $\EB$ itself may be temperature-dependent, which can ultimately be captured by a temperature-dependent attempt frequency~\cite{AttemptFreqTemperature}. % Ref says: ``When this energy barrier is the result of a collective statistical behavior of many constituents, it may contain an intrinsic temperature dependence which has to be carefully taken into account, in particular when the prefactor is interpreted in terms of an attempt frequency.''
+It must also be noted that the attempt frequency can significantly depend on other system parameters like temperature~\cite{AttemptFreqTemperature}. % Ref says: ``When this energy barrier is the result of a collective statistical behavior of many constituents, it may contain an intrinsic temperature dependence which has to be carefully taken into account, in particular when the prefactor is interpreted in terms of an attempt frequency.''
 
 \paragraph{Algorithm}
 Knowledge of the \xref{switching rate} $\nu$ can be used to construct a rejection-free kinetic Monte Carlo method, first presented by \textit{Gillespie}~\cite{gillespie1976general}, referred to as the ``first-switch'' method.
@@ -415,17 +415,17 @@ When using the first-switch method, \cref{alg:2:FirstSwitchSingle} is simply per
 		\item Finally, $t_\mathrm{max}$ determines whether a switch occurs.
 		\begin{itemize}
 			\item \textit{If $t + \Delta t_j \leq t_\mathrm{max}$}: increment the elapsed time $t$ by $\Delta t_j$ and switch magnet $j$.
-			\item \textit{If $t + \Delta t_j > t_\mathrm{max}$}: increment the elapsed time $t$ by $t_\mathrm{max}$ without switching a magnet.
+			\item \textit{If $t + \Delta t_j > t_\mathrm{max}$}: increment the elapsed time $t$ by $t_\mathrm{max}$ without switching a magnet.\footnote{The maximum time $t_\mathrm{max}$ means that, strictly speaking, this is no longer a rejection-free algorithm.}
 		\end{itemize}
 	\end{enumerate} % NOTE: this is different from the BKL algorithm, yet still gives the exact same result.
 \end{algorithm}
 % Note that this algorithm still gives the correct switching rate $\nu$, even though the switching time $t_i$ is sampled randomly multiple times before magnet $i$ typically switches. This is because, the more magnets there are, the harder it gets for an arbitrary magnet $i$ to have the shortest randomly sampled time (and thus to switch), but the elapsed time increment after each switch will be smaller as well, and these two effects cancel perfectly to end up with the same switching rate as if the magnet would be the only one switching.
-The maximum time $t_\mathrm{max}$ (default value of one second) prevents the simulation from advancing too far into the future, as the exponential character of the \xref{N\'eel-Arrhenius} law can cause switching times to become much longer than what could ever be observed experimentally.
-It can also be used to apply time-dependent \xref{external magnetic fields}.
-For example, when a sinusoidal signal of frequency $f$ is applied to the lattice, using $t_{\mathrm{max}}=20/f$ will ensure that the waveform is captured in sufficient detail. \par
+The maximum time $t_\mathrm{max}$ (default value of one second) prevents the simulation from advancing too far into the future.
+For example, it is needed when a time-dependent \xref{external magnetic field} is applied to the lattice: for a sinusoidal signal of frequency $f$, using $t_{\mathrm{max}}=20/f$ will ensure that the waveform is captured in sufficient detail.
+Furthermore, it prevents unrealistic timescales, as the exponential character of the \xref{N\'eel-Arrhenius} law can cause switching times to become much longer than what could ever be observed experimentally. \par
 In the realm of rejection-free KMC, two commonly used algorithms are the very similar \idx{Bortz-Kalos-Lebowitz}~\cite{nfoldMCalgorithm} and \idx{Gillespie}~\cite{gillespie1976general} algorithms.
 Although the first-switch method is also discussed in Gillespie's paper, these two algorithms differ slightly from~\cref{alg:2:FirstSwitchSingle}, yet all yield identical results.
-Their different strategies to calculating random switching times and selecting the next switch are discussed by \textit{Gibson and Bruck}~\cite{GibsonBruck} alongside an optimized algorithm.
+Their different strategies for calculating random switching times and selecting the next switch are discussed by \textit{Gibson and Bruck}~\cite{GibsonBruck}, alongside an optimised algorithm.
 
 \subsection{Metropolis-Hastings: sampling equilibrium states} \label{sec:2:Dynamics_MH}
 \idx{Metropolis-Hastings sampling} is a rejection-based KMC method designed to sample the state space at thermal equilibrium, where the probability of each state appearing is proportional to their \xlabel{Boltzmann factor} $e^{-E/\kBT}$~\cite{IntroductionMC,kyimba2006comparisonIsingAlgorithms}.
@@ -506,13 +506,13 @@ For a broader overview of Monte Carlo methods, we refer to Ref.~\cite{Introducti
 \section{Implementation}\label{sec:2:Implementation}
 Now that the physics underlying the simulator have been extensively discussed, we turn our attention to the software implementation. \par
 First, we discuss why we chose to implement the ASI on an underlying rectilinear grid, and explain how the \textit{`kernel'} --- the lookup table for the magnetostatic interaction --- was implemented.
-We then take a look at the performance of \hotspice and how it has improved since its initial version due to improvements to the kernel.
+We then take a look at the performance of \hotspice and the various improvements enabled by the implementation of these kernels.
 One particular performance-enhancing feature is examined in more detail: the possibility to select multiple magnets at once during \xref{Metropolis-Hastings sampling}.
 Finally, we briefly discuss the structure of the software package and the functionality included in the various submodules, and finish with a short retrospective.
 
 \subsection{Grid}\indexlabel{unit cell}
-\hotspice{} represents an ASI as a \xlabel{rectilinear grid} of non-uniform unit cells, with magnets positioned at selected grid points.
-This choice was made based on the trade-off between calculation efficiency and the freedom to place magnets arbitrarily.
+\hotspice{} represents an ASI as a non-uniform \xlabel{rectilinear grid} of unit cells, with magnets positioned at selected grid points.
+This choice was made based on the trade-off between calculation efficiency and the freedom to place magnets anywhere.
 We opted to prioritise efficiency and accept the geometrical restriction, as most ASI research focuses on periodic lattices.
 All quantities are therefore stored in 2D matrices of size $L_x \times L_y$, upon which operations can be performed efficiently.
 We will denote these matrices with large bold upright symbols: e.g., $\vc{S}$ contains the states $s_i$, $\vc{E_\mathrm{MS}}$ the magnetostatic energies $E_{\mathrm{MS},i}$, $\vc{\bigmu}$ the magnitudes $\mu_i$ of magnetic moments... \par % Q: other suggestions? I can not capitalise the magnitudes of magnetic moments, because that would just be capital M which is too reminiscent of the magnetisation (in H = B/mu0 - M). So I just put it upright. Is that sufficient?
