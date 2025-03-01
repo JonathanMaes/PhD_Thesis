@@ -424,7 +424,7 @@ The maximum time $t_\mathrm{max}$ (default value of one second) prevents the sim
 For example, it is needed when a time-dependent \xref{external magnetic field} is applied to the lattice: for a sinusoidal signal of frequency $f$, using $t_{\mathrm{max}}=20/f$ will ensure that the waveform is captured in sufficient detail.
 Furthermore, it prevents unrealistic timescales, as the exponential character of the \xref{N\'eel-Arrhenius} law can cause switching times to become much longer than what could ever be observed experimentally. \par
 In the realm of rejection-free KMC, two commonly used algorithms are the very similar \idx{Bortz-Kalos-Lebowitz}~\cite{nfoldMCalgorithm} and \idx{Gillespie}~\cite{gillespie1976general} algorithms.
-Although the first-switch method is also discussed in Gillespie's paper, these two algorithms differ slightly from~\cref{alg:2:FirstSwitchSingle}, yet all yield identical results.
+Although Gillespie's paper also discusses the first-switch method, these two algorithms differ slightly from~\cref{alg:2:FirstSwitchSingle}, yet all yield identical results.
 Their different strategies for calculating random switching times and selecting the next switch are discussed by \textit{Gibson and Bruck}~\cite{GibsonBruck}, alongside an optimised algorithm.
 
 \subsection{Metropolis-Hastings: sampling equilibrium states} \label{sec:2:Dynamics_MH}
@@ -507,8 +507,8 @@ For a broader overview of Monte Carlo methods, we refer to Ref.~\cite{Introducti
 Now that the physics underlying the simulator have been extensively discussed, we turn our attention to the software implementation. \par
 First, we discuss why we chose to implement the ASI on an underlying rectilinear grid, and explain how the \textit{`kernel'} --- the lookup table for the magnetostatic interaction --- was implemented.
 We then take a look at the performance of \hotspice and the various improvements enabled by the implementation of these kernels.
-One particular performance-enhancing feature is examined in more detail: the possibility to select multiple magnets at once during \xref{Metropolis-Hastings sampling}.
-Finally, we briefly discuss the structure of the software package and the functionality included in the various submodules, and finish with a short retrospective.
+One particular performance-enhancing feature is examined in more detail: the possibility to select multiple magnets at once when using \xref{Metropolis-Hastings sampling}.
+Finally, we briefly discuss the structure of the software package and the functionality included in the various submodules, before finishing with a short retrospective.
 
 \subsection{Grid}\indexlabel{unit cell}
 \hotspice{} represents an ASI as a non-uniform \xlabel{rectilinear grid} of unit cells, with magnets positioned at selected grid points.
@@ -517,14 +517,14 @@ We opted to prioritise efficiency and accept the geometrical restriction, as mos
 All quantities are therefore stored in 2D matrices of size $L_x \times L_y$, upon which operations can be performed efficiently.
 We will denote these matrices with large bold upright symbols: e.g., $\vc{S}$ contains the states $s_i$, $\vc{E_\mathrm{MS}}$ the magnetostatic energies $E_{\mathrm{MS},i}$, $\vc{\bigmu}$ the magnitudes $\mu_i$ of magnetic moments... \par % Q: other suggestions? I can not capitalise the magnitudes of magnetic moments, because that would just be capital M which is too reminiscent of the magnetisation (in H = B/mu0 - M). So I just put it upright. Is that sufficient?
 Despite the seemingly restrictive nature of the rectilinear grid,~\cref{fig:2:ASIs} illustrates its versatility in forming various periodic lattices, with only the Cairo lattices requiring grid non-uniformity.
-As a bonus, \link{graphical user interface}{real-time visualisation} is simple and efficient using this approach, as the underlying matrix can directly be cast to a pixel image. \par
+As a bonus, \link{graphical user interface}{real-time visualisation} is simple and efficient using this approach, as the underlying matrix can directly be cast to a pixel image. \\\par
 By leveraging the unit cell concept in periodic lattices and the efficient indexation of a rectilinear grid in computer memory, several aspects of the calculation can be performed more efficiently than for free-form ASI.
 %The unit cell of each lattice in~\cref{fig:2:ASIs} is depicted as a grey rectangle.
 Although non-rectilinear unit cells with fewer magnets can be identified for some lattices, such unit cells would increase complexity without significant benefit: the amount of unoccupied sites in a unit cell only increases the required memory, with little impact on the performance of the simulation.
 
 \subsection{Kernels for magnetostatic interaction}\label{sec:2:Kernels}
 Pre-calculated ``kernels'' are used to efficiently update the \xref{magnetostatic interaction} after each switch. 
-The need to calculate these kernels beforehand increases the initialisation time, but the reduced runtime when simulating \link{sec:2:Dynamics}{dynamics} more than makes up for this.
+While these kernels have to be calculated before the simulation starts, and therefore increase the initialisation time, the reduced runtime when simulating \link{sec:2:Dynamics}{dynamics} more than makes up for this.
 
 \subsubsection{Magnetostatic interaction kernel}
 For each magnet $i$, a kernel $\vc{k}^{(i)}$ stores the magnitude of the magnetostatic interaction between itself and all other magnets.
@@ -533,8 +533,11 @@ By calculating these values beforehand, when the ASI is created, the magnetostat
 	E_{\mathrm{MS},i,j}= s_i s_j \vc{k}^{(i)}_j \mathrm{,}
 \end{equation}
 which can only change sign, since the states $s_i = \pm 1$ and $s_j = \pm 1$ are the only variables in the system. \par
-Due to the fact that magnets are placed on a \xref{rectilinear grid}, the kernel of magnet $i$ can also be written as an $L_x \times L_y$ matrix $\vc{K}^{(i)}_{ab}$ where $ab$ denotes a position on the ASI grid.
-For example, $\vc{K}^{(i)}_{2,3}$ stores the interaction strength between magnet $i$ and the magnet at index\footnote{The indexation used throughout this section starts counting at 1, as is typical for matrix notation. This is not to be confused with indexation in source code, which starts at 0.} $(2,3)$ on the grid.
+Due to the fact that magnets are placed on a \xref{rectilinear grid}, the kernel corresponding to a magnet $i$ can also be written as an $L_x \times L_y$ matrix $\vc{K}^{(i)}_{ab}$ where $ab$ denotes a position on the ASI grid.
+For example, $\vc{K}^{(i)}_{2,3}$ stores the magnetostatic interaction strength between magnet $i$ and the magnet at index\footnote{
+	The indexation used throughout this section starts counting at 1, as is typical for matrix notation.
+	This is not to be confused with indexation in source code, which starts at 0.
+} $(2,3)$ on the grid.
 If no magnet was placed at index $(a,b)$ on the grid, then $\vc{K}^{(i)}_{ab} = 0, \forall i$. \\\par
 
 However, storing such a kernel for all magnets $i$ would require storing $\order{N^2}$ values in memory. % Furthermmore, many values would be zero, though the same (but less extreme) can be said of the unit cell kernel. Note: small \vc{k} has no zeros if a lookup table is used to assign an index to each magnet.
