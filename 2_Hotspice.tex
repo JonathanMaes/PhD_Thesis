@@ -1273,12 +1273,14 @@ For the dipole model, theoretical calculations predict this transition at $\alph
 For the \xref{dumbbell model}, the transition angle depends on the distance $d$ between \xref{magnetic monopoles}, but is always larger than for the dipole model~\cite{AFM-FM-transition-Pinwheel}. \\\par
 The result of a \hotspice simulation using both models is shown in \cref{fig:2:Pinwheel_angle}.
 To quantify this transition, we measure the fraction of vertices with net zero magnetisation --- this value is 0 for superferromagnetic order while it is 1 for AFM order.
-For the dipole model, the transition occurs at $\approx \ang{35}$ as expected, while the dumbbell model indeed transitions at a larger rotation angle.
+We used the same lattice compression as described in~\ccite{AFM-FM-transition-Pinwheel}, making our lattice spacing $a=\SI{240}{\nano\metre} / \sin(\ang{45}+\alpha)$ angle-dependent: it varies from \SI{340}{\nano\metre} at $\alpha=\ang{0}$ to \SI{240}{\nano\metre} at $\alpha=\ang{45}$. 
+For the dipole model, the transition occurs at $\approx \ang{35}$ as expected, while the dumbbell model (here with $d = \SI{220}{\nano\metre}$) indeed transitions at a larger rotation angle.
 % TODO REF: should or should we not look for some experimental references to include the following sentences, or do we keep this text hidden?
 % While this transition was experimentally observed to be gradual from \ang{35} to nearly \ang{45}, these experiments likely could not reach an equilibrium state due to defects, rapid quenching, or finite correlation times, all of which freeze domain walls in the system. Metropolis-Hastings samples the equilibrium state space, resulting in the sharp transition seen in the figure.
 
 \xfig[0.6]{2_Hotspice/Verification/Pinwheel_angle.pdf}{
 	Fraction of vertices with net zero magnetisation at equilibrium, as square ASI (left) transitions to pinwheel ASI (right) by rotating individual magnets.
 	The theoretical transition angle $\alpha_c \approx \ang{35.3}$ for the dipole model is indicated by the vertical dotted line.
+	The dumbbell model uses a monopole-monopole distance $d = \SI{220}{\nano\metre}$.
 	\label{fig:2:Pinwheel_angle}
 }
