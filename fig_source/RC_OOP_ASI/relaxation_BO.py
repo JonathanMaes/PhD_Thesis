@@ -77,14 +77,14 @@ def compare_exp_sim(exp_data: dict, E_EA: float = 65, E_MC: float = 10, J: float
                 sim_data_at_times[k].append(frac*sim_data[k][i] + (1-frac)*sim_data[k][i-1])
         
         all_diffs.append(np.array([[sim_data_at_times[k][i] - exp_data[k][i] for i, _ in enumerate(exp_data["times"])] for k in sim_data_at_times.keys()]))
-    ## Summarize the differences between all the samples' metrics and the experimental metrics into one BO value
+    ## Summarise the differences between all the samples' metrics and the experimental metrics into one BO value
     all_diffs = np.asarray(all_diffs) # So an array of shape (n_avg, n_metrics=4, n_times).
     # Calculate the average and std of the differences
     all_diffs_avg = np.mean(all_diffs, axis=0) # Shape (n_metrics=4, n_times)
     all_diffs_std = np.std(all_diffs, axis=0) # Shape (n_metrics=4, n_times)
     
     # Score is how likely this outcome is, assuming a normal distribution
-    prob = np.exp(-.5*(all_diffs_avg/all_diffs_std)**2) # No normalization to get area 1, we are just interested in the relative probability of this outcome
+    prob = np.exp(-.5*(all_diffs_avg/all_diffs_std)**2) # No normalisation to get area 1, we are just interested in the relative probability of this outcome
     total_prob = np.prod(prob) # Total probability is all probabilities multiplied together
     
     ## Return BO value or plt figure (depending on `plot` argument).
@@ -248,7 +248,7 @@ def plot_all_iterations(path: str|Path, legend_title: str = r"$S_\mathrm{ASI}$",
 
 
 def run_optimization(S_ASI: float, n_iter: int = 8, static_params: dict = None, variables: dict = None, initial_guess: dict = None, max_total_iter: int = np.inf):
-    # Process/sanitize input arguments
+    # Process/sanitise input arguments
     exp_data = get_exp_data(S_ASI=S_ASI)
     msr = 170/(170 + S_ASI) if FINITE_MAGNET_SIZE else 0
     if static_params is None: static_params = {}
@@ -267,7 +267,7 @@ def run_optimization(S_ASI: float, n_iter: int = 8, static_params: dict = None, 
                 for iteration in data["all_iterations"]:
                     iterationsfile.write(json.dumps(iteration) + "\n")
     
-    # Define minimization function
+    # Define minimisation function
     def BO_optimizer_wrapper(plot=False, **kwargs):
         print(f"Running {S_ASI:.0f}nm with parameters {kwargs}")
         if plot: return compare_exp_sim(exp_data=exp_data, n_avg=200, plot=plot, magnet_size_ratio=msr, **kwargs)
@@ -276,7 +276,7 @@ def run_optimization(S_ASI: float, n_iter: int = 8, static_params: dict = None, 
         except Exception:
             return min_val
     
-    # Initialize optimizer
+    # Initialise optimizer
     optimizer = bayes_opt.BayesianOptimization(
         f=BO_optimizer_wrapper,
         pbounds=variables,

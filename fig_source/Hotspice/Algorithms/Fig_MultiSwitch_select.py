@@ -45,7 +45,7 @@ def calculate_any_neighbours(pos, shape, center: int = 0):
 
 
 def run(n_samples: int=100000, L:int=400, r:float=16, PBC:bool=True, ASI_type:type[hotspice.Magnets]=None, method:str="grid"):
-    """ In this analysis, the multiple-magnet-selection algorithm of `hotspice.Magnets.select()` is analyzed.
+    """ In this analysis, the multiple-magnet-selection algorithm of `hotspice.Magnets.select()` is analysed.
         The spatial distribution is calculated by performing `n` runs of the `select()` method.
         Also the probability distribution of the distance between two samples is calculated,
         as well as the probablity distribution of their relative positions.

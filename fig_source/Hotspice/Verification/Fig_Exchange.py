@@ -6,7 +6,7 @@ r""" This file tests the correspondence between theory and simulation for a
         J. H. Toloza, F. A. Tamarit, and S. A. Cannas. Aging in a two-dimensional Ising model
         with dipolar interactions. Physical Review B, 58(14):R8885, 1998.
     
-    Since the average magnetization is a bit boring to put as the only quantity, I wanted to include
+    Since the average magnetisation is a bit boring to put as the only quantity, I wanted to include
     also some correlation. We can either include the NN correlation or the correlation length.
     - The NN correlation is easy to calculate, and has an analytical expression available.
     - The correlation length is expensive to calculate (though it can of course be done, see e.g.
@@ -30,7 +30,7 @@ def run(T_range = np.linspace(0.9, 1.1, 21), N: int = 100, size: int = 800, sche
         `T_range` specifies the examined temperature range in multiples of T_c.
         At each step, `N` Monte Carlo steps per site are performed.
     """
-    ## Sanitize input
+    ## Sanitise input
     N = int(N)
     
     a = 1 # Choose large spacing to get many simultaneous Metropolis switches, exchange energy does not depend on `a` anyway

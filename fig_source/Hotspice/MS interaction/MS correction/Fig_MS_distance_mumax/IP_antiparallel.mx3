@@ -19,7 +19,7 @@ print(sprintf("Cell size: %.2fnm x %.2fnm x %.2fnm", w*distance_step*1e9, w*dist
 Msat = 1063242
 Aex = 13e-12
 print("Exchange length:", Sqrt((2*Aex.GetRegion(0))/(mu0*Pow(Msat.GetRegion(0), 2)))) // Check if larger than cell size
-print("Saturation magnetization:", Msat.GetRegion(0))
+print("Saturation magnetisation:", Msat.GetRegion(0))
 
 //// Track E_total, angle, shape
 TableAdd(E_total)

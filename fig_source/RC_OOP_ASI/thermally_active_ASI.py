@@ -115,7 +115,7 @@ class UniformInputter(hotspice.io.Inputter):
 
 #! WHAT IS THE BEST INPUTTER? MANY VARIATIONS OF 'WIGGLING' BETWEEN STATES EXIST, LIKE:
 #   - Just applying a uniform field, that's the easiest one but likely won't work very well because it does not really use the spatial memory, but it is easiest to fabricate
-#     -> The problem with this is that this effectively only uses the logarithmic decay or growth of the average magnetization, so memory can be present but will be quite minimal. Nothing that can't be done with something else than an ASI.
+#     -> The problem with this is that this effectively only uses the logarithmic decay or growth of the average magnetisation, so memory can be present but will be quite minimal. Nothing that can't be done with something else than an ASI.
 #   - Only applying one half-checkerboard at once, and the direction of that field on that part of the checkerboard can be varied to promote states, but then we might get closer to binary input again
 # TODO: make a list of all the various possible 'wiggling' procedures, their advantages, disadvantages, practicality, whether they can easily be done scalar instead of binary, ...
 

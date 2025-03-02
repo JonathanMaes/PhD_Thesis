@@ -107,7 +107,7 @@ def poisson_disk_sampling(width, height, radius, points=None, k=30, pad=0, seed=
     def distance(p1, p2):
         return math.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)
 
-    # Initialize variables
+    # Initialise variables
     grid_size = radius / math.sqrt(2)
     grid_width = int(math.ceil(width / grid_size))
     grid_height = int(math.ceil(height / grid_size))
@@ -130,7 +130,7 @@ def poisson_disk_sampling(width, height, radius, points=None, k=30, pad=0, seed=
                     return False
         return True
 
-    # Initialize with a random starting point if none provided
+    # Initialise with a random starting point if none provided
     if not points:
         start_point = (random.uniform(0, width), random.uniform(0, height))
         final_points.append(start_point)

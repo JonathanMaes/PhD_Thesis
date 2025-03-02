@@ -15,7 +15,7 @@ xp = hotspice.xp
 
 def run(mm: hotspice.Magnets=None, n: int = 10000, L: int = 400, Lx: int = None, Ly: int = None, cutoff: int = 16, pattern: str = None):
     """ In this analysis, the difference between using either a truncated hotspice.DipolarEnergy() kernel,
-        or using the full dipolar kernel, is analyzed.
+        or using the full dipolar kernel, is analysed.
         
         @param n [int] (10000): the number of times the energy is updated using a reduced kernel.
         @param Lx, Ly [int] (400): the size of the simulation in x- and y-direction. Can also specify `L` for square domain.

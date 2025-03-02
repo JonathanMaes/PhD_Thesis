@@ -198,7 +198,7 @@ def show_MS_distance_fig():
         # ax.set_ylim(bottom=0, top=data_i['mumax'].max()/scale_y*1.05)
         ax.set_ylim(bottom=0, top=5)
         inset_ax(ax, ASI_type=ASI_type)
-    # fig.supxlabel("Normalized center-to-center distance", fontsize=10, x=0.52) # "Normalized" means that distance was divided by the distance at which the magnets barely touch.
+    # fig.supxlabel("Normalised center-to-center distance", fontsize=10, x=0.52) # "Normalised" means that distance was divided by the distance at which the magnets barely touch.
     leg = fig.legend(*ax.get_legend_handles_labels(), ncol=4, loc="upper center")
     thesis_utils.move_legend(leg, ax, dx=0.04, dy=0.1)
     fig.tight_layout()
