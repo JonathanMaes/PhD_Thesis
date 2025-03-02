@@ -1068,7 +1068,7 @@ Two parameters suffice to make a rudimentary ASI: the lattice parameter $a$ (the
 The three \xref{energy contributions} in \eqref{eq:2:E} are provided in the \textbf{\python{hotspice.energies}} module and can be accessed from the main \python{hotspice} namespace.
 Choosing between the \link{finite dipole model}{dipole} and \link{dumbbell model}{monopole} representations for the \link{magnetostatic interaction}{magnetostatic energy} is currently done by respectivley using either the \python{DipolarEnergy} or \python{DiMonopolarEnergy} classes.
 By default, an ASI object uses only a \python{DipolarEnergy}.
-When relevant, the user has to explicitly add a \link{Zeeman energy}{\python{ZeemanEnergy}} or \link{exchange coupling}{\python{ExchangeEnergy}}.
+When relevant, the user has to explicitly add a \link{Zeeman energy}{\python{ZeemanEnergy}} or \link{exchange coupling}{\python{ExchangeEnergy}} using the \python{add_energy()} method of an ASI object.
 By manually setting the \python{local_interaction} field of an \python{ExchangeEnergy}, longer-range exchange interactions can be applied.
 
 \paragraph{Reservoir computing} % io and experiments modules

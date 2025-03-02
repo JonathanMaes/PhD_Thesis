@@ -1,5 +1,19 @@
 import matplotlib
 matplotlib.use("Agg")
+""" NOTE: if "DejaVu Sans Display" can not be found, then math mode will not be italic.
+          To fix this, go to the C:/Users/<me>/.matplotlib/fontlist-v<version>.json file
+          and add the following after the "DejaVuSans-BoldOblique.ttf" entry:
+    {
+      "fname": "fonts\\ttf\\DejaVuSansDisplay.ttf",
+      "name": "DejaVu Sans Display",
+      "style": "normal",
+      "variant": "normal",
+      "weight": 400,
+      "stretch": "normal",
+      "size": "scalable",
+      "__class__": "FontEntry"
+    },
+"""
 
 import hotspice
 import inspect
@@ -23,14 +37,14 @@ class Cycle(object):
     def __repr__(self): return self.data.__repr__()
 marker_cycle = Cycle(['o', 's', 'D', 'P', 'X', 'p', '*', '^']) # Circle, square, diamond, plus, cross, pentagon, star, triangle up (and repeat enough times)
 
+fs_small = 9
+fs_medium = fs_small + 1
+fs_large = fs_medium + 1
 
 def init_style(style=None):
-    small = 9
-    medium = small + 1
-    large = medium + 1
-    hotspice.plottools.init_style(small=small, medium=medium, large=large, style=style if style is not None else "default")
+    hotspice.plottools.init_style(small=fs_small, medium=fs_medium, large=fs_large, style=style if style is not None else "default")
     if style is None: plt.rcParams['axes.prop_cycle'] = cycler(color=["dodgerblue", "tab:red", "tab:orange", "m", "c"])
-    plt.rcParams["legend.fontsize"] = medium
+    plt.rcParams["legend.fontsize"] = fs_medium
     # plt.rcParams["pdf.use14corefonts"] = True # trigger core fonts for PDF backend
     # plt.rcParams["ps.useafm"] = True # trigger core fonts for PS backend
     # plt.rcParams["font.family"] = "Arial"

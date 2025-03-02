@@ -6,7 +6,7 @@ import os
 import pandas as pd
 
 from enum import Enum, auto
-from matplotlib.patches import Ellipse, FancyArrowPatch
+from matplotlib.patches import Annulus, Ellipse, FancyArrowPatch
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
 import thesis_utils
@@ -102,6 +102,10 @@ def inset_ax(ax: plt.Axes, ASI_type: Types, fig: plt.Figure = None):
         if ry is None: ry = rx
         inset_ax.add_patch(Ellipse((x, y), width=2*rx, height=2*ry, **kwargs))
     
+    def draw_charge(x, y, r, color="black"):
+        draw_ellipse(x, y, r/2, facecolor=color, edgecolor="none")
+        inset_ax.add_patch(Annulus((x, y), r=r, width=r/4, facecolor=color, edgecolor="none"))
+    
     def annotate_distance(text, x1, y1, x2, y2, color='k', opposite_side: bool = False, text_pad=3, endlines=False):
         fancyarrowkwargs = dict(posA=(x1, y1), posB=(x2, y2), color=color, lw=1, linestyle='-', zorder=1, shrinkA=0, shrinkB=0)
         inset_ax.add_artist(FancyArrowPatch(**fancyarrowkwargs, arrowstyle='<|-|>', mutation_scale=8))
@@ -113,7 +117,7 @@ def inset_ax(ax: plt.Axes, ASI_type: Types, fig: plt.Figure = None):
         if x1 == x2: ha, va = "left" if opposite_side else "right", "center" # Special case: vertical line
         text_offset = transforms.offset_copy(inset_ax.transData, x=[text_pad, 0, -text_pad][::(-1 if opposite_side else 1)][ln_slope],
                                              y=text_pad*(1 if opposite_side else -1)*(va != "center"), units="points", fig=fig)
-        inset_ax.text(x=np.mean((x1, x2)), y=np.mean((y1, y2)), s=text, color=color, ha=ha, va=va, transform=text_offset)
+        inset_ax.text(x=np.mean((x1, x2)), y=np.mean((y1, y2)), s=text, color=color, ha=ha, va=va, transform=text_offset, fontsize=thesis_utils.fs_large+1)
 
     r, padding = 0.19, 0.05
     d = 0.9
@@ -142,16 +146,16 @@ def inset_ax(ax: plt.Axes, ASI_type: Types, fig: plt.Figure = None):
         #     inset_ax.text(x=x1, y=y, s=r"$\otimes$", color='k', ha="center", va="center")
         #     inset_ax.text(x=x2, y=y, s=r"$\odot$", color='k', ha="center", va="center")
         case Types.IP_PARALLEL:
-            draw_ellipse(x1 - d*rx, y, r*0.05, color="blue")
-            draw_ellipse(x1 + d*rx, y, r*0.05, color="red")
-            draw_ellipse(x2 - d*rx, y, r*0.05, color="blue")
-            draw_ellipse(x2 + d*rx, y, r*0.05, color="red")
+            draw_charge(x1 - d*rx, y, r*0.15, color="blue")
+            draw_charge(x1 + d*rx, y, r*0.15, color="red")
+            draw_charge(x2 - d*rx, y, r*0.15, color="blue")
+            draw_charge(x2 + d*rx, y, r*0.15, color="red")
             annotate_distance("$d=0.9l$", x2 - d*rx, y, x2 + d*rx, y, opposite_side=True, text_pad=12, color="C2")
         case Types.IP_ANTIPARALLEL:
-            draw_ellipse(x1, y - d*ry, r*0.05, color="red")
-            draw_ellipse(x1, y + d*ry, r*0.05, color="blue")
-            draw_ellipse(x2, y - d*ry, r*0.05, color="blue")
-            draw_ellipse(x2, y + d*ry, r*0.05, color="red")
+            draw_charge(x1, y - d*ry, r*0.15, color="red")
+            draw_charge(x1, y + d*ry, r*0.15, color="blue")
+            draw_charge(x2, y - d*ry, r*0.15, color="blue")
+            draw_charge(x2, y + d*ry, r*0.15, color="red")
             # annotate_distance("$d=0.9l$", x2 - d*rx, y, x2 + d*rx, y, opposite_side=True, text_pad=6)
     annotate_distance(text, x1 - rx, y, x1 + rx, y, opposite_side=True, text_pad=12 if ASI_type == Types.IP_PARALLEL else 3, endlines=True)
             
@@ -176,13 +180,19 @@ def show_MS_distance_fig():
         title = titles[ASI_type]
         dumbbell_is_dipole = np.allclose(data_i['dipole'], data_i['dumbbell'], rtol=1e-2)
         # The following scale_y is very ad-hoc: scale_y = -np.nanmax(np.abs([data_i['mumax'], data_i['dipole'], data_i['dipole_finite'], data_i['dumbbell']])) # -1e-7*moment**2
-        ax.plot(data_i['distances'], data_i['dipole']/scale_y, label="Point dipole")
-        ax.plot(data_i['distances'], data_i['dipole_finite']/scale_y, label="Finite dipole")
-        ax.plot(data_i['distances'], data_i['dumbbell']/scale_y, label="Dumbbell" + (f" $d={get_data_kwargs['dumbbell_ratio']:.1f}l$" if get_data_kwargs['dumbbell_ratio'] != 1 else ""), linestyle=(0,(3,3)) if dumbbell_is_dipole else '-')
-        ax.plot(data_i['distances'], data_i['mumax']/scale_y, label="mumax³", color='k')
+        markevery, markersize = 0.1, 5
+        ax.plot(data_i['distances'], data_i['dipole']/scale_y, label="Point dipole",
+                marker=thesis_utils.marker_cycle[0], markevery=(0, markevery), ms=markersize)
+        ax.plot(data_i['distances'], data_i['dipole_finite']/scale_y, label="Finite dipole",
+                marker=thesis_utils.marker_cycle[1], markevery=(0, markevery), ms=markersize)
+        ax.plot(data_i['distances'], data_i['dumbbell']/scale_y, label="Dumbbell" + (f" $d={get_data_kwargs['dumbbell_ratio']:.1f}l$" if get_data_kwargs['dumbbell_ratio'] != 1 else ""),
+                marker=thesis_utils.marker_cycle[2], markevery=(markevery/2, markevery), ms=markersize,
+                linestyle=(0,(3,3)) if dumbbell_is_dipole else '-')
+        ax.plot(data_i['distances'], data_i['mumax']/scale_y, label="mumax³", color='k', ls='--')
         # ax.set_title(title, fontsize=10)
-        if i == 0: ax.set_ylabel(r"$|E_\mathrm{MS}|/\mu^2$ [a.u.]" if get_data_kwargs['scale'] else r"$E_{MS}$ (J)")
-        ax.set_xlabel([r"$r_{ij}/2r$", r"$r_{ij}/l$", r"$r_{ij}/w$"][i])
+        if i == 0: ax.set_ylabel(r"$|E_\mathrm{MS}|/\mu^2$ [a.u.]" if get_data_kwargs['scale'] else r"$E_{MS}$ (J)", fontdict=dict(fontsize=thesis_utils.fs_large))
+        else: ax.set_yticklabels([])
+        ax.set_xlabel([r"$r_{ij}/2r$", r"$r_{ij}/l$", r"$r_{ij}/w$"][i], fontdict=dict(fontsize=thesis_utils.fs_large))
         ax.axvline(1, linestyle=':', color='grey', linewidth=1)
         ax.set_xlim(right=data_i['distances'].max())
         # ax.set_ylim(bottom=0, top=data_i['mumax'].max()/scale_y*1.05)
