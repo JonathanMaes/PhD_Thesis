@@ -423,6 +423,10 @@ When using the first-switch method, \cref{alg:2:FirstSwitchSingle} is simply per
 The maximum time $t_\mathrm{max}$ (default value of one second) prevents the simulation from advancing too far into the future.
 For example, it is needed when a time-dependent \xref{external magnetic field} is applied to the lattice: for a sinusoidal signal of frequency $f$, using $t_{\mathrm{max}}=20/f$ will ensure that the waveform is captured in sufficient detail.
 Furthermore, it prevents unrealistic timescales, as the exponential character of the \xref{N\'eel-Arrhenius} law can cause switching times to become much longer than what could ever be observed experimentally. \par
+A situation can occur where $\EBeff < 0$, in which case real magnets would switch deterministically.
+In \hotspice, we choose to apply~\cref{eq:2:Néel_2} regardless, even though this likely yields non-physical random switching times $\Delta t_i \ll 1/\nu_0$.
+Therefore, we must interpret the elapsed time $t$ as being ``instantaneous'' if $t < 1/\nu_0$.
+The alternative --- limiting $\Delta t_i$ to be $\geq 1/\nu_0$ --- is not possible, as this would overestimate the elapsed time $t$. \par
 In the realm of rejection-free KMC, two commonly used algorithms are the very similar \idx{Bortz-Kalos-Lebowitz}~\cite{nfoldMCalgorithm} and \idx{Gillespie}~\cite{gillespie1976general} algorithms.
 Although Gillespie's paper also discusses the first-switch method, these two algorithms differ slightly from~\cref{alg:2:FirstSwitchSingle}, yet all yield identical results.
 Their different strategies for calculating random switching times and selecting the next switch are discussed by \textit{Gibson and Bruck}~\cite{GibsonBruck}, alongside an optimised algorithm.
