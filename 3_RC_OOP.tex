@@ -1,4 +1,4 @@
-\chapter{Applications}\label{ch:Applications}
+\chapter{Reservoir computing in out-of-plane artificial spin ice}\label{ch:Applications}
 % TODO END: go through this chapter (and the others, probably) at the end and see if any comments with additional information can be put or merged anywhere.
 \glijbaantje{If you find that you're spending almost all your time on theory,\\ start turning some attention to practical things; it will improve your theories.\\ If you find that you're spending almost all your time on practice,\\ start turning some attention to theoretical things; it will improve your practice.}{Donald Knuth}
 
@@ -21,14 +21,6 @@
 	\vspace{1em}
 \end{adjustwidth}
 
-Our main focus will be on out-of-plane systems. First, however, we will rather briefly discuss several in-plane cases.
-
-\section{In-plane systems}
-\subsection{Pinwheel reversal}\label{sec:3:IP_Pinwheel_reversal}
-\subsection{Kagome reversal} % Q: move these reversals to the Hotspice chapter?
-\subsection{RC by clocking in Pinwheel ASI}
-
-\section{Reservoir computing in out-of-plane systems}
 The main factor that attracted attention towards OOP ASI for RC, was that they allow very efficient and relatively simple input and read-out methods to be used.
 Early on in the \spinengine project, methods to read the state of OOP ASI had already been demonstrated experimentally on a small scale by ETHZ/PSI.
 However, their potential for RC had not yet been investigated.
@@ -38,15 +30,15 @@ Therefore, in this section \hotspice will be used to assess the viability and ch
 It will be shown that RC is indeed possible in such systems by using an appropriate input and readout protocol.
 This section starts with a discussion of the basic properties of OOP ASI and the motivation for researching them.
 Then, the section is divided into two main parts, discussing non-volatile and thermally active ASI. % At first, the fabricated OOP ASI were not thermally active, though ASI which spontaneously relaxed to a checkerboard state was achieved later.
-\subsection{Characteristics of OOP ASI}
-\subsubsection{Motivation} % Input and output
+\section{Characteristics of OOP ASI}
+\subsection{Motivation} % Input and output
 While it is possible to use an external field to switch both IP and OOP nanomagnets, this is undesirable in a real device due to stray fields and the need for bulky magnets.
 The main allure of OOP ASI stems from the existence of efficient input and readout mechanisms for such OOP magnets.
 Input can be applied via spin-orbit torque (SOT)~\cite{SOT_FM_AFM,SOTswitchingCoPt}, and the system can be read out using the anomalous Hall effect (AHE)~\cite{AHE}.
 Both of these only require a current to be passed through an underlayer that is electrically connected to the sample, and were explained earlier in the introduction (\cref{sec:1:ASI_IO}).
 % Nonetheless, external fields are often used for input anyway in the lab during the first stages of development, because they are easier to handle than the more complicated methods that would be used in a real device. By the end of the project, Alex had used SOT in his actual devices.
 
-\subsubsection{Structure of OOP nanomagnets} % Co/Pt multilayer, energy contributions
+\subsection{Structure of OOP nanomagnets} % Co/Pt multilayer, energy contributions
 \label{sec:3:OOP_nanomagnet_PMA}
 Where IP magnets mostly rely on shape anisotropy to create an easy axis, OOP magnets can be realised using interfacial anisotropy between the ferromagnetic material and the substrate.
 One example of this is found at the interface between \ce{Co} and \ce{Pt}, as was used in the experimental OOP ASI fabricated within the context of the \spinengine project.
@@ -59,7 +51,7 @@ Other factors contribute to the anisotropy as well, e.g. a non-linear dependence
 However, this coupling is likely not dominant in a \ce{Co}-\ce{Pt} stack, as \ce{Pt} nearly satisfies the Stoner criterion~\cite{PtMagneticOrder}.
 Since the \ce{Pt} is combined with a ferromagnetic material (\ce{Co}), it is thought that this induces a ferromagnetic coupling between \ce{Co} layers in spite of the RKKY interaction, for reasonable \ce{Pt} thicknesses~\cite{PerpendicularMagnetizationASI}.
 
-\subsubsection{ASI ground state}
+\subsection{ASI ground state}
 The ground state of any system being used for RC is of utmost importance; it dictates which input methods will induce desirable dynamics in the system and which input protocols will fall flat.
 The ground state of most OOP spin ices is some form of anti-ferromagnetic (AFM) ordering, because the dipolar interaction will always encourage opposite magnetisation between any two neighbouring OOP magnets.
 Depending on the particular lattice upon which the OOP magnets are placed, this may (e.g. triangle/Cairo; \crefSubFigRef{fig:2:ASIs}{j,l}) or may not (e.g. square/honeycomb; \crefSubFigRef{fig:2:ASIs}{i,k}) induce frustration in the system.
@@ -67,8 +59,8 @@ If no frustration is present, the symmetry of the system imposes exactly two opp
 If frustration is present, no real ground state exists apart from local interactions, though the simple two-fold symmetry will still be present, as in any ASI.
 For the OOP square-lattice ASI in particular, which is the lattice we will consider throughout this chapter, the ground state is an AFM checkerboard pattern of `up' ($\uparrow$) and `down' ($\downarrow$) magnetisation.
 
-\subsubsection{Input and readout: experiment to simulation}
-\paragraph{Input by spin-orbit torque}
+\subsection{Input and readout: experiment to simulation}
+\subsubsection{Input by spin-orbit torque}
 In the experimental system, the intent was to switch the OOP magnets using SOT~\cite{SOTswitchingCoPt}.
 Compared to an \xref{external magnetic field}, this allows far greater control over the stimulus applied for each input bit, and can more easily be integrated on-chip without generating stray fields. \par
 Since \hotspice does not work with torques, but rather with switching energies, SOT can not directly be modelled as a torque.
@@ -77,7 +69,7 @@ Broken symmetry creates a preferential magnetisation direction, which can be mod
 This is a crude approximation to fit SOT into the Ising-like model; the modelled field $B_z$ is not necessarily related to the field-like SOT torque~\cite{SOT_firstprinciplesCoPt}, though the SOT current density is likely non-linearly related to the modelled field $B_z$.
 % In the case without symmetry breaking, the effect may be modelled as a temporary reduction of the PMA, as in reality a sufficiently strong SOT (applied over multiple $\tau_0$) will push the magnetic moment in-plane~\cite{SOT_Roadmap}, after which it falls back randomly (with higher likelihood to the lowest energy state, I suppose). But this approach raises multiple additional questions: is it meaningful to reduce the barrier only slightly?
 
-\paragraph{Readout by anomalous Hall effect}
+\subsubsection{Readout by anomalous Hall effect}
 In our paper~\cite{KUR-24}, \textit{A. Kurenkov} experimentally demonstrated electrical readout of the average magnetisation $\llangle s \rrangle$ using the anomalous Hall effect~\cite{AHE}.
 This can therefore be used as a magnetic state readout in the simulations.
 However, for reservoir computing purposes, multiple readout values are beneficial, so the average magnetisation of each lattice column was used for the readout $y_i(t)$. % Fig. 6a
@@ -91,15 +83,16 @@ In the context of reservoir computing, this means that the use of this readout a
 
 %We will later notice that simple stimuli are not sufficient for RC in this system, and instead more complicated patterns will have to be used to meaningfully address the system. However, the practical implementation of such complicated stimuli requires more complicated current line layouts, which also cannot interfere with the readout. This proves to be a conundrum, which I will address later again.
 
-\subsection{RC in non-volatile OOP square ASI}
-\subsubsection{Considerations for devising an appropriate input scheme}
-\paragraph{Global field can not work} % Start with schemes that are not appropriate
-\paragraph{AFM field can work}
-\paragraph{Input encoding} % Binary vs. byte etc. Sigmoid thingy?
-\subsubsection{Two-step input scheme: clocking} % With importance of E_B_std
+\section{RC in non-volatile OOP square ASI}
+% TODO: mention disorder already here, can refer to DisorderGroundStateASI which says: "Disorder allows dynamics to start inside the array at sites where ``loose'' spins with smaller switching fields are located."
+\subsection{Considerations for devising an appropriate input scheme}
+\subsubsection{Global uniform field can not work} % Start with schemes that are not appropriate
+\subsubsection{AFM field can work}
+\subsubsection{Input encoding} % Binary vs. byte etc. Sigmoid thingy?
+\subsection{Two-step input scheme: clocking} % With importance of E_B_std
 
-\subsection{Thermally active OOP ASI}
-\subsubsection{Energy contributions}
+\section{Thermally active OOP ASI}
+\subsection{Energy contributions}
 Thermally active OOP ASI are hard to manufacture, because they must strike a delicate balance between several strong energy contributions to end up in an OOP state with a net energy barrier of only several tens of $\kBT$ at most.
 To appreciate this difficulty, let us first take a closer look at the various energy contributions in the system --- ranging from local anisotropy to large-scale interactions --- and their dependence on the geometrical structure of the OOP magnets.
 \begin{enumerate}
@@ -121,7 +114,7 @@ To appreciate this difficulty, let us first take a closer look at the various en
 For a system to exhibit spontaneous switching, the first three of these contributions should mostly cancel out --- to the level where their combined influence is of the same order of magnitude as the inter-magnet magnetostatic interaction, which is usually at least an order of magnitude weaker than the other contributions separately.
 As we will see in~\cref{sec:3:relaxation}, achieving spontaneous thermal ordering to the ground state may require even finer control.
 
-\paragraph{Magnet geometry}
+\subsubsection{Magnet geometry}
 \label{sec:3:OOP_geometry}
 % The geometry of nanomagnets in an OOP ASI is shown schematically in~\cref{fig:3:OOP_geometry}.
 % TODO: make own figure of nanomagnets?
@@ -200,9 +193,9 @@ In the Ising-like model used by \hotspice, two essential system parameters remai
 \end{itemize}
 Due to the N\'eel-Arrhenius switching law~\eqref{eq:2:Néel}, it is more appropriate to write dimensionless energies ($\EEA/\kBT$ and $\EMC/\kBT$), as it is only this ratio --- not the absolute value of the energies or temperature --- that controls the switching times. \par
 In real ASI, manufacturing inevitably introduces imperfections.
-Slight geometrical variations can result in a significant variance of the net OOP anisotropy between magnets.
-In simulations, this will be modelled by sampling $\EEA$ from a normal distribution: unless otherwise specified, a standard deviation $\sigma(\EEA) = \SI{5}{\percent}$ is used.
-This provides pinning sites for domain walls, making the relaxation process more reproducible: such ``consistent variation'' within an ASI could ultimately be beneficial for RC by providing a richer output space. \par
+Slight geometrical variations can result in a significant variance of the net OOP anisotropy between magnets~\cite{Budrikis2012,DisorderGroundStateASI}.
+In simulations, this will be modelled by sampling $\EEA$ from a normal distribution: unless otherwise specified, a standard deviation $\sigma(\EEA) = \SI{5}{\percent}$ is used~\cite{Farhan2013}.
+This provides pinning sites for domain walls, making the relaxation process more reproducible: such ``consistent variation'' within an ASI could ultimately be beneficial for RC by providing a richer output space. \par % TODO: this paragraph can actually already be mentioned in the nonvolatile section, where we just change the symbol E_EA to E_B.
 The effective energy barrier $\EBeff$ of a magnet $i$ can then symbolically be written as
 \begin{equation}
 	\label{eq:3:OOP_relaxation_EBeff}
@@ -220,7 +213,7 @@ Each panel shows the mean, standard deviation and 1st/99th percentile of $\mavg$
 Each relaxation consisted of at most $40N$ switches using the first-switch method, as this is sufficient for the system to achieve equilibrium.
 The size of the ASI does not significantly affect the relaxation process, apart from reducing the spread on these traces.
 
-\xfig{3_OOP/OOP_relaxation.pdf}{
+\xfig{3_RC_OOP/OOP_relaxation.pdf}{
 	\label{fig:3:OOP_relaxation}
 	Dependence of the ordering timescale on the energy balance between net OOP anisotropy $\EEA$ and nearest-neighbour magnetostatic coupling $\EMC$ in an $11 \times 11$ OOP square-lattice ASI. % This system size was chosen because it matched the size of our fabricated systems discussed later.
 	The ASI is initialised in a uniform magnetic state with all spins pointing `up' and is released at $t = 0$, after which the lattice relaxes to lower energies.
@@ -302,7 +295,7 @@ Increasing the $\EMC/\EEA$ ratio shifts the system though the transient region $
 Further increase of $\EMC/\EEA$ shifts the system to region $\mathrm{III}$ (panel 6) with $\mavg \approx 0$ but $\qNN \neq 1$, characteristic of stage $\circled{2}$.
 Any further increase of $\EMC/\EEA$ does not affect the average magnetisation or ordering at $t = \SI{e4}{\second}$ --- unless both $\EEA$ and $\EMC$ are sufficiently small, as in regions $\mathrm{IV}$ and $\mathrm{V}$.
 
-\xfig{3_OOP/OOP_relaxation_continuous.pdf}{
+\xfig{3_RC_OOP/OOP_relaxation_continuous.pdf}{
 	\label{fig:3:OOP_relaxation_continuous}
 	Phase diagrams of the normalised average magnetisation $\mavg$ and the local antiferromagnetic parameter $\qNN$ as a function of net out-of-plane anisotropy $\EEA$ and nearest-neighbour magnetostatic coupling $\EMC$ at $t=\SI{e4}{\second}$.
 	Five regions can be distinguished: $\mathrm{I}$ -- frozen state, $\mathrm{II}$ -- transient states, $\mathrm{III}$ -- state with domains and domain boundaries, $\mathrm{IV}$ -- checkerboard ordering, $\mathrm{V}$ -- superparamagnetic state.
@@ -391,7 +384,7 @@ Their values are indicated by the dots at $t=\SI{e3}{\second}$ and \SI{7e7}{\sec
 This figure shows the optimal fits through these points --- based on $\gtrsim 1000$ iterations of Bayesian optimisation --- with the corresponding values of $\EEA$, $\EMC$ and $J$ listed in the top right corner of each panel.
 These combinations of $\EEA$ and $\EMC$ have also been indicated in~\cref{fig:3:OOP_relaxation_continuous} as circles ($S_\mathrm{ASI}=\SI{20}{\nano\metre}$), triangles ($S_\mathrm{ASI}=\SI{25}{\nano\metre}$) and crosses ($S_\mathrm{ASI}=\SI{30}{\nano\metre}$).
 
-\xfig{3_OOP/MFM_grid.pdf}{
+\xfig{3_RC_OOP/MFM_grid.pdf}{
 	\label{fig:3:MFM_grid}
 	Determining system parameters (net OOP anisotropy $\EEA$, NN MS coupling $\EMC$ and exchange coupling $J$) for lattices with different magnet separation $S_\mathrm{ASI}$.
 	All magnets have the same geometry with $t_{\ce{Co}} = \SI{1.45}{\nano\metre}$ and $D_\mathrm{NM} = \SI{170}{\nano\metre}$.
@@ -407,7 +400,7 @@ However, one should not blindly trust the optimal parameter combination that BO 
 For this reason, \cref{fig:3:MFM_fitquality} is also provided, which shows the fit quality $\eta$ for all guesses made by the optimiser, as a function of these three parameters.
 This provides more insight on whether a high fit quality can only be obtained in a narrow parameter range.
 
-\xfig{3_OOP/MFM_fitquality.pdf}{
+\xfig{3_RC_OOP/MFM_fitquality.pdf}{
 	\label{fig:3:MFM_fitquality}
 	Fitting simulated relaxations to the experimental data, accounting for non-zero \xref{exchange coupling} $J$ and \link{finite dipole model}{finite magnet size} using the \xref{mean-barrier model}.
 	Each dot represents one guess by the Bayesian optimiser.
