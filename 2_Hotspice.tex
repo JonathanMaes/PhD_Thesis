@@ -224,13 +224,15 @@ The dumbbell model does, however, require an additional parameter $d$, which aff
 For the best correspondence with \mumax, the monopole-monopole distance $d$ should be set slightly shorter than the length $l$ of a magnet, typically around $d/l\approx0.9$.
 This adjustment accounts for the curvature and corresponding non-uniform magnetisation at the ends of real nanomagnets.
 Similar values for $d/l$ were previously found in~\ccite{DDG_Masterproef} for typical nanomagnet shapes like ellipses and stadiums. \par
-In contrast, the second-order dipole correction has little effect in IP systems and can even increase the discrepancy with \mumax. It emulates increased spatial extent and therefore always increases the interaction, but for magnets neighbouring along their hard axes (rightmost panel in~\cref{fig:2:MS_distance}) the point dipole model already overestimates the interaction. \par
+In contrast, the second-order dipole correction has little effect in IP systems and can even increase the discrepancy with \mumax.
+It emulates increased spatial extent and therefore always increases the interaction, but for magnets neighbouring along their hard axes (rightmost panel in~\cref{fig:2:MS_distance}) the point dipole model already overestimates the interaction. \par
 In conclusion, the dumbbell model is preferred for IP systems, while the second-order dipole correction is most suitable for OOP systems.
 
 \subsection{Effective energy barrier}\label{sec:2:E_B_eff}
 To properly simulate ASI dynamics and hysteresis, knowledge of the \idx{effective energy barrier} $\EBeff$, which separates the two magnetisation states of each magnet, is crucial.
 Recall that this quantity is distinct from the \xref{shape anisotropy} $\EB$: the effective energy barrier $\EBeff$ is a modification of $\EB$ caused by the interaction with other magnets. \par
-This is illustrated in~\crefSubFigRef{fig:2:EB_meanbarrier}{b}, where \indexlabel{energy landscape}energy landscapes are shown for various values of the \xref{switching energy} $\Delta E$. The energy landscape for $\Delta E = 0$ reveals the shape anisotropy $\EB$ while slanted energy landscapes for $\Delta E \neq 0$ show how $\EBeff$ is affected by these interactions.
+This is illustrated in~\crefSubFigRef{fig:2:EB_meanbarrier}{b}, where \indexlabel{energy landscape}energy landscapes are shown for various values of the \xref{switching energy} $\Delta E$.
+The energy landscape for $\Delta E = 0$ reveals the shape anisotropy $\EB$ while slanted energy landscapes for $\Delta E \neq 0$ show how $\EBeff$ is affected by these interactions.
 The figure shows that $\EBeff$ can be calculated at various levels of accuracy, which may yield different switching rates or even a different switching order~\cite{leo2021chiral}. \par
 In this section, we will explore some of these approximations for $\EBeff$.
 All of them make use of the switching energy $\Delta E$ between the current and opposite state of a magnet, since this is cheap to compute\footnote{
@@ -324,7 +326,8 @@ As a bonus, we can use the combined knowledge of $E$ and $E_\perp$ to implicitly
 		\norm{\vc{\mu} \times \vc{B}_\mathrm{eff}} = E_\perp  \mathrm{.}
 	\end{cases}
 \end{equation}
-For IP ASI, this uniquely defines $\vc{B}_\mathrm{eff}$ since all vectors lay in-plane. Solving \cref{eq:2:B_eff_implicit} for $\vc{B}_\mathrm{eff}$ yields an expression as function of $E$, $E_\perp$ and $\vc{\mu}$, valid for both IP and OOP ASI:
+For IP ASI, this uniquely defines $\vc{B}_\mathrm{eff}$ since all vectors lay in-plane.
+Solving \cref{eq:2:B_eff_implicit} for $\vc{B}_\mathrm{eff}$ yields an expression as function of $E$, $E_\perp$ and $\vc{\mu}$, valid for both IP and OOP ASI:
 \begin{equation}
 	\label{eq:2:B_eff_explicit}
 	\vc{B}_\mathrm{eff} = - \frac{E \vc{\mu} + E_\perp \vc{e}_z \times \vc{\mu}}{\mu^2} \mathrm{.}
@@ -467,7 +470,9 @@ While the \xref{first-switch method} relies on an explicit calculation of the el
 Therefore, the last step of~\cref{alg:2:MetropolisHastingsSingle} --- the calculation of the elapsed time --- is optional. \par
 For a long time, the notion of a well-defined measure for the elapsed time in rejection KMC was controversial~\cite{nfoldMCalgorithm,GlauberTimescale_sadiq1984,MCSim_StatPhys}. % Refs: `nfoldMCalgorithm` mentions both GD & MH acceptance prob., but says that GD can have a timescale (their equation looks a lot like in PhysicalTimeKMC) yet Metropolis cannot (due to the max()?), which is no longer true. `GlauberTimescale_sadiq1984' uses a less rigorously defined yet similar expression as in `PhysicalTimeKMC`. Don't use this reference when referring to the lack of a timescale, because this one seems to be one of the better solutions presented in literature, yet not very rigorous. Also `Lattice Kinetic Descriptions for Bulk Reaction-Diffusion Processes: Application to Alloys under Irradiation' p.215 says that ``The relationship between the simulation time and the physical time has been widely debated [MCSim_StatPhys], and it is sometimes assumed that the two time scales are proportional.''
 Often, the number of performed \xref{Monte Carlo sweeps}\footnote{
-	A Monte Carlo \textit{step} refers to attempting to switch a single magnet. By a \idx{Monte Carlo sweep} (MCS), we refer to $N$ attempted switches when the simulation contains $N$ magnets~\cite{NumericalDynamicalNiedermayer}. Note that no distinction between attempted switches and actual switches exists in the \xref{first-switch method}.
+	A Monte Carlo \textit{step} refers to attempting to switch a single magnet.
+	By a \idx{Monte Carlo sweep} (MCS), we refer to $N$ attempted switches when the simulation contains $N$ magnets~\cite{NumericalDynamicalNiedermayer}.
+	Note that no distinction between attempted switches and actual switches exists in the \xref{first-switch method}.
 } was used as a crude measure, but eventually a formal derivation for the physical time scale in rejection KMC was presented by \textit{Serebrinsky}~\cite{PhysicalTimeKMC}, who derived~\cref{eq:Metropolis_time}. \par
 Note that the \xref{effective energy barrier} $\EBeff$ only appears in the optional calculation of the elapsed time.
 Energy barriers do not affect the \xref{acceptance probability} in the Metropolis-Hastings algorithm because they have no effect on the equilibrium state~\cite{DynamicalGlassyBehaviour}.
@@ -605,7 +610,8 @@ This is done by performing a convolution ($*$) rather than a pointwise multiplic
 where only the central $L_x \times L_y$ area of the convolution is calculated and the matrix $\vc{Q_q}$ contains 1 at sites with unit cell index $q$, otherwise 0.
 Such a convolution can be calculated very efficiently by using the \xlabel{fast Fourier transform} (FFT). \\\par
 
-The exact values stored in the kernel depend on whether any \link{sec:2:finite}{finite-size corrections} to the magnetostatic interaction were used and whether the ASI is of the IP or OOP type. For example, an IP kernel using the \link{point dipole model}{point dipole approximation} contains elements
+The exact values stored in the kernel depend on whether any \link{sec:2:finite}{finite-size corrections} to the magnetostatic interaction were used and whether the ASI is of the IP or OOP type.
+For example, an IP kernel using the \link{point dipole model}{point dipole approximation} contains elements
 \begin{equation}
 	\label{eq:2:Kernel_detailed}
 	\vc{\mathcal{K}}^{(q)}_{ab} = \frac{\mu_0}{4 \pi} \frac{
@@ -635,7 +641,8 @@ This is illustrated in~\cref{fig:2:Kernel_PBC} for an example of pinwheel ASI. \
 	\indexlabel{open boundary conditions}
 	Comparison of the \xref{magnetostatic interaction} \link{unit cell kernel}{kernel} $\vc{\mathcal{K}}^\mathrm{(A)}$ for open (left) and periodic (right) boundary conditions, for a $16 \times 16$ pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a}) using the \link{point dipole model}{point dipole approximation}.
 	The magnet of the \xref{unit cell} site associated to this particular kernel is shown in the centre with a black outline.
-	The colour of other magnets indicates the magnitude of the magnetostatic interaction between the central and the coloured magnets if they both point `up'. This alignment is preferable for \textcolor{blue}{blue} magnets (low energy) and unstable for \textcolor{red}{red} magnets (high energy).
+	The colour of other magnets indicates the magnitude of the magnetostatic interaction between the central and the coloured magnets if they both point `up'.
+	This alignment is preferable for \textcolor{blue}{blue} magnets (low energy) and unstable for \textcolor{red}{red} magnets (high energy).
 }
 
 This construction works because elements near the edge of a kernel represent interactions between distant magnets on opposite sides of the ASI, which are the interactions most affected by PBC.
@@ -845,7 +852,8 @@ By choosing a random quarter of subregions each time, all magnets are equally li
 	\textbf{(a)} Probability density of \link{multi-switching}{simultaneously sampling} the magnet at the centre of the figure (white circle) and at any other point in the figure.
 	The imposed minimal distance $\rmin=16$ cells is indicated by the dashed white circle.
 	\textbf{(b)} Binned (cumulative) probability density of nearest-neighbour distance for simultaneously sampled points.
-	\textbf{(c)} Sample distribution over the simulation domain. This must not display any obvious pattern.
+	\textbf{(c)} Sample distribution over the simulation domain.
+	This must not display any obvious pattern.
 	\textbf{(d)} \link{periodogram}{Periodogram}, i.e. spatial Fourier transform of simultaneously sampled magnets, averaged over all iterations of the selection algorithm.
 }
 
@@ -918,7 +926,10 @@ This benchmark, as well as all other simulations throughout this thesis, were pe
 Simulation times displayed serve an illustrative purpose: absolute values on other hardware may vary significantly, though the general trends within the tables should remain similar.
 
 % Q: should we use L or N=L²? I would prefer L because at some point we talk about 2D indexation, so L makes it clearer that we have a 2D system.
-\xtable[tab:2:perf_init]{\textbf{Initialisation time} for various simulation sizes $L$ (i.e. $L \times L = N$ magnets). `Mem' indicates excessive memory consumption, `?' indicates a prohibitively long simulation time ($\gtrsim \SI{1000}{\second}$).}{
+\xtable[tab:2:perf_init]{
+	\textbf{Initialisation time} for various simulation sizes $L$ (i.e. $L \times L = N$ magnets).
+	`Mem' indicates excessive memory consumption, `?' indicates a prohibitively long simulation time ($\gtrsim \SI{1000}{\second}$).
+}{
 	\begin{tabular}{r|c|c|c|c|c|c}
 		\multicolumn{1}{r}{Simulation size $L=$} & \multicolumn{1}{c}{50} & \multicolumn{1}{c}{100} & \multicolumn{1}{c}{150} & \multicolumn{1}{c}{200} & \multicolumn{1}{c}{400} & 1000 \\
 		\hline \hline
@@ -937,7 +948,10 @@ Simulation times displayed serve an illustrative purpose: absolute values on oth
 	\end{tabular}
 }
 
-\xtable[tab:2:perf_switch]{\textbf{Time for 5000 switches} using the \xref{first-switch method}, for various simulation sizes $L$ (i.e. $L \times L = N$ magnets). `Mem' indicates excessive memory consumption, `?' indicates a prohibitively long simulation time ($\gtrsim \SI{1000}{\second}$).}{
+\xtable[tab:2:perf_switch]{
+	\textbf{Time for 5000 switches} using the \xref{first-switch method}, for various simulation sizes $L$ (i.e. $L \times L = N$ magnets).
+	`Mem' indicates excessive memory consumption, `?' indicates a prohibitively long simulation time ($\gtrsim \SI{1000}{\second}$).
+}{
 	\begin{tabular}{r|c|c|c|c|c|c}
 		\multicolumn{1}{r}{Simulation size $L=$} & \multicolumn{1}{c}{50} & \multicolumn{1}{c}{100} & \multicolumn{1}{c}{150} & \multicolumn{1}{c}{200} & \multicolumn{1}{c}{400} & 1000 \\
 		\hline \hline
@@ -1010,7 +1024,8 @@ The ability to perform \link{multi-switching}{multiple switches} simultaneously 
 
 \vspace{-1em}
 \xfigsnocap[0.47]{2_Hotspice/Performance_CPU.pdf}{2_Hotspice/Performance_GPU.pdf}{
-	Performance of OOP square ASI as a function of system size, on \textbf{(a)} CPU and \textbf{(b)} GPU. The Metropolis-Hastings algorithm was used with \xref{multi-switching} $Q=0.05$, lattice spacing $a = \SI{1}{\micro\metre}$, temperature $T = \SI{100}{\kelvin}$ and energy barrier $\EB = 0$.
+	Performance of OOP square ASI as a function of system size, on \textbf{(a)} CPU and \textbf{(b)} GPU.
+	The Metropolis-Hastings algorithm was used with \xref{multi-switching} $Q=0.05$, lattice spacing $a = \SI{1}{\micro\metre}$, temperature $T = \SI{100}{\kelvin}$ and energy barrier $\EB = 0$.
 	\label{fig:2:Performance}
 } % Q: Performance for IP ASI might be worse. Add a Pinwheel figure as well?
 
@@ -1143,7 +1158,8 @@ Special attention will be given to the issue of ``\xref{critical slowing down}''
 \subsection{Hexagon}
 Before progressing to equilibrium problems, we briefly check that the \xref{magnetostatic interaction} and its underlying \link{unit cell kernel}{kernels} all work as expected.
 The magnetostatic interaction energy of any given arrangement of nanomagnets can be calculated analytically and compared to \hotspice. \par
-As an example that is neither too simple nor complex, we consider a regular hexagon in a vortex state. The energy of all magnets should equal the following analytical solution, which is the sum of the magnetostatic interaction energy between nearest neighbours $\circled{1}$, next-nearest neighbours $\circled{2}$ and magnets on opposite sides of the hexagon $\circled{3}$:
+As an example that is neither too simple nor complex, we consider a regular hexagon in a vortex state.
+The energy of all magnets should equal the following analytical solution, which is the sum of the magnetostatic interaction energy between nearest neighbours $\circled{1}$, next-nearest neighbours $\circled{2}$ and magnets on opposite sides of the hexagon $\circled{3}$:
 \begin{align*}
 	E_{\mathrm{MS},i} =&\, \circled{1} + 2 \times \circled{2} + 2 \times \circled{3} \\
 	=&\, -\frac{\mu_0 m^2}{4\pi a^3} -2\frac{\mu_0 m^2}{4\pi \frac{3 \sqrt{3} a^3}{8}} \Big[3\cos^2(\pi/3) - \cos(2\pi/3)\Big] -2\frac{\mu_0 m^2}{4\pi \frac{a^3}{8}} \Big[3\cos^2(\pi/6) - \cos(\pi/3)\Big] \\
@@ -1204,7 +1220,8 @@ with $K$ the complete elliptic integral of the first kind and $k=\sinh^{-2}(2J/\
 
 The result of a \hotspice simulation of this Ising system is shown in \cref{fig:2:Verification_exchange}, as calculated for an $800 \times 800$ lattice at various temperatures $T$.
 Maximal \xref{multi-switching} ($Q=+\infty$) during \xref{Metropolis-Hastings sampling} was used to verify that --- at least for systems with such short-range coupling --- this sort of extreme multi-switching still converges to the correct solution.
-Since the theoretical curves for $\langle M \rangle / M_0$ and $\langle s_i s_{i+1} \rangle$ are monotonically decreasing, the final state from the previous temperature step was retained as the starting point for the next step. This preserves progress already made towards equilibrium and avoids the disruption that resetting to the uniform state would cause~\cite{MCinStatPhys}. \par
+Since the theoretical curves for $\langle M \rangle / M_0$ and $\langle s_i s_{i+1} \rangle$ are monotonically decreasing, the final state from the previous temperature step was retained as the starting point for the next step.
+This preserves progress already made towards equilibrium and avoids the disruption that resetting to the uniform state would cause~\cite{MCinStatPhys}. \par
 
 \xfig{2_Hotspice/Verification/OOP_Exchange.pdf}{
 	\label{fig:2:Verification_exchange}
@@ -1257,7 +1274,9 @@ The analytical theory is valid at zero temperature, but we are using the \link{M
 
 \xfig{2_Hotspice/Verification/OOP_Dipolar.pdf}{
 	\label{fig:2:Verification_dipolar}
-	\link{nearest-neighbour correlation}{Nearest-neighbour (NN) correlation} in an \link{exchange coupling}{exchange-coupled} system with long-range \xref{magnetostatic interactions} included, as a function of relative NN magnetostatic/exchange coupling $\delta$. Transitions occur at $\delta=0.85$ and 2.65, indicated by dotted lines. Insets show the magnetisation state with growing \xlabel{stripe domains}: white corresponds to spin `up', black to `down'.
+	\link{nearest-neighbour correlation}{Nearest-neighbour (NN) correlation} in an \link{exchange coupling}{exchange-coupled} system with long-range \xref{magnetostatic interactions} included, as a function of relative NN magnetostatic/exchange coupling $\delta$.
+	Transitions occur at $\delta=0.85$ and 2.65, indicated by dotted lines.
+	Insets show the magnetisation state with growing \xlabel{stripe domains}: white corresponds to spin `up', black to `down'.
 }
 
 Consistent with the theoretical predictions of~\ccite{StripedDipolarIsing}, for $\delta < 0.85$ a \xref{checkerboard state} exists with $\langle s_i s_{i+1} \rangle = -1$.
