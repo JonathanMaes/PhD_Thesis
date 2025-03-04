@@ -78,14 +78,12 @@ The exact form of this relationship is currently irrelevant for our RC purposes,
 \subsubsection{Readout by anomalous Hall effect}
 In our paper~\cite{KUR-24}, \textit{A. Kurenkov} experimentally demonstrated electrical readout of the average magnetisation $\llangle s \rrangle$ using the anomalous Hall effect~\cite{AHE}.
 This can therefore be used as a magnetic state readout in the simulations.
-However, reservoir computing benefits from having multiple readout values, so we will use the average magnetisation of each lattice column $i$ to populate our readout vector $y_i(t)$. % Fig. 6a in paper
-
+However, reservoir computing benefits from having multiple readout values, so we will use the average magnetisation of each lattice column $i$ to populate our readout vector $y_i(t)$. \par % Fig. 6a in paper
 A discussion about the experimental feasibility of such a grid of local readouts is given in Supplementary Information 7 of our paper~\cite{KUR-24}.
-In short, by adding more electrodes to the Hall bar --- the conductive layer underneath the ASI used to measure the magnetic state through the AHE --- inhomogeneities in the current density distribution result in different currents flowing through the different nanomagnets.
+In short, by adding more electrodes to the Hall bar --- the conductive layer underneath the ASI used to measure the magnetic state through the AHE --- inhomogeneities in the current density distribution result in different currents flowing through the various nanomagnets.
 This consequently results in unequal contributions to the Hall resistance, providing a way to differentiate between magnets.
 Individual states of the nanomagnets, not just $\llangle s \rrangle$, can be extracted through a set of linear operations.
-In the context of reservoir computing, this means that this readout approach with multiple electrodes can be computationally equivalent to knowing the exact magnetic configuration of the system.
-
+In the context of reservoir computing, this means that such a readout approach with multiple electrodes can be computationally equivalent to knowing the exact magnetic configuration of the system.
 
 %We will later notice that simple stimuli are not sufficient for RC in this (non-volatile) system, and instead more complicated patterns will have to be used to meaningfully address the system. However, the practical implementation of such complicated stimuli requires more complicated current line layouts, which also cannot interfere with the readout. This proves to be a conundrum, which I will address later again.
 
@@ -291,7 +289,12 @@ Five distinct regions can be distinguished.
 In region $\mathrm{I}$ (panel 1), weak coupling and high anisotropy result in a non-volatile system --- as used in the previous section --- where no spontaneous switches occur and $\mavg = 1$ and $\qNN = 0$ remain unchanged.
 Increasing the $\EMC/\EEA$ ratio shifts the system though the transient region $\mathrm{II}$ (panel 2), characterised by decreasing $\mavg$ and increased ordering.
 Further increase of $\EMC/\EEA$ shifts the system to region $\mathrm{III}$ (panel 6) with $\mavg \approx 0$ but $\qNN \neq 1$, characteristic of stage $\circled{2}$.
-Any further increase of $\EMC/\EEA$ does not affect the average magnetisation or ordering at $t = \SI{e4}{\second}$ --- unless both $\EEA$ and $\EMC$ are sufficiently small, as in regions $\mathrm{IV}$ and $\mathrm{V}$.
+Any further increase of $\EMC/\EEA$ does not affect the average magnetisation or ordering at $t = \SI{e4}{\second}$ --- unless both $\EEA$ and $\EMC$ are sufficiently small, as in regions $\mathrm{IV}$ and $\mathrm{V}$. \par
+Region $\mathrm{IV}$ (panel 9) is the only region where the system spontaneously achieves the checkerboard ground state.
+In~\cref{fig:3:OOP_relaxation_continuous}, it is delineated by the dotted black line that envelops a region with $\qNN \geq 0.95$.
+Reducing $\EMC$ too much puts the system in region $\mathrm{V}$ (panel 7), where the system is superparamagnetic at this timescale.
+For $t = \SI{e4}{\second}$, region $\mathrm{V}$ extends upwards to $\EEA \lesssim 32 \kBT$, since the N\'eel-Arrhenius switching law states that nanomagnets with such anisotropy have a mean switching time $\lesssim \exp(32)/\nu_0 \approx \SI{e4}{\second}$.
+The main region of interest, region $\mathrm{IV}$ with $\qNN \approx 1$, is therefore constrained from the left by the superparamagnetic regime, from the top by the transient/frozen regime, and from the right by states in which domain boundaries are too stable at the given timescale. \par
 
 \xfig{3_RC_OOP/OOP_relaxation_continuous.pdf}{
 	\label{fig:3:OOP_relaxation_continuous}
@@ -302,11 +305,6 @@ Any further increase of $\EMC/\EEA$ does not affect the average magnetisation or
 	The three symbols correspond to the experimental lattices shown in~\cref{fig:3:MFM_grid} with nanomagnet diameter $D_\mathrm{NM} = \SI{170}{\nano\metre}$, \ce{Co} thickness $t_{\ce{Co}} = \SI{1.45}{\nano\metre}$ and nanomagnet separations $S_\mathrm{ASI} = \SI{20}{\nano\metre}$ (circle), $S_\mathrm{ASI} = \SI{25}{\nano\metre}$ (triangle), $S_\mathrm{ASI} = \SI{30}{\nano\metre}$ (cross).
 }
 
-Region $\mathrm{IV}$ (panel 9) is the only region where the system spontaneously achieves the checkerboard ground state.
-In~\cref{fig:3:OOP_relaxation_continuous}, it is delineated by the dotted black line that envelops a region with $\qNN \geq 0.95$.
-Reducing $\EMC$ too much puts the system in region $\mathrm{V}$ (panel 7), where the system is superparamagnetic at this timescale.
-For $t = \SI{e4}{\second}$, region $\mathrm{V}$ extends upwards to $\EEA \lesssim 32 \kBT$, since the N\'eel-Arrhenius switching law states that nanomagnets with such anisotropy have a mean switching time $\lesssim \exp(32)/\nu_0 \approx \SI{e4}{\second}$.
-The main region of interest, region $\mathrm{IV}$ with $\qNN \approx 1$, is therefore constrained from the left by the superparamagnetic regime, from the top by the transient/frozen regime, and from the right by states in which domain boundaries are too stable at the given timescale. \par
 The phase diagrams in~\cref{fig:3:OOP_relaxation_continuous} are snapshots at $t = \SI{e4}{\second}$ and, with increasing time, region $\mathrm{IV}$ will expand and the boundaries between the different regions will shift upwards.
 Therefore, if the observation is long enough and $\EMC$ is non-negligible, a system located in the frozen region at $t = \SI{e4}{\second}$ may eventually find itself in the more ordered Regions $\mathrm{II}$, $\mathrm{III}$ or $\mathrm{IV}$.
 However, due the exponential character of the N\'eel-Arrhenius law, this shift will be minimal and region $\mathrm{IV}$ will not become much bigger than in~\cref{fig:3:OOP_relaxation_continuous} for any realistic timescale~\cite{KUR-24}.
@@ -368,19 +366,7 @@ This fitting procedure was used to determine the energy balance in real ASI with
 Due to the logarithmic relaxation, an accurate fit requires measurements separated by multiple orders of magnitude in time.
 Because $\mavg \approx a \log_{10}(t \nu_0) + b$, two measurements should suffice to fit this kind of curve to experimental data.
 However, two measurements are insufficient to prove that the relaxation is indeed logarithmic, as predicted by simulation.
-This logarithmic behaviour was separately verified using multiple measurements over a shorter timescale, as discussed in our paper~\cite{KUR-24} (Supp. 5.4). \par
-Consequently, samples were measured soon after initialisation ($\approx \SI{e3}{\second}$, since MFM measurements are not instantaneous) and again after about 2 years $\approx \SI{7e7}{\second}$.
-This provides two sufficiently distinct timescales for a successful fit.
-In the meantime, the arrays were kept in a field-free environment at room temperature in ambient atmosphere.
-The acquired MFM images are shown in~\crefSubFigRef{fig:3:MFM_grid}{a}: magnets that are still in the initial `up' state appear black, while spontaneously switched magnets (`down') are white. \par
-After \SI{1000}{\second}, multiple switches have occurred, but the system is still far from the highly ordered state with $\qNN=1$ and $\mavg=0$.
-Note that more switches occur in closely-packed lattices (low $S_\mathrm{ASI}$) due to the stronger coupling between magnets.
-After $\approx 27$ months (\SI{7e7}{\second}), several more magnets were observed to have switched, as indicated by the yellow circles in~\crefSubFigRef{fig:3:MFM_grid}{a}.
-Only switches from the initial `up' (black) to the `down' (white) state were observed: none of the magnets that had already switched after \SI{e3}{\second} had switched back to the initial state after \SI{7e7}{\second}. \par
-From each of these MFM images, $\mavg$, $\qNN$, $\qNN[2]$ and $\qNN[3]$ were determined.
-Their values are indicated by the dots at $t=\SI{e3}{\second}$ and \SI{7e7}{\second} in~\crefSubFigRef{fig:3:MFM_grid}{b}.
-This figure shows the optimal fits through these points --- based on $\gtrsim 1000$ iterations of Bayesian optimisation --- with the corresponding values of $\EEA$, $\EMC$ and $J$ listed in the top right corner of each panel.
-These combinations of $\EEA$ and $\EMC$ have also been indicated in~\cref{fig:3:OOP_relaxation_continuous} as circles ($S_\mathrm{ASI}=\SI{20}{\nano\metre}$), triangles ($S_\mathrm{ASI}=\SI{25}{\nano\metre}$) and crosses ($S_\mathrm{ASI}=\SI{30}{\nano\metre}$).
+This logarithmic behaviour was separately verified using multiple measurements over a shorter timescale, as discussed in our paper~\cite{KUR-24} (Supp. 5.4).
 
 \xfig{3_RC_OOP/MFM_grid.pdf}{
 	\label{fig:3:MFM_grid}
@@ -394,9 +380,19 @@ These combinations of $\EEA$ and $\EMC$ have also been indicated in~\cref{fig:3:
 	Each trace shows the average of 200 simulated relaxations (central line) and their standard deviation (shaded area).
 }
 
-However, one should not blindly trust the optimal parameter combination that BO provides: it is possible that a fit of similar quality could be obtained for different $\EEA$, $\EMC$ or $J$.
-For this reason, \cref{fig:3:MFM_fitquality} is also provided, which shows the fit quality $\eta$ for all guesses made by the optimiser, as a function of these three parameters.
-This provides more insight on whether a high fit quality can only be obtained in a narrow parameter range.
+
+Consequently, samples were measured soon after initialisation ($\approx \SI{e3}{\second}$, since MFM measurements are not instantaneous) and again after about 2 years $\approx \SI{7e7}{\second}$.
+This provides two sufficiently distinct timescales for a successful fit.
+In the meantime, the arrays were kept in a field-free environment at room temperature in ambient atmosphere.
+The acquired MFM images are shown in~\crefSubFigRef{fig:3:MFM_grid}{a}: magnets that are still in the initial `up' state appear black, while spontaneously switched magnets (`down') are white. \par
+After \SI{1000}{\second}, multiple switches have occurred, but the system is still far from the highly ordered state with $\qNN=1$ and $\mavg=0$.
+Note that more switches occur in closely-packed lattices (low $S_\mathrm{ASI}$) due to the stronger coupling between magnets.
+After $\approx 27$ months (\SI{7e7}{\second}), several more magnets were observed to have switched, as indicated by the yellow circles in~\crefSubFigRef{fig:3:MFM_grid}{a}.
+Only switches from the initial `up' (black) to the `down' (white) state were observed: none of the magnets that had already switched after \SI{e3}{\second} had switched back to the initial state after \SI{7e7}{\second}. \par
+From each of these MFM images, $\mavg$, $\qNN$, $\qNN[2]$ and $\qNN[3]$ were determined.
+Their values are indicated by the dots at $t=\SI{e3}{\second}$ and \SI{7e7}{\second} in~\crefSubFigRef{fig:3:MFM_grid}{b}.
+This figure shows the optimal fits through these points --- based on $\gtrsim 1000$ iterations of Bayesian optimisation --- with the corresponding values of $\EEA$, $\EMC$ and $J$ listed in the top right corner of each panel.
+These combinations of $\EEA$ and $\EMC$ have also been indicated in~\cref{fig:3:OOP_relaxation_continuous} as circles ($S_\mathrm{ASI}=\SI{20}{\nano\metre}$), triangles ($S_\mathrm{ASI}=\SI{25}{\nano\metre}$) and crosses ($S_\mathrm{ASI}=\SI{30}{\nano\metre}$).
 
 \xfig{3_RC_OOP/MFM_fitquality.pdf}{
 	\label{fig:3:MFM_fitquality}
@@ -406,6 +402,9 @@ This provides more insight on whether a high fit quality can only be obtained in
 	The greyed-out area in the right panel represents antiferromagnetic coupling ($J<0$), which is considered non-physical in this system. 
 }
 
+However, one should not blindly trust the optimal parameter combination that BO provides: it is possible that a fit of similar quality could be obtained for different $\EEA$, $\EMC$ or $J$.
+For this reason, \cref{fig:3:MFM_fitquality} is also provided, which shows the fit quality $\eta$ for all guesses made by the optimiser, as a function of these three parameters.
+This provides more insight on whether a high fit quality can only be obtained in a narrow parameter range. \par
 Besides the aforementioned $S_\mathrm{ASL} = \SI{20}{\nano\metre}$, \SI{25}{\nano\metre} and \SI{30}{\nano\metre} samples, \cref{fig:3:MFM_fitquality} also shows results for a \SI{40}{\nano\metre} system (red crosses).
 In contrast to $S_\mathrm{ASI} = \SIrange{20}{30}{\nano\metre}$ --- for which the best fits are concentrated in a narrow range of $\EEA$, $\EMC$ and $J$ --- the $S_\mathrm{ASI} = \SI{40}{\nano\metre}$ system yielded inconclusive fits, with the fit quality $\eta$ being quite independent of the system parameters.
 For this reason, no conclusive estimates of $\EEA$, $\EMC$ and $J$ can be given for this system.
@@ -442,6 +441,7 @@ However, fits using the exact barrier were more inclined to assign $J < 0$ and d
 Because of this, we may conclude that the exact barrier is less accurate than the mean-barrier model in this case, possibly indicating that reversal occurs through a non-coherent process.
 This would also explain why the effective anisotropy is on the order of $60 \kBT$, rather than the $\approx 1000 \kBT$ predicted by analytical calculations that also assume a coherent reversal (\ccite{KUR-24} Supp. 4).
 
+\newpage
 \section{RC in thermally active OOP square ASI}
 \subsection{Concept} % Lessons learnt from non-volatile ASI
 \subsubsection{Input torques: representation in \hotspice}
@@ -465,6 +465,7 @@ The inverse mean squared error (1/MSE) between o(t) and the desired result (the 
 \subsubsection{Bayesian optimisation: Mackey-Glass}
 \subsubsection{Reflecting on results} % Is the performance decent? Compare to literature. MSE is not an ideal parameter, should use something that accounts more for the general shape.
 
+\newpage
 \section{RC in non-volatile OOP square ASI}
 % TODO: mention disorder again, can refer to DisorderGroundStateASI which says: "Disorder allows dynamics to start inside the array at sites where ``loose'' spins with smaller switching fields are located."
 \subsection{Global stimulus}
