@@ -187,7 +187,7 @@ Note that the numerical values of the limits given below are only indicative and
 In the particular case of the thermally active OOP ASI fabricated within the \spinengine project, the nanomagnets consist of $n_{\ce{Co}}=7$ ferromagnetic layers of $D_\mathrm{NM}=\SI{170}{\nano\metre}$ diameter and $t_{\ce{Co}} \approx \SI{1.45}{\nano\metre}$ thickness, with $t_{\ce{Pt}} \approx \SI{0.8}{\nano\metre}$ spacing layers in between.
 The edge-to-edge spacing between neighbouring magnets is $S_\mathrm{ASI}=\SI{30}{\nano\metre}$, unless specified otherwise, with a saturation magnetisation $M_\mathrm{sat}=\SI{1063}{\kilo\ampere\per\metre}$~\cite{Msat_Co}.
 
-\subsubsection{Relaxation characteristics}
+\subsection{Relaxation characteristics}
 \label{sec:3:relaxation}
 To better inform our choices for RC in thermally active ASI, it is essential to familiarise ourselves with its spontaneous relaxation process.
 In this section, we numerically investigate this process with \hotspice by initialising an OOP ASI in a uniform ($\uparrow$) state and subsequently observing its decay towards the checkerboard ground state over a certain timespan.
@@ -231,7 +231,7 @@ The size of the ASI does not significantly affect the relaxation process, apart 
 	The simulations were stopped after \SI{e4}{\second} and the resulting final magnetic states are shown in \textbf{the insets}, where white (black) indicates up (down) spins.
 }
 
-\paragraph{Logarithmic relaxation}
+\subsubsection{Logarithmic relaxation}
 Most strikingly, by using a logarithmic scale for the time axis, both $\mavg$ and (to a lesser extent) $\qNN$ trace a very straight line during relaxation.
 Because of this \idx{logarithmic relaxation}, the first switches occur on a vastly different timescale than the last --- each subsequent switch occurs on average $x$ times later than the previous switch ($t_{i+1} = x t_i \Rightarrow t_n = t_0 x^n$). \par
 The cause of this is the magnetostatic interaction\footnote{
@@ -264,7 +264,7 @@ The effects of $\EMC$ and $\EEA$ can be quantified by fitting a logarithmic curv
 %  	t_{\mavg=0} = \frac{10^{-b/a}}{\nu_0} = \frac{10^{\frac{\EEA - 0.3 \EMC}{3\kBT} - 0.5}}{\nu_0} \mathrm{.}
 % \end{equation}
 
-\paragraph{Two-stage relaxation}
+\subsubsection{Two-stage relaxation}
 While $\mavg$ follows a near-perfect logarithmic relaxation, $\mavg \approx 0$ is reached earlier than the perfect checkerboard ordering $\qNN = 1$ --- most strikingly in panels 6 and 9 of~\cref{fig:3:OOP_relaxation}.
 This is accompanied by a decreased ordering rate $\frac{\partial \qNN}{\partial \log(t)}$, marking the transition between stage $\circled{1}$ and $\circled{2}$ of relaxation.
 The latter is indicated by the green shaded area in the figure. \par
@@ -290,7 +290,7 @@ This is because $\EMC$ is the only factor responsible for order in the system: l
 %During the relaxation process, one may be inclined to draw the conclusion from~\cref{fig:3:OOP_relaxation} that larger $\EMC$ yields more random variation.
 %This is mostly an illusion due to the steep slope of the relaxation for low $\EMC$: while the lower slope for $\mavg$ increases the random variation along the temporal axis, the vertical spread actually decreases for larger $\EMC$. \par
 
-\paragraph{Phase diagram}
+\subsubsection{Phase diagram}
 A stronger coupling $\EMC$ causes faster decay of $\mavg \rightarrow 0$: in panels 4--6 of~\cref{fig:3:OOP_relaxation}, the time to reach $\mavg \sim 0$ decreases from $\approx \SIrange{e3}{10}{\second}$.
 However, strong coupling does not necessarily result in faster ordering $\qNN \rightarrow 1$ --- as panels 8 and 9 clearly illustrate --- because domain wall magnets typically have 3 oppositely magnetised nearest neighbours, resulting in a net stabilising effect proportional to $\EMC$ (and $\EEA$).
 Therefore, for a system to reach the checkerboard state on a given timescale, a sufficiently low $\EMC$ and $\EEA$ are required. \par
@@ -320,16 +320,16 @@ The phase diagrams in~\cref{fig:3:OOP_relaxation_continuous} are snapshots at $t
 Therefore, if the observation is long enough and $\EMC$ is non-negligible, a system located in the frozen region at $t = \SI{e4}{\second}$ may eventually find itself in the more ordered Regions $\mathrm{II}$, $\mathrm{III}$ or $\mathrm{IV}$.
 However, due the exponential character of the N\'eel-Arrhenius law, this shift will be minimal and region $\mathrm{IV}$ will not become much bigger than in~\cref{fig:3:OOP_relaxation_continuous} for any realistic timescale~\cite{KUR-24}.
 
-\paragraph{Exchange-coupled system} % TODO: expand, could be omitted if not sufficiently worked out
+\subsubsection{Exchange-coupled system} % TODO: expand, could be omitted if not sufficiently worked out
 
-\paragraph{Summary}
+\subsubsection{Summary}
 The state of an OOP ASI is defined by the net OOP anisotropy $\EEA$, magnetostatic coupling $\EMC$ and elapsed time $t$.
 Increasing $\EMC$ causes the relaxation to occur over a larger amount of timescales.
 Meanwhile, $\EEA$ controls the timescale of the relaxation but does not affect the amount of timescales over which the relaxation occurs.
 For reservoir computing purposes, a sufficiently low $\EEA$ and $\EMC$ are required --- but not too low, to maintain OOP anisotropy and a ground-state checkerboard ordering, respectively.
 Therefore, practical applications exploiting systems with specific dynamics will require careful adjustment of the lattice and nanomagnet dimensions~\cite{KUR-24}.
 
-\subsubsection{Fitting MFM images}\label{sec:3:OOP:MFM}
+\subsection{Fitting MFM images}\label{sec:3:OOP:MFM}
 Based only on the magnet geometry --- determined by the various geometrical parameters discussed earlier in~\cref{sec:3:OOP_geometry} --- it is hard to predict the net OOP anisotropy $\EEA$ and magnetostatic coupling $\EMC$ of a manufactured ASI.
 For typical nanomagnet dimensions (7 layers of $t_{\ce{Co}} \approx \SI{1.45}{\nano\metre}$ with $D_\mathrm{NM} \approx \SI{170}{\nano\metre}$), some of the aforementioned energy contributions are on the order of several $1000 \kBT$, as we discuss in more detail in~\ccite{KUR-24} (Supp. 4). % --- especially PMA and shape anisotropy, which have opposite sign and therefore mostly cancel out.
 Due to manufacturing defects, the discrepancy between theoretical estimates of these energy contributions and their real magnitudes can easily exceed $100 \kBT$. % Theoretically, $\EEA$ of an isolated magnet (as manufactured by Alex and observed to be part of a thermally relaxing OOP ASI) is $\approx\SI{-3.6e-18}{\joule} = \SI{-22.5}{\electronvolt} = -871\kBT$ which is far too large to get thermal switching. Furthermore, it is negative, implying an IP magnetisation. This discrepancy between Mathematica and reality could be due to non-coherent reversal, lowering the real energy barrier.
@@ -339,7 +339,7 @@ For this reason, \textit{A. Kurenkov} manufactured several $11 \times 11$ OOP sq
 For each of these MFM images, the values of $\mavg$ and $\qNN$ can be determined.
 The knowledge of these quantities at different moments in time can then be used to fit this data to simulated relaxations, like the ones in~\cref{fig:3:OOP_relaxation}, by varying simulation parameters like $\EEA$ and $\EMC$.
 
-\paragraph{Bayesian optimisation}
+\subsubsection{Bayesian optimisation}
 Any fitting procedure requires an appropriate metric $\eta$ to determine the quality of the fit.
 For this, we will use the random distribution of both $\mavg$ and $\qNN$ at the times of measurement $t_i$, as previously seen in~\cref{fig:3:OOP_relaxation}.
 These distributions are each characterised by a mean and standard deviation, which can be determined from repeated simulations --- typically, 200 relaxations are used. % We embrace the Monte Carlo nature of \hotspice.
@@ -372,7 +372,7 @@ It then explores a region in $\EEA \times \EMC \times J$-space by choosing new p
 While BO may not be the most performant method, as it converges rather slowly and its computational complexity scales with the number of iterations $n$ as $\order{n^3}$, it is sufficient for our purposes.
 More extensive parameter searches may benefit from using other optimisation techniques like LIPO~\cite{LIPO,LIPO_dlib}. \\\par
 
-\paragraph{Results} 
+\subsubsection{Results} 
 This fitting procedure was used to determine the energy balance in real ASI with different magnet separations $S_\mathrm{ASI}$.
 Due to the logarithmic relaxation, an accurate fit requires measurements separated by multiple orders of magnitude in time.
 Because $\mavg \approx a \log_{10}(t \nu_0) + b$, two measurements should suffice to fit this kind of curve to experimental data.
@@ -451,25 +451,25 @@ However, fits using the exact barrier were more inclined to assign $J < 0$ and d
 Because of this, we may conclude that the exact barrier is less accurate than the mean-barrier model in this case, possibly indicating that reversal occurs through a non-coherent process.
 This would also explain why the effective anisotropy is on the order of $60 \kBT$, rather than the $\approx 1000 \kBT$ predicted by analytical calculations that also assume a coherent reversal (\ccite{KUR-24} Supp. 4).
 
-\subsection{RC in thermally active OOP square ASI}
-\subsubsection{Concept} % Lessons learnt from non-volatile ASI
-\paragraph{Input torques: representation in \hotspice}
+\section{RC in thermally active OOP square ASI}
+\subsection{Concept} % Lessons learnt from non-volatile ASI
+\subsubsection{Input torques: representation in \hotspice}
 Contrary to the binary input in the non-volatile OOP ASI, thermally active ASI can be addressed by a continuous range of input.
 The input --- in reality applied through spin-orbit torque --- was applied in the simulations in the form of an OOP magnetic field $B_z(t)$ acting on the entire system.
 The field was scaled such that its OOP component extends from $B_0$ (minimum) to $B_1$ (maximum), i.e. $B_0 \leq B_z \leq B_1$.
 
-\paragraph{Readout method}
+\subsubsection{Readout method}
 The inverse mean squared error (1/MSE) between o(t) and the desired result (the sawtooth) was used as a performance metric.
 
-\subsubsection{RC: signal transformation}
-\paragraph{Motivation} % Why do signal transformation? (scalar, nonlinear, memory...)
-\paragraph{Baseline}
-\paragraph{Parameter dependencies}
-\subparagraph{Field magnitude}
-\subparagraph{Frequency}
-\subparagraph{Gradient}
-\subparagraph{System size and readout resolution}
-\subparagraph{Exchange/no exchange}
-\subparagraph{Transformation}
-\paragraph{Bayesian optimisation: Mackey-Glass}
-\paragraph{Reflecting on results} % Is the performance decent? Compare to literature. MSE is not an ideal parameter, should use something that accounts more for the general shape.
+\subsection{RC: signal transformation}
+\subsubsection{Motivation} % Why do signal transformation? (scalar, nonlinear, memory...)
+\subsubsection{Baseline}
+\subsubsection{Parameter dependencies}
+\paragraph{Field magnitude}
+\paragraph{Frequency}
+\paragraph{Gradient}
+\paragraph{System size and readout resolution}
+\paragraph{Exchange/no exchange}
+\paragraph{Transformation}
+\subsubsection{Bayesian optimisation: Mackey-Glass}
+\subsubsection{Reflecting on results} % Is the performance decent? Compare to literature. MSE is not an ideal parameter, should use something that accounts more for the general shape.
