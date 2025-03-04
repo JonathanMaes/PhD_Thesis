@@ -25,10 +25,10 @@ The main factor that attracted attention towards OOP ASI for RC, was that they a
 Early on in the \spinengine project, methods to read the state of OOP ASI had already been demonstrated experimentally on a small scale by ETHZ/PSI.
 However, their potential for RC had not yet been investigated.
 As \hotspice is well-suited for the simulation of OOP ASI, this presented an appropriate use-case for the software developed in~\cref{ch:Hotspice}. \par % Furthermore, the other simulator developed by the consortium (flatspin) only supports in-plane magnetisation. Furthermore, \hotspice is more accurate for OOP ASI than IP ASI due to the high degree of symmetry in the former.
-Therefore, in this section \hotspice will be used to assess the viability and characteristics of a couple of methods to achieve RC in OOP ASI.
+Therefore, in this chapter, \hotspice will be used to assess the viability and characteristics of a couple of methods to achieve RC in OOP ASI.
 It will be shown that RC is indeed possible in such systems by using an appropriate input and readout protocol.
-This section starts with a discussion of the basic properties of OOP ASI and the motivation for researching them.
-Then, the section is divided into two main parts, discussing non-volatile and thermally active ASI. % At first, the fabricated OOP ASI were not thermally active, though ASI which spontaneously relaxed to a checkerboard state was achieved later.
+This chapter starts with a discussion of the basic properties of OOP ASI and the motivation for researching them.
+Then, the chapter is divided into two main parts, discussing non-volatile and thermally active ASI. % At first, the fabricated OOP ASI were not thermally active, though ASI which spontaneously relaxed to a checkerboard state was achieved later.
 \section{Characteristics of OOP ASI}
 \subsection{Structure of OOP nanomagnets} % Co/Pt multilayer, energy contributions
 \label{sec:3:OOP_nanomagnet_PMA}
@@ -45,13 +45,18 @@ However, this coupling is likely not dominant in a \ce{Co}-\ce{Pt} stack, as \ce
 Since the \ce{Pt} is combined with a ferromagnetic material (\ce{Co}), it is thought that this induces a ferromagnetic coupling between \ce{Co} layers in spite of the RKKY interaction, at least for reasonable \ce{Pt} thicknesses up to a few \SI{}{\nano\metre}~\cite{PerpendicularMagnetizationASI}.
 
 \subsection{ASI ground state}
-The ground state of any system being used for RC is of utmost importance; it dictates which input methods will induce desirable dynamics in the system and which input protocols will fall flat.
-The ground state of most OOP spin ices is some form of anti-ferromagnetic (AFM) ordering, because the dipolar interaction will always encourage opposite magnetisation between any two neighbouring OOP magnets.
-Depending on the particular lattice upon which the OOP magnets are placed, frustration may (e.g. triangle/Cairo; \crefSubFigRef{fig:2:ASIs}{j,l}) or may not (e.g. square/honeycomb; \crefSubFigRef{fig:2:ASIs}{i,k}) be induced in the system by this local AFM ordering.
-If no frustration is present, the symmetry of the system imposes exactly two opposite ground states.
-If frustration is present, then not all local interactions can be satisfied simultaneously and the global ground states of the system will be hard to reach. % Locally, vertices where magnets meet will have a degenerate ground state, giving rise to mobile domains dictated by frustration.
-The simple two-fold `up'/`down' symmetry is present in any OOP ASI.
-For the OOP square-lattice ASI in particular, which is the lattice we will consider throughout this chapter, the ground state is an AFM checkerboard pattern of `up' ($\uparrow$) and `down' ($\downarrow$) magnetisation.
+The ground state of any system used for RC is crucial, as it dictates which input methods will induce desirable dynamics in the system and which input protocols will be ineffective.
+For most OOP spin ices, the ground state exhibits some form of antiferromagnetic (AFM) ordering due to the magnetostatic interaction, which always encourages opposite magnetisation between two neighbouring OOP magnets.
+As is the case for any ASI, the ground state is at least twofold degenerate, because all interactions are symmetric under magnetisation reversal. \par
+Depending on the particular lattice upon which the OOP magnets are placed, frustration may (e.g. triangle/Cairo; \crefSubFigRef{fig:2:ASIs}{j,l}) or may not (e.g. square/honeycomb; \crefSubFigRef{fig:2:ASIs}{i,k}) be present due to the local AFM ordering.
+In the absence of frustration, the symmetry of the system imposes exactly two opposite ground states.
+Conversely, if frustration is present, then not all local interactions can be satisfied simultaneously, making the global ground states of the system hard to reach. \par % Locally, vertices where magnets meet will have a degenerate ground state, giving rise to mobile domains dictated by frustration.
+For the OOP square-lattice ASI (\crefSubFigRef{fig:2:ASIs}{i}) in particular, which we focus on in this chapter, the ground state adopts an AFM checkerboard pattern of `up' ($\uparrow$) and `down' ($\downarrow$) magnetisation.
+We focus on the square-lattice system because it is the simplest example of a non-frustrated OOP ASI.
+The results obtained for this system will be applicable to most other non-frustrated OOP ASI because they all exhibit a twofold degenerate AFM ground state.
+Non-frustrated lattices with the same NN spacing can only differ in their magnetostatic interactions for next-nearest neighbours and beyond.
+However, since this interaction decays rapidly with distance, the ground state is typically dictated by the NN, which prefer anti-parallel alignment.
+Therefore, if every closed NN loop in an OOP lattice contains an even number of magnets, as is the case for the square and honeycomb lattices, then the lattice is unlikely to exhibit geometric frustration.
 
 \subsection{Input and readout: experiment to simulation}
 While it is possible to use an external field to switch both IP and OOP nanomagnets, this is undesirable in a real device due to stray fields and the need for bulky magnets.
