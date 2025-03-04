@@ -28,7 +28,7 @@ As \hotspice is well-suited for the simulation of OOP ASI, this presented an app
 Therefore, in this chapter, \hotspice will be used to assess the viability and characteristics of a couple of methods to achieve RC in OOP ASI.
 It will be shown that RC is indeed possible in such systems by using an appropriate input and readout protocol.
 This chapter starts with a discussion of the basic properties of OOP ASI and the motivation for researching them.
-Then, the chapter is divided into two main parts, discussing non-volatile and thermally active ASI. % At first, the fabricated OOP ASI were not thermally active, though ASI which spontaneously relaxed to a checkerboard state was achieved later.
+Then, the chapter is divided into two main parts, discussing thermally active and non-volatile ASI. % At first, the fabricated OOP ASI were not thermally active, though ASI which spontaneously relaxed to a checkerboard state was achieved later.
 \section{Characteristics of OOP ASI}
 \subsection{Structure of OOP nanomagnets} % Co/Pt multilayer, energy contributions
 \label{sec:3:OOP_nanomagnet_PMA}
@@ -44,8 +44,8 @@ Other factors contribute to the anisotropy as well, e.g. a non-linear dependence
 However, this coupling is likely not dominant in a \ce{Co}-\ce{Pt} stack, as \ce{Pt} nearly satisfies the Stoner criterion~\cite{PtMagneticOrder}.
 Since the \ce{Pt} is combined with a ferromagnetic material (\ce{Co}), it is thought that this induces a ferromagnetic coupling between \ce{Co} layers in spite of the RKKY interaction, at least for reasonable \ce{Pt} thicknesses up to a few \SI{}{\nano\metre}~\cite{PerpendicularMagnetizationASI}.
 
-\subsection{ASI ground state}
-The ground state of any system used for RC is crucial, as it dictates which input methods will induce desirable dynamics in the system and which input protocols will be ineffective.
+\subsection{ASI ground state} % TODO: make sure this paragraph still feels right, now that the non-volatile ASI is not the next section but is all the way at the end. Might have to move some sentences that do not make much sense for thermal ASI. But then again, this is still a general OOP ASI discussion, so we should probably keep it broad.
+The ground state of any system used for RC is crucial, as it dictates which input methods will induce desirable dynamics in the system and which input protocols will be ineffective, particularly for a non-volatile system.
 For most OOP spin ices, the ground state exhibits some form of antiferromagnetic (AFM) ordering due to the magnetostatic interaction, which always encourages opposite magnetisation between two neighbouring OOP magnets.
 As is the case for any ASI, the ground state is at least twofold degenerate, because all interactions are symmetric under magnetisation reversal. \par
 Depending on the particular lattice upon which the OOP magnets are placed, frustration may (e.g. triangle/Cairo; \crefSubFigRef{fig:2:ASIs}{j,l}) or may not (e.g. square/honeycomb; \crefSubFigRef{fig:2:ASIs}{i,k}) be present due to the local AFM ordering.
@@ -87,15 +87,7 @@ Individual states of the nanomagnets, not just $\llangle s \rrangle$, can be ext
 In the context of reservoir computing, this means that this readout approach with multiple electrodes can be computationally equivalent to knowing the exact magnetic configuration of the system.
 
 
-%We will later notice that simple stimuli are not sufficient for RC in this system, and instead more complicated patterns will have to be used to meaningfully address the system. However, the practical implementation of such complicated stimuli requires more complicated current line layouts, which also cannot interfere with the readout. This proves to be a conundrum, which I will address later again.
-
-\section{RC in non-volatile OOP square ASI}
-% TODO: mention disorder already here, can refer to DisorderGroundStateASI which says: "Disorder allows dynamics to start inside the array at sites where ``loose'' spins with smaller switching fields are located."
-\subsection{Considerations for devising an appropriate input scheme}
-\subsubsection{Global uniform field can not work} % Start with schemes that are not appropriate
-\subsubsection{AFM field can work}
-\subsubsection{Input encoding} % Binary vs. byte etc. Sigmoid thingy?
-\subsection{Two-step input scheme: clocking} % With importance of E_B_std
+%We will later notice that simple stimuli are not sufficient for RC in this (non-volatile) system, and instead more complicated patterns will have to be used to meaningfully address the system. However, the practical implementation of such complicated stimuli requires more complicated current line layouts, which also cannot interfere with the readout. This proves to be a conundrum, which I will address later again.
 
 \section{Thermally active OOP ASI}
 \subsection{Energy contributions} \label{sec:3:E_contributions}
@@ -201,7 +193,7 @@ Due to the N\'eel-Arrhenius switching law~\eqref{eq:2:Néel}, it is more appropr
 In real ASI, manufacturing inevitably introduces imperfections.
 Slight geometrical variations can result in a significant variance of the net OOP anisotropy between magnets~\cite{Budrikis2012,DisorderGroundStateASI}.
 In simulations, this will be modelled by sampling $\EEA$ from a normal distribution: unless otherwise specified, a standard deviation $\sigma(\EEA) = \SI{5}{\percent}$ is used~\cite{Farhan2013}.
-This provides pinning sites for domain walls, making the relaxation process more reproducible: such ``consistent variation'' within an ASI could ultimately be beneficial for RC by providing a richer output space. \par % TODO: this paragraph can actually already be mentioned in the nonvolatile section, where we just change the symbol E_EA to E_B.
+This provides pinning sites for domain walls, making the relaxation process more reproducible: such ``consistent variation'' within an ASI could ultimately be beneficial for RC by providing a richer output space. \par
 The effective energy barrier $\EBeff$ of a magnet $i$ can then symbolically be written as
 \begin{equation}
 	\label{eq:3:OOP_relaxation_EBeff}
@@ -472,3 +464,11 @@ The inverse mean squared error (1/MSE) between o(t) and the desired result (the 
 \paragraph{Transformation}
 \subsubsection{Bayesian optimisation: Mackey-Glass}
 \subsubsection{Reflecting on results} % Is the performance decent? Compare to literature. MSE is not an ideal parameter, should use something that accounts more for the general shape.
+
+\section{RC in non-volatile OOP square ASI}
+% TODO: mention disorder again, can refer to DisorderGroundStateASI which says: "Disorder allows dynamics to start inside the array at sites where ``loose'' spins with smaller switching fields are located."
+\subsection{Global stimulus}
+\paragraph{Appropriate readout method}
+\subsection{Two-step input scheme: clocking} % With importance of E_B_std
+\subsubsection{Input encoding} % Binary vs. byte etc. Sigmoid thingy?
+% TODO: filter the simulations/sweeps that I performed and organise them below, have a look at what parameters were changed (E_B_std, binary/byte, endianness...)
