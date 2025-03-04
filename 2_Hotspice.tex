@@ -29,9 +29,8 @@
     \vspace{1em}
 \end{adjustwidth}
 
-To assess the potential of \link{reservoir computing}{Reservoir Computing} in (perpendicular-anisotropy) \link{artificial spin ice}{Artificial Spin Ice}, as is the main topic of this thesis, a simulation framework is needed to efficiently explore the impact of various system parameters and input methods on reservoir performance. \\\par
-
-Nanomagnetic systems are often simulated using \indexlabel{micromagnetic simulations}micromagnetic codes, such as the finite-difference-based \mumax~\cite{mumax3} and \oommf~\cite{OOMMF} or the finite-element-based \nmag~\cite{Nmag}, which capture the magnetisation dynamics of individual nanomagnets in great detail. \par
+To assess the potential of \link{reservoir computing}{Reservoir Computing} in (perpendicular-anisotropy) \link{artificial spin ice}{Artificial Spin Ice}, as is the main topic of this thesis, a simulation framework is needed to efficiently explore the impact of various system parameters and input methods on reservoir performance. \par
+Nanomagnetic systems are often simulated using \indexlabel{micromagnetic simulations}micromagnetic codes, such as the finite-difference-based \mumax~\cite{mumax3} and \oommf~\cite{OOMMF} or the finite-element-based \nmag~\cite{Nmag}, which capture the magnetisation dynamics of individual nanomagnets in great detail.
 However, the time between successive switches of a nanomagnet is not necessarily similar to the timescale of micromagnetics.
 Furthermore, determining RC metrics requires applying many input cycles --- on the order of 100 for the task-agnostic metrics --- to get a statistically valid result~\cite{RC_TaskAgnosticMetrics_v2}.
 In this timeframe, many switches occur.
@@ -252,7 +251,7 @@ All of them make use of the switching energy $\Delta E$ between the current and 
 We will omit the subscript $i$ for the remainder of this section; it is implied that the following discussion and equations apply to each magnet individually.
 
 \subsubsection{Intrinsic barrier due to \xlabel{shape anisotropy}} % TODO END: is any of this more relevant in the introduction?
-% TODO: elaborate about the anisotropy constant: demag tensor with form factor $\mathcal{N}$ of a cylinder etc.
+% TODO: elaborate about the anisotropy constant: demag tensor with form factor $\mathcal{N}$ of a cylinder etc. and its calculation in hotspice
 \label{sec:2:shape_anisotropy}
 An isolated single-domain nanomagnet often exhibits two stable magnetisation states separated by energy barriers.
 In IP ASI, these states usually arise from \textit{shape anisotropy}, which originates from the \xlabel{demagnetising field} of the magnet itself.
@@ -275,7 +274,7 @@ This means the barrier height changes at half the rate at which the \xref{switch
 	\label{eq:2:EB_meanbarrier_original}
 	\EBeff = \EB + \frac{\Delta E}{2} \mathrm{,}
 \end{equation}
-as it is often encountered in literature~\cite{MC_TemperatureDesorption,DirectionalEnergyBarrier}.
+as it is often encountered in literature~\cite{MC_TemperatureDesorption,DirectionalEnergyBarrier,HyperCubicThermalASI}.
 This method is illustrated in blue in~\cref{fig:2:EB_meanbarrier}. \par
 However, this is a very crude approximation which does not account for the extreme cases where the interactions are so strong that the energy barrier effectively disappears.
 In the model of \cref{eq:2:EB_meanbarrier_original}, this happens when $\abs{\Delta E}$ exceeds twice the \xref{shape anisotropy} $\EB$, leaving only one global minimum.
