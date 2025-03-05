@@ -468,9 +468,36 @@ To find the optimal performance for a Mackey-Glass prediction, we will once agai
 
 \newpage
 \section{RC in non-volatile OOP square ASI}
-% TODO: mention disorder again, can refer to DisorderGroundStateASI which says: "Disorder allows dynamics to start inside the array at sites where ``loose'' spins with smaller switching fields are located."
+We now turn our attention to non-volatile ASI, to show that an ASI need not be thermally active to be usable for reservoir computing.
+When the energy barrier $\EEA$ separating the `up' and `down' states of a magnet is significantly higher than the thermal energy, say $\EEA \gg 40 \kBT$, the N\'eel-Arrhenius switching law says that the magnet will remain stable over any reasonable timescale.
+Therefore, non-volatile ASI consists of nanomagnets with a large perpendicular anisotropy.
+Throughout this section, we will examine various input methods for such non-volatile ASI and develop a scheme that demonstrates promising memory capacity.
+
+\paragraph{Magnetostatic interaction}
+Note that ``non-volatile'' does imply a non-interacting system; a sufficiently high magnetostatic coupling will still induce local AFM order.
+Recall the five regions we previously outlined in~\cref{fig:3:OOP_relaxation_continuous}.
+Because of the high anisotropy $\EEA$, the system can not be superparamagnetic (region $\mathrm{V}$) or attain perfect checkerboard ordering (region $\mathrm{IV}$).
+Instead, there are only two regimes for non-volatile ASI: one where the magnetostatic interaction is sufficiently strong to overcome the energy barrier $\EEA$, and another where it is not.
+These correspond to region $\mathrm{III}$ and the frozen region $\mathrm{I}$ in~\cref{fig:3:OOP_relaxation_continuous}, respectively.
+Region $\mathrm{II}$ is simply a smooth transition between these two regimes. \par
 \subsection{Global stimulus}
 \paragraph{Appropriate readout method}
-\subsection{Two-step input scheme: clocking} % With importance of E_B_std
+\subsection{Two-step input scheme: clocking}
+% TODO: mention importance of E_B_std and say "As expected, disorder allows dynamics to start inside the array at sites where ``loose'' spins with smaller switching fields are located~\cite{DisorderGroundStateASI}."
+% It should be noted that, usually, the simulations consider a \SI{5}{\percent} standard deviation on the energy barrier $\EB$ separating the `up' and `down' states of the magnets.
+% This allows nucleation of domains to start in the bulk of the system, rather than at the edges as would be the case in a perfect system.
+
+In a non-volatile system, we can instead use the domain structure for reservoir computing.
+To achieve this, we can take inspiration from the clocking scheme proposed by Jensen~\textit{et al.} for the in-plane pinwheel lattice~\cite{clocking-protocol}.
+In our square-lattice system, we can divide magnets into two groups, akin to the black and white squares on a checkerboard.
+The idea is to apply the aforementioned AFM input, but in two sub-steps to avoid saturating the entire system.
+In the first sub-step, we only apply the stimulus to the first group, while in the second sub-step we only address the second group of magnets.
+We will refer to this as the \idx{two-step AFM input scheme}.
+In this scheme, half of the magnets are not stimulated at any time, which means they can not switch if we choose a sufficiently low MS coupling $\EMC$.
+This way, we avoid the issue present in the global AFM input scheme, where the global stimulus caused domain walls to propagate throughout the system until most of the system consisted of one particular domain type. \par
+By choosing the strength of the stimulus correctly, we can make it such that only magnets part of a domain wall will switch.
+After all, any magnet that is part of a domain wall is less stable than a magnet in the bulk of a domain.
+In combination with the two-step method, this means that we can move domain walls by only a few lattice sites at once.
+This creates the much-needed memory in the system.
 \subsubsection{Input encoding} % Binary vs. byte etc. Sigmoid thingy?
 % TODO: filter the simulations/sweeps that I performed and organise them below, have a look at what parameters were changed (E_B_std, binary/byte, endianness...)
