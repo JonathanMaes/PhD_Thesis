@@ -1,6 +1,6 @@
 \chapter{Methods: ``\hotspice'' simulator for ASI}\label{ch:Hotspice}
 % \glijbaantje{It's not a bug, it's a feature.}{Someone}
-
+% TODO: apply changes applied in response letter, when response letter is sent
 \begin{adjustwidth}{2em}{2em} % TODO END: update once published.
     \begin{center}
         \textbf{Material from this chapter has also been published in:} \\
@@ -42,8 +42,11 @@ Using such higher-level approximations enables the study of collective behaviour
 Additionally, Monte Carlo methods are often used to simulate spin ices, including ASI, but these are typically specialised to a select few lattice geometries and often only account for nearest-neighbour interactions, whose strength is often arbitrarily set or calculated separately using micromagnetic codes.~\cite{MeltingASI,sklenar2019field,gilbert2014emergent,zhang2013crystallites} \\\par % REFS: 'gilbert2014emergent': Monte Carlo sims based on a vertex model and interacting magnetic charges. 'zhang2013crystallites': uses monopoles and NN couplings to model kagome ASI with Metropolis and loop update. 'moller2006artificial': bit broader using dipolar interaction, though seemingly still only for nearest neighbors. 'mengotti2011kagome' use a full dipole model with Ewald summation for PBC. 'lou2023competing': dipole model for half-occupation IP Ising. 'sendetskyi2019continuous': dipole model for square ASI. 'EngineeringRelaxationComputation': KMC on dipole model, seemingly for square arrays. 'sklenar2019field': NN interactions calculated by mumax on quadrupole lattice. 'MeltingASI': 16-vertex ice model
 
 Our goal was to blend these two approaches, resulting in \hotspice: a versatile Monte Carlo simulator meant to capture ASI physics with minimal parameters, allowing various lattice configurations to be evaluated.
-This software approximates each single-domain nanomagnet as a single Ising spin, associating energies with the various ASI states by accounting for the \link{magnetostatic interaction}{magnetostatic (MS) interaction} between all magnets.
-\hotspice supports both in-plane (IP) and out-of-plane (OOP) ASI, which may contain thousands of magnets. Simulations can span arbitrary timescales, as determined by the switching time of magnets in the system. \\\par
+It supports both in-plane (IP) and out-of-plane (OOP) ASI, which may contain thousands of magnets. 
+This software approximates each single-domain nanomagnet as a single Ising spin, associating energies with the various ASI states.
+\hotspice explicitly accounts for the \link{magnetostatic interaction}{magnetostatic (MS) interaction} between all magnets.
+The importance of considering long-range magnetostatic interactions, particularly for OOP systems, has been highlighted by Chioar~\textit{et al.}~\cite{Chioar2014}.
+Simulations can span arbitrary timescales, as determined by the switching time of magnets in the system. \\\par
 
 In this chapter, we discuss several model variants that have been implemented, and assess their accuracy in simulating the behaviour of ASI.
 These variants differ in their choice of Monte Carlo spin-flip algorithm and their calculation of the magnetostatic interactions and energy barriers. \\\par
