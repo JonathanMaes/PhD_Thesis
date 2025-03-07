@@ -53,13 +53,13 @@ def init_style(style=None):
     # rc('font',**{'family':'serif','serif':['Times']})
     # rc('text', usetex=True)
 
-def replot_all(plot_function):
+def replot_all(plot_function, **plot_kwargs):
     """ Replots all the timestamp dirs """
     script = Path(inspect.stack()[1].filename) # The caller script, i.e. the one where __name__ == "__main__"
     outdir = script.parent / (script.stem + '.out')
     for data_dir in outdir.iterdir():
         try:
-            plot_function(data_dir)
+            plot_function(data_dir, **plot_kwargs)
         except Exception:
             print(traceback.format_exc())
 
