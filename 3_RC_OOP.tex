@@ -474,13 +474,22 @@ Therefore, non-volatile ASI consists of nanomagnets with a large perpendicular a
 Throughout this section, we will examine various input methods for such non-volatile ASI and develop a scheme that demonstrates promising memory capacity.
 
 \paragraph{Magnetostatic interaction}
-Note that ``non-volatile'' does imply a non-interacting system; a sufficiently high magnetostatic coupling will still induce local AFM order.
+Note that ``non-volatile'' does imply a non-interacting system; a sufficiently high magnetostatic coupling will still induce spontaneous local AFM order.
 Recall the five regions we previously outlined in~\cref{fig:3:OOP_relaxation_continuous}.
 Because of the high anisotropy $\EEA$, the system can not be superparamagnetic (region $\mathrm{V}$) or attain perfect checkerboard ordering (region $\mathrm{IV}$).
-Instead, there are only two regimes for non-volatile ASI: one where the magnetostatic interaction is sufficiently strong to overcome the energy barrier $\EEA$, and another where it is not.
+Instead, there are only two regimes for non-volatile ASI: one where the magnetostatic coupling is sufficiently strong to overcome the energy barrier $\EEA$, and another where it is not.
 These correspond to region $\mathrm{III}$ and the frozen region $\mathrm{I}$ in~\cref{fig:3:OOP_relaxation_continuous}, respectively.
 Region $\mathrm{II}$ is simply a smooth transition between these two regimes. \par
 \subsection{Global stimulus}
+One may at first be inclined to apply a global stimulus to all magnets, in the hope of inducing dynamics.
+After all, a uniform field could be used to achieve a decent signal transformation in thermally active OOP ASI and has been reported to achieve good RC metrics in the IP pinwheel ASI~\cite{RC_ASI}.
+However, such a simple method is not usable in non-volatile OOP ASI.
+The reason for this is that the ground state of the system --- an AFM checkerboard ordering of `up' and `down' magnetization --- is twofold degenerate.
+A uniform external field does not distinguish between these two ground states at all, and will not induce any useful dynamics between them. \par
+Instead, all a uniform field would do is induce switching in some low-barrier magnets, making them point towards the field.
+However, even if they do not spontaneously return to their local ground state, they will easily do so when the opposite field is applied.
+This may induce movement of domain boundaries, but this will be a random process due to the indiscriminate nature of a global field.
+As such, the input is not reflected in the output.
 \paragraph{Appropriate readout method}
 \subsection{Two-step input scheme: clocking}
 % TODO: mention importance of E_B_std and say "As expected, disorder allows dynamics to start inside the array at sites where ``loose'' spins with smaller switching fields are located~\cite{DisorderGroundStateASI}."
