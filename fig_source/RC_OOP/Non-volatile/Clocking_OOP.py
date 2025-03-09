@@ -14,8 +14,8 @@ from nonvolatile_ASI import get_nonvolatile_mm
 
 
 def run(N: int = 13, E_B_std: float = 0.05, E_EA_ratio: float = 100, E_MC_ratio: float = 25,
-        magnitude: float = 0.00185, vacancy_fraction: float = 0., size: int = 50):
-    magnet_size_ratio = 170/(170+30) # S_ASI = 30nm, D_NM = 170nm
+        magnitude: float = 0.00185, vacancy_fraction: float = 0., size: int = 50, finite: bool = True):
+    magnet_size_ratio = 170/(170+30)*finite # S_ASI = 30nm, D_NM = 170nm
     mm = get_nonvolatile_mm(E_EA_ratio=E_EA_ratio, E_MC_ratio=E_MC_ratio, E_B_std=E_B_std,
                             size=size, magnet_size_ratio=magnet_size_ratio)
     vacancies = int(mm.n*vacancy_fraction)
@@ -210,6 +210,8 @@ if __name__ == "__main__":
     ## THESIS SYSTEMS (preliminary)
     # run(E_B_std=0.05, E_EA_ratio=100, E_MC_ratio=25, magnitude=0.00185) # Region II (magnitude range 0.0018-0.0019 works)
     # run(E_B_std=0.05, E_EA_ratio=100, E_MC_ratio=10, magnitude=0.00145) # Region I (magnitude range 0.00145-0.0015 works decently, up to 0.002 stuff happens)
+    
+    ## Clocking_clearly_<moments|domains>.pdf IS GENERATED WITH:
     # run(E_B_std=0.05, E_EA_ratio=100, E_MC_ratio=200, magnitude=0.0055, size=20, N=11) # Region III
     
     thesis_utils.replot_all(plot)
