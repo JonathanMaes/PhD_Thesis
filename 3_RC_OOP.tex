@@ -502,12 +502,34 @@ To achieve this, we can take inspiration from the clocking scheme proposed by Je
 In our square-lattice system, we can divide magnets into two groups, akin to the black and white squares on a checkerboard.
 The idea is to apply the aforementioned AFM input, but in two sub-steps to avoid saturating the entire system.
 In the first sub-step, we only apply the stimulus to the first group, while in the second sub-step we only address the second group of magnets.
-We will refer to this as the \idx{two-step AFM input scheme}.
+We will refer to this as the \idx{two-step AFM clocking scheme}.
 In this scheme, half of the magnets are not stimulated at any time, which means they can not switch if we choose a sufficiently low MS coupling $\EMC$.
 This way, we avoid the issue present in the global AFM input scheme, where the global stimulus caused domain walls to propagate throughout the system until most of the system consisted of one particular domain type. \par
 By choosing the strength of the stimulus correctly, we can make it such that only magnets part of a domain wall will switch.
 After all, any magnet that is part of a domain wall is less stable than a magnet in the bulk of a domain.
 In combination with the two-step method, this means that we can move domain walls by only a few lattice sites at once.
 This creates the much-needed memory in the system.
+% TODO: make explanatory figure with the two substeps and possibly showing domain wall movement
+
+\paragraph{Example}
+For a clean illustration of the clocking scheme, we will use an example with $\EEA=100\kBT$ and a very high coupling $\EMC=200\kBT=2\EEA$.
+This way, the influence of the random defects in $\EEA$ is suppressed, as the magnetostatic interactions are far stronger.
+This results in a far more deterministic domain wall movement.
+%Besides this and the requirement for a stronger stimulus to counteract the strong magnetostatic coupling --- domain wall magnets typically have 3 oppositely-oriented NN and are therefore stable with $\EBeff \propto \EEA + \EMC$ --- not much changes.
+
+\makeshiftfig{
+	\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_clearly_moments.pdf}
+	\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_clearly_domains.pdf}
+}{
+	\label{fig:3:Clocking_clearly_domains}
+	Evolution of a $20 \times 20$ OOP square-lattice ASI when using the two-step AFM clocking scheme (for five cycles $A$ and five opposite cycles $B$).
+	The finite size of magnets was accounted for with $D_\mathrm{NM} = \SI{170}{\nano\metre}$ and $S_\mathrm{ASI} = \SI{200}{\nano\metre}$.
+	System parameters were chosen to get $\EMC = 25 \kBT$ and $\EEA = 100 \kBT$, with $\sigma(\EEA) = \SI{5}{\percent}$.
+	All magnets are initially magnetized in one of the antiferromagnetic ground states (black). The magnetic field used in the clocking cycles has a magnitude $B_\mathrm{ext} = \qty{48}{\milli\tesla}$, and each step is applied for \qty{0.5}{\second}.
+}
+
+Besides showing the magnetisation state of each magnet, \cref{fig:3:Clocking_clearly_domains} also shows the evolution of the spatial distribution of the two domain types.
+The domain representation is more meaningful in this context, because the clocking scheme was designed to act on domains, promoting domains of one type during each cycle.
+Therefore, only the domain representation will be used from here on.
 \subsubsection{Input encoding} % Binary vs. byte etc. Sigmoid thingy?
 % TODO: filter the simulations/sweeps that I performed and organise them below, have a look at what parameters were changed (E_B_std, binary/byte, endianness...)
