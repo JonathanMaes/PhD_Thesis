@@ -514,14 +514,23 @@ However, Glauber dynamics explores the state space more slowly because it is alw
 Therefore, \hotspice uses the Metropolis-Hastings acceptance probability.
 For a broader overview of Monte Carlo methods, we refer to Ref.~\cite{IntroductionMC}, which may further clarify the at times confusing naming present throughout literature.
 
+\newpage
 \section{Implementation}\label{sec:2:Implementation}
-Now that the physics underlying the simulator have been extensively discussed, we turn our attention to the software implementation. \par
-First, we discuss why we chose to implement the ASI on an underlying rectilinear grid, and explain how the \textit{`kernel'} --- the lookup table for the magnetostatic interaction --- was implemented.
-We then take a look at the performance of \hotspice and the various improvements enabled by the implementation of these kernels.
-One particular performance-enhancing feature is examined in more detail: the possibility to select multiple magnets at once when using \xref{Metropolis-Hastings sampling}.
-Finally, we briefly discuss the structure of the software package and the functionality included in the various submodules, before finishing with a short retrospective.
+Now that the physical principles underlying the simulator have been extensively discussed, we turn our attention to its software implementation. \par
+The introductory \cref{sec:2:Implementation:Grid} provides a brief motivation for our choice to implement the ASI on a rectilinear grid.
+One of its main benefits is the existence of unit cells, which enables efficient \textit{kernels} for computing the \xref{magnetostatic interaction}. \par
+These kernels are discussed in detail in~\cref{sec:2:Kernels}, which consists of four subsections.
+First, \cref{sec:2:Kernels:Structure} explains their internal structure and how exactly they are used to calculate and update the magnetostatic interaction.
+\cref{sec:2:Kernels:PBC} then explains how these kernels facilitate the implementation of periodic boundary conditions.
+Next, \cref{sec:2:Kernels:Perp} briefly notes how similar kernels can be used for the calculation of $\left. E_{\mathrm{MS}} \right|_{\perp}$, as used for the \xref{asymmetric energy barrier}.
+Finally, \cref{sec:2:Kernels:Error} evaluates the effect of truncating the magnetostatic interaction beyond a certain distance, to reduce the computational load. \par
+After this, \cref{sec:2:MultiSwitch} explores one particular performance-enhancing feature: the simultaneous sampling of multiple magnets during \xref{Metropolis-Hastings sampling}, facilitated by the grid-based kernel implementation.
+We first derive a lower bound for the minimum separation between simultaneously sampled magnets (\cref{sec:2:MultiSwitch:rmin}), followed by a discussion of three selection algorithms in \cref{sec:2:MultiSwitch:Algorithms}. \par
+Subsequently, \cref{sec:2:Implementation:Performance} assesses the performance of \hotspice for both CPU and GPU calculations, considering the various kernels proposed in~\cref{sec:2:Kernels:Structure}.
+The performance impact of the aforementioned simultaneous sampling of magnets during Metropolis-Hastings sampling is also assessed. \par
+Finally, \cref{sec:2:API} briefly discusses the structure of the software package and the functionality included in the various submodules, before finishing the chapter with a short retrospective on the choices made during the development of this software.
 
-\subsection{Grid}\indexlabel{unit cell}
+\subsection{Grid}\indexlabel{unit cell}\label{sec:2:Implementation:Grid}
 \hotspice{} represents an ASI as a non-uniform \xlabel{rectilinear grid} of unit cells, with magnets positioned at selected grid points.
 This choice was made based on the trade-off between calculation efficiency and the freedom to place magnets anywhere.
 We opted to prioritise efficiency and accept the geometrical restriction, as most ASI research focuses on periodic lattices.
@@ -537,7 +546,7 @@ Although non-rectilinear unit cells with fewer magnets can be identified for som
 Pre-calculated ``kernels'' are used to efficiently update the \xref{magnetostatic interaction} after each switch. 
 While these kernels have to be calculated before the simulation starts, and therefore increase the initialisation time, the reduced runtime when simulating \link{sec:2:Dynamics}{dynamics} more than makes up for this.
 
-\subsubsection{Magnetostatic interaction kernel}
+\subsubsection{Magnetostatic interaction kernel}\label{sec:2:Kernels:Structure}
 For each magnet $i$, a kernel $\vc{k}^{(i)}$ stores the magnitude of the magnetostatic interaction between itself and all other magnets.
 By calculating these values beforehand, when the ASI is created, the magnetostatic interaction energy between magnets $i$ and $j$ can readily be calculated as
 \begin{equation}
@@ -633,7 +642,7 @@ if the indexation of $\vc{\mathcal{K}}^{(q)}$ starts at $(1,1)$.
 Note that $\mu_i$ and $\mu_j$ were not included in the \xref{unit cell kernel} to allow magnets in different unit cells but with the same unit cell index $q$ to have a different magnetic moment $\mu$.
 This versatility comes at the cost of two additional elementwise multiplications per interaction, which has a non-negligible performance impact as \cref{eq:2:Kernel_unitcell} is by far the most common operation performed during a meaningful simulation. \\\par
 
-\subsubsection{Periodic boundary conditions}
+\subsubsection{Periodic boundary conditions}\label{sec:2:Kernels:PBC}
 The \xref{rectilinear grid} enables the straightforward implementation of first-order \idx{periodic boundary conditions} (PBC), which account for the eight nearest replicas of the ASI --- two horizontally, two vertically and four diagonally.
 An open-boundary kernel $\vc{\mathcal{K}}^{(q)}$ can be transformed into a PBC kernel by just adding eight offset copies of the kernel to itself.
 Specifically, four copies are shifted along the axes by $\pm L_x$ or $\pm L_y$, while the remaining four are shifted diagonally by $(\pm L_x, \pm L_y)$.
@@ -643,7 +652,8 @@ This is illustrated in~\cref{fig:2:Kernel_PBC} for an example of pinwheel ASI. \
 	\label{fig:2:Kernel_PBC}
 	\indexlabel{open boundary conditions}
 	Comparison of the \xref{magnetostatic interaction} \link{unit cell kernel}{kernel} $\vc{\mathcal{K}}^\mathrm{(A)}$ for open (left) and periodic (right) boundary conditions, for a $16 \times 16$ pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a}) using the \link{point dipole model}{point dipole approximation}.
-	The magnet of the \xref{unit cell} site associated to this particular kernel is shown in the centre with a black outline.
+	For this ASI size, the 8 copies for PBC are offset by $\pm 16$ grid cells along each axis, resulting in the 8 repetitions visible in the right panel. 
+	The magnet of the \xref{unit cell} site associated to this particular kernel is shown in the centre with a black outline --- its 8 copies at $\pm 16$ lay just outside the kernel.
 	The colour of other magnets indicates the magnitude of the magnetostatic interaction between the central and the coloured magnets if they both point `up'.
 	This alignment is preferable for \textcolor{blue}{blue} magnets (low energy) and unstable for \textcolor{red}{red} magnets (high energy).
 }
@@ -654,11 +664,11 @@ Since the middle region of the open-boundary \link{unit cell kernel}{kernel} alr
 This approach has the advantage that PBC do not impact performance, as they are baked into the kernel, contrary to the alternative of using a circular convolution.
 However, this method is limited to ASI consisting of an integer number of \xref{unit cells} as systems with truncated unit cells along an edge can not properly be tiled.
 Higher-order PBC --- beyond only the 8 nearest copies --- can not be calculated based on an open-boundary kernel since it does not include interactions with such distant magnets.
-Due to the rapid $1/r^3$ decline of the \xref{magnetostatic interaction} over distance, the use for such higher-order PBC would be very limited, and they were therefore not implemented.
+Due to the rapid $1/r^3$ decline of the \xref{magnetostatic interaction} over distance, the use for such higher-order PBC would be very limited for 2D systems, and they were therefore not implemented.
 % For very small systems, higher-order PBC can be relevant, but it is recommended to instead increase the system size to increase the fidelity of the Monte Carlo simulation.
 % To explain the usage of the magnetostatic kernel, we can possibly refer to ``Real-space observation of emergent magnetic monopoles and associated Dirac strings in artificial kagome spin ice'', which notes that the energy is just a convolution of the interaction potential with the lattice sites at which there are magnets (which, for the Ewald summation, means that in Fourier space it is just a multiplication of the Fourier-transformed versions of those functions), which is pretty much what we are doing during multi-switching.
 
-\subsubsection{Hard-axis magnetostatic kernel}
+\subsubsection{Hard-axis magnetostatic kernel}\label{sec:2:Kernels:Perp}
 If the simulation accounts for the \xref{asymmetric energy barrier}, as detailed in \cref{sec:2:E_B_eff}, then two additional kernels are needed for each site in the unit cell. \par
 The first is calculated for a situation where the central magnet maintains its usual orientation while all other magnets are rotated counter-clockwise by \ang{90}.
 This kernel will be used whenever a magnet switches, to update the \link{hard-axis interaction energy}{hard-axis magnetostatic energy} $\left. E_{\mathrm{MS}} \right|_{\perp}$ of all other magnets.
@@ -669,7 +679,7 @@ This kernel is needed only once, to calculate the initial value of $\left. E_{\m
 The underlying equation for this one is also very similar to \cref{eq:2:Kernel_detailed}, but now with $u_x^{(ab)} \rightarrow -u_y^{(ab)}$ and $u_y^{(ab)} \rightarrow u_x^{(ab)}$ substituted.
 It is used in the same way as the kernel $\vc{\mathcal{K}}^{(q)}$ in \cref{eq:2:Kernel_init}.
 
-\subsubsection{Numerical error with cut-off kernel}
+\subsubsection{Numerical error with cut-off kernel}\label{sec:2:Kernels:Error}
 Since the kernel is nearly 4 times larger than the simulation domain, a straightforward performance improvement presents itself: truncating the \xref{magnetostatic interaction} at a certain distance.
 Due to the underlying grid, the most natural way of achieving this is to reduce the size of the kernel from $2L-1 \times 2L-1$ to a smaller $2K-1 \times 2K-1$ central region, $1 < K < L$.
 Note that the kernel size has to remain odd for the convolution to still place the switching magnet in the centre. \par
@@ -684,7 +694,7 @@ For example, the figure shows that the absolute error $E_\mathrm{err}$ for this 
 
 \xfig[1.0]{2_Hotspice/Kernel_cutoff.pdf}{
 	\label{fig:2:Kernel_cutoff}
-	Accumulation of error in the\link{magnetostatic interaction}{magnetostatic energy} $E_\mathrm{MS}$ when using a truncated $41 \times 41$ kernel for a simulation of $100 \times 100$ pinwheel ASI at high temperature, starting from a uniform state.
+	Accumulation of error in the \link{magnetostatic interaction}{magnetostatic energy} $E_\mathrm{MS}$ when using a truncated $41 \times 41$ kernel for a simulation of $100 \times 100$ pinwheel ASI at high temperature, starting from a uniform state.
 	\textbf{(a)} Mean and maximum error of the magnetostatic energy $E_\mathrm{MS}$ throughout the ASI, as a function of the number of switches after initialising the system in the uniform state.
 	\textbf{(b)} Final situation at the right edge of panel (a), i.e. after $\approx \SI{5e6}{}$ random switches.
 	The absolute error $E_\mathrm{err}$ is the difference between the simulations with (``Approximation'') and without (``Exact $E_\mathrm{MS}$'') a truncated kernel.
@@ -707,7 +717,7 @@ Previously, when only a single magnet switched at any instant, the magnetostatic
 This process is no longer usable if we intend to use multi-switching as a method to efficiently parallelise Metropolis-Hastings iterations: not much performance can be gained if every switching magnet requires a different cut-out.
 Instead, a far more efficient method to calculate the change in magnetostatic energy whenever multiple magnets switch is to perform a convolution of the kernel with an $L_x \times L_y$ array whose only non-zero elements are the values $s_i$ at the positions of the switching magnets.
 
-\subsubsection{Minimal distance between sampled magnets} % Derive equation
+\subsubsection{Minimal distance between sampled magnets}\label{sec:2:MultiSwitch:rmin} % Derive equation
 Since all magnets affect each other through the magnetostatic interaction, simultaneously switching nearby magnets that significantly affect each other's \xref{switching energy} may result in unphysical behaviour.
 Take for example the extreme case where it would be allowed to switch all magnets in a system at once: the total energy would not change after such a simultaneous step and an infinite loop results where the energy of the system remains high.
 In a less extreme case, convergence to a low-energy or equilibrium state may be slowed down significantly. \par
@@ -787,9 +797,10 @@ this finally gives
 Recall that we are using the Metropolis-Hastings acceptance probability in \hotspice's rejection-based \xref{kinetic Monte Carlo} algorithm (\cref{sec:2:Dynamics_MH}) rather than the \xref{Glauber dynamics} acceptance probability $P_\mathrm{GD}(\Delta E, T) = \frac{\exp(-\Delta E/k_B T)}{1+\exp(-\Delta E/k_B T)}$, because they both satisfy \xref{ergodicity} and \xref{detailed balance} but the Glauber acceptance probability is always more likely to reject a switch~\cite{bit-player_MCvsGlauber}.
 However, we can now see that the Glauber acceptance probability is not all bad when \xref{multi-switching} is used, as the extremum of its derivative is 4 times smaller than for the Metropolis-Hastings acceptance probability.
 Hence, \cref{eq:2:MultiSwitch_inequality} tells us that the minimal distance between samples with Glauber dynamics can be a factor $\sqrt[3]{1/4} \approx 0.63$ smaller than with Metropolis-Hastings.
-Consequently, $\sqrt[3]{16} \approx 2.52$ times more magnets can switch at once, so it is not as clear-cut which acceptance probability is more efficient in a given situation.
+Consequently, $\sqrt[3]{16} \approx 2.52$ times more magnets can safely switch at once.
+Therefore, Glauber dynamics can ultimately result in a greater number of switches overall, given that the Metropolis-Hastings acceptance probability is at most twice that of Glauber dynamics. Still, the optimal acceptance probability depends on the specifics of a simulation, as a large $\rmin$ will yield very few switches, which benefits Metropolis-Hastings.
 
-\subsubsection{Selection algorithms}\indexlabel{selection algorithm}
+\subsubsection{Selection algorithms}\indexlabel{selection algorithm}\label{sec:2:MultiSwitch:Algorithms}
 Now that we know how far apart simultaneously sampled magnets must be spaced, we can turn our attention to the question of how to sample them.
 Several methods are available to achieve this, whose respective benefits and drawbacks will be explored in the following paragraphs. \par
 An open question is whether \xref{multi-switching} could induce non-physical correlations into the system, as there will always be preferential directions or distances between samples.
@@ -912,7 +923,7 @@ The average distance to a nearest neighbour is, however, larger than both method
 This hybrid grid-Poisson method is half as fast as the restricted SJG method, which is still a substantial improvement over Poisson disc sampling --- due to the optimised Poisson sampler for non-adjacent subregions --- and has a more natural-looking distribution of neighbouring magnets than the grid-select method.
 As such, it is up to user preference which method to use, with modified SJG being the default in \hotspice to prioritise performance.
 
-\subsection{Performance}
+\subsection{Performance}\label{sec:2:Implementation:Performance}
 \subsubsection{History}
 The performance of \hotspice has been improved throughout development in various ways. \par
 At an early stage of development, the implementation of \hotspice was adjusted to allow calculations to be performed on either a \xlabel{central processing unit} (CPU) or a \xlabel{graphics processing unit} (GPU).

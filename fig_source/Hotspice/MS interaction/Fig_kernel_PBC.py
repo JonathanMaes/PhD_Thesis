@@ -20,6 +20,7 @@ def plot_kernel_PBC(L: int = 16):
     thesis_utils.init_style()
     figsize = (thesis_utils.page_width, 3)
     fig, axes = plt.subplots(nrows=1, ncols=2, squeeze=False, figsize=figsize)
+    fig.suptitle(r"Unitcell-kernel $\boldsymbol{\mathcal{K}}^\mathrm{(A)}$, with", x=0.47)
     imshow_kwargs = dict(
         cmap = plt.get_cmap("bwr"),
         vmin=-1,
@@ -32,14 +33,14 @@ def plot_kernel_PBC(L: int = 16):
     ax1: plt.Axes = axes[0,0]
     v = max(xp.max(xp.abs(kernel_OBC)), xp.max(xp.abs(kernel_PBC)))
     im1 = ax1.imshow(kernel_OBC*0, **imshow_kwargs)
-    ax1.set_title("Open BC")
+    ax1.set_title("open BC")
     ax1.set_xticks(ticks)
     ax1.set_yticks(ticks)
     
     ## Periodic BC
     ax2: plt.Axes = axes[0,1]
     im2 = ax2.imshow(kernel_PBC*0, **imshow_kwargs)
-    ax2.set_title("Periodic BC")
+    ax2.set_title("periodic BC")
     ax2.set_xticks(ticks)
     ax2.set_yticks(ticks)
     
@@ -61,15 +62,15 @@ def plot_kernel_PBC(L: int = 16):
                     draw_magnet(i, j, 45 if i%2 else -45, alpha=1, facecolor="white" if i==j==0 else color, edgecolor=edgecolor)
     
     ## Add colorbar axis on the right
-    X, Y = 0.89, 0.75 # X: left edge of colorbar, Y: height of all axes
-    cbar_ax: plt.Axes = fig.add_axes([X, (1-Y)/2, 0.02, Y])  # [left, bottom, width, height]
+    X, Y, bottom = 0.89, 0.75, 0.08 # X: left edge of colorbar, Y: height of all axes, bottom: bottom of all axes
+    cbar_ax: plt.Axes = fig.add_axes([X, bottom, 0.02, Y])  # [left, bottom, width, height]
     cbar = fig.colorbar(im2, cax=cbar_ax)
     cbar.set_ticks([-1, 0, 1])
     cbar.set_label("Magnetostatic interaction [a.u.]", rotation=-90, labelpad=12)  # Add a label to the colorbar
 
     ## Adjust layout to avoid overlapping elements
     fig.tight_layout(rect=[0, 0, X, 1])  # Leave space on the right for the colorbar
-    fig.subplots_adjust(bottom=(1-Y)/2, top=(1+Y)/2)
+    fig.subplots_adjust(bottom=bottom, top=Y+bottom)
 
     ## Save
     hotspice.utils.save_results(figures={"Kernel_PBC": fig}, timestamped=False)
