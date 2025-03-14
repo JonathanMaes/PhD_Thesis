@@ -20,7 +20,7 @@ def plot_kernel_PBC(L: int = 16):
     thesis_utils.init_style()
     figsize = (thesis_utils.page_width, 3)
     fig, axes = plt.subplots(nrows=1, ncols=2, squeeze=False, figsize=figsize)
-    fig.suptitle(r"Unitcell-kernel $\boldsymbol{\mathcal{K}}^\mathrm{(A)}$, with", x=0.47)
+    fig.suptitle(r"Unit cell kernel $\boldsymbol{\mathcal{K}}^\mathrm{(A)}$, with", x=0.47)
     imshow_kwargs = dict(
         cmap = plt.get_cmap("bwr"),
         vmin=-1,
