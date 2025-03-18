@@ -470,45 +470,117 @@ To find the optimal performance for a Mackey-Glass prediction, we will once agai
 \newpage
 \section{RC in non-volatile OOP square ASI}
 We now turn our attention to non-volatile ASI, to show that an ASI need not be thermally active to be usable for reservoir computing.
-When the energy barrier $\EEA$ separating the `up' and `down' states of a magnet is significantly higher than the thermal energy, say $\EEA \gg 40 \kBT$, the N\'eel-Arrhenius switching law says that the magnet will remain stable over any reasonable timescale.
-Therefore, non-volatile ASI consists of nanomagnets with a large perpendicular anisotropy.
+When the energy barrier $\EEA$ separating the `up' and `down' states of a magnet is significantly higher than the thermal energy, the N\'eel-Arrhenius switching law says that it will remain stable over any reasonable timescale --- for example, a magnet with $\EEA > 40 \kBT$ will remain stable over multiple years in the absence of external perturbations.
+Therefore, non-volatile ASI is easier to construct, as it does not require great control over the perpendicular anisotropy: it just requires a large anisotropy.
 Throughout this section, we will examine various input methods for such non-volatile ASI and develop a scheme that demonstrates promising memory capacity.
 
 \paragraph{Magnetostatic interaction}
-Note that ``non-volatile'' does imply a non-interacting system; a sufficiently high magnetostatic coupling will still induce spontaneous local AFM order.
+Note that ``non-volatile'' does not imply a non-interacting system; a sufficiently high magnetostatic coupling will still induce spontaneous AFM order, albeit only locally.
 Recall the five regions we previously outlined in~\cref{fig:3:OOP_relaxation_continuous}.
-Because of the high anisotropy $\EEA$, the system can not be superparamagnetic (region $\mathrm{V}$) or attain perfect checkerboard ordering (region $\mathrm{IV}$).
+Because of the high anisotropy $\EEA$, the system can not be superparamagnetic (region $\mathrm{V}$) or attain the perfect checkerboard ordering (region $\mathrm{IV}$).
 Instead, there are only two regimes for non-volatile ASI: one where the magnetostatic coupling is sufficiently strong to overcome the energy barrier $\EEA$, and another where it is not.
 These correspond to region $\mathrm{III}$ and the frozen region $\mathrm{I}$ in~\cref{fig:3:OOP_relaxation_continuous}, respectively.
 Region $\mathrm{II}$ is simply a smooth transition between these two regimes. \par
-\subsection{Global stimulus}
-One may at first be inclined to apply a global stimulus to all magnets, in the hope of inducing dynamics.
-After all, a uniform field could be used to achieve a decent signal transformation in thermally active OOP ASI and has been reported to achieve good RC metrics in the IP pinwheel ASI~\cite{RC_ASI}.
-However, such a simple method is not usable in non-volatile OOP ASI.
-The reason for this is that the ground state of the system --- an AFM checkerboard ordering of `up' and `down' magnetization --- is twofold degenerate.
-A uniform external field does not distinguish between these two ground states at all, and will not induce any useful dynamics between them. \par
-Instead, all a uniform field would do is induce switching in some low-barrier magnets, making them point towards the field.
-However, even if they do not spontaneously return to their local ground state, they will easily do so when the opposite field is applied.
-This may induce movement of domain boundaries, but this will be a random process due to the indiscriminate nature of a global field.
-As such, the input is not reflected in the output.
-\paragraph{Appropriate readout method}
+
+While we previously noted that the magnets in the thermally active system had a coupling $\EMC \approx 10 \kBT$, this will not suffice here: if the anisotropy is $\gg 40 \kBT$, the magnetostatic coupling between magnets must be increased.
+This should not present a significant practical issue: as demonstrated in Supplementary Information 10 of our paper~\cite{KUR-24}, the inclusion of a separate ferromagnetic layer above the magnets can focus the stray fields onto nearby magnets, thereby significantly increasing the MS coupling.
+
+\paragraph{Uniform external field}
+While a uniform field could be used to achieve a decent signal transformation in thermally active OOP ASI, this approach is no longer viable for non-volatile ASI.
+They lack the intrinsic relaxation dynamics that we previously relied upon for RC in thermally active ASI, so a fundamentally different input method will be required.
+In a non-volatile system, rather than pulling the system out of equilibrium and expecting it to return towards the ground state by itself, we must instead make use of the domain structure for RC.
+
 \subsection{Two-step input scheme: clocking}
+To achieve control over the domains, we can take inspiration from the ``clocking'' protocol proposed by Jensen~\textit{et al.} for the in-plane pinwheel lattice~\cite{clocking-protocol}.
+While that lattice is very different from our OOP system, both exhibit domains, though in pinwheel ASI these are superferromagnetic rather than anti-ferromagnetic.
+As such, we can carry over some key concepts, but there will also be several key differences regarding the input and readout if such a clocking protocol is to work in OOP ASI. \par
+Jensen~\textit{et al.} devised an input method that can move domain wall boundaries in IP pinwheel ASI in discrete steps.
+To achieve this, they apply an external magnetic field in a well-chosen direction to selectively affect one of the two pinwheel sublattices at a time, and then changed the field direction to affect the other sublattice.
+By carefully tuning the field magnitude, only the magnets at the boundary of a domain --- or at the edge of the ASI --- will switch.
+This is possible because those magnets have a lower effective energy barrier $\EBeff$ than magnets in the bulk of a domain.
+Such a two-step clocking scheme therefore allows domain wall boundaries to advance one step at a time, while avoiding saturated magnetic states that would result from a stronger input. \par
+The key takeaway from this concept is that two key factors are necessary if one wants to achieve controlled domain wall movement in an ASI~\cite{MAES-24}.
+\begin{itemize}
+	\item The input method must lift the degeneracy between the ground states --- in pinwheel ASI, a global in-plane field readily distinguishes between the four types of superferromagnetic domains.
+	\item At least two independently addressable sublattices should exist to prevent avalanches --- in pinwheel ASI, two sublattices exist whose magnets are perpendicular to each other, enabling selective manipulation via in-plane fields.
+\end{itemize}
+Let us now consider how this can be achieved in a square-lattice OOP system.
+This system is quite different from the IP pinwheel lattice used by Jensen~\textit{et al.}~\cite{clocking-protocol} and will therefore require a different input method than just applying uniform fields at well-chosen angles.
+
 % TODO: mention importance of E_B_std and say "As expected, disorder allows dynamics to start inside the array at sites where ``loose'' spins with smaller switching fields are located~\cite{DisorderGroundStateASI}."
 % It should be noted that, usually, the simulations consider a \SI{5}{\percent} standard deviation on the energy barrier $\EB$ separating the `up' and `down' states of the magnets.
 % This allows nucleation of domains to start in the bulk of the system, rather than at the edges as would be the case in a perfect system.
 
-In a non-volatile system, we can instead use the domain structure for reservoir computing.
-To achieve this, we can take inspiration from the clocking scheme proposed by Jensen~\textit{et al.} for the in-plane pinwheel lattice~\cite{clocking-protocol}.
-In our square-lattice system, we can divide magnets into two groups, akin to the black and white squares on a checkerboard.
-The idea is to apply the aforementioned AFM input, but in two sub-steps to avoid saturating the entire system.
+\paragraph{Distinguishing the ground states}
+\subparagraph{No uniform field}
+A uniform external field does not fulfill the first requirement, i.e. that an input method should be able to distinguish between the two ground states if it is to be used in a clocking protocol.
+In fact, a uniform field can not be used for RC in OOP ASI in general, regardless of whether it is used in a clocking protocol or not.
+If a uniform field is applied to non-volatile ASI, the magnetisation of low-$\EBeff$ magnets will align with the external field.
+However, any subsequent input would either be too weak to have any additional effect, or it would be strong enough to override the previous information present in the system, due to the deterministic switching.
+This would result in a very poor memory capacity, which precludes any meaningful RC.
+%Therefore, the design of an effective input protocol for non-volatile ASI must explicitly be tailored to the specific lattice geometry if it is to induce desirable dynamics.
+
+\subparagraph{AFM input}
+In the case of square-lattice OOP ASI, we can apply an AFM ``checkerboard'' field instead.
+By this, we mean that a spatially alternating `up'/`down' field must be applied to the magnets in the ASI.
+This way, each magnet will feel an effective field that is oppositely oriented to the effective field experienced by its nearest neighbours\footnote{
+	A practical realisation of such a stimulus could start from the concept of SOT through diagonal current lines, thereby carrying an oppositely oriented current through successive diagonals, and hence creating a checkerboard ordering, but this may conflict with the AHE readout method.
+	The details of this have not been worked out since practical considerations are beyond the scope of this thesis; we are primarily interested in whether this system can at all be used for RC.
+}, thereby promoting one of the two degenerate domain types --- temporarily lifting their degeneracy while the input is applied.
+This can then be used to encode input, by relating a positive input value to one domain type, while relating a negative input to the other domain type.
+% TODO: improve explanation. Should we even explain it? Explanatory image?
+
+\subparagraph{AFM readout}
+Note, however, that the readout method must follow suit: in any system, the readout method must be able to picks up on the changes induced by the input, otherwise there will be no meaningful input-output relation to perform RC with.
+In our case, using an AFM input to promote one of the ground states requires that the readout method can also distinguish between the ground states.
+The standard $\mavg$ readout, as previously used for the thermally active system, can not do so, nor can the order parameters $\qNN$.
+Instead, we will henceforth use the domain type of each magnet as the readout: we quantify the two equivalent domain types as $\pm 1$.
+We have previously mentioned that, in theory, the state of all magnets in a small ASI can be determined from AHE measurements.
+This means that such an AFM readout can be realised\footnote{
+	However, the AHE measurements may conflict with the separate diagonal current lines now required for the AFM input using SOT, whereas SOT previously used the same metallic underlayer as AHE (just with a larger current).
+	Still, these practical considerations are currently of no concern as we are performing simulations.
+}, since it only requires multiplying the state of each magnet by $\pm 1$ depending on their location in the ASI.
+To turn these individual values into a robust output vector, we will once again use averaging.
+Contrary to the thermally active ASI, where a column-wise readout was used because of their gradient along the x-axis, here ``squinting'' is used instead because no such gradient is present.
+By this, we mean that the readout values of groups of $p \times p$ magnets will be averaged --- effectively dividing the ASI into a larger square lattice.
+By applying a more isotropic averaging method like squinting, absolute values $<1$ indicate the presence of a domain boundary,
+and it is even possible to distinguish between straight walls, corners and other kinds of domain boundaries based on these averaged readout values.
+Squinting yields $\approx N/p^2$ readout values, where $p$ should be chosen large enough to avoid over-fitting.
+Typically, we use rather small ASI just like we did for thermally active ASI, so $p=2$ is often a good choice for systems up to $20 \times 20$ magnets.
+
+
+%This only affects the average magnetisation of the system, which is insufficient to get any considerable non-linearity or memory capacity in the system --- which are indispensable for RC --- because the effect is readily undone by applying the opposite field.
+
+\paragraph{Avoiding avalanches}
+However, applying the aforementioned AFM input is insufficient to achieve a clocking protocol.
+The main issue is that the AFM input provides a global stimulus.
+This means that all magnets in the system will want to take on the ground state that the input promotes, which can easily saturate the system.
+The only thing preventing saturation are the defects that cause variation on the anisotropy $\EEA$, as these can prevent magnets from switching to the opposite state.
+However, this means that the AFM input is not fundamentally different from the uniform output we dismissed!
+They both just pull magnets towards the direction of the external stimulus, with only high-anisotropy magnets resisting the switching.
+Aside from the AFM input using the ground state of the system, their effects only differ by a $\pm 1$ sign on each magnet, which gets negated by their respective readout methods.
+While the AFM and uniform input have different effects in reality, they are equivalent from a computational point of view.
+The only difference is that the AFM input can achieve switching with lower fields, as it only has to switch domain wall magnets to make domain walls propagate through the system, whereas a uniform input requires a stronger field to pull magnets away from the ground state.
+To make use of the natural ordering of an ASI, we must allow some magnets in the ASI to choose their state based on their neighbours. \par
+Therefore, to avoid saturation, two sub-steps can be applied instead.
+For this, we can divide the magnets into two groups, akin to the black and white squares on a checkerboard.
 In the first sub-step, we only apply the stimulus to the first group, while in the second sub-step we only address the second group of magnets.
-We will refer to this as the \idx{two-step AFM clocking scheme}.
-In this scheme, half of the magnets are not stimulated at any time, which means they can not switch if we choose a sufficiently low MS coupling $\EMC$.
+We refer to this as the \idx{two-step AFM clocking scheme}.
+In this scheme, half of the magnets are not stimulated at any time, which means they can not switch if the anisotropy $\EEA$ is sufficiently high (i.e., $\gg 40\kBT$ for practical timescales).
 This way, we avoid the issue present in the global AFM input scheme, where the global stimulus caused domain walls to propagate throughout the system until most of the system consisted of one particular domain type. \par
-By choosing the strength of the stimulus correctly, we can make it such that only magnets part of a domain wall will switch.
-After all, any magnet that is part of a domain wall is less stable than a magnet in the bulk of a domain.
-In combination with the two-step method, this means that we can move domain walls by only a few lattice sites at once.
-This creates the much-needed memory in the system.
+By choosing the strength of the stimulus correctly, we can make it such that only magnets that are part of a domain wall will switch.
+After all, any domain wall magnet is less stable than a magnet in the bulk of a domain, as domain wall magnets only have 3 or 2 oppositely-oriented NN.
+In combination with the two-step method that prevents half of the magnets from switching, this means that we can move domain walls by only a few lattice sites at once. \par
+To use this clocking scheme for RC, input values must be mapped to a certain cycle.
+We will map an input of value `0' to the application of cycle $A$, and a value `1' to cycle $B$.
+% For e.g. bit 0 we first apply a + stimulus on the first sublattice with 0 stimulus on the other sublattice, and then apply 0 stimulus on the other sublattice with - stimulus on the first sublattice.
+In this two-step input scheme, it is not possible to apply scalar input, because we are using domain wall movement as the input, which limits the options.
+Since there are only 2 domain types, we can only apply binary input.
+Therefore, we can not perform the signal transformation task with this system.
+This limitation of binary input is explored further in~\cref{sec:3:clocking_input_encoding}. \par
+This clocking scheme, coupled with this meaning of the input, automatically provides a basic form of memory in the system as the previous few input bits (since the last saturation) are encoded in the size of the domains.
+Since this clocking scheme relies on deterministic switching, the duration over which the sub-steps are applied is irrelevant; \qty{1}{\second} will be used in all simulations.
+
 % TODO: make explanatory figure with the two substeps and possibly showing domain wall movement
 
 \paragraph{Example}
