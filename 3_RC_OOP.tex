@@ -583,48 +583,92 @@ If it is too weak, no magnets will respond.
 If it is too strong, the system will become saturated in one of the ground states regardless.
 Since our goal is to selectively move domain walls, the input strength must be carefully chosen such that only domain wall magnets will switch deterministically. % i.e. only magnets with 3 oppositely magnetised NN should have $\EBeff < \SI{0}{\electronvolt}$
 After all, any domain wall magnet is less stable than a magnet in the bulk of a domain, so there must exist a range of input strengths where only domain wall magnets respond to the input.
-This is no different from the global AFM input method, but that method had no way of stopping the domain wall movement after it has begun.
-By combining this appropriate choice of input strength with the two-step protocol that prevents half of the magnets from switching, it is possible to move domain walls by only a few lattice sites at once.
+This is no different from the global AFM input method, but that method had no way of stopping the domain wall movement after it had begun.
+By combining an appropriate choice of input strength with the two-step protocol that prevents half of the magnets from switching, it is possible to move domain walls by only a few lattice sites at once.
 
 \xfig{3_RC_OOP/Nonvolatile/Clocking_protocol.pdf}{
 	\label{fig:3:Clocking_protocol}
 	 Illustration of the \xref{two-step AFM clocking protocol} for controlled domain wall movement in ASI.
-	 The symbols $\bigodot$ and $\bigotimes$ respectively indicate that the external stimulus is such, that the magnet at that location prefers an `up' ($\uparrow$) or `down' ($\downarrow$) magnetisation.
+	 The symbols $\bigodot$ and $\bigotimes$ respectively indicate that the external stimulus is such, that the magnet at that location would prefer an `up' or `down' magnetisation.
 	 This example shows a $5 \times 5$ ASI, but the concept is analogous for other lattice sizes.
 	 Each input cycle consists of two sub-steps that each affect a different set of magnets, arranged in a checkerboard pattern: only half of the magnets are stimulated at once.
 	 Input cycle $A$ (associated with bit 0) and input cycle $B$ (bit 1) apply opposite stimuli.
 }
 
 To use this clocking scheme for RC, input values must be mapped to a certain cycle.
-Since we are using domain wall movement as the input, this two-step input scheme requires binary input.
+Since we are using the growth and shrinking of domains, and we intend to move domain walls by only one lattice unit at a time, this two-step input scheme requires binary input data.
 Therefore, we define two cycles, $A$ and $B$, which both consist of two sub-steps.
-Recall the black and white squares on the checkerboard: cycle $A$ will stimulate the magnets on black sites to point `up' in the first sub-step --- while the other magnets remain unaffected --- after which the stimulus is removed from the black sites and magnets on white sites are stimulated to point `down'.
-Cycle $B$ is identical apart from the directions of the fields being reversed.
-This is illustrated in~\cref{fig:3:Clocking_protocol} by the symbols $\bigodot$ and $\bigotimes$.
-To apply input data, we will map an input of bit `0' to the application of cycle $A$ and bit `1' to cycle $B$. \par
-This clocking scheme, coupled with this meaning of the input, automatically provides a basic form of memory in the system as the previous few input bits (since the last saturation) are encoded in the size of the domains.
-Since this clocking scheme relies on deterministic switching, the duration over which the sub-steps are applied is irrelevant; \qty{1}{\second} will be used in all simulations.
-
-% TODO: make explanatory figure with the two substeps and possibly showing domain wall movement
+Recall the black and white squares on the checkerboard: cycle $A$'s first sub-step will stimulate the magnets on black sites such that they prefer an `up' magnetisation --- while the other magnets remain unaffected --- after which the stimulus is removed from the black sites and magnets on white sites are stimulated to point `down'.
+Cycle $B$ is identical but promotes the other magnetisation direction for each magnet, in order to grow the opposite domains as the ones grown by cycle $A$.
+These preferential magnetisation directions are illustrated in~\cref{fig:3:Clocking_protocol} by the symbols $\bigodot$ and $\bigotimes$.
+To apply input data, we define an input bit `0' as cycle $A$ and bit `1' as cycle $B$. \par
+This clocking scheme, coupled with this definition of the input, automatically provides basic memory in the system, as the previous few input bits are encoded in the size of the domains.
+Since this clocking scheme relies on deterministic switching, the duration over which the sub-steps are applied is irrelevant; \qty{1}{\second} will be used in all simulations. \par
 While this clocking protocol is likely not the only viable input method for non-volatile OOP ASI, we can say with certainty that simply applying a uniform or AFM external field would not yield any useful dynamics for RC.
 In the remainder of this section, we will illustrate the behaviour of the clocking protocol and show that it provides desirable dynamics for RC.
 
 \subsection{Illustrative examples}
+To show that the \xref{two-step AFM clocking protocol} does, indeed, move domain walls step by step, we will now consider several example systems. % independent of their sign, orientation or precise location.
+This will illustrate that the growth of domains can be controlled as originally envisioned, while providing insight into the effect of system parameters on the domain wall motion.
+
 \paragraph{No disorder}
+First, consider an example without any disorder, i.e. $\sigma(\EEA) = \SI{0}{\percent}$.
+This serves as a clean illustration of the general behaviour of the clocking protocol, because this results in a far more orderly domain wall movement than expected in a real system, where domain walls are likely to remain pinned at defects (i.e. high-anisotropy magnets).
+The effect of subsequent clocking cycles on such a ``perfect'' system is shown in~\cref{fig:3:Clocking_clearly_EBstd0}.
+Besides showing the magnetisation state of each magnet, \cref{fig:3:Clocking_clearly_EBstd0} also shows the evolution of the spatial distribution of the two domain types.
+The domain representation is more meaningful in this context, since controlled domain wall motion is the entire reason why we are interested in this input method.
+%Therefore, only the domain representation will be used from here on, unless the moment representation offers additional insight. 
 
 \makeshiftfig{
-	\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_clearly_moments.pdf}
-	\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_clearly_domains.pdf}
+	\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_clearly_EBstd0_moments.pdf}
+	\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_clearly_EBstd0_domains.pdf}
+	\vspace{-1.5em} % Looks more natural for this figure
 }{
-	\label{fig:3:Clocking_clearly_domains}
-	Evolution of a $20 \times 20$ OOP square-lattice ASI when using the two-step AFM clocking scheme (for five cycles $A$ and five opposite cycles $B$).
+	\label{fig:3:Clocking_clearly_EBstd0}
+	Evolution of a $16 \times 16$ OOP square-lattice ASI when using the two-step AFM clocking scheme (for seven cycles $A$ and seven opposite cycles $B$).
+	The moment orientation (\textbf{top}) and domain type (\textbf{bottom}) of each magnet are shown after each cycle was applied.
 	The finite size of magnets was accounted for with $D_\mathrm{NM} = \SI{170}{\nano\metre}$ and $S_\mathrm{ASI} = \SI{200}{\nano\metre}$.
-	System parameters were chosen to get $\EMC = 25 \kBT$ and $\EEA = 100 \kBT$, with $\sigma(\EEA) = \SI{5}{\percent}$.
-	All magnets are initially magnetized in one of the antiferromagnetic ground states (black). The magnetic field used in the clocking cycles has a magnitude $B_\mathrm{ext} = \qty{48}{\milli\tesla}$, and each step is applied for \qty{0.5}{\second}.
+	System parameters were chosen such that $\EMC = 40 \kBT$ and $\EEA = 200 \kBT$, with $\sigma(\EEA) = \SI{0}{\percent}$.
+	All magnets are initially magnetised in one of the antiferromagnetic ground states (white).
+	The magnetic field used in the clocking cycles has a magnitude $B_\mathrm{ext} = \qty{3.78}{\milli\tesla}$.
 }
 
-Besides showing the magnetisation state of each magnet, \cref{fig:3:Clocking_clearly_domains} also shows the evolution of the spatial distribution of the two domain types.
-The domain representation is more meaningful in this context, because the clocking scheme was designed to act on domains, promoting domains of one type during each cycle.
-Therefore, only the domain representation will be used from here on.
+The figure clearly shows the stepwise growth of domains following the application of each clocking cycle.
+While cycle $A$ promotes the domain type that is coloured black in the figure, cycle $B$ promotes the white-coloured domains.
+These domains nucleate at the edges of the ASI, as occurs during the first $A$-cycle as well as the first $B$-cycle.
+Any existing domains of the promoted type also grow at the expense of the opposite domain type, as occurs e.g. in the centre of the ASI during the application of $B$-cycles.
+Notably, while cycle $B$ simply applies the opposite fields as cycle $A$, they are not each other's inverse: in the figure, the states visited by cycle $B$ were not previously visited by cycle $A$. \par
+Furthermore, even though the system is non-volatile and $\sigma(\EEA) = 0$, some stochasticity can still be present.
+A clear example of this is found after the first $B$-cycle is applied: the magnets at the bottom right do not switch, even though they did switch during the first $A$-cycle.
+This occurs because the input strength strikes a delicate balance to encourage domain wall magnets to switch, without causing other magnets to switch.
+Because $\EMC$ is only $40\kBT$ in this example, stochastic events can still occur.
+By further increasing both $\EEA$ and $\EMC$, such stochastic switching events can be suppressed further, but a stronger input will be required to switch the magnets.
+Furthermore, as soon as this asymmetry occurs, the ASI state after subsequent steps becomes increasingly asymmetric, indicating that this clocking protocol in OOP ASI also exhibits some non-linearity as required for RC. \par
+Note that the average magnetisation could be used as an indicator to determine the last input applied, but it provides very little on previous inputs and therefore is not used as an output value.
+Instead, the output is provided by the locally averaged domain type, which has the potential to provide far more information about the past inputs since cycle $B$ is not the inverse of cycle $A$.  
+
+\paragraph{Disordered system}
+When disorder is introduced in the system, once again in the form of a random normally distributed anisotropy for each magnet, the first steps of the clocking protocol will no longer yield such geometrically clean effect as the cycles $A$ did in~\cref{fig:3:Clocking_clearly_EBstd0}.
+Instead, the field magnitude now has to be chosen carefully such that the domain walls can still propagate through all the defects in the system, but not through the non-stimulated magnets during each sub-step of the clocking protocol.
+This can rarely be satisfied for all the low- and high-barrier magnets in the system, causing either some high-barrier magnets to be un-switchable (by weak inputs), or causing some low-barrier magnets to allow the domain wall to pass through the unstimulated magnets regardless.
+The latter is not a big issue as long as the domain wall encounters a magnet with a more average value of $\EEA$ soon enough.
+In fact, such ``leaking'' can be beneficial to the non-linearity of the system, as it readily provides asymmetry in the system.
+This is illustrated in~\cref{fig:3:Clocking_clearly_EBstd5}, where $\sigma(\EEA) = \SI{5}{\percent}$ is used.
+
+\makeshiftfig{
+	\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_clearly_EBstd5_moments.pdf}
+	\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_clearly_EBstd5_domains.pdf}
+	\vspace{-1.5em} % Looks more natural for this figure
+}{
+	\label{fig:3:Clocking_clearly_EBstd5}
+	Evolution of a $20 \times 20$ OOP square-lattice ASI when using the two-step AFM clocking scheme (for five cycles $A$ and five opposite cycles $B$).
+	The moment orientation (top) and domain type (bottom) of each magnet are shown after each cycle.
+	The finite size of magnets was accounted for with $D_\mathrm{NM} = \SI{170}{\nano\metre}$ and $S_\mathrm{ASI} = \SI{200}{\nano\metre}$.
+	System parameters were chosen to result in $\EMC = 25 \kBT$ and $\EEA = 100 \kBT$, with $\sigma(\EEA) = \SI{5}{\percent}$.
+	All magnets are initially magnetized in one of the antiferromagnetic ground states (white). The magnetic field used in the clocking cycles has a magnitude $B_\mathrm{ext} = \qty{48}{\milli\tesla}$, and each step is applied for \qty{0.5}{\second}.
+}
+
+We now see a more disordered evolution of the system due to the $\EEA$-defects.
+If these defects become even more pronounced, domain nucleation will also occur in the bulk of the system.
 \subsubsection{Input encoding} % Binary vs. byte etc. Sigmoid thingy?
 % TODO: filter the simulations/sweeps that I performed and organise them below, have a look at what parameters were changed (E_B_std, binary/byte, endianness...)
