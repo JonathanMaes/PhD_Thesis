@@ -450,6 +450,7 @@ This would also explain why the effective anisotropy is on the order of $60 \kBT
 Contrary to the binary input in the non-volatile OOP ASI, thermally active ASI can be addressed by a continuous range of input.
 The input --- in reality applied through spin-orbit torque --- was applied in the simulations in the form of an OOP magnetic field $B_z(t)$ acting on the entire system.
 The field was scaled such that its OOP component extends from $B_0$ (minimum) to $B_1$ (maximum), i.e. $B_0 \leq B_z \leq B_1$.
+Hence, an input $0 \leq x \leq 1$ is encoded by a field of magnitude $B_z = B_0 + x (B_1 - B_0)$.
 
 \subsubsection{Readout method}
 The inverse mean squared error (1/MSE) between o(t) and the desired result (the sawtooth) was used as a performance metric.
@@ -471,25 +472,26 @@ To find the optimal performance for a Mackey-Glass prediction, we will once agai
 \newpage
 \section{RC in non-volatile OOP square ASI}
 We now turn our attention to non-volatile ASI, to show that an ASI need not be thermally active to be usable for reservoir computing.
-When the energy barrier $\EEA$ separating the `up' and `down' states of a magnet is significantly higher than the thermal energy, the N\'eel-Arrhenius switching law says that it will remain stable over any reasonable timescale --- for example, a magnet with $\EEA > 40 \kBT$ will remain stable over multiple years in the absence of external perturbations.
-Therefore, non-volatile ASI is easier to construct, as it does not require great control over the perpendicular anisotropy: it just requires a large anisotropy.
+When the energy barrier $\EEA$ separating the two stable `up' and `down' states of a magnet is significantly higher than the thermal energy, the N\'eel-Arrhenius switching law says that it will remain stable over any reasonable timescale in the absence of external perturbations --- for example, a magnet with $\EEA > 40 \kBT$ will likely remain stable over multiple years.
+Therefore, non-volatile ASI is easier to construct, as it does not require great control over the perpendicular anisotropy: it only requires the anisotropy to be large.
 Throughout this section, we will examine various input methods for such non-volatile ASI and develop a scheme that demonstrates promising memory capacity.
 
 \paragraph{Magnetostatic interaction}
 Note that ``non-volatile'' does not imply a non-interacting system; a sufficiently high magnetostatic coupling will still induce spontaneous AFM order, albeit only locally.
 Recall the five regions we previously outlined in~\cref{fig:3:OOP_relaxation_continuous}.
-Because of the high anisotropy $\EEA$, the system can not be superparamagnetic (region $\mathrm{V}$) or attain the perfect checkerboard ordering (region $\mathrm{IV}$).
+Because of the high anisotropy $\EEA$, the system can not be superparamagnetic (region~$\mathrm{V}$) or attain the perfect checkerboard ordering (region~$\mathrm{IV}$).
 Instead, there are only two regimes for non-volatile ASI: one where the magnetostatic coupling is sufficiently strong to overcome the energy barrier $\EEA$, and another where it is not.
-These correspond to region $\mathrm{III}$ and the frozen region $\mathrm{I}$ in~\cref{fig:3:OOP_relaxation_continuous}, respectively.
-Region $\mathrm{II}$ is simply a smooth transition between these two regimes. \par
+These correspond to region~$\mathrm{III}$ and the frozen region~$\mathrm{I}$ in~\cref{fig:3:OOP_relaxation_continuous}, respectively.
+Region~$\mathrm{II}$ is simply a smooth transition between these two regimes. \par
 
-While we previously noted that the magnets in the thermally active system had a coupling $\EMC \approx 10 \kBT$, this will not suffice here: if the anisotropy is $\gg 40 \kBT$, the magnetostatic coupling between magnets must be increased.
-This should not present a significant practical issue: as demonstrated in Supplementary Information 10 of our paper~\cite{KUR-24}, the inclusion of a separate ferromagnetic layer above the magnets can focus the stray fields onto nearby magnets, thereby significantly increasing the MS coupling.
+While we previously noted that the magnets in the thermally active system had a coupling $\EMC \approx 10 \kBT$, this will not suffice here: for deterministic switching, both the anisotropy $\EEA$ and magnetostatic coupling $\EMC$ must be $\gg 40 \kBT$.
+Increasing the magnetostatic coupling should not present a significant practical issue: as demonstrated in Supplementary Information 10 of our paper~\cite{KUR-24}, the inclusion of a separate ferromagnetic layer above the magnets can focus their stray fields onto nearby magnets, thereby significantly increasing the MS coupling.
 
 \paragraph{Uniform external field}
 While a uniform field could be used to achieve a decent signal transformation in thermally active OOP ASI, this approach is no longer viable for non-volatile ASI.
-They lack the intrinsic relaxation dynamics that we previously relied upon for RC in thermally active ASI, so a fundamentally different input method will be required.
-In a non-volatile system, rather than pulling the system out of equilibrium and expecting it to return towards the ground state by itself, we must instead make use of the domain structure for RC.
+They lack the intrinsic relaxation dynamics that we previously relied on for RC in thermally active ASI, so a fundamentally different input method will be required.
+In a non-volatile system, the temporal dimension can no longer be used, so we must instead perform RC by making use of the spatial dimensions of an ASI.
+Therefore, rather than pulling the system out of equilibrium and expecting it to return towards the ground state by itself, we can instead make use of the domain structure.
 
 \subsection{Two-step input scheme: clocking}
 To achieve control over the domains, we can take inspiration from the ``clocking'' protocol proposed by Jensen~\textit{et al.} for the in-plane pinwheel lattice~\cite{clocking-protocol}.
@@ -514,7 +516,7 @@ This system is quite different from the IP pinwheel lattice used by Jensen~\text
 
 \paragraph{Distinguishing the ground states}
 \subparagraph{No uniform field}
-A uniform external field does not fulfill the first requirement, i.e. that an input method should be able to distinguish between the two ground states if it is to be used in a clocking protocol.
+A uniform external field does not fulfil the first requirement, i.e. that an input method should be able to distinguish between the two ground states if it is to be used in a clocking protocol.
 In fact, a uniform field can not be used for RC in OOP ASI in general, regardless of whether it is used in a clocking protocol or not.
 If a uniform field is applied to non-volatile ASI, the magnetisation of low-$\EBeff$ magnets will align with the external field.
 However, any subsequent input would either be too weak to have any additional effect, or it would be strong enough to override the previous information present in the system, due to the deterministic switching.
