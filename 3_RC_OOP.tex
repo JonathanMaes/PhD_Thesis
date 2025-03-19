@@ -35,7 +35,7 @@ Then, the chapter is divided into two main parts, discussing thermally active an
 Where IP magnets mostly rely on shape anisotropy to create an easy axis, OOP magnets can be realised using interfacial anisotropy between the ferromagnetic material and the substrate.
 One example of this is found at the interface between \ce{Co} and \ce{Pt}, as was used in the experimental OOP ASI fabricated within the context of the \spinengine project.
 This \idx{perpendicular magnetic anisotropy} (PMA) acts in the immediate vicinity of the interface, where the magnetisation then prefers to align perpendicular to said interface. \par
-Typically, a number of \ce{Co}-\ce{Pt} interfaces are stacked vertically, with the number and thickness of \ce{Co} layers then controlling the OOP anisotropy.
+Typically, a number of \ce{Co}-\ce{Pt} interfaces are stacked vertically, with the number and thickness of the ferromagnetic \ce{Co} layers then controlling the OOP anisotropy.
 The ferromagnetic layers in such stacks are typically made to be very thin for two main reasons.
 Firstly, since the PMA only acts at the interface, it does not increase for thicker layers.
 Secondly, recall that the energy associated with \xref{shape anisotropy} increases with volume ($\EB=K_\mathrm{u}V$), so a maximal number of layers for a given amount of ferromagnetic material is preferable for PMA to counteract the in-plane shape anisotropy.
@@ -65,7 +65,7 @@ Input can be applied via spin-orbit torque (SOT)~\cite{SOT_FM_AFM,SOTswitchingCo
 Both of these only require a current to be passed through an underlayer that is electrically connected to the sample, and were explained earlier in the introduction (\cref{sec:1:ASI_IO}).
 % Nonetheless, external fields are often used for input anyway in the lab during the first stages of development, because they are easier to handle than the more complicated methods that would be used in a real device. By the end of the project, Alex had used SOT in his actual devices.
 
-\subsubsection{Input by spin-orbit torque}
+\paragraph{Input by spin-orbit torque}
 In the experimental system, the intent was to apply input data by using SOT~\cite{SOTswitchingCoPt} to switch the OOP magnets.
 Compared to an \xref{external magnetic field}, this allows far greater control over the stimulus applied for each input bit, and can more easily be integrated on-chip without generating significant stray fields. \par
 Since the model used by \hotspice does not use torques, but is rather based on switching energies, SOT can not directly be modelled as a torque in our simulations.
@@ -75,7 +75,7 @@ This is a crude approximation to fit SOT into the Ising-like model; the modelled
 The exact form of this relationship is currently irrelevant for our RC purposes, because it only constitutes an additional non-linear transformation on the input which does not fundamentally change the RC performance of the OOP ASI itself.
 % In the case without symmetry breaking, the effect may be modelled as a temporary reduction of the PMA, as in reality a sufficiently strong SOT (applied over multiple $\tau_0$) will push the magnetic moment in-plane~\cite{SOT_Roadmap}, after which it falls back randomly (with higher likelihood to the lowest energy state, I suppose). But this approach raises multiple additional questions: is it meaningful to reduce the barrier only slightly?
 
-\subsubsection{Readout by anomalous Hall effect}
+\paragraph{Readout by anomalous Hall effect}
 In our paper~\cite{KUR-24}, \textit{A. Kurenkov} experimentally demonstrated electrical readout of the average magnetisation $\llangle s \rrangle$ using the anomalous Hall effect~\cite{AHE}.
 This can therefore be used as a magnetic state readout in the simulations.
 However, reservoir computing benefits from having multiple readout values, so we will use the average magnetisation of each lattice column $i$ to populate our readout vector $y_i(t)$. \par % Fig. 6a in paper
@@ -123,7 +123,7 @@ Note that the magnetostatic interactions depend on the square of the ferromagnet
 
 \xtable[tab:3:interactions_geometry]{
 	Dependence of the energy components present in OOP ASI on the geometrical parameters.
-	$x$ represents the parameter above the column.
+	$x$ represents the parameter at the top of the column.
 	The magnet centre-to-centre distance $r = D_\mathrm{NM} + S_\mathrm{ASI}$.
 	PMA depends non-trivially on $t_{\ce{Pt}}$.
 	Empty cells indicate no significant dependence.
@@ -217,8 +217,9 @@ The size of the ASI does not significantly affect the relaxation process, apart 
 	Blue traces show the absolute value of the normalised average magnetisation $\mavg$ while orange traces represent the local antiferromagnetic parameter $\qNN$.
 	Each trace shows the mean (central line), standard deviation (central shaded area), and 1st/99th percentile (outer shaded area) of 200 repeated relaxations with randomly sampled $\EEA$ profiles.
 	At most $40N$ switches are simulated for each relaxation.
-	The green shaded region highlights the second stage of ordering.
-	The simulations were stopped after \SI{e4}{\second} and the resulting final magnetic states are shown in \textbf{the insets}, where white (black) indicates up (down) spins.
+	The green shaded region highlights stage~$\circled{2}$ of ordering.
+	The simulations are either stopped after \SI{e4}{\second} or $40N$ switches --- whichever is reached first.
+	\textbf{The insets} show the resulting final magnetic states, where white (black) indicates up (down) spins.
 }
 
 \subsubsection{Logarithmic relaxation}
@@ -256,22 +257,22 @@ The effects of $\EMC$ and $\EEA$ can be quantified by fitting a logarithmic curv
 
 \subsubsection{Two-stage relaxation}
 While $\mavg$ follows a near-perfect logarithmic relaxation, $\mavg \approx 0$ is reached earlier than the perfect checkerboard ordering $\qNN = 1$ --- most strikingly in panels 6 and 9 of~\cref{fig:3:OOP_relaxation}.
-This is accompanied by a decreased ordering rate $\frac{\partial \qNN}{\partial \log(t)}$, marking the transition between stage $\circled{1}$ and $\circled{2}$ of relaxation.
+This is accompanied by a decreased ordering rate $\frac{\partial \qNN}{\partial \log(t)}$, marking the transition between stage~$\circled{1}$ and~$\circled{2}$ of relaxation.
 The latter is indicated by the green shaded area in the figure. \par
 This can be understood by considering the microstate of the ASI: to this end, the final state of each panel in~\cref{fig:3:OOP_relaxation} is shown as an inset.
-Panels 1 and 2 show the system during the logarithmic relaxation of both $\mavg$ and $\qNN$ in stage $\circled{1}$.
+Panels 1 and 2 show the system during the logarithmic relaxation of both $\mavg$ and $\qNN$ in stage~$\circled{1}$.
 Here, many magnets still have three or four NN with the same magnetisation state, causing random magnets to switch and small checkerboard domains to nucleate throughout the system.
 Because these domains are twofold degenerate, the perfect checkerboard ordering is not reached directly.
-Instead, expanding domains are likely to be separated by domain walls, as seen in panels 3 and 4 which have just barely reached stage $\circled{2}$.
+Instead, expanding domains are likely to be separated by domain walls, as seen in panels 3 and 4 which have just barely reached stage~$\circled{2}$.
 From this point on, a further increase in $\qNN$ can only\footnote{
 	If the magnetostatic coupling $\EMC$ is insufficient, a perfect checkerboard ordering will not be achieved and $\qNN$ may not increase much further --- in panel 7 of~\cref{fig:3:OOP_relaxation}, $\qNN$ settles around $\approx 0.8$.
 } be achieved by switching magnets that are part of a domain wall.
 However, even though domain wall magnets are the least stable magnets in the system, they still typically have 3 stabilising NN, resulting in a significant effective energy barrier that depends on both $\EEA$ and $\EMC$.
 Furthermore, when a domain wall magnet finally switches, it simply moves the domain wall by one lattice unit without significantly altering the macrostate of the system.
-This is in stark contrast with stage $\circled{1}$, where the macrostate was constantly changing.
+This is in stark contrast with stage~$\circled{1}$, where the macrostate was constantly changing.
 Only when the domain wall randomly encounters a domain wall of opposite polarity or an edge of the system, can the total length of domain walls in the system decrease --- as occurs between panels 5 and 8.
 This process is more akin to a random walk, and therefore has a polynomial time dependency rather than a logarithmic one.
-For this reason, stage $\circled{2}$ shows up in~\cref{fig:3:OOP_relaxation} as a sudden increase of $\qNN$ after a plateau, as most clearly seen in panel 9. \par
+For this reason, stage~$\circled{2}$ shows up in~\cref{fig:3:OOP_relaxation} as a sudden increase of $\qNN$ after a plateau, as most clearly seen in panel 9. \par
 Once the system has finally approached the checkerboard state with $\mavg \rightarrow 0$ and $\qNN \rightarrow 1$, random thermal fluctuations will still cause small excursions to $\mavg > 0$ and $\qNN < 1$.
 These are generally more pronounced for low coupling $\EMC$, as can clearly be seen in the $\EEA = 20\kBT$ row of~\cref{fig:3:OOP_relaxation}.
 This is because $\EMC$ is the only factor responsible for order in the system: low coupling makes magnets less inclined to reside in the ground state, giving the opportunity for multiple magnets to be in an unstable state at once and drive $\mavg$ further from 0.
@@ -287,15 +288,15 @@ Therefore, for a system to reach the checkerboard state on a given timescale, a 
 This is most clearly seen in phase diagrams like~\cref{fig:3:OOP_relaxation_continuous}, which summarise the values of $\mavg$ and $\qNN$ at $t = \SI{e4}{\second}$ (i.e., the maximum time in \cref{fig:3:OOP_relaxation}) over a wide range of $\EEA$ and $\EMC$.
 This encompasses the nine $(\EMC,\EEA)$ combinations of the various panels in~\cref{fig:3:OOP_relaxation}, as indicated by grey numbered crosses in~\cref{fig:3:OOP_relaxation_continuous}. \par
 Five distinct regions can be distinguished.
-In region $\mathrm{I}$ (panel 1), weak coupling and high anisotropy result in a non-volatile system --- as used in the previous section --- where no spontaneous switches occur and $\mavg = 1$ and $\qNN = 0$ remain unchanged.
-Increasing the $\EMC/\EEA$ ratio shifts the system though the transient region $\mathrm{II}$ (panel 2), characterised by decreasing $\mavg$ and increased ordering.
-Further increase of $\EMC/\EEA$ shifts the system to region $\mathrm{III}$ (panel 6) with $\mavg \approx 0$ but $\qNN \neq 1$, characteristic of stage $\circled{2}$.
-Any further increase of $\EMC/\EEA$ does not affect the average magnetisation or ordering at $t = \SI{e4}{\second}$ --- unless both $\EEA$ and $\EMC$ are sufficiently small, as in regions $\mathrm{IV}$ and $\mathrm{V}$. \par
-Region $\mathrm{IV}$ (panel 9) is the only region where the system spontaneously achieves the checkerboard ground state.
+In region~$\mathrm{I}$ (panel 1), weak coupling and high anisotropy result in a non-volatile system --- as used in the previous section --- where no spontaneous switches occur and $\mavg = 1$ and $\qNN = 0$ remain unchanged.
+Increasing the $\EMC/\EEA$ ratio shifts the system though the transient region~$\mathrm{II}$ (panel 2), characterised by decreasing $\mavg$ and increased ordering.
+Further increase of $\EMC/\EEA$ shifts the system to region~$\mathrm{III}$ (panel 6) with $\mavg \approx 0$ but $\qNN \neq 1$, characteristic of stage~$\circled{2}$.
+Any further increase of $\EMC/\EEA$ does not affect the average magnetisation or ordering at $t = \SI{e4}{\second}$ --- unless both $\EEA$ and $\EMC$ are sufficiently small, as in regions~$\mathrm{IV}$ and~$\mathrm{V}$. \par
+Region~$\mathrm{IV}$ (panel~9) is the only region where the system spontaneously achieves the checkerboard ground state.
 In~\cref{fig:3:OOP_relaxation_continuous}, it is delineated by the dotted black line that envelops a region with $\qNN \geq 0.95$.
-Reducing $\EMC$ too much puts the system in region $\mathrm{V}$ (panel 7), where the system is superparamagnetic at this timescale.
-For $t = \SI{e4}{\second}$, region $\mathrm{V}$ extends upwards to $\EEA \lesssim 32 \kBT$, since the N\'eel-Arrhenius switching law states that nanomagnets with such anisotropy have a mean switching time $\lesssim \exp(32)/\nu_0 \approx \SI{e4}{\second}$.
-The main region of interest, region $\mathrm{IV}$ with $\qNN \approx 1$, is therefore constrained from the left by the superparamagnetic regime, from the top by the transient/frozen regime, and from the right by states in which domain boundaries are too stable at the given timescale. \par
+Reducing $\EMC$ too much puts the system in region~$\mathrm{V}$ (panel 7), where the system is superparamagnetic at this timescale.
+For $t = \SI{e4}{\second}$, region~$\mathrm{V}$ extends upwards to $\EEA \lesssim 32 \kBT$, since the N\'eel-Arrhenius switching law states that nanomagnets with such anisotropy have a mean switching time $\lesssim \exp(32)/\nu_0 \approx \SI{e4}{\second}$.
+The main region of interest --- region~$\mathrm{IV}$ with $\qNN \approx 1$ --- is therefore constrained from the left by the superparamagnetic regime, from the top by the transient/frozen regime, and from the right by states in which domain boundaries are too stable at the given timescale. \par
 
 \xfig{3_RC_OOP/OOP_relaxation_continuous.pdf}{
 	\label{fig:3:OOP_relaxation_continuous}
@@ -306,9 +307,9 @@ The main region of interest, region $\mathrm{IV}$ with $\qNN \approx 1$, is ther
 	The three symbols correspond to the experimental lattices shown in~\cref{fig:3:MFM_grid} with nanomagnet diameter $D_\mathrm{NM} = \SI{170}{\nano\metre}$, \ce{Co} thickness $t_{\ce{Co}} = \SI{1.45}{\nano\metre}$ and nanomagnet separations $S_\mathrm{ASI} = \SI{20}{\nano\metre}$ (circle), $S_\mathrm{ASI} = \SI{25}{\nano\metre}$ (triangle), $S_\mathrm{ASI} = \SI{30}{\nano\metre}$ (cross).
 }
 
-The phase diagrams in~\cref{fig:3:OOP_relaxation_continuous} are snapshots at $t = \SI{e4}{\second}$ and, with increasing time, region $\mathrm{IV}$ will expand and the boundaries between the different regions will shift upwards.
-Therefore, if the observation is long enough and $\EMC$ is non-negligible, a system located in the frozen region at $t = \SI{e4}{\second}$ may eventually find itself in the more ordered regions $\mathrm{II}$, $\mathrm{III}$ or $\mathrm{IV}$.
-However, due the exponential character of the N\'eel-Arrhenius law, this shift will be minimal and region $\mathrm{IV}$ will not become much bigger than in~\cref{fig:3:OOP_relaxation_continuous} for any realistic timescale~\cite{KUR-24}.
+The phase diagrams in~\cref{fig:3:OOP_relaxation_continuous} are snapshots at $t = \SI{e4}{\second}$ and, with increasing time, region~$\mathrm{IV}$ will expand and the boundaries between the different regions will shift upwards.
+Therefore, if the observation is long enough and $\EMC$ is non-negligible, a system located in the frozen region at $t = \SI{e4}{\second}$ may eventually find itself in the more ordered regions~$\mathrm{II}$, $\mathrm{III}$ or~$\mathrm{IV}$.
+However, due the exponential character of the N\'eel-Arrhenius law, this shift will be minimal and region~$\mathrm{IV}$ will not become much bigger than in~\cref{fig:3:OOP_relaxation_continuous} for any realistic timescale~\cite{KUR-24}.
 
 \subsubsection{Exchange-coupled system} % TODO: expand, could be omitted if not sufficiently worked out
 
