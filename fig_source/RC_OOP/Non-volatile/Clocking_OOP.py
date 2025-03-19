@@ -60,7 +60,7 @@ def plot(data_dir=None):
         ax: plt.Axes = axes[0,0]
         ax.set_aspect('equal')
         ax.set_axis_off()
-        fs = thesis_utils.fs_large + 1
+        fs = min(thesis_utils.fs_large + 1, 150/N)
 
         ## Setup plot variables
         OOP = params['ASI_type'] == "OOP_Square"
@@ -120,9 +120,9 @@ def plot(data_dir=None):
         ## Draw "legend" on the axes
         x, y = 0 if N%2 else .5, -1 # (0, -1) is the index of the empty tile in the figure, DON'T CHANGE
         if show_domains:
-            legend_domains(ax, x, y, OOPcmap)
+            legend_domains(ax, x, y, OOPcmap, text_size=fs)
         else:
-            legend_moments(ax, x, y, OOPcmap)
+            legend_moments(ax, x, y, OOPcmap, text_size=fs)
         
         figs['Clocking_OOP' + ('domains' if show_domains else 'moments')] = fig
     
@@ -211,9 +211,14 @@ if __name__ == "__main__":
     # run(E_B_std=0.05, E_EA_ratio=100, E_MC_ratio=25, magnitude=0.00185) # Region II (magnitude range 0.0018-0.0019 works)
     # run(E_B_std=0.05, E_EA_ratio=100, E_MC_ratio=10, magnitude=0.00145) # Region I (magnitude range 0.00145-0.0015 works decently, up to 0.002 stuff happens)
     
-    ## Clocking_clearly_<moments|domains>.pdf IS GENERATED WITH:
-    # run(E_B_std=0.05, E_EA_ratio=100, E_MC_ratio=200, magnitude=0.0055, size=20, N=11) # Region III
+    ## Clocking_clearly_EBstd0.pdf IS GENERATED WITH:
+    # run(E_B_std=0.00, E_EA_ratio=200, E_MC_ratio=40, magnitude=0.00378, size=14, N=15)
     
-    thesis_utils.replot_all(plot)
-    # plot(show_domains=True)
+    ## Clocking_clearly_EBstd5.pdf IS GENERATED WITH:
+    # run(E_B_std=0.05, E_EA_ratio=100, E_MC_ratio=200, magnitude=0.0055, size=20, N=11) # Region III
+    # run(E_B_std=0.05, E_EA_ratio=100, E_MC_ratio=200, magnitude=0.0055, size=64, N=41) # Region III but ridiculous
+    
+
+    
+    # thesis_utils.replot_all(plot)
     
