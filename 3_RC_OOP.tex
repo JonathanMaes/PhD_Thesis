@@ -445,7 +445,7 @@ This would also explain why the effective anisotropy is on the order of $60 \kBT
 
 \newpage
 \section{RC in thermally active OOP square ASI}
-\subsection{Concept} % Lessons learnt from non-volatile ASI
+\subsection{Concept}
 \subsubsection{Input torques: representation in \hotspice}
 Contrary to the binary input in the non-volatile OOP ASI, thermally active ASI can be addressed by a continuous range of input.
 The input --- in reality applied through spin-orbit torque --- was applied in the simulations in the form of an OOP magnetic field $B_z(t)$ acting on the entire system.
@@ -554,43 +554,48 @@ Typically, we use rather small ASI just like we did for thermally active ASI, so
 
 %This only affects the average magnetisation of the system, which is insufficient to get any considerable non-linearity or memory capacity in the system --- which are indispensable for RC --- because the effect is readily undone by applying the opposite field.
 
-\paragraph{Avoiding avalanches}
-However, applying the aforementioned AFM input is insufficient to achieve a clocking protocol.
-The main issue is that the AFM input provides a global stimulus.
-This means that all magnets in the system will want to take on the ground state that the input promotes, which can easily saturate the system.
-The only thing preventing saturation are the defects that cause variation on the anisotropy $\EEA$, as these can prevent magnets from switching to the opposite state.
-However, this means that the AFM input is not fundamentally different from the uniform output we dismissed!
-They both just pull magnets towards the direction of the external stimulus, with only high-anisotropy magnets resisting the switching.
-Aside from the AFM input using the ground state of the system, their effects only differ by a $\pm 1$ sign on each magnet, which gets negated by their respective readout methods.
-While the AFM and uniform input have different effects in reality, they are equivalent from a computational point of view.
-The only difference is that the AFM input can achieve switching with lower fields, as it only has to switch domain wall magnets to make domain walls propagate through the system, whereas a uniform input requires a stronger field to pull magnets away from the ground state.
-To make use of the natural ordering of an ASI, we must allow some magnets in the ASI to choose their state based on their neighbours. \par
-Therefore, to avoid saturation, two sub-steps can be applied instead.
-For this, we can divide the magnets into two groups, akin to the black and white squares on a checkerboard.
+\paragraph{Avalanches and saturation}
+The previously discussed AFM input method alone is insufficient to achieve controlled domain wall movement.
+The main issue is that the AFM input applies a global stimulus, which can easily cause avalanches of switching magnets and drive the system to a saturated state.
+The reason for this is that most magnets that are near to or part of a domain wall experience a very similar effective energy barrier $\EBeff$.
+Hence, when the input is sufficiently strong to move a domain wall by one lattice unit, it is unlikely that the local environment is significantly different at that new position, so the domain wall can easily move another lattice unit.
+This process repeats near-instantaneously --- because we are in the deterministic rather than the thermally active regime --- until a defect is encountered that provides a barrier too strong to overcome. \par
+In this regard, the AFM input method is not fundamentally different from the uniform input scheme we previously dismissed.
+Both simply provide each magnet with a preferential orientation, with only high-anisotropy magnets refusing to switch.
+Given this similarity, one might be inclined to consider them mathematically equivalent when paired with their respective readout methods.
+However, while both methods ultimately lead to saturation and are therefore unsuitable for RC, they differ in how they affect the microstate of the system when the magnetostatic interaction is appreciable. \par
+Compared to the AFM input method, a uniform field must be far stronger to achieve any effect, because it has to switch all magnets to a state where they have 4 NN with the same magnetisation, which is the state with the highest possible energy.
+While the AFM input method also just pulls magnets in a certain direction, it differs in that it pulls the ASI to one of the ground states.
+This allows it to achieve saturation already with a far weaker input, since it only needs to affect domain wall magnets, which have only $\leq 3$ oppositely magnetized NN.
+As a result, these magnets are less stable and easier to switch, making it far easier to propagate a domain wall through the system to switch the ASI to the opposite ground state, as compared to pulling the system out of this near-equilibrium state. \par
+Hence, the effect of both global input methods on the ASI is fundamentally different, even though they both achieve saturation near-instantaneously which precludes their usage for RC.
+The fact that the AFM input can selectively influence domain walls is crucial, as it enables us to avoid saturation by introducing one last change to the input protocol.
+
+\paragraph{Avoiding avalanches with a clocking protocol}
+Saturation can be avoided by instead applying two sub-steps for each applied input value.
+For this, we divide the magnets into two groups, akin to the black and white squares on a checkerboard.
 In the first sub-step, we only apply the stimulus to the first group, while in the second sub-step we only address the second group of magnets.
 We refer to this as the \idx{two-step AFM clocking scheme}.
-In this scheme, half of the magnets are not stimulated at any time, which means they can not switch if the anisotropy $\EEA$ is sufficiently high (i.e., $\gg 40\kBT$ for practical timescales).
-This way, we avoid the issue present in the global AFM input scheme, where the global stimulus caused domain walls to propagate throughout the system until most of the system consisted of one particular domain type. \par
-By choosing the strength of the stimulus correctly, we can make it such that only magnets that are part of a domain wall will switch.
-After all, any domain wall magnet is less stable than a magnet in the bulk of a domain, as domain wall magnets only have 3 or 2 oppositely-oriented NN.
-In combination with the two-step method that prevents half of the magnets from switching, this means that we can move domain walls by only a few lattice sites at once. \par
+By using this protocol, only half of the magnets are stimulated simultaneously, such that the other half is prevented from switching at the same time if their anisotropy $\EEA$ is sufficiently high (i.e., $\gg 40\kBT$ for practical timescales).
+This way, we avoid the avalanches that plagued the global input schemes. \par
+Still, the strength of the input is of great importance.
+If it is too weak, no magnets will respond.
+If it is too strong, the system will become saturated in one of the ground states regardless.
+Since our goal is to selectively move domain walls, the input strength must be carefully chosen such that only domain wall magnets will switch deterministically. % i.e. only magnets with 3 oppositely magnetised NN should have $\EBeff < \SI{0}{\electronvolt}$
+After all, any domain wall magnet is less stable than a magnet in the bulk of a domain, as domain wall magnets only have 3 or 2 oppositely magnetised NN, as compared to 4 for a bulk domain magnet.
+This is no different from the global AFM input method, but that method had no way of stopping the domain wall movement once it had been initiated.
+In combination with the two-step method that prevents half of the magnets from switching, this enables the controlled movement of domain walls by only a few lattice sites at once. \par
 To use this clocking scheme for RC, input values must be mapped to a certain cycle.
-We will map an input of value `0' to the application of cycle $A$, and a value `1' to cycle $B$.
-% For e.g. bit 0 we first apply a + stimulus on the first sublattice with 0 stimulus on the other sublattice, and then apply 0 stimulus on the other sublattice with - stimulus on the first sublattice.
-In this two-step input scheme, it is not possible to apply scalar input, because we are using domain wall movement as the input, which limits the options.
-Since there are only 2 domain types, we can only apply binary input.
-Therefore, we can not perform the signal transformation task with this system.
-This limitation of binary input is explored further in~\cref{sec:3:clocking_input_encoding}. \par
+Since we are using domain wall movement as the input, this two-step input scheme requires binary input.
 This clocking scheme, coupled with this meaning of the input, automatically provides a basic form of memory in the system as the previous few input bits (since the last saturation) are encoded in the size of the domains.
 Since this clocking scheme relies on deterministic switching, the duration over which the sub-steps are applied is irrelevant; \qty{1}{\second} will be used in all simulations.
 
 % TODO: make explanatory figure with the two substeps and possibly showing domain wall movement
+While this clocking protocol is likely not the only viable input method for non-volatile OOP ASI, we can say with certainty that simply applying a uniform or AFM external field would not yield any useful dynamics for RC.
+In the remainder of this section, we will illustrate the behaviour of the clocking protocol and show that it provides desirable dynamics for RC.
 
-\paragraph{Example}
-For a clean illustration of the clocking scheme, we will use an example with $\EEA=100\kBT$ and a very high coupling $\EMC=200\kBT=2\EEA$.
-This way, the influence of the random defects in $\EEA$ is suppressed, as the magnetostatic interactions are far stronger.
-This results in a far more deterministic domain wall movement.
-%Besides this and the requirement for a stronger stimulus to counteract the strong magnetostatic coupling --- domain wall magnets typically have 3 oppositely-oriented NN and are therefore stable with $\EBeff \propto \EEA + \EMC$ --- not much changes.
+\subsection{Illustrative examples}
+\paragraph{No disorder}
 
 \makeshiftfig{
 	\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_clearly_moments.pdf}
