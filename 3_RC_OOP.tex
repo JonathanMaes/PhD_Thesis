@@ -574,19 +574,34 @@ The fact that the AFM input can selectively influence domain walls is crucial, a
 \paragraph{Avoiding avalanches with a clocking protocol}
 Saturation can be avoided by instead applying two sub-steps for each applied input value.
 For this, we divide the magnets into two groups, akin to the black and white squares on a checkerboard.
-In the first sub-step, we only apply the stimulus to the first group, while in the second sub-step we only address the second group of magnets.
-We refer to this as the \idx{two-step AFM clocking scheme}.
+In the first sub-step, we only apply the stimulus to the first group, while in the second sub-step we only address the second group of magnets, as illustrated in~\cref{fig:3:Clocking_protocol}.
+We refer to this as the \idx{two-step AFM clocking protocol}.
 By using this protocol, only half of the magnets are stimulated simultaneously, such that the other half is prevented from switching at the same time if their anisotropy $\EEA$ is sufficiently high (i.e., $\gg 40\kBT$ for practical timescales).
 This way, we avoid the avalanches that plagued the global input schemes. \par
 Still, the strength of the input is of great importance.
 If it is too weak, no magnets will respond.
 If it is too strong, the system will become saturated in one of the ground states regardless.
 Since our goal is to selectively move domain walls, the input strength must be carefully chosen such that only domain wall magnets will switch deterministically. % i.e. only magnets with 3 oppositely magnetised NN should have $\EBeff < \SI{0}{\electronvolt}$
-After all, any domain wall magnet is less stable than a magnet in the bulk of a domain, as domain wall magnets only have 3 or 2 oppositely magnetised NN, as compared to 4 for a bulk domain magnet.
-This is no different from the global AFM input method, but that method had no way of stopping the domain wall movement once it had been initiated.
-In combination with the two-step method that prevents half of the magnets from switching, this enables the controlled movement of domain walls by only a few lattice sites at once. \par
+After all, any domain wall magnet is less stable than a magnet in the bulk of a domain, so there must exist a range of input strengths where only domain wall magnets respond to the input.
+This is no different from the global AFM input method, but that method had no way of stopping the domain wall movement after it has begun.
+By combining this appropriate choice of input strength with the two-step protocol that prevents half of the magnets from switching, it is possible to move domain walls by only a few lattice sites at once.
+
+\xfig{3_RC_OOP/Nonvolatile/Clocking_protocol.pdf}{
+	\label{fig:3:Clocking_protocol}
+	 Illustration of the \xref{two-step AFM clocking protocol} for controlled domain wall movement in ASI.
+	 The symbols $\bigodot$ and $\bigotimes$ respectively indicate that the external stimulus is such, that the magnet at that location prefers an `up' ($\uparrow$) or `down' ($\downarrow$) magnetisation.
+	 This example shows a $5 \times 5$ ASI, but the concept is analogous for other lattice sizes.
+	 Each input cycle consists of two sub-steps that each affect a different set of magnets, arranged in a checkerboard pattern: only half of the magnets are stimulated at once.
+	 Input cycle $A$ (associated with bit 0) and input cycle $B$ (bit 1) apply opposite stimuli.
+}
+
 To use this clocking scheme for RC, input values must be mapped to a certain cycle.
 Since we are using domain wall movement as the input, this two-step input scheme requires binary input.
+Therefore, we define two cycles, $A$ and $B$, which both consist of two sub-steps.
+Recall the black and white squares on the checkerboard: cycle $A$ will stimulate the magnets on black sites to point `up' in the first sub-step --- while the other magnets remain unaffected --- after which the stimulus is removed from the black sites and magnets on white sites are stimulated to point `down'.
+Cycle $B$ is identical apart from the directions of the fields being reversed.
+This is illustrated in~\cref{fig:3:Clocking_protocol} by the symbols $\bigodot$ and $\bigotimes$.
+To apply input data, we will map an input of bit `0' to the application of cycle $A$ and bit `1' to cycle $B$. \par
 This clocking scheme, coupled with this meaning of the input, automatically provides a basic form of memory in the system as the previous few input bits (since the last saturation) are encoded in the size of the domains.
 Since this clocking scheme relies on deterministic switching, the duration over which the sub-steps are applied is irrelevant; \qty{1}{\second} will be used in all simulations.
 
