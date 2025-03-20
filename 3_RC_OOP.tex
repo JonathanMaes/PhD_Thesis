@@ -556,7 +556,7 @@ Typically, we use rather small ASI just like we did for thermally active ASI, so
 
 \paragraph{Avalanches and saturation}
 The previously discussed AFM input method alone is insufficient to achieve controlled domain wall movement.
-The main issue is that the AFM input applies a global stimulus, which can easily cause avalanches of switching magnets and drive the system to a saturated state.
+The main issue is that the AFM input applies a global stimulus, which can easily cause avalanches of switching magnets and drive the system to saturation.
 The reason for this is that most magnets that are near to or part of a domain wall experience a very similar effective energy barrier $\EBeff$.
 Hence, when the input is sufficiently strong to move a domain wall by one lattice unit, it is unlikely that the local environment is significantly different at that new position, so the domain wall can easily move another lattice unit.
 This process repeats near-instantaneously --- because we are in the deterministic rather than the thermally active regime --- until a defect is encountered that provides a barrier too strong to overcome. \par
@@ -566,7 +566,7 @@ Given this similarity, one might be inclined to consider them mathematically equ
 However, while both methods ultimately lead to saturation and are therefore unsuitable for RC, they differ in how they affect the microstate of the system when the magnetostatic interaction is appreciable. \par
 Compared to the AFM input method, a uniform field must be far stronger to achieve any effect, because it has to switch all magnets to a state where they have 4 NN with the same magnetisation, which is the state with the highest possible energy.
 While the AFM input method also just pulls magnets in a certain direction, it differs in that it pulls the ASI to one of the ground states.
-This allows it to achieve saturation already with a far weaker input, since it only needs to affect domain wall magnets, which have only $\leq 3$ oppositely magnetized NN.
+This allows it to achieve saturation already with a far weaker input, since it only needs to affect domain wall magnets which have just $\leq 3$ oppositely magnetized NN and are therefore stable with $\EBeff \propto \EEA + 2\EMC$, as compared to $\EEA + 4\EMC$ for bulk magnets.
 As a result, these magnets are less stable and easier to switch, making it far easier to propagate a domain wall through the system to switch the ASI to the opposite ground state, as compared to pulling the system out of this near-equilibrium state. \par
 Hence, the effect of both global input methods on the ASI is fundamentally different, even though they both achieve saturation near-instantaneously which precludes their usage for RC.
 The fact that the AFM input can selectively influence domain walls is crucial, as it enables us to avoid saturation by introducing one last change to the input protocol.
@@ -615,7 +615,8 @@ This will illustrate that the growth of domains can be controlled as originally 
 First, consider an example without any disorder, i.e. $\sigma(\EEA) = \SI{0}{\percent}$.
 This serves as a clean illustration of the general behaviour of the clocking protocol, because this results in a far more orderly domain wall movement than expected in a real system, where domain walls are likely to remain pinned at defects (i.e. high-anisotropy magnets).
 The effect of subsequent clocking cycles on such a ``perfect'' system is shown in~\cref{fig:3:Clocking_clearly_EBstd0}.
-Besides showing the magnetisation state of each magnet, \cref{fig:3:Clocking_clearly_EBstd0} also shows the evolution of the spatial distribution of the two domain types.
+The top half of this figure shows the magnetisation state of each magnet, while the bottom half shows the same states but instead visualises the two domain types as black and white.
+% While diagonal domain walls stand out in the top panels as lines of the same colour, horizontal/vertical domain walls (e.g. in the centre of the ASI during the $B$ cycles) are harder to see.
 The domain representation is more meaningful in this context, since controlled domain wall motion is the entire reason why we are interested in this input method.
 %Therefore, only the domain representation will be used from here on, unless the moment representation offers additional insight. 
 
@@ -635,25 +636,32 @@ The domain representation is more meaningful in this context, since controlled d
 
 The figure clearly shows the stepwise growth of domains following the application of each clocking cycle.
 While cycle $A$ promotes the domain type that is coloured black in the figure, cycle $B$ promotes the white-coloured domains.
-These domains nucleate at the edges of the ASI, as occurs during the first $A$-cycle as well as the first $B$-cycle.
-Any existing domains of the promoted type also grow at the expense of the opposite domain type, as occurs e.g. in the centre of the ASI during the application of $B$-cycles.
-Notably, while cycle $B$ simply applies the opposite fields as cycle $A$, they are not each other's inverse: in the figure, the states visited by cycle $B$ were not previously visited by cycle $A$. \par
-Furthermore, even though the system is non-volatile and $\sigma(\EEA) = 0$, some stochasticity can still be present.
-A clear example of this is found after the first $B$-cycle is applied: the magnets at the bottom right do not switch, even though they did switch during the first $A$-cycle.
-This occurs because the input strength strikes a delicate balance to encourage domain wall magnets to switch, without causing other magnets to switch.
+These domains nucleate at the edges of the ASI: this occurs both during the first $A$-cycle as well as the first $B$-cycle.
+Any existing domains of the type promoted by the applied cycle also grow at the expense of the opposite domain type: in the figure, this occurs for example in the centre of the ASI when the $B$-cycles are applied. \par
+A very important feature of this input method that can be noted from the figure, is that the states visited by cycle $B$ were not previously visited by cycle $A$.
+In other words, cycle $B$ and cycle $A$ are not each other's inverse, even though they simply encourage the opposite magnetisation directions as the other cycle does.
+This is of great importance for RC, because this enables the often desired fading memory as information is always retained from the previous input cycles. \par
+Note also that, even though this system is non-volatile and $\sigma(\EEA) = 0$, some stochasticity can still be present and induce asymmetry.
+A clear example of this is found when the $B$-cycles are applied: during the first $B$-cycle, the magnets at the bottom right do not switch, even though they did switch symmetrically during the first $A$-cycle.
+This occurs because the strength of the input must strike a delicate balance to encourage domain wall magnets to switch, without causing other magnets to switch.
 Because $\EMC$ is only $40\kBT$ in this example, stochastic events can still occur.
 By further increasing both $\EEA$ and $\EMC$, such stochastic switching events can be suppressed further, but a stronger input will be required to switch the magnets.
-Furthermore, as soon as this asymmetry occurs, the ASI state after subsequent steps becomes increasingly asymmetric, indicating that this clocking protocol in OOP ASI also exhibits some non-linearity as required for RC. \par
-Note that the average magnetisation could be used as an indicator to determine the last input applied, but it provides very little on previous inputs and therefore is not used as an output value.
-Instead, the output is provided by the locally averaged domain type, which has the potential to provide far more information about the past inputs since cycle $B$ is not the inverse of cycle $A$.  
+Furthermore, as soon as this asymmetry occurs, the ASI state after subsequent steps becomes increasingly asymmetric as the magnetostatic interaction is now also asymmetric, indicating that this clocking protocol in OOP ASI also exhibits some non-linearity as required for RC. \par
+Note that the average magnetisation indicates what the last applied input value was, but it provides very little on previous inputs and therefore is not used as an output value.
+Instead, the output is provided by the locally averaged domain type, which has the potential to provide far more information about the past inputs since cycle $B$ is not the inverse of cycle $A$.
 
 \paragraph{Disordered system}
-When disorder is introduced in the system, once again in the form of a random normally distributed anisotropy for each magnet, the first steps of the clocking protocol will no longer yield such geometrically clean effect as the cycles $A$ did in~\cref{fig:3:Clocking_clearly_EBstd0}.
-Instead, the field magnitude now has to be chosen carefully such that the domain walls can still propagate through all the defects in the system, but not through the non-stimulated magnets during each sub-step of the clocking protocol.
-This can rarely be satisfied for all the low- and high-barrier magnets in the system, causing either some high-barrier magnets to be un-switchable (by weak inputs), or causing some low-barrier magnets to allow the domain wall to pass through the unstimulated magnets regardless.
-The latter is not a big issue as long as the domain wall encounters a magnet with a more average value of $\EEA$ soon enough.
+When disorder is introduced in the system --- once again in the form of a random normally distributed anisotropy for each magnet --- the first steps of the clocking protocol will no longer be as clean and symmetric as they were during the $A$-cycles in~\cref{fig:3:Clocking_clearly_EBstd0}.
+If the disorder is significant, the difference between low- and high-barrier magnets in the system can become substantial, making it harder to selectively address domain wall magnets.
+Therefore, the field magnitude now has to be chosen carefully such that the domain walls can still propagate through all the defects in the system, but without making the stimulus so strong that domain walls can propagate through most of the non-stimulated magnets during each sub-step of the clocking protocol.
+This is the same balance that already had to be struck in the earlier example, but which is now further complicated by the random distribution of $\EEA$. \par
+It is rarely possible to find an input magnitude that satisfies all these constraints, so one has to be content with some imperfections.
+Either one makes the input rather weak, causing some high-barrier magnets to be non-switchable while guaranteeing that no unstimulated magnets will switch.
+Alternatively, one can make the input relatively strong, to ensure that the input can switch any magnet in the system when needed, but at the cost of having some ``leaking'' through the unstimulated magnets. % TODO: what to call these magnets? Unstimulated? Non-addressed? 
+The latter is preferable since non-switchable magnets do not provide any compute capability to the system and their frozen $\uparrow/\downarrow$ state depends on the initial state of the system, introducing an additional variable factor.
+Leaking, on the other hand, is not a big issue as long as the domain wall does not move through too many unstimulated magnets per input step.
 In fact, such ``leaking'' can be beneficial to the non-linearity of the system, as it readily provides asymmetry in the system.
-This is illustrated in~\cref{fig:3:Clocking_clearly_EBstd5}, where $\sigma(\EEA) = \SI{5}{\percent}$ is used.
+An example with $\sigma(\EEA) = \SI{5}{\percent}$ is shown in~\cref{fig:3:Clocking_clearly_EBstd5}, where such leaking can be observed.
 
 \makeshiftfig{
 	\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_clearly_EBstd5_moments.pdf}
@@ -664,11 +672,34 @@ This is illustrated in~\cref{fig:3:Clocking_clearly_EBstd5}, where $\sigma(\EEA)
 	Evolution of a $20 \times 20$ OOP square-lattice ASI when using the two-step AFM clocking scheme (for five cycles $A$ and five opposite cycles $B$).
 	The moment orientation (top) and domain type (bottom) of each magnet are shown after each cycle.
 	The finite size of magnets was accounted for with $D_\mathrm{NM} = \SI{170}{\nano\metre}$ and $S_\mathrm{ASI} = \SI{200}{\nano\metre}$.
-	System parameters were chosen to result in $\EMC = 25 \kBT$ and $\EEA = 100 \kBT$, with $\sigma(\EEA) = \SI{5}{\percent}$.
-	All magnets are initially magnetized in one of the antiferromagnetic ground states (white). The magnetic field used in the clocking cycles has a magnitude $B_\mathrm{ext} = \qty{48}{\milli\tesla}$, and each step is applied for \qty{0.5}{\second}.
+	System parameters were chosen to result in $\EMC = 200 \kBT$ and $\EEA = 100 \kBT$, with $\sigma(\EEA) = \SI{5}{\percent}$.
+	All magnets are initially magnetised in one of the antiferromagnetic ground states (white). The magnetic field used in the clocking cycles has a magnitude $B_\mathrm{ext} = \qty{5.5}{\milli\tesla}$, and each step is applied for \qty{0.5}{\second}.
 }
 
-We now see a more disordered evolution of the system due to the $\EEA$-defects.
-If these defects become even more pronounced, domain nucleation will also occur in the bulk of the system.
+The $\EEA$-defects indeed cause more disordered domain dynamics.
+If these defects were even more pronounced, domain nucleation could also occur in the bulk of the system.
+
+\paragraph{Strength of magnetostatic interaction}
+One of the main factors affecting domain wall movement is the $\EMC/\EEA$-ratio, as long as $\EEA$ is sufficiently high to yield a non-volatile system.
+In the previous example of~\cref{fig:3:Clocking_clearly_EBstd5}, a very high ratio $\EMC/\EEA = 2$ was used.
+Typically, it is easier to manufacture systems with low $\EMC/\EEA$ values, but they behave more erratically since the \SI{5}{\percent} disorder becomes more influential in such cases relative to the magnetostatic interaction.
+To illustrate this,~\cref{fig:3:Clocking_clearly_EBstd5_EMC} shows a system with $\EMC/\EEA = 0.2$ and $\sigma(\EEA) = \SI{5}{\percent}$ still.
+
+\makeshiftfig{
+	\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_clearly_EBstd5_highEMC.pdf}\\
+	\vspace{0.5em}
+	\hrule
+	\vspace{0.5em}
+	\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_clearly_EBstd5_lowEMC.pdf}
+	\vspace{-1.5em} % Looks more natural for this figure
+}{
+	\label{fig:3:Clocking_clearly_EBstd5_EMC}
+	Evolution of the spatial distribution of domain types in a $20 \times 20$ OOP square-lattice ASI when using the two-step AFM clocking scheme (for six cycles $A$ and six opposite cycles $B$).
+	All magnets are initially magnetised in one of the antiferromagnetic ground states (white).
+	The finite size of magnets was accounted for with $D_\mathrm{NM} = \SI{170}{\nano\metre}$ and $S_\mathrm{ASI} = \SI{200}{\nano\metre}$.
+	System parameters were chosen to result in $\EEA = 200 \kBT$, with $\sigma(\EEA) = \SI{5}{\percent}$.
+	\textbf{(a)} shows a system with high magnetostatic interaction $\EMC = 400 \kBT$, requiring an external input magnitude $B_\mathrm{ext} = \qty{11.2}{\milli\tesla}$ for controlled domain wall movement.
+	\textbf{(b)} shows a system with $\EMC = 40 \kBT$ and $B_\mathrm{ext} = \qty{3.78}{\milli\tesla}$ instead.
+}
 \subsubsection{Input encoding} % Binary vs. byte etc. Sigmoid thingy?
 % TODO: filter the simulations/sweeps that I performed and organise them below, have a look at what parameters were changed (E_B_std, binary/byte, endianness...)
