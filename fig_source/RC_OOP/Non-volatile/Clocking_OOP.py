@@ -42,7 +42,7 @@ def run(N: int = 13, E_B_std: float = 0.05, E_EA_ratio: float = 100, E_MC_ratio:
     plot()
 
 
-def plot(data_dir=None):
+def plot(data_dir=None, label_domains=None, label_moments=None):
     """ (Re)plots the figures in the `data_dir` folder.
         If `data_dir` is not specified, the most recently created directory in <filename>.out is used.
     """
@@ -121,13 +121,18 @@ def plot(data_dir=None):
         x, y = 0 if N%2 else .5, -1 # (0, -1) is the index of the empty tile in the figure, DON'T CHANGE
         if show_domains:
             legend_domains(ax, x, y, OOPcmap, text_size=fs)
+            if label_domains is not None:
+                thesis_utils.label_ax(ax, label_domains, axis_units=False, offset=(-0.47*imfrac, 0.47*imfrac), va="top", ha="left")
         else:
             legend_moments(ax, x, y, OOPcmap, text_size=fs)
+            if label_moments is not None:
+                thesis_utils.label_ax(ax, label_moments, axis_units=False, offset=(-0.47*imfrac, 0.47*imfrac), va="top", ha="left")
         
         figs['Clocking_OOP' + ('domains' if show_domains else 'moments')] = fig
     
     ## Save the result
     hotspice.utils.save_results(figures=figs, outdir=data_dir, copy_script=False)
+    plt.close()
 
 
 def legend_domains(ax: plt.Axes, x, y, cmap, text_size: float = thesis_utils.fs_large + 1, scale: float = 1.):
@@ -218,7 +223,10 @@ if __name__ == "__main__":
     # run(E_B_std=0.05, E_EA_ratio=100, E_MC_ratio=200, magnitude=0.0055, size=20, N=11) # Region III
     # run(E_B_std=0.05, E_EA_ratio=100, E_MC_ratio=200, magnitude=0.0055, size=64, N=41) # Region III but ridiculous
     
+    ## Clocking_clearly_EBstd5_highEMC.pdf and _lowEMC.pdf ARE GENERATED WITH:
+    # run(E_B_std=0.05, E_EA_ratio=200, E_MC_ratio=400, magnitude=0.0112, size=20, N=13)
+    # thesis_utils.replot_all(plot, subdir="EBstd=5%/EMC_high", label_domains=0)
+    # run(E_B_std=0.05, E_EA_ratio=200, E_MC_ratio=40, magnitude=0.00378, size=20, N=13)
+    # thesis_utils.replot_all(plot, subdir="EBstd=5%/EMC_low", label_domains=1)
 
-    
-    # thesis_utils.replot_all(plot)
-    
+    thesis_utils.replot_all(plot)

@@ -53,17 +53,28 @@ def init_style(style=None):
     # rc('font',**{'family':'serif','serif':['Times']})
     # rc('text', usetex=True)
 
-def replot_all(plot_function, **plot_kwargs):
+def replot_all(plot_function, subdir: str = None, **plot_kwargs):
     """ Replots all the timestamp dirs """
     script = Path(inspect.stack()[1].filename) # The caller script, i.e. the one where __name__ == "__main__"
     outdir = script.parent / (script.stem + '.out')
-    for data_dir in outdir.iterdir():
+    if subdir: outdir = outdir / subdir
+    
+    def replot_dir(data_dir: Path):
+        if not data_dir.is_dir(): return
         try:
             plot_function(data_dir, **plot_kwargs)
+            print(f"Re-plotted {data_dir}")
+        except FileNotFoundError:
+            print(f"Skipping {data_dir}")
         except Exception:
             print(traceback.format_exc())
+    
+    replot_dir(outdir)
+    for data_dir in outdir.iterdir():
+        replot_dir(data_dir)
+        
 
-def label_ax(ax: plt.Axes, i: int = None, form: str = "(%s)", offset: tuple[float, float] = (0,0), fontsize: float = 11, **kwargs):
+def label_ax(ax: plt.Axes, i: int = None, form: str = "(%s)", offset: tuple[float, float] = (0,0), fontsize: float = 11, axis_units: bool = True, **kwargs):
     """ To add a label to `ax`, pass either `i` or `form` (or both).
         If only `i` is passed, the label becomes "(a)", with the letter corresponding to index `i` (0=a, 1=b ...)
         If only `form` is passed, it is used as the complete label.
@@ -83,11 +94,11 @@ def label_ax(ax: plt.Axes, i: int = None, form: str = "(%s)", offset: tuple[floa
     """
     if isinstance(i, int):
         s = 'abcdefghijklmnopqrstuvwxyz'[i]
-        form = form % s
+        text = form % s
     kwargs = dict(ha='left', va='bottom', color='k', weight='bold', fontfamily='DejaVu Sans') | kwargs
-    t = ax.text(0 + offset[0], 1 + offset[1], form, fontsize=fontsize,
+    t = ax.text(0 + offset[0], int(bool(axis_units)) + offset[1], text, fontsize=fontsize,
                 bbox=dict(boxstyle='square,pad=3', facecolor='none', edgecolor='none'),
-                transform=ax.transAxes, zorder=1000, **kwargs)
+                transform=ax.transAxes if axis_units else ax.transData, zorder=1000, **kwargs)
 
 def get_last_outdir(subdir: str = None):
     script = Path(inspect.stack()[1].filename) # The caller script, i.e. the one where __name__ == "__main__"
