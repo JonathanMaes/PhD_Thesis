@@ -701,5 +701,45 @@ To illustrate this,~\cref{fig:3:Clocking_clearly_EBstd5_EMC} shows a system with
 	\textbf{(a)} shows a system with high magnetostatic interaction $\EMC = 400 \kBT$, requiring an external input magnitude $B_\mathrm{ext} = \qty{11.2}{\milli\tesla}$ for controlled domain wall movement.
 	\textbf{(b)} shows a system with $\EMC = 40 \kBT$ and $B_\mathrm{ext} = \qty{3.78}{\milli\tesla}$ instead.
 }
-\subsubsection{Input encoding} % Binary vs. byte etc. Sigmoid thingy?
+
+\subsection{Reservoir computing}
+Due to the binary character of this input protocol, it is not possible to apply scalar input.
+% TODO: The limitation of binary input will be explored further in~\cref{sec:3:clocking_input_encoding}.
+This limits our options for RC tasks, as we can for example not perform the previously used signal transformation task with this non-volatile system.
+Instead, we opt to determine more general RC metrics for this clocked non-volatile OOP ASI, like the matrix-rank based and task-agnostic metrics that were previously detailed in~\cref{sec:1:RC_metrics}. \\\par
+
+We will determine metrics for an ASI with a very large perpendicular anisotropy $\EEA = \SI{110}{\electronvolt} \approx 4255\kBT (\pm \SI{5}{\percent})$ and whose magnets have the same magnetic moment as for the thermally active ASI ($\mu = \SI{2.5e-16}{\ampere\metre\squared}$), which was based on $D_\mathrm{NM} = \SI{170}{\nano\metre}$ magnets.
+Based on this geometry, we may control the magnetostatic coupling $\EMC$ by varying the lattice parameter $a > \SI{195}{\nano\metre}$ --- this lower limit being $D_\mathrm{NM} + \SI{25}{\nano\metre}$ to avoid an interconnected ASI as previously encountered in~\cref{sec:3:MFM}.
+The best RC performance was achieved for systems where the MS coupling $\EMC$ is far smaller than the anisotropy $\EEA$\footnote{
+	The values for $\EEA$ and $\EMC$ used here are not expressed as multiples of $\kBT$ because the research of non-volatile ASI was actually conducted before thermally active ASI were considered, so the notion of $\EEA$ and $\EMC$ as a multiple of $\kBT$ was not yet in use.
+	Therefore, here, $\EEA$ is set in \SI{}{\electronvolt} and metrics are determined as a function of the lattice parameter $a$ rather than the magnetostatic coupling $\EMC$.
+}, resulting in clocking dynamics similar to \crefSubFigRef{fig:3:Clocking_clearly_EBstd5_EMC}{b}. \par
+To determine the optimal system parameters to perform RC with this clocking protocol, the input magnitude (i.e., external field magnitude $B$) and magnetostatic interaction (i.e., lattice spacing $a$) were varied, while the anisotropy was kept constant at a high value to ensure a non-volatile system.
+Note that the absolute value of the external field magnitude $B$ is mostly irrelevant, as it depends on the specific values of $\EEA$ and $\EMC$ which affect the effective energy barrier $\EBeff$ of domain wall magnets.
+A different choice of $\EEA$ and/or $\EMC$ will necessitate a different input magnitude $B$, but will not significantly alter the general trend of the metrics as function of the input magnitude.
+Since the input strength has a significant effect on the clocking dynamics, it was varied to ensure that the ``sweet spot'' was hit for every value of the lattice spacing $a$. \par
+Accounting for the finite size of magnets was found to have a negligible impact on the reservoir performance, apart from shifting the whole metric map slightly towards larger lattice constants $a$ by about \SIrange{20}{30}{\nano\metre}. % TODO: do we want to show this as figures? (Sweep20250325131714 vs. Sweep20250325105313)
+
+\subsubsection{Metrics}
+
+\paragraph{Kernel-quality, generalisation-capability and computing capacity}
+
+First, we can determine the matrix-rank based metrics as explained in the introduction (\cref{sec:1:RC_metrics_KQ}).
+Three quantities can be calculated in this regard: the kernel-quality $K$, generalisation-capability $G$ and computing capacity $Q=K-G$.
+The latter is the main metric that can be used as an indication of how usable a system is for reservoir computing.
+
+\xfig{3_RC_OOP/Nonvolatile/Sweeps/Sweep20230208082817.pdf}{
+	\label{fig:3:Clocking_Sweeps_binary_KQ}
+	Kernel-quality $K$, generalisation-capability $G$ and computing capacity $Q$ of a $20 \times 20$ OOP square-lattice ASI with $\EEA = \SI{110}{\electronvolt} \pm \SI{5}{\percent}$, for a range of lattice constants $a$ and input field magnitudes $B$.
+	The corresponding magnetostatic coupling $\EMC$ ranges from $\approx 146\kBT$ (at $a=\SI{220}{\nano\metre}$) to $\approx 88\kBT$ (at $a=\SI{260}{\nano\metre}$).
+	The magnets had the same magnetic moment as the thermally active ASI, i.e. $\mu = \SI{2.5e-16}{\ampere\metre\squared}$.
+	The readout used the average domain type of each $2 \times 2$ set of magnets, for a total of 100 readout values.
+	Hence, the maximum value of $K$, $G$ and $Q$ is 100.
+}
+
+These matrix-rank based metrics mostly show where the system responds to different kinds of input patterns, but provide limited additional information and are relatively expensive to compute.
+In contrast, the matrix-rank based metrics require as many input sequences as there are readout nodes, with each input sequence consisting of a certain number of input values.
+Specifically, we applied 100 random input values for every input sequence, and applied 100 such input sequences since we have 100 readout nodes.
+For further insight, we also determined task-agnostic metrics in the same range.
+
 % TODO: filter the simulations/sweeps that I performed and organise them below, have a look at what parameters were changed (E_B_std, binary/byte, endianness...)
