@@ -10,7 +10,7 @@ import thesis_utils
 
 
 ## Create custom Sweep class to generate the relevant type of experiments
-class Sweep_OOPSquare_AFM2_KQ_byteInput(hotspice.experiments.Sweep):
+class Sweep_OOPSquare_AFM2_TA_byteInput(hotspice.experiments.Sweep):
     def __init__(self, groups=None, **kwargs):
         self.info = """
             The inputter is a hotspice.io.OOPSquareChessStepsInputter, and the outputreader
@@ -32,7 +32,7 @@ class Sweep_OOPSquare_AFM2_KQ_byteInput(hotspice.experiments.Sweep):
         units = {'a': "m", 'T': "K", 'E_B_mean': "J", 'E_B_std': "%", 'E_B': "J", 'moment': "Am²", 'ext_field': "T"}
         super().__init__(groups=groups, names=names, units=units, **kwargs)
 
-    def create_experiment(self, params: dict) -> hotspice.experiments.KernelQualityExperiment:
+    def create_experiment(self, params: dict) -> hotspice.experiments.TaskAgnosticExperiment:
         # If E_B in params, it will override E_B_mean and E_B_std (if E_B is absent, mean and std create random E_B)
         E_B = params.get('E_B', params['E_B_mean']*np.random.normal(1, params['E_B_std'], size=(nx, ny)))
         mm = hotspice.ASI.OOP_Square(params['a'], params['nx'], ny=params['ny'], T=params['T'], E_B=E_B, moment=params['moment'], PBC=params['PBC'],
@@ -41,7 +41,7 @@ class Sweep_OOPSquare_AFM2_KQ_byteInput(hotspice.experiments.Sweep):
         datastream = hotspice.io.RandomBinaryDatastream()
         inputter = hotspice.io.OOPSquareChessStepsInputter(datastream, magnitude=params['ext_field'], n=2, frequency=1) # Frequency does not matter as long as it is nonzero and reasonable
         outputreader = hotspice.io.OOPSquareChessOutputReader(params['res_x'], params['res_y'], mm)
-        experiment = hotspice.experiments.KernelQualityExperiment(inputter, outputreader, mm)
+        experiment = hotspice.experiments.TaskAgnosticExperiment(inputter, outputreader, mm)
         return experiment
 
 
@@ -65,7 +65,7 @@ nx = ny = 20
 pixel_size = 2
 
 
-sweep = Sweep_OOPSquare_AFM2_KQ_byteInput(groups=[('res_x', 'res_y')],
+sweep = Sweep_OOPSquare_AFM2_TA_byteInput(groups=[('res_x', 'res_y')],
     nx=nx, ny=ny,
     res_x=math.ceil(nx/pixel_size), res_y=math.ceil(ny/pixel_size),
     ext_field=field_range,
@@ -112,14 +112,14 @@ if __name__ == "__main__":
                         help="the index of the sweep-iteration to be performed.")
     parser.add_argument('-o', '--outdir', dest='outdir', type=str, nargs='?', default=None)
     args = parser.parse_args()
-    outdir = args.outdir if args.outdir is not None else "Clocking_binary_KQ"
+    outdir = args.outdir if args.outdir is not None else "Clocking_binary_TA"
 
     if args.iteration is not None: # Then one specific iteration of sweep() should be calculated on the first available GPU/CPU.
         save = True
         experiment_run_kwargs = {
-            'input_length': 100,
+            'N': 1000,
             'verbose': True,
-            'pattern': 'afm'
+            'pattern': 'random'
         }
         process_single(sweep, args.iteration, run_kwargs=experiment_run_kwargs, save_dir=outdir if save else False)
 
@@ -128,5 +128,12 @@ if __name__ == "__main__":
         plot_kwargs = {"param_x": "a", "unit_x": "nm", "transform_x": lambda x: x*1e9,
                        "param_y": "ext_field", "unit_y": "mT", "transform_y": lambda y: y*1e3,
                        "fig_width": thesis_utils.page_width, "fig_height": thesis_utils.page_width/2.6,
+                       "metrics": ["NL", "MC", "PC"],
                        "colormap": "magma"}
-        sweep.plot(os.path.join(os.path.splitext(__file__)[0], "Sweep20230208082817.json"), plot=False, **plot_kwargs)
+        sweep.plot(os.path.join(os.path.splitext(__file__)[0]), plot=False, **plot_kwargs)
+        # sweep.plot(os.path.join(os.path.splitext(__file__)[0], "Sweep20230119153543.json"), plot=False, **plot_kwargs)
+
+        # if args.outdir is None:
+        #     args.outdir = hotspice.utils.get_newest_dir("Sweep_230119_2_binaryInput.out/")
+        # summary_savepath = sweep.load_results(args.outdir, save=True, verbose=True, return_savepath=True)
+        # sweep.plot(summary_savepath)
