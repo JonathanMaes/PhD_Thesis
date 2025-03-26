@@ -130,10 +130,5 @@ if __name__ == "__main__":
                        "fig_width": thesis_utils.page_width, "fig_height": thesis_utils.page_width/2.6,
                        "metrics": ["NL", "MC", "PC"],
                        "colormap": "magma"}
-        sweep.plot(os.path.join(os.path.splitext(__file__)[0]), plot=False, **plot_kwargs)
-        # sweep.plot(os.path.join(os.path.splitext(__file__)[0], "Sweep20230119153543.json"), plot=False, **plot_kwargs)
-
-        # if args.outdir is None:
-        #     args.outdir = hotspice.utils.get_newest_dir("Sweep_230119_2_binaryInput.out/")
-        # summary_savepath = sweep.load_results(args.outdir, save=True, verbose=True, return_savepath=True)
-        # sweep.plot(summary_savepath)
+        sweep.plot(os.path.join(os.path.splitext(__file__)[0], r"EBstd=5%"), plot=False, **plot_kwargs) # Averaging
+        sweep.plot(os.path.join(os.path.splitext(__file__)[0], r"EBstd=0%/Sweep20230124100320.json"), plot=False, **plot_kwargs)

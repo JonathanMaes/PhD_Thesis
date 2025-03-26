@@ -19,3 +19,4 @@
 
 # Always include the following:
 !/fig/**
+!/fig_source/**/Sweeps/**/*.json
