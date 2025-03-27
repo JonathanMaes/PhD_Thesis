@@ -1293,6 +1293,7 @@ Such local-update Monte Carlo algorithms only change a small portion of the syst
 Consequently, even after many MCS, the number of statistically independent configurations remains low, as the large autocorrelation time yields a very low effective number of independent samples $N_\mathrm{eff} = N_\mathrm{MCS}/\tau$~\cite{niedermayer1988general,BeatCriticalSlowingDown1990}. \par
 
 While CSD is to some extent an inherent property of the physical system --- physical quantities like $\xi$ and $\tau$ diverge near the \xref{phase transition} --- the choice of simulation algorithm also has a significant impact~\cite{PhD_Reynal}.
+By employing algorithms that make abstraction of the time variable, we need not be limited by the divergent autocorrelation time. % TODO: fully address Jonathan's comment on this
 Because CSD originates from long-range correlations, the \link{Metropolis-Hastings sampling}{Metropolis-Hastings algorithm} exacerbates the issue due to its single-spin flip nature.
 Other algorithms have been devised that alleviate CSD by non-local spin updates, thereby acting on collective modes~\cite{BeatCriticalSlowingDown1990}.
 Among these are the group of \idx{cluster algorithms} --- first the \idx{Swendsen-Wang}~\cite{SwendsenWang} and later the \idx{Niedermayer}~\cite{niedermayer1988general} and \idx{Wolff}~\cite{Wolff} algorithms --- which construct clusters of magnets and flip all magnets in the cluster simultaneously~\cite{CompStatPhys}. % Also multi-grid Monte Carlo~\cite{edwards1991multi}
@@ -1359,13 +1360,15 @@ This variance between experiments may be due to differences in defects or quench
 \section{Applications}
 % TODO: add the applications from the paper here, except the clocking in OOP ASI
 \subsection{Pinwheel reversal}\label{sec:2:Applications_reversal_Pinwheel}
-TODO: This can show some interesting things about the energy barrier approximations etc.
+% TODO: This can show some interesting things about the energy barrier approximations etc.
+This will result in a \xlabel{hysteresis}.
+Note that any hysteresis must be simulated using the \xref{first-switch method}, as \xref{Metropolis-Hastings sampling} ignores the uniaxial anisotropy (i.e., the energy barrier $\EB$) and therefore does not yield a representative hysteresis --- if it yields any hysteresis at all.
 
-\subsection{Kagome reversal} % Q: move these reversals to the Hotspice chapter?
-TODO: This can show some interesting things about the monopole vs. dipole models.
+\subsection{Kagome reversal}
+% TODO: This can show some interesting things about the monopole vs. dipole models.
 
-\subsection{RC by clocking in Pinwheel ASI} % TODO: remove this or not?
-This probably won't be added since it is mostly Ian's work, and concerns RC rather than the simulator itself.
+%\subsection{RC by clocking in Pinwheel ASI} % TODO: remove this or not?
+%This probably won't be added since it is mostly Ian's work, and concerns RC rather than the simulator itself.
 
 \section{Conclusion}
 % TODO END: summarise the main takeaways of all the different sections and subsections.

@@ -311,7 +311,7 @@ The phase diagrams in~\cref{fig:3:OOP_relaxation_continuous} are snapshots at $t
 Therefore, if the observation is long enough and $\EMC$ is non-negligible, a system located in the frozen region at $t = \SI{e4}{\second}$ may eventually find itself in the more ordered regions~$\mathrm{II}$, $\mathrm{III}$ or~$\mathrm{IV}$.
 However, due the exponential character of the N\'eel-Arrhenius law, this shift will be minimal and region~$\mathrm{IV}$ will not become much bigger than in~\cref{fig:3:OOP_relaxation_continuous} for any realistic timescale~\cite{KUR-24}.
 
-\subsubsection{Exchange-coupled system} % TODO: expand, could be omitted if not sufficiently worked out
+\subsubsection{Exchange-coupled system} % TODO: expand, could be omitted if not sufficiently worked out. Maybe better to change this to a showcase of the application of multiple inputs in sequence and how this affects the system.
 
 \subsubsection{Summary}
 The state of an OOP ASI is defined by the net OOP anisotropy $\EEA$, magnetostatic coupling $\EMC$ and elapsed time $t$.
@@ -477,6 +477,7 @@ Therefore, non-volatile ASI is easier to construct, as it does not require great
 Throughout this section, we will examine various input methods for such non-volatile ASI and develop a protocol that demonstrates promising memory capacity.
 
 \paragraph{Magnetostatic interaction}
+% TODO END: is this correct after everything I wrote?
 Note that ``non-volatile'' does not imply a non-interacting system; a sufficiently high magnetostatic coupling will still induce spontaneous AFM order, albeit only locally.
 Recall the five regions we previously outlined in~\cref{fig:3:OOP_relaxation_continuous}.
 Because of the high anisotropy $\EEA$, the system can not be superparamagnetic (region~$\mathrm{V}$) or attain the perfect checkerboard ordering (region~$\mathrm{IV}$).
@@ -742,5 +743,7 @@ The latter is the main metric of interest, as it can be used as an indication of
 The matrix rank-based metrics require as many input sequences as there are readout nodes, with each input sequence consisting of a certain number of input values.
 Specifically, we applied 100 random input values for every input sequence, and applied 100 such input sequences since we have 100 readout nodes.
 For further insight, we also determined task-agnostic metrics in the same range.
+% TODO: explain what I say in the powerpoint presentation of 20230207, or at least check if everything useful has been said
 
 % TODO: filter the simulations/sweeps that I performed and organise them below, have a look at what parameters were changed (E_B_std, binary/byte, endianness...)
+% TODO SIM: sweep of E_B_std and input magnitude at a well-chosen lattice spacing to showcase the effect of E_B_std?
