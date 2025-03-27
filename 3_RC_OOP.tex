@@ -474,7 +474,7 @@ To find the optimal performance for a Mackey-Glass prediction, we will once agai
 We now turn our attention to non-volatile ASI, to show that an ASI need not be thermally active to be usable for reservoir computing.
 When the energy barrier $\EEA$ separating the two stable `up' and `down' states of a magnet is significantly higher than the thermal energy, the N\'eel-Arrhenius switching law says that it will remain stable over any reasonable timescale in the absence of external perturbations --- for example, a magnet with $\EEA > 40 \kBT$ will likely remain stable over multiple years.
 Therefore, non-volatile ASI is easier to construct, as it does not require great control over the perpendicular anisotropy: it only requires the anisotropy to be large.
-Throughout this section, we will examine various input methods for such non-volatile ASI and develop a scheme that demonstrates promising memory capacity.
+Throughout this section, we will examine various input methods for such non-volatile ASI and develop a protocol that demonstrates promising memory capacity.
 
 \paragraph{Magnetostatic interaction}
 Note that ``non-volatile'' does not imply a non-interacting system; a sufficiently high magnetostatic coupling will still induce spontaneous AFM order, albeit only locally.
@@ -493,7 +493,7 @@ They lack the intrinsic relaxation dynamics that we previously relied on for RC 
 In a non-volatile system, the temporal dimension can no longer be used, so we must instead perform RC by making use of the spatial dimensions of an ASI.
 Therefore, rather than pulling the system out of equilibrium and expecting it to return towards the ground state by itself, we can instead make use of the domain structure.
 
-\subsection{Two-step input scheme: clocking}
+\subsection{Two-step input protocol: clocking}
 To achieve control over the domains, we can take inspiration from the ``clocking'' protocol proposed by Jensen~\textit{et al.} for the in-plane pinwheel lattice~\cite{clocking-protocol}.
 While that lattice is very different from our OOP system, both exhibit domains, though in pinwheel ASI these are superferromagnetic rather than anti-ferromagnetic.
 As such, we can carry over some key concepts, but there will also be several key differences regarding the input and readout if such a clocking protocol is to work in OOP ASI. \par
@@ -501,7 +501,7 @@ Jensen~\textit{et al.} devised an input method that can move domain wall boundar
 To achieve this, they apply an external magnetic field in a well-chosen direction to selectively affect one of the two pinwheel sublattices at a time, and then changed the field direction to affect the other sublattice.
 By carefully tuning the field magnitude, only the magnets at the boundary of a domain --- or at the edge of the ASI --- will switch.
 This is possible because those magnets have a lower effective energy barrier $\EBeff$ than magnets in the bulk of a domain.
-Such a two-step clocking scheme therefore allows domain wall boundaries to advance one step at a time, while avoiding saturated magnetic states that would result from a stronger input. \par
+Such a two-step clocking protocol therefore allows domain wall boundaries to advance one step at a time, while avoiding saturated magnetic states that would result from a stronger input. \par
 The key takeaway from this concept is that two key factors are necessary if one wants to achieve controlled domain wall movement in an ASI~\cite{MAES-24}.
 \begin{itemize}
 	\item The input method must lift the degeneracy between the ground states --- in pinwheel ASI, a global in-plane field readily distinguishes between the four types of superferromagnetic domains.
@@ -560,7 +560,7 @@ The main issue is that the AFM input applies a global stimulus, which can easily
 The reason for this is that most magnets that are near to or part of a domain wall experience a very similar effective energy barrier $\EBeff$.
 Hence, when the input is sufficiently strong to move a domain wall by one lattice unit, it is unlikely that the local environment is significantly different at that new position, so the domain wall can easily move another lattice unit.
 This process repeats near-instantaneously --- because we are in the deterministic rather than the thermally active regime --- until a defect is encountered that provides a barrier too strong to overcome. \par
-In this regard, the AFM input method is not fundamentally different from the uniform input scheme we previously dismissed.
+In this regard, the AFM input method is not fundamentally different from the uniform input strategy we previously dismissed.
 Both simply provide each magnet with a preferential orientation, with only high-anisotropy magnets refusing to switch.
 Given this similarity, one might be inclined to consider them mathematically equivalent when paired with their respective readout methods.
 However, while both methods ultimately lead to saturation and are therefore unsuitable for RC, they differ in how they affect the microstate of the system when the magnetostatic interaction is appreciable. \par
@@ -569,7 +569,7 @@ While the AFM input method also just pulls magnets in a certain direction, it di
 This allows it to achieve saturation already with a far weaker input, since it only needs to affect domain wall magnets which have just $\leq 3$ oppositely magnetized NN and are therefore stable with $\EBeff \propto \EEA + 2\EMC$, as compared to $\EEA + 4\EMC$ for bulk magnets.
 As a result, these magnets are less stable and easier to switch, making it far easier to propagate a domain wall through the system to switch the ASI to the opposite ground state, as compared to pulling the system out of this near-equilibrium state. \par
 Hence, the effect of both global input methods on the ASI is fundamentally different, even though they both achieve saturation near-instantaneously which precludes their usage for RC.
-The fact that the AFM input can selectively influence domain walls is crucial, as it enables us to avoid saturation by introducing one last change to the input protocol.
+The fact that the AFM input can selectively influence domain walls is crucial, as it enables us to avoid saturation by introducing one last change to the input strategy.
 
 \paragraph{Avoiding avalanches with a clocking protocol}
 Saturation can be avoided by instead applying two sub-steps for each applied input value.
@@ -577,7 +577,7 @@ For this, we divide the magnets into two groups, akin to the black and white squ
 In the first sub-step, we only apply the stimulus to the first group, while in the second sub-step we only address the second group of magnets, as illustrated in~\cref{fig:3:Clocking_protocol}.
 We refer to this as the \idx{two-step AFM clocking protocol}.
 By using this protocol, only half of the magnets are stimulated simultaneously, such that the other half is prevented from switching at the same time if their anisotropy $\EEA$ is sufficiently high (i.e., $\gg 40\kBT$ for practical timescales).
-This way, we avoid the avalanches that plagued the global input schemes. \par
+This way, we avoid the avalanches that plagued the global input strategies. \par
 Still, the strength of the input is of great importance.
 If it is too weak, no magnets will respond.
 If it is too strong, the system will become saturated in one of the ground states regardless.
@@ -595,15 +595,15 @@ By combining an appropriate choice of input strength with the two-step protocol 
 	 Input cycle $A$ (associated with bit 0) and input cycle $B$ (bit 1) apply opposite stimuli.
 }
 
-To use this clocking scheme for RC, input values must be mapped to a certain cycle.
-Since we are using the growth and shrinking of domains, and we intend to move domain walls by only one lattice unit at a time, this two-step input scheme requires binary input data.
+To use this clocking protocol for RC, input values must be mapped to a certain cycle.
+Since we are using the growth and shrinking of domains, and we intend to move domain walls by only one lattice unit at a time, this two-step input protocol requires binary input data.
 Therefore, we define two cycles, $A$ and $B$, which both consist of two sub-steps.
 Recall the black and white squares on the checkerboard: cycle $A$'s first sub-step will stimulate the magnets on black sites such that they prefer an `up' magnetisation --- while the other magnets remain unaffected --- after which the stimulus is removed from the black sites and magnets on white sites are stimulated to point `down'.
 Cycle $B$ is identical but promotes the other magnetisation direction for each magnet, in order to grow the opposite domains as the ones grown by cycle $A$.
 These preferential magnetisation directions are illustrated in~\cref{fig:3:Clocking_protocol} by the symbols $\bigodot$ and $\bigotimes$.
 To apply input data, we define an input bit `0' as cycle $A$ and bit `1' as cycle $B$. \par
-This clocking scheme, coupled with this definition of the input, automatically provides basic memory in the system, as the previous few input bits are encoded in the size of the domains.
-Since this clocking scheme relies on deterministic switching, the duration over which the sub-steps are applied is irrelevant; \qty{1}{\second} will be used in all simulations. \par
+This clocking protocol, coupled with this definition of the input, automatically provides basic memory in the system, as the previous few input bits are encoded in the size of the domains.
+Since this clocking protocol relies on deterministic switching, the duration over which the sub-steps are applied is irrelevant; \qty{1}{\second} will be used in all simulations. \par
 While this clocking protocol is likely not the only viable input method for non-volatile OOP ASI, we can say with certainty that simply applying a uniform or AFM external field would not yield any useful dynamics for RC.
 In the remainder of this section, we will illustrate the behaviour of the clocking protocol and show that it provides desirable dynamics for RC.
 
@@ -626,7 +626,7 @@ The domain representation is more meaningful in this context, since controlled d
 	\vspace{-1.5em} % Looks more natural for this figure
 }{
 	\label{fig:3:Clocking_clearly_EBstd0}
-	Evolution of a $16 \times 16$ OOP square-lattice ASI when using the two-step AFM clocking scheme (for seven cycles $A$ and seven opposite cycles $B$).
+	Evolution of a $16 \times 16$ OOP square-lattice ASI when using the two-step AFM clocking protocol (for seven cycles $A$ and seven opposite cycles $B$).
 	The moment orientation (\textbf{top}) and domain type (\textbf{bottom}) of each magnet are shown after each cycle was applied.
 	The finite size of magnets was accounted for with $D_\mathrm{NM} = \SI{170}{\nano\metre}$ and $S_\mathrm{ASI} = \SI{200}{\nano\metre}$.
 	System parameters were chosen such that $\EMC = 40 \kBT$ and $\EEA = 200 \kBT$, with $\sigma(\EEA) = \SI{0}{\percent}$.
@@ -650,7 +650,7 @@ Furthermore, as soon as this asymmetry occurs, the ASI state after subsequent st
 Note that the average magnetisation indicates what the last applied input value was, but it provides very little on previous inputs and therefore is not used as an output value.
 Instead, the output is provided by the locally averaged domain type, which has the potential to provide far more information about the past inputs since cycle $B$ is not the inverse of cycle $A$.
 
-\paragraph{Disordered system}
+\paragraph{System with defects}
 When disorder is introduced in the system --- once again in the form of a random normally distributed anisotropy for each magnet --- the first steps of the clocking protocol will no longer be as clean and symmetric as they were during the $A$-cycles in~\cref{fig:3:Clocking_clearly_EBstd0}.
 If the disorder is significant, the difference between low- and high-barrier magnets in the system can become substantial, making it harder to selectively address domain wall magnets.
 Therefore, the field magnitude now has to be chosen carefully such that the domain walls can still propagate through all the defects in the system, but without making the stimulus so strong that domain walls can propagate through most of the non-stimulated magnets during each sub-step of the clocking protocol.
@@ -669,7 +669,7 @@ An example with $\sigma(\EEA) = \SI{5}{\percent}$ is shown in~\cref{fig:3:Clocki
 	\vspace{-1.5em} % Looks more natural for this figure
 }{
 	\label{fig:3:Clocking_clearly_EBstd5}
-	Evolution of a $20 \times 20$ OOP square-lattice ASI when using the two-step AFM clocking scheme (for five cycles $A$ and five opposite cycles $B$).
+	Evolution of a $20 \times 20$ OOP square-lattice ASI when using the two-step AFM clocking protocol (for five cycles $A$ and five opposite cycles $B$).
 	The moment orientation (top) and domain type (bottom) of each magnet are shown after each cycle.
 	The finite size of magnets was accounted for with $D_\mathrm{NM} = \SI{170}{\nano\metre}$ and $S_\mathrm{ASI} = \SI{200}{\nano\metre}$.
 	System parameters were chosen to result in $\EMC = 200 \kBT$ and $\EEA = 100 \kBT$, with $\sigma(\EEA) = \SI{5}{\percent}$.
@@ -694,7 +694,7 @@ To illustrate this,~\cref{fig:3:Clocking_clearly_EBstd5_EMC} shows a system with
 	\vspace{-1.5em} % Looks more natural for this figure
 }{
 	\label{fig:3:Clocking_clearly_EBstd5_EMC}
-	Evolution of the spatial distribution of domain types in a $20 \times 20$ OOP square-lattice ASI when using the two-step AFM clocking scheme (for six cycles $A$ and six opposite cycles $B$).
+	Evolution of the spatial distribution of domain types in a $20 \times 20$ OOP square-lattice ASI when using the two-step AFM clocking protocol (for six cycles $A$ and six opposite cycles $B$).
 	All magnets are initially magnetised in one of the antiferromagnetic ground states (white).
 	The finite size of magnets was accounted for with $D_\mathrm{NM} = \SI{170}{\nano\metre}$ and $S_\mathrm{ASI} = \SI{200}{\nano\metre}$.
 	System parameters were chosen to result in $\EEA = 200 \kBT$, with $\sigma(\EEA) = \SI{5}{\percent}$.
@@ -703,13 +703,18 @@ To illustrate this,~\cref{fig:3:Clocking_clearly_EBstd5_EMC} shows a system with
 }
 
 \subsection{Reservoir computing}
-Due to the binary character of this input protocol, it is not possible to apply scalar input.
+Due to the binary character of the clocked input protocol --- each cycle either grows or shrinks domains of either type --- it is not possible to apply scalar input in a straightforward manner.
 % TODO: The limitation of binary input will be explored further in~\cref{sec:3:clocking_input_encoding}.
-This limits our options for RC tasks, as we can for example not perform the previously used signal transformation task with this non-volatile system.
-Instead, we opt to determine more general RC metrics for this clocked non-volatile OOP ASI, like the matrix-rank based and task-agnostic metrics that were previously detailed in~\cref{sec:1:RC_metrics}. \\\par
+This limits the available options of which RC tasks can be used as benchmarks for this non-volatile system, as many tasks --- like the previously used signal transformation --- can not be performed with binary input.
+Instead, we opt to determine more general RC metrics for this clocked non-volatile OOP ASI.
+In the introduction (\cref{sec:1:RC_metrics}), two such classes of metrics were discussed: metrics based on matrix ranks, and the task-agnostic metrics.
+In the following, the clocking protocol on the OOP square-lattice ASI will be evaluated using both classes of metrics.
 
-We will determine metrics for an ASI with a very large perpendicular anisotropy $\EEA = \SI{110}{\electronvolt} \approx 4255\kBT (\pm \SI{5}{\percent})$ and whose magnets have the same magnetic moment as for the thermally active ASI ($\mu = \SI{2.5e-16}{\ampere\metre\squared}$), which was based on $D_\mathrm{NM} = \SI{170}{\nano\metre}$ magnets.
-Based on this geometry, we may control the magnetostatic coupling $\EMC$ by varying the lattice parameter $a > \SI{195}{\nano\metre}$ --- this lower limit being $D_\mathrm{NM} + \SI{25}{\nano\metre}$ to avoid an interconnected ASI as previously encountered in~\cref{sec:3:MFM}.
+\paragraph{Baseline system}
+We will initially calculate RC metrics for a baseline ASI, after which we will evaluate the effect of several system parameters by adjusting them individually.
+Magnets in this baseline ASI have a very large perpendicular anisotropy $\EEA = \SI{110}{\electronvolt} \approx 4255\kBT (\pm \SI{5}{\percent})$ and have the same magnetic moment as used for the thermally active ASI ($\mu = \SI{2.5e-16}{\ampere\metre\squared}$), which was based on $D_\mathrm{NM} = \SI{170}{\nano\metre}$ magnets.
+Based on this geometry, the magnetostatic coupling $\EMC$ can be controlled by varying the lattice parameter $a$.
+To avoid an unintentionally interconnected ASI as previously encountered in~\cref{sec:3:MFM}, a lower limit $a > D_\mathrm{NM} + \SI{25}{\nano\metre} = \SI{195}{\nano\metre}$ is imposed.
 The best RC performance was achieved for systems where the MS coupling $\EMC$ is far smaller than the anisotropy $\EEA$\footnote{
 	The values for $\EEA$ and $\EMC$ used here are not expressed as multiples of $\kBT$ because the research of non-volatile ASI was actually conducted before thermally active ASI were considered, so the notion of $\EEA$ and $\EMC$ as a multiple of $\kBT$ was not yet in use.
 	Therefore, here, $\EEA$ is set in \SI{}{\electronvolt} and metrics are determined as a function of the lattice parameter $a$ rather than the magnetostatic coupling $\EMC$.
@@ -721,24 +726,20 @@ Since the input strength has a significant effect on the clocking dynamics, it w
 Accounting for the finite size of magnets was found to have a negligible impact on the reservoir performance, apart from shifting the whole metric map slightly towards larger lattice constants $a$ by about \SIrange{20}{30}{\nano\metre}. % TODO: do we want to show this as figures? (Sweep20250325131714 vs. Sweep20250325105313)
 
 \subsubsection{Metrics}
-
-\paragraph{Kernel-quality, generalisation-capability and computing capacity}
-
-First, we can determine the matrix-rank based metrics as explained in the introduction (\cref{sec:1:RC_metrics_KQ}).
-Three quantities can be calculated in this regard: the kernel-quality $K$, generalisation-capability $G$ and computing capacity $Q=K-G$.
-The latter is the main metric that can be used as an indication of how usable a system is for reservoir computing.
+\paragraph{Matrix rank-based metrics}
+Three matrix rank-based quantities can be calculated: the kernel-quality $K$, generalisation-capability $G$ and computing capacity $Q=K-G$.
+The latter is the main metric of interest, as it can be used as an indication of how suitable a system is for RC purposes.
 
 \xfig{3_RC_OOP/Nonvolatile/Sweeps/Sweep20230208082817.pdf}{
 	\label{fig:3:Clocking_Sweeps_binary_KQ}
-	Kernel-quality $K$, generalisation-capability $G$ and computing capacity $Q$ of a $20 \times 20$ OOP square-lattice ASI with $\EEA = \SI{110}{\electronvolt} \pm \SI{5}{\percent}$, for a range of lattice constants $a$ and input field magnitudes $B$.
-	The corresponding magnetostatic coupling $\EMC$ ranges from $\approx 146\kBT$ (at $a=\SI{220}{\nano\metre}$) to $\approx 88\kBT$ (at $a=\SI{260}{\nano\metre}$).
+	Kernel-quality $K$, generalisation-capability $G$ and computing capacity $Q$ of a $20 \times 20$ OOP square-lattice ASI with $\EEA = \SI{110}{\electronvolt} \pm \SI{5}{\percent}$, over a range of lattice constants $a$ and input field magnitudes $B$.
+	The corresponding magnetostatic coupling $\EMC$ ranges from $\approx 146\kBT$ (at $a=\SI{220}{\nano\metre}$) to $\approx 88\kBT$ (at $a=\SI{260}{\nano\metre}$) --- this is the optimum range, as the computing capacity decreases outside this range.
 	The magnets had the same magnetic moment as the thermally active ASI, i.e. $\mu = \SI{2.5e-16}{\ampere\metre\squared}$.
 	The readout used the average domain type of each $2 \times 2$ set of magnets, for a total of 100 readout values.
 	Hence, the maximum value of $K$, $G$ and $Q$ is 100.
 }
 
-These matrix-rank based metrics mostly show where the system responds to different kinds of input patterns, but provide limited additional information and are relatively expensive to compute.
-In contrast, the matrix-rank based metrics require as many input sequences as there are readout nodes, with each input sequence consisting of a certain number of input values.
+The matrix rank-based metrics require as many input sequences as there are readout nodes, with each input sequence consisting of a certain number of input values.
 Specifically, we applied 100 random input values for every input sequence, and applied 100 such input sequences since we have 100 readout nodes.
 For further insight, we also determined task-agnostic metrics in the same range.
 
