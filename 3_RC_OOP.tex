@@ -377,7 +377,8 @@ For this, we will use the random distribution of both $\mavg$ and $\qNN$ at the 
 These distributions are each characterised by a mean and standard deviation, which can be determined from repeated simulations --- typically, 200 relaxations are used. % We embrace the Monte Carlo nature of \hotspice.
 Therefore, each experimental data-point lies some amount of standard deviations away from the mean of this simulated distribution.
 Assuming a normal distribution\footnote{
-	Since the random relaxation is governed by the N\'eel-Arrhenius equation~\eqref{eq:2:Néel}, quantities like $\mavg$ which are bounded in the range $[0,1]$ most likely follow a binomial distribution, which can be well approximated by a normal distribution for a large number of magnets $N$ in the system (here: $N > 100$).
+	Since the random relaxation is governed by the N\'eel-Arrhenius equation~\eqref{eq:2:Néel}, the distribution of quantities bounded in the range $[0,1]$, like $\mavg$ and $\qNN$, will be similar to a binomial distribution.
+	For sufficiently large systems (here: $N > 100$), this can be well approximated by a normal distribution~\cite{DeMoivreLaplaceTheorem}.
 }, a probability density can be assigned to this.
 As fit metric $\eta$, we will use the product of these probability densities, multiplied over each experimental $\mavg$ and $\qNN$ at each measured time $t$.
 This can be interpreted as a relative probability that the MFM measurement can be explained by a simulation using certain system parameters.
