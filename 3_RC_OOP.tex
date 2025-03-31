@@ -312,7 +312,47 @@ The phase diagrams in~\cref{fig:3:OOP_relaxation_continuous} are snapshots at $t
 Therefore, if the observation is long enough and $\EMC$ is non-negligible, a system located in the frozen region at $t = \SI{e4}{\second}$ may eventually find itself in the more ordered regions~$\mathrm{II}$, $\mathrm{III}$ or~$\mathrm{IV}$.
 However, due the exponential character of the N\'eel-Arrhenius law, this shift will be minimal and region~$\mathrm{IV}$ will not become much bigger than in~\cref{fig:3:OOP_relaxation_continuous} for any realistic timescale~\cite{KUR-24}.
 
-\subsubsection{Exchange-coupled system} % TODO: expand, could be omitted if not sufficiently worked out. Maybe better to change this to a showcase of the application of multiple inputs in sequence and how this affects the system.
+\subsubsection{Exchange-coupled system}
+The presence of exchange coupling in a system affects the relaxation behaviour, which is then not near-perfectly logarithmic during stage $\circled{1}$ of ordering.
+This is depicted in~\cref{fig:3:OOP_relaxation_exchange} for a negative (AFM) exchange coupling $J=-8\kBT$ and a net OOP anisotropy $\EEA = 40\kBT$.
+
+\xfig{3_RC_OOP/OOP_relaxation_exchange.pdf}{
+	\label{fig:3:OOP_relaxation_exchange}
+	Dependence of the ordering timescale on the nearest-neighbour magnetostatic coupling $\EMC$ in an $11 \times 11$ exchange-coupled OOP square-lattice ASI.
+	The NN exchange coupling is $J=-8\kBT$ and the net OOP anisotropy is $\EEA = 40\kBT$.
+	The ASI is initialised in a uniform magnetic state with all spins pointing `up' and is released at $t = 0$, after which the lattice relaxes to lower energies.
+	Blue traces show the absolute value of the normalised average magnetisation $\mavg$ while orange traces represent the local antiferromagnetic parameter $\qNN$.
+	Each trace shows the mean (central line), standard deviation (central shaded area), and 1st/99th percentile (outer shaded area) of 200 repeated relaxations with randomly sampled $\EEA$ profiles.
+	The green shaded region highlights stage~$\circled{2}$ of ordering.
+	\textbf{The insets} show the resulting final magnetic states, where white (black) indicates up (down) spins.
+}
+
+Since a negative exchange coupling further stabilises the checkerboard state, the relaxation generally occurs faster than in a system without exchange coupling (compare, for instance, panels 2--3 of \cref{fig:3:OOP_relaxation_exchange} with panels 1--2 of \cref{fig:3:OOP_relaxation}).
+Most strikingly, the relaxation dynamics of an exchange-coupled system exhibit clear ``stair-like'' features --- timescales where the relaxation occurs faster than at other moments.
+This is in stark contrast with the near-perfect logarithmic relaxation previously observed in systems without exchange coupling.
+The reason for this is that, contrary to the MS interaction, the exchange coupling only depends on the local configuration of the nearest neighbours of each magnet.
+The amount of local configurations is limited, as each magnet can only have between 0 and 4 parallel or anti-parallel NN.
+Each of these five local configurations corresponds to a certain timescale at which switching is most probable, resulting in only a select few dominant switching timescales.
+Hence, each ``stair'' corresponds to magnets which all have a similar mean switching time, so the relaxation of each individual stair occurs exponentially rather than logarithmically.
+However, the overarching logarithmic relaxation is still present, as the different stairs are still separated by many orders of magnitude in time, similar to the logarithmic relaxation of a magnetostatically-coupled system. \\\par
+
+In~\cref{fig:3:OOP_relaxation_exchange}, the ASI starts in the uniform state where all magnets have 4 parallel NN, so $E_{\mathrm{exch},i} = 4J, \forall i$.
+These magnets will randomly switch over a certain timescale, thereby randomly nucleating checkerboard domains.
+This is what occurs at the first stair (e.g., $t < \SI{e-6}{\second}$ in panel 1 of~\cref{fig:3:OOP_relaxation_exchange}).
+When little to no magnets with 4 parallel NN remain, the relaxation rate temporarily slows down until the local magnetic configuration with the second-highest energy becomes thermally active. \par
+The second stair (e.g., $t < \SI{e-2}{\second}$ in panel 1 of~\cref{fig:3:OOP_relaxation_exchange}) is caused by magnets at the boundary of the ASI.
+These have different energy levels than magnets in the bulk, since they only have 3 NN: for them, $E_\mathrm{exch} \in \{\pm 3J, \pm J\}$, as compared to $E_\mathrm{exch} \in \{\pm 4J, \pm 2J, 0\}$ for bulk magnets.
+Therefore, they are the next magnets to switch, as they initially only have 3 parallel NN but no stabilising anti-parallel NN, so $E_\mathrm{exch} = 3J$.
+This is then followed by the bulk magnets with 3 parallel but 1 anti-parallel NN ($E_\mathrm{exch} = 2J$), until all magnets have at most 2 parallel NN at the end of the third stair (e.g., $t < \SI{10}{\second}$ in panel 1 of~\cref{fig:3:OOP_relaxation_exchange}).
+As the system size increases, the second stair --- caused by the boundary magnets --- shrinks and becomes increasingly obscured by the surrounding stairs. \par
+From then on, further relaxation towards the perfect checkerboard state can only be achieved in the same way as for systems without exchange coupling: domain walls must perform a random walk to move out of the ASI.
+The only difference in an exchange-coupled ASI is that this random walk will occur more slowly, because the exchange coupling further stabilises domain wall magnets (by $\Delta \EBeff = 2J$) since they have 3 anti-parallel and 1 parallel NN. \par
+When the absolute value of the exchange coupling is small, as in \cref{fig:3:OOP_relaxation_exchange} with $J=-8\kBT$, separate stairs will blend together to some extent as the tails of their exponential relaxation overlap.
+This effect becomes more pronounced in the presence of magnetostatic interactions, which increase the variation in the interactions between magnets --- for instance leading to some magnets with 3 parallel NN randomly switching even before all magnets with 4 parallel NN have done so.
+Hence, the clarity of the stairs is determined by the balance between exchange coupling and magnetostatic interactions when $J/\kBT$ is sufficiently high.
+When magnetostatic interactions dominate over the exchange coupling, the stairs mostly disappear as the relaxation takes on a smoother logarithmic profile.
+
+\subsubsection{Applying input} % TODO: expand, show figure of how the system responds to input. A showcase of the application of multiple inputs in sequence and how this affects the system.
 
 \subsubsection{Summary}
 The state of an OOP ASI is defined by the net OOP anisotropy $\EEA$, magnetostatic coupling $\EMC$ and elapsed time $t$.
