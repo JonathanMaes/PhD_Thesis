@@ -134,7 +134,7 @@ def plot(data_dir=None):
     fig.subplots_adjust(left=0.16, top=0.88, bottom=0.09, wspace=0.12, hspace=0.2) #! Already here, because insets require knowledge of final aspect ratio
     fig.suptitle(varx_text(0).split("\n")[0] if len(varx_text(0).split("\n")) > 1 else "", fontsize=fontsize_headers, x=0.53) # 0.03 to the right to be centered on the subplots
     fig.supylabel(vary_text(0).split("\n")[0] if len(vary_text(0).split("\n")) > 1 else "", fontsize=fontsize_headers, x=0.005, y=0.47) # 0.005 to not be right at the edge but not too far to the right either
-    fig.supxlabel("Elapsed time (s)", fontsize=fontsize_labels, x=0.56)
+    fig.supxlabel("Elapsed time (s)", fontsize=fontsize_labels, x=0.53)
     
     insets_x = np.array([[0.8, 0.6, 0.8], [0.45, 0.35, 0.8], [0.8, 0.8, 0.8]])
     insets_y = np.ones((3,3))*.5
