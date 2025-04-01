@@ -352,7 +352,39 @@ This effect becomes more pronounced in the presence of magnetostatic interaction
 Hence, the clarity of the stairs is determined by the balance between exchange coupling and magnetostatic interactions when $J/\kBT$ is sufficiently high.
 When magnetostatic interactions dominate over the exchange coupling, the stairs mostly disappear as the relaxation takes on a smoother logarithmic profile.
 
-\subsubsection{Applying input} % TODO: expand, show figure of how the system responds to input. A showcase of the application of multiple inputs in sequence and how this affects the system.
+\subsubsection{Applying input}
+Since we intend to use the spontaneous relaxation of thermally active OOP ASI for reservoir computing, it is desirable for the relaxation process to span as few orders of magnitude in time as possible.
+To achieve this, a low MS coupling $\EMC=2.5\kBT$ will be used --- chosen to be as low as possible while avoiding the superparamagnetic regime.
+As can be seen in~\cref{fig:3:OOP_relaxation}, systems with this level of coupling relax over timescales suitable for computation (i.e., $\mavg \rightarrow 0$ within $\approx \SI{1}{\milli\second}$) when $\EEA \leq 20\kBT$.
+While a further reduction of $\EEA$ would accelerate the relaxation, accurate control over the anisotropy is challenging in practice.
+Therefore, all subsequent simulations of reservoir computing in thermally active ASI will use the standard values $\EEA=20\kBT$ and $\EMC=2.5\kBT$ (unless otherwise specified) while varying other parameters to determine the optimal input conditions for such a system. \\\par
+
+The main factors influencing the dynamics, beyond those intrinsic to the ASI, are the input frequency $f$ and the magnitude $B$ of the excitation.
+Their effect is illustrated in~\cref{fig:3:OOP_relaxation_input}, where a random scalar input sequence is applied to the system.
+This means that the external field providing the input can take any random magnitude between 0 and $B$, and each value is maintained for a period determined by the input frequency $f$.
+
+\xfig{3_RC_OOP/OOP_relaxation_input.pdf}{
+	\label{fig:3:OOP_relaxation_input}
+	Dependence of the system dynamics on the input frequency $f$ and magnitude $B$ in an $11 \times 11$ exchange-coupled OOP square-lattice ASI.
+	At any time, the normalised input magnitude is indicated by the grey bars.
+	The NN magnetostatic interaction is $\EMC=2.5\kBT$ and the net OOP anisotropy is $\EEA = 40\kBT$.
+	The ASI is initialised in an AFM ground state.
+	A uniform external field of arbitrary strength is then applied for a duration determined by the input frequency $f$.
+	Blue traces show the absolute value of the normalised average magnetisation $\mavg$ while orange traces represent the local antiferromagnetic parameter $\qNN$.
+	Each trace shows the mean (central line), standard deviation (central shaded area), and 1st/99th percentile (outer shaded area) of 200 repeated relaxations with randomly sampled $\EEA$ profiles.
+}
+
+The higher the applied input value, the harder the system gets pulled away from the ground state.
+Conversely, when a small input value is applied for a sufficiently long time, the system can gradually relax back towards the ground state.
+For sufficiently small input values $x$ (corresponding to an applied field $xB$), the relaxation is independent of the input field magnitude $B$, but not of the input frequency $f$.
+In~\cref{fig:3:OOP_relaxation_input}, this can for example be observed during cycles 12 and 14: for $f=\SI{1}{\kilo\hertz}$ (panels 1--3), $\mavg$ drops to the same value ($\mavg \approx 0.2$) regardless of $B$, but for $f=\SI{100}{\kilo\hertz}$ it drops to a different value ($\mavg \approx 0.55$).
+The only exception to this is panel 4, where the input with $(f,B)=(\SI{100}{\kilo\hertz}, \SI{200}{\micro\tesla})$ is not sufficiently impactful to bring the system that far from equilibrium. \par
+In contrast to these minima of $\mavg$, the maxima do depend on the input magnitude.
+Logically, the lower the frequency $f$ and the higher the input magnitude $B$, the easier the system reaches saturation --- the uniform state, characterised by $\mavg=1$ and $\qNN=0$.
+Optimal reservoir computing can be expected when the system is never saturated, but uses as much of the available $\mavg$-range as possible to minimise the relative impact of the stochastic nature of the relaxation process.
+Indeed, some of the smaller changes of input value do not incur a statistically significant change of $\mavg$ nor $\qNN$, as measured by their standard deviations.
+This is most striking for high-frequency input --- for instance, the value of $\mavg$ remains statistically unaltered during input cycles 7--9 in panels 4--6 of~\cref{fig:3:OOP_relaxation_input}, regardless of the input magnitude $B$, while the input values applied during those cycles differ significantly between $0.54$ and $0.73$.
+Therefore, the stochastic nature of the relaxation can, in some cases, prevent the perceptron from distinguishing between closely spaced input values.
 
 \subsubsection{Summary}
 The state of an OOP ASI is defined by the net OOP anisotropy $\EEA$, magnetostatic coupling $\EMC$ and elapsed time $t$.
