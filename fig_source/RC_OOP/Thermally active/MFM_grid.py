@@ -68,7 +68,7 @@ def plot():
 
         ## Row 2: MFM two years
         ax2: plt.Axes = axes[1,col]
-        show_MFM(ax2, Path(__file__).parent / f"MFM/SASI{S_ASI_values[col]}_t7e7.png")
+        show_MFM(ax2, Path(__file__).parent / f"MFM/SASI{S_ASI_values[col]}_t7e7.jpg")
         factor = 1/13 # Size of one magnet in axis units
         for x, y in switched[col]:
             ax2.add_artist(Circle(((x+1.5)*factor, 1 - (y+1.5)*factor), factor/2,
@@ -96,7 +96,7 @@ def plot():
         ax3.xaxis.set_minor_locator(LogLocator(numticks=999, subs=(.1, .2, .3, .4, .5, .6, .7, .8, .9, .99)))
         plt.setp(ax3.get_xminorticklabels(), visible=False)
 
-    fig.supxlabel("Elapsed time [s]")
+    fig.supxlabel("Elapsed time [s]", fontsize=thesis_utils.fs_large, x=0.52)
     y = axes[2,1].get_position().y1
     fig.legend(traces, [l.get_label() for l, f in traces], ncols=4, bbox_to_anchor=(0.5, y), loc="lower center")
 

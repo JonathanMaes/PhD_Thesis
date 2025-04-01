@@ -36,7 +36,7 @@ def run(t_max: float = 1e4, MCsweeps: float = 4., samples: int = 20):
     varx_name, vary_name = "E_MC_ratio", "E_EA_ratio" # NN Dipole-dipole interaction, and energy barrier, in multiples of kBT
     # varx_values, vary_values = [0, 2.5, 10, 40], [0, 20, 40]
     varx_values, vary_values = [1.25, 2.5, 10], [40, 30, 20] #! These are the paper values.
-    
+
     ## RUN SIMULATIONS
     # Sanitize input
     if varx_name not in (allowed_varx_vary := ("E_MC_ratio", "E_EA_ratio", "J_ratio", "gradient")) or vary_name not in allowed_varx_vary:
@@ -134,8 +134,8 @@ def plot(data_dir=None):
     fig.subplots_adjust(left=0.16, top=0.88, bottom=0.09, wspace=0.12, hspace=0.2) #! Already here, because insets require knowledge of final aspect ratio
     fig.suptitle(varx_text(0).split("\n")[0] if len(varx_text(0).split("\n")) > 1 else "", fontsize=fontsize_headers, x=0.53) # 0.03 to the right to be centered on the subplots
     fig.supylabel(vary_text(0).split("\n")[0] if len(vary_text(0).split("\n")) > 1 else "", fontsize=fontsize_headers, x=0.005, y=0.47) # 0.005 to not be right at the edge but not too far to the right either
-    fig.supxlabel("Elapsed time (s)", fontsize=fontsize_labels, x=0.53)
-    
+    fig.supxlabel("Elapsed time [s]", fontsize=fontsize_labels, x=0.53)
+
     insets_x = np.array([[0.8, 0.6, 0.8], [0.45, 0.35, 0.8], [0.8, 0.8, 0.8]])
     insets_y = np.ones((3,3))*.5
     insets_d = 0.4
@@ -210,7 +210,8 @@ def plot(data_dir=None):
 
             t = ax.text(0, 1, f" \n  {i*len(varx_values) + j + 1:d}  ",
                         bbox=dict(boxstyle='square,pad=0', facecolor='#000', edgecolor='#000'), color='w',
-                        fontsize=fontsize_ticks*.85, fontfamily='DejaVu Sans', weight='bold', linespacing=0.01, ha='left', va='bottom', transform=ax.transAxes, zorder=-1)
+                        fontsize=fontsize_ticks*.85, fontfamily='DejaVu Sans', weight='bold',
+                        linespacing=0.01, ha='left', va='bottom', transform=ax.transAxes, zorder=-1)
             if any(phase_1_finished := (np.mean(m_avg, axis=0) < 0.2)): # Don't draw the green shading if m_avg doesn't even reach the threshold
                 plt.axvspan(np.mean(x_vals, axis=0)[np.argmax(phase_1_finished)], t_max, facecolor='g', alpha=0.1)
             

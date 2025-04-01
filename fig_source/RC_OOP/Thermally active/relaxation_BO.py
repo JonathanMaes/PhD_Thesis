@@ -231,10 +231,10 @@ def plot_all_iterations(path: str|Path, legend_title: str = r"$S_\mathrm{ASI}$",
                 ax.set_yscale('log')
                 ax.set_ylim([min_prob, 1])
                 ax.grid(color='gray', linestyle=':', linewidth=1, alpha=0.5)
-                if v == 0: ax.set_ylabel(r"Fit quality $\eta$", fontsize=12)
+                if v == 0: ax.set_ylabel(r"Fit quality $\eta$", fontsize=thesis_utils.fs_large)
                 else: ax.set_yticklabels([])
                 if varname == "J": ax.add_artist(Rectangle((-100, 0), 100, 1, alpha=0.2, color='gray', zorder=1)) # Nonphysical J values
-                ax.set_xlabel(varnames_readable.get(varname, varname), fontsize=12)
+                ax.set_xlabel(varnames_readable.get(varname, varname), fontsize=thesis_utils.fs_large)
                 try: # Try to find the file that contains information about the BO bounds
                     with open(file.parent / "params.json") as inFile: ax.set_xlim(json.load(inFile)["variables"][varname])
                 except Exception: pass
