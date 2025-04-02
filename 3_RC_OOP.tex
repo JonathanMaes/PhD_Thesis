@@ -435,21 +435,21 @@ Therefore, an optimisation method must be used that can find the optimum with a 
 This is an iterative method that starts from an initial guess --- estimated values of $\EEA$ and $\EMC$ can be determined based on the experimentally measured $\mavg(t)$ by using the inverse of~\cref{eq:3:relaxation_fit_ab}.
 It then explores a region in $\EEA \times \EMC \times J$-space by choosing new parameter combinations based on an acquisition function --- here, the upper confidence bound is used.
 While BO may not be the most performant method, as it converges rather slowly and its computational complexity scales with the number of iterations $n$ as $\order{n^3}$, it is sufficient for our purposes.
-More extensive parameter searches may benefit from using other optimisation techniques like LIPO~\cite{LIPO,LIPO_dlib}. \\\par
+More extensive parameter searches may benefit from using other optimisation techniques like LIPO~\cite{LIPO,LIPO_dlib}.
 
 \subsubsection{Results} 
 This fitting procedure was used to determine the energy balance in real ASI with different magnet separations $S_\mathrm{ASI}$.
 Due to the logarithmic relaxation, an accurate fit requires measurements separated by multiple orders of magnitude in time.
 Because $\mavg \approx a \log_{10}(t \nu_0) + b$, two measurements should suffice to fit this kind of curve to experimental data.
 
+\vspace{-1em}
 \xfig{3_RC_OOP/MFM_grid.pdf}{
 	\label{fig:3:MFM_grid}
 	Determining system parameters (net OOP anisotropy $\EEA$, NN MS coupling $\EMC$ and exchange coupling $J$) for lattices with different magnet separation $S_\mathrm{ASI}$.
-	All magnets have the same geometry with $t_{\ce{Co}} = \SI{1.45}{\nano\metre}$ and $D_\mathrm{NM} = \SI{170}{\nano\metre}$.
-	All systems were initialised in a uniform magnetic state with an \SI{0.9}{\tesla} out-of-plane magnetic field before the measurements.
-	\textbf{(a)} MFM images by \textit{A. Kurenkov}~\cite{KUR-24} of the lattices observed at $t \sim \SI{1000}{\second}$ and $t \sim \SI{7e7}{\second}$ (27 months) after initialisation and kept at room temperature.
+	All magnets have the same geometry ($t_{\ce{Co}} = \SI{1.45}{\nano\metre}$ and $D_\mathrm{NM} = \SI{170}{\nano\metre}$) and were initialised in a uniform magnetic state by an \SI{0.9}{\tesla} OOP magnetic field at $t=0$.
+	\textbf{(a)} MFM images by \textit{A. Kurenkov}~\cite{KUR-24} of the lattices after they were kept at room temperature for $t \sim \SI{1000}{\second}$ and $t \sim \SI{7e7}{\second}$ (27 months).
 	Black magnets remain in the initial magnetic state while white magnets have switched.
-	Yellow circles indicate magnets that have switched between these two moments.
+	Yellow circles indicate magnets that have switched between the two observations.
 	\textbf{(b)} Evolution of normalised average magnetisation $\mavg$ and local antiferromagnetic parameters $\qNN$, $\qNN[2]$, $\qNN[3]$.
 	Each trace shows the average of 200 simulated relaxations (central line) and their standard deviation (shaded area).
 }
@@ -466,15 +466,7 @@ Only switches from the initial `up' (black) to the `down' (white) state were obs
 From each of these MFM images, $\mavg$, $\qNN$, $\qNN[2]$ and $\qNN[3]$ were determined.
 Their values are indicated by the dots at $t=\SI{e3}{\second}$ and \SI{7e7}{\second} in~\crefSubFigRef{fig:3:MFM_grid}{b}.
 This figure shows the optimal fits through these points --- based on $\gtrsim 1000$ iterations of Bayesian optimisation --- with the corresponding values of $\EEA$, $\EMC$ and $J$ listed in the top right corner of each panel.
-These combinations of $\EEA$ and $\EMC$ have also been indicated in~\cref{fig:3:OOP_relaxation_continuous} as circles ($S_\mathrm{ASI}=\SI{20}{\nano\metre}$), triangles ($S_\mathrm{ASI}=\SI{25}{\nano\metre}$) and crosses ($S_\mathrm{ASI}=\SI{30}{\nano\metre}$).
-
-\xfig{3_RC_OOP/MFM_fitquality.pdf}{
-	\label{fig:3:MFM_fitquality}
-	Fitting simulated relaxations to the experimental data, accounting for non-zero \xref{exchange coupling} $J$ and \link{finite dipole model}{finite magnet size} using the \xref{mean-barrier model}.
-	Each dot represents one guess by the Bayesian optimiser.
-	The fit quality $\eta$ indicates how well the Monte Carlo simulation fits the experimental data at a given $\EEA$, $\EMC$ and $J$ value: brighter dots represent better guesses.
-	The greyed-out area in the right panel represents antiferromagnetic coupling ($J<0$), which is considered non-physical in this system. 
-}
+These combinations of $\EEA$ and $\EMC$ have also been indicated in~\cref{fig:3:OOP_relaxation_continuous} as circles ($S_\mathrm{ASI}=\SI{20}{\nano\metre}$), triangles ($S_\mathrm{ASI}=\SI{25}{\nano\metre}$) and crosses ($S_\mathrm{ASI}=\SI{30}{\nano\metre}$). \\\par
 
 However, one should not blindly trust the optimal parameter combination that BO provides: it is possible that a fit of similar quality could be obtained for different $\EEA$, $\EMC$ or $J$.
 For this reason, \cref{fig:3:MFM_fitquality} is also provided, which shows the fit quality $\eta$ for all guesses made by the optimiser, as a function of these three parameters.
@@ -487,6 +479,15 @@ The reason for this is unclear; see the supplementary information of our paper~\
 The three other systems (20, 25 and \SI{30}{\nano\metre}) all end up with a similar estimate of the net OOP anisotropy $\EEA \approx 60 \kBT$, as was to be expected since they were all deposited in the same manner.
 More surprisingly, $\EEA$ only differs by $< 10 \kBT$ between these systems.
 This indicates that the anisotropy might be easier to control than initially thought --- recall that analytical calculations, assuming coherent reversal, estimated $\EEA \gg 100 \kBT$ \cite[Supp. 4]{KUR-24} --- or that it is at least reproducible for identically processed samples.
+
+\xfig{3_RC_OOP/MFM_fitquality.pdf}{
+	\label{fig:3:MFM_fitquality}
+	Fitting simulated relaxations to the experimental data, accounting for non-zero \xref{exchange coupling} $J$ and \link{finite dipole model}{finite magnet size} using the \xref{mean-barrier model}.
+	Each dot represents one guess by the Bayesian optimiser.
+	The fit quality $\eta$ indicates how well the Monte Carlo simulation fits the experimental data at a given $\EEA$, $\EMC$ and $J$ value: brighter dots represent better guesses.
+	The greyed-out area in the right panel represents antiferromagnetic coupling ($J<0$), which is considered non-physical in this system. 
+}
+
 The reason for allowing the optimiser to adjust the exchange coupling $J$ is now also clear: for $S_\mathrm{ASI} = \SI{20}{\nano\metre}$, the optimal fit yields a clear non-zero $J = 6.5 \kBT$.
 High-$\eta$ guesses are also limited to a very narrow $J$-range (\cref{fig:3:MFM_fitquality}), lending further credibility to the existence of exchange coupling in this system.
 For systems with larger spacing, a near-zero exchange coupling is found.
