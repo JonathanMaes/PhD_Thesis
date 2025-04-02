@@ -441,8 +441,6 @@ More extensive parameter searches may benefit from using other optimisation tech
 This fitting procedure was used to determine the energy balance in real ASI with different magnet separations $S_\mathrm{ASI}$.
 Due to the logarithmic relaxation, an accurate fit requires measurements separated by multiple orders of magnitude in time.
 Because $\mavg \approx a \log_{10}(t \nu_0) + b$, two measurements should suffice to fit this kind of curve to experimental data.
-However, two measurements are insufficient to prove that the relaxation is indeed logarithmic, as predicted by simulation.
-This logarithmic behaviour was separately verified using multiple measurements over a shorter timescale, as discussed in our paper~\cite{KUR-24} (Supp. 5.4).
 
 \xfig{3_RC_OOP/MFM_grid.pdf}{
 	\label{fig:3:MFM_grid}
@@ -456,6 +454,7 @@ This logarithmic behaviour was separately verified using multiple measurements o
 	Each trace shows the average of 200 simulated relaxations (central line) and their standard deviation (shaded area).
 }
 
+Since two measurements are insufficient to prove that the relaxation is indeed logarithmic --- as predicted by simulation --- this logarithmic behaviour was separately verified using multiple measurements over a shorter timescale, as discussed in our paper~\cite[Supp. 5.4]{KUR-24}.
 Consequently, samples were measured soon after initialisation ($\approx \SI{e3}{\second}$, since MFM measurements are not instantaneous) and again after about 2 years $\approx \SI{7e7}{\second}$.
 This provides two sufficiently distinct timescales for a successful fit.
 In the meantime, the arrays were kept in a field-free environment at room temperature in ambient atmosphere.
@@ -487,7 +486,7 @@ The reason for this is unclear; see the supplementary information of our paper~\
 
 The three other systems (20, 25 and \SI{30}{\nano\metre}) all end up with a similar estimate of the net OOP anisotropy $\EEA \approx 60 \kBT$, as was to be expected since they were all deposited in the same manner.
 More surprisingly, $\EEA$ only differs by $< 10 \kBT$ between these systems.
-This indicates that the anisotropy might be easier to control than initially thought --- recall that analytical calculations, assuming coherent reversal, estimated $\EEA \gg 100 \kBT$ (\ccite{KUR-24} Supp. 4) --- or that it is at least reproducible for identically processed samples. \par
+This indicates that the anisotropy might be easier to control than initially thought --- recall that analytical calculations, assuming coherent reversal, estimated $\EEA \gg 100 \kBT$ \cite[Supp. 4]{KUR-24} --- or that it is at least reproducible for identically processed samples.
 The reason for allowing the optimiser to adjust the exchange coupling $J$ is now also clear: for $S_\mathrm{ASI} = \SI{20}{\nano\metre}$, the optimal fit yields a clear non-zero $J = 6.5 \kBT$.
 High-$\eta$ guesses are also limited to a very narrow $J$-range (\cref{fig:3:MFM_fitquality}), lending further credibility to the existence of exchange coupling in this system.
 For systems with larger spacing, a near-zero exchange coupling is found.
@@ -514,7 +513,7 @@ These yielded less conclusive results, though there is no single factor that def
 They still more or less agreed on the approximate values of $\EEA$, $\EMC$ and the requirement of a nonzero exchange coupling for $S_\mathrm{ASI} = \SI{20}{\nano\metre}$.
 However, fits using the exact barrier were more inclined to assign $J < 0$ and did not yield a clear high-$\eta$ peak as in~\cref{fig:3:MFM_fitquality}.
 Because of this, we may conclude that the exact barrier is less accurate than the mean-barrier model in this case, possibly indicating that reversal occurs through a non-coherent process.
-This would also explain why the effective anisotropy is on the order of $60 \kBT$, rather than the $\approx 1000 \kBT$ predicted by analytical calculations that also assume a coherent reversal (\ccite{KUR-24} Supp. 4).
+This would also explain why the effective anisotropy is on the order of $60 \kBT$, rather than the $\approx 1000 \kBT$ predicted by analytical calculations that also assume a coherent reversal \cite[Supp.4]{KUR-24}.
 
 \newpage
 \section{RC in thermally active OOP square ASI}
