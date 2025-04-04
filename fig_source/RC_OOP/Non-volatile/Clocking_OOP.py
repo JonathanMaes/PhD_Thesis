@@ -13,8 +13,8 @@ import thesis_utils
 from nonvolatile_ASI import get_nonvolatile_mm
 
 
-def run(N: int = 13, E_B_std: float = 0.05, E_EA_ratio: float = 100, E_MC_ratio: float = 25,
-        magnitude: float = 0.00185, vacancy_fraction: float = 0., size: int = 50, finite: bool = True):
+def run(N: int = 13, E_B_std: float = 0.05, E_EA_ratio: float = 100, E_MC_ratio: float = 25, repeats: int = 1,
+        magnitude: float = 0.00185, vacancy_fraction: float = 0., size: int = 50, finite: bool = True, pattern: str = "AFM"):
     magnet_size_ratio = 170/(170+30)*finite # S_ASI = 30nm, D_NM = 170nm
     mm = get_nonvolatile_mm(E_EA_ratio=E_EA_ratio, E_MC_ratio=E_MC_ratio, E_B_std=E_B_std,
                             size=size, magnet_size_ratio=magnet_size_ratio)
@@ -24,10 +24,17 @@ def run(N: int = 13, E_B_std: float = 0.05, E_EA_ratio: float = 100, E_MC_ratio:
     
     states, domains = [], []
     values = []
-    mm.initialize_m('AFM', angle=np.pi)
+    match pattern:
+        case "seed":
+            mm.initialize_m("AFM", angle=np.pi)
+            mm.m[size//2, size//2] *= -1
+            mm.update_energy()
+        case _:
+            mm.initialize_m(pattern, angle=np.pi)
+    # hotspice.gui.show(mm, inputter=inputter)
     for i in range(N):
         if i == 0: values.append(None)
-        else: values.append(inputter.input(mm, values=(i < (N//2 + 1)))[0])
+        else: values.append(inputter.input(mm, values=[(i < (N//2 + 1))]*repeats)[0])
         states.append(np.where(mm.occupation == 0, np.nan, mm.m))
         domains.append(np.where(mm.occupation == 0, np.nan, mm.get_domains()))
         # hotspice.gui.show(mm)
@@ -37,7 +44,7 @@ def run(N: int = 13, E_B_std: float = 0.05, E_EA_ratio: float = 100, E_MC_ratio:
     hotspice.utils.save_results(parameters={"magnitude": magnitude, "E_MC_ratio": E_MC_ratio, "E_EA_ratio": E_EA_ratio, "E_B_std": E_B_std,
                                             "vacancy_fraction": vacancy_fraction, "vacancies": vacancies, "a": mm.a, "d": mm.a*magnet_size_ratio,
                                             "T": mm.T_avg, "PBC": mm.PBC, "scheme": mm.params.UPDATE_SCHEME.name, "size": size, "moment": mm.moment_avg,
-                                            "N": N, "ASI_type": "OOP_Square"},
+                                            "N": N, "ASI_type": "OOP_Square", "repeats": repeats},
                                 data={"values": values, "states": states, "domains": domains})
     plot()
 
@@ -50,6 +57,7 @@ def plot(data_dir=None, label_domains=None, label_moments=None):
     if data_dir is None: data_dir = thesis_utils.get_last_outdir()
     params, data = hotspice.utils.load_results(data_dir)
     N = params['N'] # Number of panels
+    repeats = params.get('repeats', 1) # Number of repeated A- or B-cycles between state snapshots
     
     ## Plot
     thesis_utils.init_style()
@@ -91,7 +99,7 @@ def plot(data_dir=None, label_domains=None, label_moments=None):
             else:
                 avg = hotspice.plottools.Average.POINT
 
-        imfrac = 0.8 # How wide the imshows are w.r.t. their spacing
+        imfrac = 0.8 if repeats == 1 else 0.7 # How wide the imshows are w.r.t. their spacing
         x, y = -1, 0 # x=-1 because the first thing we do is x+1, so first x is actually 0
         ax.set_xlim([-imfrac/2, imfrac/2])
         ax.set_ylim([-imfrac/2, imfrac/2])
@@ -113,7 +121,7 @@ def plot(data_dir=None, label_domains=None, label_moments=None):
             ax.add_patch(Rectangle((x-imfrac/2, y-imfrac/2), imfrac, imfrac, fill=False, color="gray", linewidth=1))
             # Draw arrow from previous
             if i == 0: continue # No arrow drawn before the first image
-            text = '$A$' if data['values'][i] else '$B$'
+            text = f"{repeats:d}" + ('$A$' if data['values'][i] else '$B$')
             if nextrow: annotate_connection(ax, text, x, y+1-imfrac/2, x, y+imfrac/2, opposite_side=y%2, text_pad=3, text_size=fs)
             else: annotate_connection(ax, text, x+(-1+imfrac/2)*(1 if dx > 0 else -1), y, x+(-imfrac/2)*(1 if dx > 0 else -1), y, text_size=fs)
         
@@ -228,5 +236,11 @@ if __name__ == "__main__":
     # thesis_utils.replot_all(plot, subdir="EBstd=5%/EMC_high", label_domains=0)
     # run(E_B_std=0.05, E_EA_ratio=200, E_MC_ratio=40, magnitude=0.00378, size=20, N=13)
     # thesis_utils.replot_all(plot, subdir="EBstd=5%/EMC_low", label_domains=1)
+    
+    ## Clocking_binary_KQ_states.pdf IS GENERATED WITH:
+    # run(E_B_std=0.05, E_EA_ratio=455, E_MC_ratio=110, magnitude=0.01, finite=False, size=20, N=9)
+    
+    ## Clocking_massive_seeded.pdf IS GENERATED WITH:
+    run(E_B_std=0.00, E_EA_ratio=200, E_MC_ratio=40, magnitude=0.00378, size=141, N=13, repeats=6, pattern='seed')
 
-    thesis_utils.replot_all(plot)
+    # thesis_utils.replot_all(plot)
