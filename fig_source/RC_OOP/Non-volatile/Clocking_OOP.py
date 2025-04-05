@@ -121,7 +121,7 @@ def plot(data_dir=None, label_domains=None, label_moments=None):
             ax.add_patch(Rectangle((x-imfrac/2, y-imfrac/2), imfrac, imfrac, fill=False, color="gray", linewidth=1))
             # Draw arrow from previous
             if i == 0: continue # No arrow drawn before the first image
-            text = f"{repeats:d}" + ('$A$' if data['values'][i] else '$B$')
+            text = f"{repeats:d}"*(repeats != 1) + ('$A$' if data['values'][i] else '$B$')
             if nextrow: annotate_connection(ax, text, x, y+1-imfrac/2, x, y+imfrac/2, opposite_side=y%2, text_pad=3, text_size=fs)
             else: annotate_connection(ax, text, x+(-1+imfrac/2)*(1 if dx > 0 else -1), y, x+(-imfrac/2)*(1 if dx > 0 else -1), y, text_size=fs)
         
