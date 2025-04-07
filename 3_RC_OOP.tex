@@ -779,7 +779,7 @@ It can even enhance RC performance, as it introduces asymmetry which is benefici
 \paragraph{Energy balance}
 As the ratio $\sigma(\EEA) \EEA / \EMC$ increases, so does the range of fields where low-anisotropy magnets can be switched in the bulk of a domain without significant leaking during stepwise domain wall propagation.
 Such nucleation is beneficial for RC, in contrast to defect-free ASI where domain walls could only be injected at corners of the ASI.
-% Notably, systems with low $\EMC$ --- which enhances this effect --- are typically easier to fabricate.
+%Fortunately from a fabrication perspective, systems with low $\EMC$ are typically easier to produce.
 To illustrate the impact of $\EMC$,~\cref{fig:3:Clocking_clearly_EBstd5_EMC} compares a strongly-coupled system (a) with a weakly-coupled system (b). % a system with $\sigma(\EEA) \EEA / \EMC = 0.025$ (\crefSubFigRef{fig:3:Clocking_clearly_EBstd5_EMC}{a}) against one with $\sigma(\EEA) \EEA / \EMC = 0.25$ (\crefSubFigRef{fig:3:Clocking_clearly_EBstd5_EMC}{b}).
 Indeed, nucleation occurs in the bulk of the weakly-coupled system because the disorder $\sigma(\EEA)\EEA=10\kBT$ is significant compared to $\EMC = 40 \kBT$, which also leads to far more irregular domain wall motion that encourages interactions between domain walls.
 
@@ -800,52 +800,166 @@ Indeed, nucleation occurs in the bulk of the weakly-coupled system because the d
 	\textbf{(a)} System with high magnetostatic interaction $\EMC = 400 \kBT$, requiring an external input magnitude $B_\mathrm{ext} = \qty{11.2}{\milli\tesla}$ for controlled domain wall movement.
 	\textbf{(b)} System with low MS interaction $\EMC = 40 \kBT$ and $B_\mathrm{ext} = \qty{3.78}{\milli\tesla}$.
 }
+\vspace{-1em}
 
 Most importantly, note that the $B$-cycles do not remove the existing domains as quickly in the weakly-coupled system.
 They even survive for as many $B$-cycles as there were $A$-cycles applied, which is great for RC as it improves the balance between both cycles.
 Because of these benefits of weakly-coupled systems --- \crefSubFigRef{fig:3:Clocking_clearly_EBstd5_EMC}{b} exhibits exactly the kind of erratic, yet controlled behaviour we have been looking for --- we will henceforth focus on systems with a low $\EMC/\EEA$-ratio to obtain significant defect rates.
 
 \subsection{Reservoir computing}
-Due to the binary character of the clocked input protocol --- each cycle either grows or shrinks domains of either type --- it is not possible to apply scalar input in a straightforward manner.
-% TODO: The limitation of binary input will be explored further in~\cref{sec:3:clocking_input_encoding}.
-This limits the available options of which RC tasks can be used as benchmarks for this non-volatile system, as many tasks --- like the previously used signal transformation --- can not be performed with binary input.
-Instead, we opt to determine more general RC metrics for this clocked non-volatile OOP ASI.
-In the introduction (\cref{sec:1:RC_metrics}), two such classes of metrics were discussed: metrics based on matrix ranks, and the task-agnostic metrics.
-In the following, the clocking protocol on the OOP square-lattice ASI will be evaluated using both classes of metrics.
+Due to the binary nature of the clocked input protocol --- as each cycle either grows or shrinks domains of a particular type --- it is most straightforward to supply binary input. % The limitation of binary input will be further explored in~\cref{sec:3:clocking_input_encoding}.
+As this precludes the usage of certain tasks like signal transformation, we will instead evaluate the performance of this clocking protocol by determining more general RC metrics that do not rely on scalar input.
+As introduced in~\cref{sec:1:RC_metrics}, these include metrics based on matrix ranks as well as the so-called task-agnostic metrics.
+In the following, these will first be used to evaluate performance for a typical ASI that serves as our baseline, after which their effect on several system parameters can be assessed by adjusting this baseline ASI.
 
-\paragraph{Baseline system}
-We will initially calculate RC metrics for a baseline ASI, after which we will evaluate the effect of several system parameters by adjusting them individually.
-Magnets in this baseline ASI have a very large perpendicular anisotropy $\EEA = \SI{110}{\electronvolt} \approx 4255\kBT (\pm \SI{5}{\percent})$ and have the same magnetic moment as used for the thermally active ASI ($\mu = \SI{2.5e-16}{\ampere\metre\squared}$), which was based on $D_\mathrm{NM} = \SI{170}{\nano\metre}$ magnets.
-Based on this geometry, the magnetostatic coupling $\EMC$ can be controlled by varying the lattice parameter $a$.
-To avoid an unintentionally interconnected ASI as previously encountered in~\cref{sec:3:MFM}, a lower limit $a > D_\mathrm{NM} + \SI{25}{\nano\metre} = \SI{195}{\nano\metre}$ is imposed.
-The best RC performance was achieved for systems where the MS coupling $\EMC$ is far smaller than the anisotropy $\EEA$\footnote{
-	The values for $\EEA$ and $\EMC$ used here are not expressed as multiples of $\kBT$ because the research of non-volatile ASI was actually conducted before thermally active ASI were considered, so the notion of $\EEA$ and $\EMC$ as a multiple of $\kBT$ was not yet in use.
-	Therefore, here, $\EEA$ is set in \SI{}{\electronvolt} and metrics are determined as a function of the lattice parameter $a$ rather than the magnetostatic coupling $\EMC$.
-}, resulting in clocking dynamics similar to \crefSubFigRef{fig:3:Clocking_clearly_EBstd5_EMC}{b}. \par
-To determine the optimal system parameters to perform RC with this clocking protocol, the input magnitude (i.e., external field magnitude $B$) and magnetostatic interaction (i.e., lattice spacing $a$) were varied, while the anisotropy was kept constant at a high value to ensure a non-volatile system.
-Note that the absolute value of the external field magnitude $B$ is mostly irrelevant, as it depends on the specific values of $\EEA$ and $\EMC$ which affect the effective energy barrier $\EBeff$ of domain wall magnets.
-A different choice of $\EEA$ and/or $\EMC$ will necessitate a different input magnitude $B$, but will not significantly alter the general trend of the metrics as function of the input magnitude.
-Since the input strength has a significant effect on the clocking dynamics, it was varied to ensure that the ``sweet spot'' was hit for every value of the lattice spacing $a$. \par
-Accounting for the finite size of magnets was found to have a negligible impact on the reservoir performance, apart from shifting the whole metric map slightly towards larger lattice constants $a$ by about \SIrange{20}{30}{\nano\metre}. % TODO: do we want to show this as figures? (Sweep20250325131714 vs. Sweep20250325105313)
+\subsubsection{Baseline system}
+The ASI we consider here as our baseline system contains magnets with a very large perpendicular anisotropy\footnote{
+	Note that the values for $\EEA$ and $\EMC$ used here are not expressed as multiples of $\kBT$ because the initial research on non-volatile ASI was conducted before the practice of scaling these parameters by $\kBT$ was adopted.
+	For this reason, $\EEA$ is provided in \SI{}{\electronvolt} and the metrics are presented as a function of the lattice parameter $a$ rather than the magnetostatic coupling $\EMC$.
+} $\EEA = \SI{110}{\electronvolt} \approx 4255\kBT (\pm \SI{5}{\percent})$ and the same magnetic moment as the thermally active ASI ($\mu = \SI{2.5e-16}{\ampere\metre\squared}$), which was based on magnets with a diameter $D_\mathrm{NM} = \SI{170}{\nano\metre}$.
+As these parameters are kept constant, the MS coupling $\EMC$ only depends on the lattice parameter $a$.
+To avoid an unintentionally interconnected ASI as previously encountered in~\cref{sec:3:MFM}, a lower limit $a > D_\mathrm{NM} + \SI{25}{\nano\metre} = \SI{195}{\nano\metre}$ is imposed. \par
+The high anisotropy guarantees a weakly-coupled system with a high $\sigma(\EEA)\EEA / \EMC$-ratio, which we previously suggested to be the most promising regime for RC.
+Given the constant values of the aforementioned system parameters, two variables remain: the input strength and the NN MS interaction energy $\EMC$.
+To determine their optimal values, the RC metrics will be determined for a range of external field magnitudes $B$ and lattice spacings $a$. \par
+Note that, while domain wall propagation can be expected near a field magnitude $B \approx (\EEA + \EMC)/\mu$, it is not guaranteed that optimal RC performance will occur exactly at this value.
+The clocking dynamics are sensitive to the precise input strength, and the presence of disorder broadens the range where the input has a meaningful effect.
+This makes it harder to predict which input strength $B$ will result in the best performance, which can also be different for each metric.
+Therefore, while the optimal field magnitude is predictable to some extent, it is also varied to ensure hitting the ``sweet spot'' for all metrics.
 
-\subsubsection{Metrics}
 \paragraph{Matrix rank-based metrics}
-Three matrix rank-based quantities can be calculated: the kernel-quality $K$, generalisation-capability $G$ and computing capacity $Q=K-G$.
-The latter is the main metric of interest, as it can be used as an indication of how suitable a system is for RC purposes.
+Three matrix rank-based metrics can be calculated: the kernel-quality $K$, generalisation-capability $G$ and computing capacity $Q=K-G$.
+The latter is the primary metric of interest, as it provides an indication of how suitable a particular system is for reservoir computing.
+\cref{fig:3:Clocking_Sweeps_binary_KQ} shows these metrics for the baseline system over a range of lattice spacings $a$ and field magnitudes $B$.
+Recall that the maximum value of $K$, $G$ and $Q$ is the number of readout nodes; here, a $20 \times 20$ ASI with $10 \times 10$ readout nodes --- each representing the average domain type of a $2 \times 2$ magnet cluster --- yields a maximum value of 100 for all three metrics.
 
 \xfig{3_RC_OOP/Nonvolatile/Sweeps/Sweep20230208082817.pdf}{
 	\label{fig:3:Clocking_Sweeps_binary_KQ}
-	Kernel-quality $K$, generalisation-capability $G$ and computing capacity $Q$ of a $20 \times 20$ OOP square-lattice ASI with $\EEA = \SI{110}{\electronvolt} \pm \SI{5}{\percent}$, over a range of lattice constants $a$ and input field magnitudes $B$.
-	The corresponding magnetostatic coupling $\EMC$ ranges from $\approx 146\kBT$ (at $a=\SI{220}{\nano\metre}$) to $\approx 88\kBT$ (at $a=\SI{260}{\nano\metre}$) --- this is the optimum range, as the computing capacity decreases outside this range.
-	The magnets had the same magnetic moment as the thermally active ASI, i.e. $\mu = \SI{2.5e-16}{\ampere\metre\squared}$.
-	The readout used the average domain type of each $2 \times 2$ set of magnets, for a total of 100 readout values.
-	Hence, the maximum value of $K$, $G$ and $Q$ is 100.
+	Kernel-quality $K$, generalisation-capability $G$ and computing capacity $Q$ of a $20 \times 20$ OOP square-lattice ASI with $\EEA = \SI{110}{\electronvolt} \pm \SI{5}{\percent}$.
+	Beyond the displayed range of lattice constants $a$ and input field magnitudes $B$, the metrics decrease.
+	The corresponding magnetostatic coupling $\EMC$ ranges from $146\kBT$ (at $a=\SI{220}{\nano\metre}$) to $88\kBT$ (at $a=\SI{260}{\nano\metre}$), as the magnetic moment of each magnet is $\mu = \SI{2.5e-16}{\ampere\metre\squared}$.
+	As readout, the average domain type of each $2 \times 2$ set of magnets is used, totalling 100 readout values.
+	Hence, the highest possible value of $K$, $G$ and $Q$ is 100.
 }
 
-The matrix rank-based metrics require as many input sequences as there are readout nodes, with each input sequence consisting of a certain number of input values.
-Specifically, we applied 100 random input values for every input sequence, and applied 100 such input sequences since we have 100 readout nodes.
-For further insight, we also determined task-agnostic metrics in the same range.
+Some noise is visible in the figure due to the random distribution of $\EEA$; for each set of parameters, a new randomly sampled value of $\EEA$ was assigned to each magnet.
+The local noise level therefore reflects how impactful a $\sigma(\EEA) = \SI{5}{\percent}$ disorder is on the clocking dynamics and, by extension, on RC performance.
+For example, near the maximum of the metric map in~\cref{fig:3:Clocking_Sweeps_binary_KQ}, the computing capacity $Q$ may vary between approximately 50 and 80.
+This suggests that, unless such defects can be reproducibly incorporated into the system, performance can vary significantly between various manufactured ASI samples. \par
+The generalisation-capability $G$ is very low for any combination of $a$ and $B$, apart from a few outliers where the randomly sampled defect distribution results in uncharacteristically high values of $G$.
+Because $Q=K-G$ provides an indication of RC performance, a low $G$ is advantageous: it indicates that recent inputs have a far greater impact on the current state of the system than older input cycles.
+In this baseline system, this low generalisation-capability allows the computing capacity $Q$ to reach values as high as 80 out of 100. \par
+Additionally, though not shown in the figure, it is worth noting that accounting for the finite size of magnets has no noticeable impact on RC performance, apart from shifting the entire metric map by roughly $\Delta a = \SIrange{20}{30}{\nano\metre}$ toward larger lattice constants as compared to a point dipole model. % If we want to show this as figures, compare Sweep20250325131714 vs. Sweep20250325105313.
+
+\paragraph{Task-agnostic metrics}
+Although the matrix rank-based metrics provide insight into how the system responds to various input patterns, they are relatively expensive to compute --- requiring as many input sequences as there are readout nodes (here: 100), with each sequence comprising many (here: 100) input values.
+In comparison, task-agnostic metrics such as non-linearity and memory capacity can be determined using only several hundred random input values, making them considerably more efficient to compute.
+Furthermore, while matrix rank-based metrics can serve as useful initial indicators of whether a system can exhibit promising dynamics for RC, they do not guarantee that a system is actually suitable for RC.
+Task-agnostic metrics are more straightforward to interpret and provide a more accurate indication of a system's suitability for RC.
+For example, the input method with a uniform field --- which was previously dismissed for non-volatile ASI --- achieves a moderate $Q \approx 40$, but yields very low values for all task-agnostic metrics like non-linearity and memory capacity. % Matrix rank-based metrics should rather be seen as indicators of which systems do NOT give decent RC performance.
+Therefore, to complement the findings from the previous paragraph, task-agnostic metrics were also determined for the baseline system over the same parameter range, as shown\footnote{
+	The stability metric is also among the task-agnostic metrics proposed in~\cite{RC_TaskAgnosticMetrics_v2}, but is not shown here as it is not relevant to non-volatile ASI which do not spontaneously reach a ground state in the absence of input.
+} in~\cref{fig:3:Clocking_Sweeps_binary_TA}.
+
+\xfig{3_RC_OOP/Nonvolatile/Sweeps/Clocking_binary_TA_averaged.pdf}{
+	\label{fig:3:Clocking_Sweeps_binary_TA}
+	Task-agnostic metrics for the same input, readout and system parameters as in~\cref{fig:3:Clocking_Sweeps_binary_KQ} ($20 \times 20$ OOP square-lattice ASI with $10 \times 10 = 100$ readout nodes, $\EEA = \SI{110}{\electronvolt} \pm \SI{5}{\percent}$, $\mu = \SI{2.5e-16}{\ampere\metre\squared}$), over the same range of lattice spacings $a$ and input magnitudes $B$.
+	The non-linearity is bounded in the range $[0,1]$, while the memory capacity and parity check have no upper limit.
+}
+
+Systems with stronger MS interaction behave more non-linearly, though only in a narrow range of input field magnitude.
+The trade-off between non-linearity and memory capacity, which has been extensively discussed~\cite{dambre2012information,MemoryNonlinearityReservoirs,RC_BeyondMemoryNonlinearity,RC_unification} and reported in various systems~\cite{DynamicEmergence_NanomagneticSystem,RC_TaskAgnosticMetrics_v2,TaskAdaptivePRC}, is striking in this system as well.
+As envisioned, the clocking protocol indeed yields a relatively high memory capacity, obtaining values $>2$ over a wide range of the parameter space.
+The parity check reveals that, on average, the parity of the previous 3 input cycles can be recalled over a wide range of the metric map.
+That the parity check reaches higher values than the memory capacity was to be expected, as it is specifically tailored to binary input data whereas memory capacity is more generally applicable to scalar data. % TODO: what does PC actually measure?
+These metrics provide more insight than the matrix rank-based metrics, as they can directly be related to the performance of the system for certain tasks --- some tasks mostly rely on fading memory while others mostly require non-linearity, and yet others prefer a mix of both. \par
+While $<3$ bits of memory may not sound like much, it is comparable to the memory capacity and parity check of other magnetic reservoirs~\cite{AdaptiveProgrammableRC,hon2021numerical,tsunegi2019STOforcedsyncRC,Venkat_2024}. % AdaptiveProgrammableRC is similar when using a normal square ASI, but width-modulated and pinwheel ASI perform better.
+Higher performance can be achieved by using general RC architectures like the rotating neurons reservoir~\cite{RotatingNeuronsRC} or the single dynamical node paradigm~\cite{appeltant2011information}, as for example used in~\ccite{Venkat_2024,Vidamour2023}.
+However, here we only consider the performance of the clocked ASI by itself, as these architectures can be applied to any reservoir.
+
+\paragraph{Effect of initial state}
+The initial state of the system can, in some cases, influence RC performance.
+While the initial state has little to no impact when the input is sufficiently strong, as the initial state gets washed out after several clocking cycles, it can significantly affect the results at lower input magnitudes.
+The reason for this is that different initial states require different minimal input field magnitudes --- it is easier to switch a magnet when the ASI is in a uniform state than when it is in the AFM ground state. % Compare Sweep_230220_1_binaryInput_randomInit.out/Sweep20230220132509 with Sweep_230119_2_binaryInput.out/Sweep20230119153543
+This is further complicated by defects, which may impede domain wall motion.
+For example, when starting from the AFM ground state, domain walls must be injected from the edges and propagate throughout the system, whereas an initially uniform state will enable initial switches (i.e., domain wall nucleation) to occur throughout the bulk of the system.
+Therefore, a field range exists where an ASI in the uniform state will respond to the input, while it would not if it were in the AFM ground state.
+This range is broader for more strongly-coupled and disordered systems. \par
+This effect is an example of how metric maps can be affected by other factors than just system parameters.
+Therefore, to ensure consistency between the RC metric maps presented in this section, all simulations start from the AFM ground state\footnote{
+	While the high anisotropy $\EEA$ prevents the system from spontaneously reaching the ground state, it can be forced to the ground state by applying a single clocking cycle with a stronger stimulus than used during computation.
+}.
+
+\subsubsection{Influence of defects on RC metrics}
+We previously mentioned that disorder is beneficial to the RC capability of the system, but provided no evidence for this.
+Now, RC metrics can be used to verify this claim: the task-agnostic metrics for a system without defects ($\sigma(\EEA) = \SI{0}{\percent}$) are shown in~\cref{fig:3:Clocking_Sweeps_binary_TA_EBstd0}. \par
+While the memory capacity and parity check are still definitively non-zero, they are at least $\approx \SI{40}{\percent}$ lower than for a system with $\sigma(\EEA) = \SI{5}{\percent}$ defects.
+Furthermore, while a region with near-unity non-linearity now exists, the overlap between parameter combinations that yield decent non-linearity and those that yield decent memory capacity remains rather limited. \\\par
+
+\xfig{3_RC_OOP/Nonvolatile/Sweeps/Sweep20230124100320.pdf}{
+	\label{fig:3:Clocking_Sweeps_binary_TA_EBstd0}
+	Task-agnostic metrics for a defect-free system ($\sigma(\EEA) = 0$) with otherwise the same input, readout and system parameters as in~\cref{fig:3:Clocking_Sweeps_binary_TA} ($20 \times 20$ OOP square-lattice ASI with $10 \times 10 = 100$ readout nodes, $\EEA = \SI{110}{\electronvolt}$, $\mu = \SI{2.5e-16}{\ampere\metre\squared}$), over the same range of lattice spacings $a$ and input magnitudes $B$.
+	The non-linearity is bounded in the range $[0,1]$, while the memory capacity and parity check have no upper limit.
+}
+
+While this shows that defects improve the memory capacity of the system, it does not prove that a defect rate $\sigma(\EEA) = \SI{5}{\percent}$ would be optimal.
+To assess this,~\cref{fig:3:Clocking_Sweeps_binary_TA_EBstd} shows task-agnostic metrics for a range of defect rates $\sigma(\EEA)$ and input field magnitudes $B$ while the lattice spacing was kept constant.
+
+\xfig{3_RC_OOP/Nonvolatile/Sweeps/Sweep20250327111551.pdf}{
+	\label{fig:3:Clocking_Sweeps_binary_TA_EBstd}
+	Task-agnostic metrics as a function of disorder $\sigma(\EEA) = 0$ with otherwise the same input, readout and system parameters as in~\cref{fig:3:Clocking_Sweeps_binary_TA} ($20 \times 20$ OOP square-lattice ASI with $10 \times 10 = 100$ readout nodes, $\EEA = \SI{110}{\electronvolt}$, $\mu = \SI{2.5e-16}{\ampere\metre\squared}$), over the same range of input magnitudes $B$, with $a=\SI{230}{\nano\metre}$ kept constant.
+	The non-linearity is bounded in the range $[0,1]$, while the memory capacity and parity check have no upper limit.
+}
+
+The non-linearity quickly drops as the disorder increases; only systems with rather low disorder ($< \SI{10}{\percent}$) display an appreciable non-linearity, and only do so over a limited field range.
+The memory capacity and parity check, on the other hand, benefit greatly from disorder.
+Note that the first column in~\cref{fig:3:Clocking_Sweeps_binary_TA_EBstd} (i.e., $\sigma(\EEA) = 0$, a defect-free system), displays a far lower memory capacity or parity check performance than any system with defects ($\sigma(\EEA) > 0$).
+The severity of these defects has no substantial impact on these two metrics; they remain reasonably high ($\gtrsim 2.5$ and $\gtrsim 3$, respectively) even for extremely severe defects beyond $\sigma(\EEA)=\SI{30}{\percent}$. \par
+The optimal field range always remains centred around the same value, but broadens as the disorder increases.
+This is a consequence of the greater spread of effective energy barriers throughout the ASI due to the increased disorder, widening the range of field strengths at which any of the magnets can switch.
+
 % TODO: explain what I say in the powerpoint presentation of 20230207, or at least check if everything useful has been said
 
-% TODO: filter the simulations/sweeps that I performed and organise them below, have a look at what parameters were changed (E_B_std, binary/byte, endianness...)
-% TODO SIM: sweep of E_B_std and input magnitude at a well-chosen lattice spacing to showcase the effect of E_B_std?
+\subsubsection{Alternative input encoding} % Binary vs. byte etc. Sigmoid thingy?
+\label{sec:3:clocking_input_encoding}
+The clocking protocol naturally lends itself to binary input\footnote{
+	Generally speaking, a clocking protocol lends itself to as many possible input values as there are degenerate ground states in the system.
+	In OOP ASI, this results in binary input (2 values).
+	One could similarly imagine a quaternary input (4 values) for Pinwheel ASI, which exhibits superferromagnetic domains with 4 possible average magnetisation angles, though this is mere conjecture as binary input was used by Jensen~\textit{et al.}~\cite{clocking-protocol} when demonstrating clocking in pinwheel ASI.
+}.
+For many real-world RC tasks, however, scalar input is preferable.
+Within the limits of the clocking protocol, we propose two concepts to address this, though neither are desirable. \par
+The first concept is to use an analog-to-digital conversion that encodes analog values as integers represented as bytes consisting of 8 bits.
+This is the natural habitat of conventional computers, but is not a viable solution here since the memory capacity of the system is less than one bit.
+The non-linearity, on the other hand, was found to be mostly unaffected when a little-endian byte representation (i.e., applying the most significant bit last) is used, but all in all this is not a viable method. \par
+The second concept is to use the input magnitude as a scalar input, similar to the thermally active ASI.
+However, non-volatile ASI only exhibit a non-trivial response to the input in a narrow range of field magnitudes.
+Furthermore, one must take care to regularly apply both positive and negative cycles to keep the domain wall dynamics going.
+Both of these factors complicate the input encoding. \par
+Ultimately, both of these scalar input concepts were dismissed as they did not provide a desirable effect.
+
+\subsection{Conclusion}
+Achieving reservoir computing in non-volatile OOP ASI posed several challenges.
+A uniform global input could not be used for RC, as it does not distinguish between the degenerate ground states.
+This was solved by devising an input with the same checkerboard pattern as the AFM ground state.
+However, applying a global AFM input did not yield usable dynamics since uncontrolled domain wall motion saturates the system in one of its ground states, erasing prior information present in the system.
+Hence, a clocking protocol was introduced, such that not all magnets are simultaneously stimulated with equal magnitude.
+More specifically, the system was divided into two interleaved sublattices, allowing the controlled propagation of domain walls. \par
+Nonetheless, in the absence of defects, the information stored by this clocking protocol was rather limited as a large portion of the response was reversible and highly symmetric.
+Since defects are always present in a real system, they were also accounted for in simulation.
+The reproducible disorder these defects offer --- at least within a single ASI with random defects --- breaks the symmetry and creates more irreversible dynamics in the bulk of the system, thereby enhancing the computational capability of the system.
+This was reflected by an increased memory capacity ($\approx 2.5$ bits instead of $\approx 1.5$) and parity check performance ($\approx 3$ bits instead of $\approx 1.5$), though the maximum non-linearity decreased. \par
+A limitation of the clocking protocol is that it only allows binary input, but for real-world applications scalar inputs are often more relevant.
+It is, however, non-trivial to devise a scalar input protocol for non-volatile ASI.
+In this sense, the non-volatile and thermally active ASI complement each other --- supporting binary and scalar input, respectively.
+
+\newpage
+\section{Conclusions}
+% TODO: expand with the thermally active conclusions
+Reservoir computing was achieved in both thermally active as well as non-volatile OOP ASI.
+While the clocked input protocol may not easily be practically realisable, the key takeaways from the clocking protocol apply to any (non-volatile) ASI.
+First, the input method must lift the degeneracy that exists between the ground states of the system, such that the input can act on the domains and selectively affect the domain boundaries in the system specifically.
+Second, at least two independently addressable sublattices should exist: an input protocol must never stimulate both of them at once, to prevent avalanches.
+Following these principles, controlled domain wall motion was achieved in non-volatile OOP square-lattice ASI, which led to a decent memory capacity of up to $2.5$ bits. \par
+In conclusion, reservoir computing capability has been demonstrated in OOP ASI, for both thermally active as well as non-volatile systems.
+These two types of system complement each other in the sense that they respectively support scalar and binary input.
