@@ -21,15 +21,15 @@ import hotspice
 import thesis_utils
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--only-plot", action="store_true", help="Pass this argument to prevent any additional iterations from being calculated, the plots are just recalculated.")
+parser.add_argument("--calculate-iterations", action="store_true", help="Pass this argument to calculate the data, or calculate more iterations than already stored in a datafile.")
 parser.add_argument("--point-dipoles", action="store_true", help="If specified, the improved finite magnet approximation is used, otherwise infinitesimal Ising spins are considered.")
 parser.add_argument("--parabolic-barrier", action="store_true", help="If specified, the improved parabolic energy barrier approximation is used, otherwise the simplest barrier calculation is used.")
 args = parser.parse_args()
 
-JUST_REPLOT: bool = args.only_plot
+JUST_REPLOT: bool = not args.calculate_iterations
 FINITE_MAGNET_SIZE: bool = not args.point_dipoles
 PARABOLIC_E_B: bool = args.parabolic_barrier
-OUTDIR = f"{hotspice.utils.get_caller_script().stem}.out/{'finite_magnets' if FINITE_MAGNET_SIZE else 'infinitesimal_magnets'}-{'parabolic_barrier' if PARABOLIC_E_B else 'simple_barrier'}"
+OUTDIR = f"{os.path.splitext(__file__)[0]}.out/{'finite_magnets' if FINITE_MAGNET_SIZE else 'infinitesimal_magnets'}-{'parabolic_barrier' if PARABOLIC_E_B else 'simple_barrier'}"
 print(f"Saving results to {OUTDIR}")
 
 
@@ -200,7 +200,7 @@ def plot_all_iterations(path: str|Path, legend_title: str = r"$S_\mathrm{ASI}$",
     cmap = colormaps['rainbow']
     varnames_readable = {"E_EA": "Net OOP anisotropy\n" + r"$E_\mathrm{EA}$ [$k_\mathrm{B}T$]",
                         "E_MC": "NN MS coupling\n" + r"$E_\mathrm{MC}$ [$k_\mathrm{B}T$]",
-                        "J": "Exchange coupling\n" + r"$J$ [$k\mathrm{B}T$]"}
+                        "J": "Exchange coupling\n" + r"$J$ [$k_\mathrm{B}T$]"}
     for i, file in enumerate(files_iterations_json):
         with open(file, 'r') as inFile:
             iterations = [json.loads(line) for line in inFile]
