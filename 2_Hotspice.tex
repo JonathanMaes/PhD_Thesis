@@ -1,33 +1,6 @@
 \chapter{Methods: ``\hotspice'' simulator for artificial spin ice}\label{ch:Hotspice}
 % \glijbaantje{It's not a bug, it's a feature.}{Someone}
 % TODO: apply changes applied in response letter, when response letter is sent
-\begin{adjustwidth}{2em}{2em} % TODO END: update once published.
-    \begin{center}
-        \textbf{Material from this chapter has also been published in:} \\
-    \end{center}
-    \vspace{1em}
-    \begin{adjustwidth}{0em}{1.5em}
-	    \begin{itemize}
-	    	\item[\cite{MAES-24}] J.~Maes, D.~De~Gusem, I.~Lateur, J.~Leliaert, A.~Kurenkov, and B.~Van Waeyenberge.
-	    	\newblock The design, verification, and applications of Hotspice: a Monte Carlo simulator for artificial spin ice.
-	    	\newblock \emph{ArXiV}, arXiv:\penalty0 2409.05580, 2024.
-	    \end{itemize}
-    \end{adjustwidth}
-    \vspace{.5em}
-    \begin{center}
-        \centering\rule{0.7\linewidth}{0.4pt}
-    \end{center}
-    \vspace{.0em}
-    \begin{center}
-    	The \hotspice simulator discussed in this chapter\\
-    	is open-source and available on \href{https://github.com/bvwaeyen/Hotspice}{GitHub}.
-    \end{center}
-    %\vspace{0em}
-    \begin{center}
-    \centering\rule{0.7\linewidth}{0.4pt}
-    \end{center}
-    \vspace{1em}
-\end{adjustwidth}
 
 To assess the potential of \link{reservoir computing}{Reservoir Computing} in (perpendicular-anisotropy) \link{artificial spin ice}{Artificial Spin Ice}, as is the main topic of this thesis, a simulation framework is needed to efficiently explore the impact of various system parameters and input methods on reservoir performance. \par
 Nanomagnetic systems are often simulated using \indexlabel{micromagnetic simulations}micromagnetic codes, such as the finite-difference-based \mumax~\cite{mumax3} and \oommf~\cite{OOMMF} or the finite-element-based \nmag~\cite{Nmag}, which capture the magnetisation dynamics of individual nanomagnets in great detail.
@@ -50,6 +23,34 @@ Simulations can span arbitrary timescales, as determined by the switching time o
 
 In this chapter, we discuss several model variants that have been implemented, and assess their accuracy in simulating the behaviour of ASI.
 These variants differ in their choice of Monte Carlo spin-flip algorithm and their calculation of the magnetostatic interactions and energy barriers. \\\par
+
+\begin{adjustwidth}{2em}{2em} % TODO END: update once published.
+	\begin{center}
+		\textbf{Material from this chapter has also been published in:} \\
+	\end{center}
+	\vspace{1em}
+	\begin{adjustwidth}{0em}{1.5em}
+		\begin{itemize}
+			\item[\cite{MAES-24}] J.~Maes, D.~De~Gusem, I.~Lateur, J.~Leliaert, A.~Kurenkov, and B.~Van Waeyenberge.
+			\newblock The design, verification, and applications of Hotspice: a Monte Carlo simulator for artificial spin ice.
+			\newblock \emph{ArXiV}, arXiv:\penalty0 2409.05580, 2024.
+		\end{itemize}
+	\end{adjustwidth}
+	\vspace{.5em}
+	\begin{center}
+		\centering\rule{0.7\linewidth}{0.4pt}
+	\end{center}
+	\vspace{.0em}
+	\begin{center}
+		The \hotspice simulator discussed in this chapter\\
+		is open-source and available on \href{https://github.com/bvwaeyen/Hotspice}{GitHub}.
+	\end{center}
+	%\vspace{0em}
+	\begin{center}
+		\centering\rule{0.7\linewidth}{0.4pt}
+	\end{center}
+	\vspace{1em}
+\end{adjustwidth}
 
 \section{Model}\indexlabel{point dipole model}
 In single-domain IP nanomagnets, the magnetisation prefers to align along the fixed \xref{easy axis} of the geometry, while for OOP magnets a strong interfacial anisotropy with the substrate causes a preferential orientation along the $z$-axis.
