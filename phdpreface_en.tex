@@ -17,6 +17,16 @@ These variants explore three key aspects of the simulation:
 In the second half of the chapter, implementation details are discussed, in particular the calculation of the magnetostatic interaction between all magnets, alongside other strategies to improve performance of the Monte Carlo simulation.
 The chapter ends by briefly verifying the software, through comparison of simulations against analytical solutions for several solvable systems. \\
 
-In \cref{ch:Applications}, ... \\
+In \cref{ch:Applications}, the \hotspice simulator is used to assess the reservoir computing capabilities of both thermally active and non-volatile out-of-plane (OOP) ASI.
+The properties of OOP nanomagnets, and consequently the behaviour of OOP ASI, are governed by the interplay between various energy contributions like perpendicular magnetic anisotropy and shape anisotropy.
+Through a careful choice of system parameters, thermally active ASI can be obtained, which spontaneously relaxes toward the ground state over a certain timeframe.
+After analysing how this relaxation is affected by key system parameters --- such as the nearest-neighbour magnetostatic coupling and net OOP anisotropy --- those same parameters are then determined for manufactured OOP ASI by fitting simulations to the experimentally observed relaxation dynamics. \par
+Building on this foundation, the relaxation of thermally active OOP ASI is employed for reservoir computing.
+To evaluate the computational performance of this method, two benchmark tasks are performed.
+First, a signal transformation task assesses the non-linearity of the reservoir.
+Subsequently, a time series prediction of the chaotic Mackey-Glass attractor evaluates its memory capacity.
+Since thermally active ASI are challenging to fabricate, the final section of this chapter turns to non-volatile ASI.
+Contrary to thermally active ASI, a global input can not be used  in non-volatile systems due to the absence of spontaneous relaxation.
+Instead, a clocking protocol is developed to enable controlled domain wall propagation, thereby leveraging domain dynamics to enhance the computational performance of the system. \\
 
 In \cref{ch:Conclusion} ...

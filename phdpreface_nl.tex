@@ -5,7 +5,7 @@ Deze thesis gaat over ... \\
 
 Hoofdstuk \ref{ch:Introduction} introduceert enkele belangrijke concepten ... \\
 
-Hoofdstuk \ref{ch:Hotspice} stelt de open-source \hotspice Monte Carlo-simulator voor, die de dynamica van artificieel spin-ijs (ASI) simuleert met als doel om reservoir computing-strategieën te evalueren en optimale systeemparameters te bepalen.
+Hoofdstuk \ref{ch:Hotspice} stelt de open-source \hotspice Monte Carlo-simulator voor, die de dynamica van artificieel spin-ijs (ASI) simuleert met als doel om reservoir computing-strategie\"en te evalueren en optimale systeemparameters te bepalen.
 Er wordt een Ising-achtig model gebruikt: elke magneet in het ASI wordt voorgesteld als een punt-dipool die kan wisselen tussen twee stabiele toestanden.
 Verschillende varianten op dit model worden voorgesteld, wiens nauwkeurigheid wordt vergeleken met betrekking tot de simulatie van het dynamische gedrag van ASI.
 Drie soorten varianten worden besproken:
@@ -17,6 +17,18 @@ Drie soorten varianten worden besproken:
 In de tweede helft van het hoofdstuk worden implementatiedetails besproken, met name de berekening van de magnetostatische interactie tussen alle magneten, evenals andere strategie\"en om de effici\"entie van de Monte Carlo-simulatie te verbeteren.
 Het hoofdstuk eindigt met een korte verificatie van de software, door simulaties te vergelijken met analytische oplossingen voor enkele oplosbare systemen. \\
 
-In hoofdstuk \ref{ch:Applications}, ... \\
+In hoofdstuk~\ref{ch:Applications} wordt deze \hotspice simulator ingezet om de reservoir computing-prestaties van zowel thermisch actieve als bevroren verticaal-gemagnetiseerde ASI te evalueren.
+Het gedrag van deze systemen wordt grotendeels bepaald door de wisselwerking tussen verschillende energiebijdragen, zoals de loodrechte magnetische anisotropie en vorm-anisotropie van elke nanomagneet.
+Door een zorgvuldige keuze van systeemparameters kunnen thermisch actieve ASI verkregen worden, welke spontaan richting de grondtoestand zullen evolueren over een zekere tijdspanne.
+Enkele parameters, zoals de magnetostatische koppeling tussen naaste buren en de netto loodrechte anisotropie, hebben een sterke impact op deze evolutie naar de grondtoestand.
+Nadat het effect van deze parameters geanalyseerd is, worden zij bepaald voor een experimenteel vervaardigd ASI door simulaties te vergelijken met het experimenteel geobserveerde relaxatieproces. \par
+Hierop voortbouwend wordt dit relaxatieproces benut voor reservoir computing.
+De prestaties van deze thermisch actieve ASI worden beoordeeld door middel van twee specifieke taken.
+Eerst wordt de niet-lineariteit van het reservoir ge\"evalueerd door het een signaaltransformatie te laten uitvoeren.
+Vervolgens wordt de geheugencapaciteit getest, door het reservoir de chaotische Mackey-Glass attractor te laten voorspellen.
+Aangezien thermisch actieve ASI moeilijk te vervaardigen zijn, richt het laatste deel van dit hoofdstuk zich op bevroren ASI.
+In tegenstelling tot thermisch actieve systemen kan bij bevroren ASI geen globale input worden toegepast, aangezien zij niet spontaan de grondtoestand kunnen bereiken.
+In plaats daarvan wordt een methode ontwikkeld waarbij elke inputcyclus uit twee aparte stappen bestaat, hetgeen gecontroleerde domeinmuurpropagatie mogelijk maakt.
+Hierdoor wordt de domeindynamica benut, wat de prestaties van het reservoir verbetert. \\
 
 In hoofdstuk \ref{ch:Conclusion} ...
