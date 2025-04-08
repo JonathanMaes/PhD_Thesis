@@ -2,25 +2,6 @@
 % TODO END: go through this chapter (and the others, probably) at the end and see if any comments with additional information can be put or merged anywhere.
 \glijbaantje{If you find that you're spending almost all your time on theory,\\ start turning some attention to practical things; it will improve your theories.\\ If you find that you're spending almost all your time on practice,\\ start turning some attention to theoretical things; it will improve your practice.}{Donald Knuth}
 
-\begin{adjustwidth}{2em}{2em} % TODO END: update once published.
-	\begin{center}
-		\textbf{Material from this chapter has also been published in:} \\
-	\end{center}
-	\vspace{1em}
-	\begin{adjustwidth}{0em}{1.5em}
-		\begin{itemize}
-			\item[\cite{KUR-24}] A.~Kurenkov, J.~Maes, A.~Pac, G.~M.~Macauley, B.~Van~Waeyenberge, A.~Hrabec, and L.~J.~Heyderman.
-			\newblock Perpendicular-anisotropy artificial spin ice with spontaneous ordering: a platform for neuromorphic computing with flexible timescales.
-			\newblock \emph{ArXiV}, arXiv:\penalty0 2408.12182, 2024.
-		\end{itemize}
-	\end{adjustwidth}
-	\vspace{.5em}
-	\begin{center}
-		\centering\rule{0.7\linewidth}{0.4pt}
-	\end{center}
-	\vspace{1em}
-\end{adjustwidth}
-
 The main factor that attracted attention towards OOP ASI for RC, was that they allow very efficient and relatively simple input and read-out methods to be used.
 Early on in the \spinengine project, methods to read the state of OOP ASI had already been demonstrated experimentally on a small scale by ETHZ/PSI.
 However, their potential for RC had not yet been investigated.
@@ -28,11 +9,31 @@ As \hotspice is well-suited for the simulation of OOP ASI, this presented an app
 Therefore, in this chapter, \hotspice will be used to assess the viability and characteristics of a couple of methods to achieve RC in OOP ASI.
 It will be shown that RC is indeed possible in such systems by using an appropriate input and readout protocol.
 This chapter starts with a discussion of the basic properties of OOP ASI and the motivation for researching them.
-Then, the chapter is divided into two main parts, discussing thermally active and non-volatile ASI. % At first, the fabricated OOP ASI were not thermally active, though ASI which spontaneously relaxed to a checkerboard state was achieved later.
-\section{Characteristics of OOP ASI}
-\subsection{Structure of OOP nanomagnets} % Co/Pt multilayer, energy contributions
+Then, the chapter is divided into two main parts, discussing thermally active and non-volatile ASI.
+
+\begin{adjustwidth}{2em}{2em} % TODO END: update once published.
+	\vspace{1em}
+	\begin{center}
+		\centering\rule{0.7\linewidth}{0.4pt}
+	\end{center}
+	\vspace{.5em}
+	\begin{center}
+		\textbf{Material from this chapter has also been published in:} \\
+	\end{center}
+	\vspace{0em} % This actually has an effect
+	\begin{adjustwidth}{0em}{1.5em}
+		\begin{itemize}
+			\item[\cite{KUR-24}] A.~Kurenkov, J.~Maes, A.~Pac, G.~M.~Macauley, B.~Van~Waeyenberge, A.~Hrabec, and L.~J.~Heyderman.
+			\newblock Perpendicular-anisotropy artificial spin ice with spontaneous ordering: a platform for neuromorphic computing with flexible timescales.
+			\newblock \emph{ArXiV}, arXiv:\penalty0 2408.12182, 2024.
+		\end{itemize}
+	\end{adjustwidth}
+\end{adjustwidth}
+
+\section{Characteristics of out-of-plane ASI}
+\subsection{Structure of out-of-plane nanomagnets} % Co/Pt multilayer, energy contributions
 \label{sec:3:OOP_nanomagnet_PMA}
-Where IP magnets mostly rely on shape anisotropy to create an easy axis, OOP magnets can be realised using interfacial anisotropy between the ferromagnetic material and the substrate.
+Where in-plane (IP) magnets mostly rely on shape anisotropy to create an easy axis, out-of-plane (OOP) magnets can be realised using interfacial anisotropy between the ferromagnetic material and the substrate.
 One example of this is found at the interface between \ce{Co} and \ce{Pt}, as was used in the experimental OOP ASI fabricated within the context of the \spinengine project.
 This \idx{perpendicular magnetic anisotropy} (PMA) acts in the immediate vicinity of the interface, where the magnetisation then prefers to align perpendicular to said interface. \par
 Typically, a number of \ce{Co}-\ce{Pt} interfaces are stacked vertically, with the number and thickness of the ferromagnetic \ce{Co} layers then controlling the OOP anisotropy.
@@ -44,7 +45,7 @@ Other factors contribute to the anisotropy as well, e.g. a non-linear dependence
 However, this coupling is likely not dominant in a \ce{Co}-\ce{Pt} stack, as \ce{Pt} nearly satisfies the Stoner criterion~\cite{PtMagneticOrder}.
 Since the \ce{Pt} is combined with a ferromagnetic material (\ce{Co}), it is thought that this induces a ferromagnetic coupling between \ce{Co} layers in spite of the RKKY interaction, at least for reasonable \ce{Pt} thicknesses up to a few \SI{}{\nano\metre}~\cite{PerpendicularMagnetizationASI}.
 
-\subsection{ASI ground state} % TODO: make sure this paragraph still feels right, now that the non-volatile ASI is not the next section but is all the way at the end. Might have to move some sentences that do not make much sense for thermal ASI. But then again, this is still a general OOP ASI discussion, so we should probably keep it broad.
+\subsection{ASI ground state}
 The ground state of any system used for RC is crucial, as it dictates which input methods will induce desirable dynamics in the system and which input protocols will be ineffective, particularly for a non-volatile system.
 For most OOP spin ices, the ground state exhibits some form of antiferromagnetic (AFM) ordering due to the magnetostatic interaction, which always encourages opposite magnetisation between two neighbouring OOP magnets.
 As is the case for any ASI, the ground state is at least twofold degenerate, because all interactions are symmetric under magnetisation reversal. \par
@@ -53,10 +54,10 @@ In the absence of frustration, the symmetry of the system imposes exactly two op
 Conversely, if frustration is present, then not all local interactions can be satisfied simultaneously, making the global ground states of the system hard to reach. \par % Locally, vertices where magnets meet will have a degenerate ground state, giving rise to mobile domains dictated by frustration.
 For the OOP square-lattice ASI (\crefSubFigRef{fig:2:ASIs}{i}) in particular, which we focus on in this chapter, the ground state adopts an AFM checkerboard pattern of `up' ($\uparrow$) and `down' ($\downarrow$) magnetisation.
 We focus on the square-lattice system because it is the simplest example of a non-frustrated OOP ASI.
-The results obtained for this system will be applicable to most other non-frustrated OOP ASI because they all exhibit a twofold degenerate AFM ground state.
-Non-frustrated lattices with the same NN spacing can only differ in their magnetostatic interactions for next-nearest neighbours and beyond.
-However, since this interaction decays rapidly with distance, the ground state is typically dictated by the NN, which prefer anti-parallel alignment.
-Therefore, if every closed NN loop in an OOP lattice contains an even number of magnets, as is the case for the square and honeycomb lattices, then the lattice is unlikely to exhibit geometric frustration.
+The results obtained for this system are expected to generalise to most other non-frustrated OOP ASI lattices, as they all exhibit a twofold degenerate AFM ground state.
+The reason for this is that lattices with the same NN spacing can only differ in their magnetostatic interaction between next-nearest neighbours and beyond, which decays rapidly with distance.
+As a result, the ground state is largely determined by NN interactions, which prefer anti-parallel alignment.
+Therefore, OOP lattices in which every closed NN loop contains an even number of magnets --- such as the square and honeycomb lattices --- are unlikely to exhibit geometric frustration.
 
 \subsection{Input and readout: experiment to simulation}
 While it is possible to use an external field to switch both IP and OOP nanomagnets, this is undesirable in a real device due to stray fields and the need for bulky magnets.
@@ -87,7 +88,7 @@ In the context of reservoir computing, this means that such a readout approach w
 
 %We will later notice that simple stimuli are not sufficient for RC in this (non-volatile) system, and instead more complicated patterns will have to be used to meaningfully address the system. However, the practical implementation of such complicated stimuli requires more complicated current line layouts, which also cannot interfere with the readout. This proves to be a conundrum, which I will address later again.
 
-\section{Thermally active OOP ASI}
+\section{Thermally active out-of-plane ASI}
 \subsection{Energy contributions} \label{sec:3:E_contributions}
 Thermally active OOP ASI are hard to manufacture, because they must strike a delicate balance between several strong energy contributions to end up in an OOP state with a net energy barrier of only several tens of $\kBT$ at most.
 To appreciate this difficulty, let us first take a closer look at the various energy contributions in the system --- ranging from local anisotropy to large-scale interactions --- and their dependence on the geometrical structure of the OOP magnets.
@@ -517,8 +518,9 @@ Because of this, we may conclude that the exact barrier is less accurate than th
 This would also explain why the effective anisotropy is on the order of $60 \kBT$, rather than the $\approx 1000 \kBT$ predicted by analytical calculations that also assume a coherent reversal \cite[Supp.4]{KUR-24}.
 
 \newpage
-\section{RC in thermally active OOP square ASI}
+\section{Reservoir computing in thermally active out-of-plane ASI}
 \subsection{Concept}
+% Bartel said the following when coming up with the thermal ASI: ``Relaxation time in the kilohertz range, then we can apply input data at megahertz range.''
 \subsubsection{Input torques: representation in \hotspice}
 Contrary to the binary input in the non-volatile OOP ASI, thermally active ASI can be addressed by a continuous range of input.
 The input --- in reality applied through spin-orbit torque --- was applied in the simulations in the form of an OOP magnetic field $B_z(t)$ acting on the entire system.
@@ -528,7 +530,7 @@ Hence, an input $0 \leq x \leq 1$ is encoded by a field of magnitude $B_z = B_0 
 \subsubsection{Readout method}
 The inverse mean squared error (1/MSE) between o(t) and the desired result (the sawtooth) was used as a performance metric.
 
-\subsection{RC: signal transformation}
+\subsection{Signal transformation task}
 \subsubsection{Motivation} % Why do signal transformation? (scalar, nonlinear, memory...)
 \subsubsection{Baseline}
 \subsubsection{Parameter dependencies}
@@ -538,12 +540,12 @@ The inverse mean squared error (1/MSE) between o(t) and the desired result (the 
 \paragraph{System size and readout resolution}
 \paragraph{Exchange/no exchange}
 \paragraph{Transformation}
-\subsubsection{Mackey-Glass}
+\subsubsection{Signal prediction task: Mackey-Glass}
 To find the optimal performance for a Mackey-Glass prediction, we will once again utilise Bayesian optimisation.
 \subsubsection{Reflecting on results} % Is the performance decent? Compare to literature. MSE is not an ideal parameter, should use something that accounts more for the general shape.
 
 \newpage
-\section{RC in non-volatile OOP square ASI}
+\section{Reservoir computing in non-volatile out-of-plane ASI}
 We now turn our attention to non-volatile ASI, to show that an ASI need not be thermally active to use it for reservoir computing.
 When the energy barrier $\EEA$ of a magnet is significantly higher than the thermal energy $\kBT$, the N\'eel-Arrhenius switching law implies that it will remain stable over any reasonable timescale in the absence of external perturbations.
 For example, a magnet with $\EEA > 40 \kBT$ will most likely remain stable for multiple years.
@@ -551,7 +553,6 @@ Therefore, non-volatile ASI is easier to construct than thermally active ASI, as
 Throughout this section, we will develop, examine and discuss a ``clocked'' input protocol for non-volatile ASI that exhibits promising memory capacity.
 
 \paragraph{Magnetostatic interaction}
-% TODO END: is this correct after everything I wrote?
 Note that a ``non-volatile'' system is not the same as a non-interacting system.
 While a low magnetostatic coupling $\EMC \ll \EEA$ results in a frozen system, a sufficiently high coupling will still induce spontaneous ordering, albeit only locally as the high anisotropy renders domain walls immobile.
 Recall in this regard the five regions previously outlined in~\cref{fig:3:OOP_relaxation_continuous}.
@@ -564,7 +565,7 @@ If, however, the RC input method does not cause significant local deviations fro
 % Achieving computation in a frozen system (i.e., region~$\mathrm{I}$) requires careful tuning of the strength of the input stimulus and the $\EMC/\EEA$ balance.
 
 While the thermally active ASI typically had a MS coupling $\EMC \lesssim 10\kBT$, as was determined from the MFM images in~\cref{fig:3:MFM_grid}, such low coupling will be insufficient in non-volatile ASI.
-For deterministic switching --- that is, to avoid region~$\mathrm{I}$ --- both the anisotropy $\EEA$ and magnetostatic coupling $\EMC$ must be sufficiently high, say $\gg 40 \kBT$.
+For deterministic switching, both the anisotropy $\EEA$ and magnetostatic coupling $\EMC$ must be sufficiently high, say $\gg 40 \kBT$.
 Increasing the magnetostatic coupling beyond $10\kBT$ should not present a significant practical issue, as the inclusion of a separate ferromagnetic layer above the magnets can significantly increase the MS coupling by focusing the stray fields onto nearby magnets~\cite[Supp. 10]{KUR-24}.
 
 \paragraph{Uniform external field}
@@ -589,10 +590,6 @@ The key takeaway from this concept is that two key factors are necessary if one 
 \end{itemize}
 Let us now consider the specifics how this can be achieved in a square-lattice OOP system.
 This system is quite different from the IP pinwheel lattice used by Jensen~\textit{et al.}~\cite{clocking-protocol} and will therefore require a different input method than just applying uniform fields at well-chosen angles.
-
-% TODO: mention importance of E_B_std and say "As expected, disorder allows dynamics to start inside the array at sites where ``loose'' spins with smaller switching fields are located~\cite{DisorderGroundStateASI}."
-% It should be noted that, usually, the simulations consider a \SI{5}{\percent} standard deviation on the energy barrier $\EB$ separating the `up' and `down' states of the magnets.
-% This allows nucleation of domains to start in the bulk of the system, rather than at the edges as would be the case in a perfect system.
 
 \paragraph{Distinguishing between the degenerate ground states}
 \subparagraph{Uniform field}
@@ -686,7 +683,7 @@ This will illustrate that the growth of domains can be controlled as originally 
 
 \paragraph{Defect-free system}
 First, for a clean illustration of the general behaviour of the clocking protocol, consider an example without any defects, i.e. $\sigma(\EEA) = \SI{0}{\percent}$.
-The absence of defects results in a far more orderly domain wall motion than expected in a real system, where domain walls would be likely to remain pinned at defects (i.e., high-anisotropy magnets).
+The absence of defects results in a far more orderly domain wall motion than expected in a real system, where domain walls would be likely to remain pinned at high-anisotropy magnets.
 The effect of subsequent clocking cycles on such a ``perfect'' system is shown in~\cref{fig:3:Clocking_clearly_EBstd0}.
 The top half of this figure shows the magnetisation state of each magnet, while the bottom half shows the same states but instead visualises the two degenerate domain types as black and white.
 % While diagonal domain walls stand out in the top panels as lines of the same colour, horizontal/vertical domain walls (e.g. in the centre of the ASI during the $B$ cycles) are harder to see.
@@ -719,11 +716,14 @@ One clear example of this is found in~\cref{fig:3:Clocking_clearly_EBstd0}: even
 The reason for this is the relatively low MS coupling $\EMC=40\kBT$, due to which the input strength must strike a delicate balance to avoid switching magnets that are not part of a domain wall.
 These events can be suppressed by increasing the MS coupling, though a stronger input is then also required. \\\par
 
-Note also that, during the $B$-cycles in~\cref{fig:3:Clocking_clearly_EBstd0}, the central white-coloured domain does not re-grow with the same Petit-Beurre-shape it previously had during the $A$-cycles.
+Note also that, during the $B$-cycles in~\cref{fig:3:Clocking_clearly_EBstd0}, the central white-coloured domain does not re-grow with the same Petit-Beurre-shape\footnote{
+	The ``Petit Beurre'' is a French biscuit decorated with serrated edges and four corners in the shape of ears, schematically resembling the central white-coloured domain that appears during the $A$-cycles of~\cref{fig:3:Clocking_clearly_EBstd0}.
+} it previously had during the $A$-cycles.
 Instead, it appears to preferably grow in such a way that it ends up with mostly horizontal and vertical edges, rather than diagonal ones.
-This is part of the general phenomenon that, in the two-step AFM clocking protocol, domain growth preferentially occurs at corners. \par
+This is part of the general phenomenon that, in the two-step AFM clocking protocol, domain growth preferentially occurs at the corners of a domain. \par
 To more clearly illustrate this phenomenon,~\cref{fig:3:Clocking_massive_seeded} shows a far larger ASI which was initialised in one ground state, apart from one ``seed'' magnet at the centre which is of the opposite domain type as compared to all other magnets in the system.
 
+\vspace{-1em}
 \makeshiftfig{
 	\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_massive_seeded.pdf}
 	\vspace{-1.5em} % Looks more natural for this figure
@@ -736,6 +736,7 @@ To more clearly illustrate this phenomenon,~\cref{fig:3:Clocking_massive_seeded}
 	System parameters were chosen to result in $\EMC = 40 \kBT$ and $\EEA = 200 \kBT$, with $\sigma(\EEA) = \SI{0}{\percent}$.
 	The magnetic field used in the clocking cycles has a magnitude $B_\mathrm{ext} = \qty{3.78}{\milli\tesla}$.
 }
+\vspace{-1em}
 
 During the first clocking cycle, one neighbour of the seed magnet will switch first, creating an asymmetry that causes the central domain to preferentially grow along that axis.
 Magnets to the side of this elongated domain can also randomly switch, resulting in a gradual widening of the domain.
@@ -753,7 +754,7 @@ This results in more erratic states during successive steps of the clocking prot
 However, contrary to the stochastic events mentioned before, the more erratic response caused by the disorder is reproducible and can therefore be used for computation. \par
 The main reason for the more erratic response is that the difference between low- and high-barrier magnets in a system with defects can be substantial.
 This often makes it impossible to find an input magnitude for which domain walls can propagate through any defect in the system without affecting magnets that are not part of domain walls.
-Therefore, ``leaking'' can occur through low-barrier unstimulated magnets, which can spontaneously respond to the changing state of their neighbours even when they themselves are not stimulated.
+Therefore, ``leaking'' can occur through low-barrier unstimulated magnets, which can spontaneously respond to the changing state of their neighbours even when they themselves are not stimulated~\cite{DisorderGroundStateASI}. % DisorderGroundStateASI says: "As expected, disorder allows dynamics to start inside the array at sites where ``loose'' spins with smaller switching fields are located."
 This can be observed in~\cref{fig:3:Clocking_clearly_EBstd5} for an example with $\sigma(\EEA) = \SI{5}{\percent}$ and high MS coupling $\EMC = 200 \kBT$ compared to the anisotropy $\EEA = 100 \kBT$ to highlight leaking.
 
 \makeshiftfig{
@@ -859,7 +860,10 @@ Task-agnostic metrics are more straightforward to interpret and provide a more a
 For example, the input method with a uniform field --- which was previously dismissed for non-volatile ASI --- achieves a moderate $Q \approx 40$, but yields very low values for all task-agnostic metrics like non-linearity and memory capacity. % Matrix rank-based metrics should rather be seen as indicators of which systems do NOT give decent RC performance.
 Therefore, to complement the findings from the previous paragraph, task-agnostic metrics were also determined for the baseline system over the same parameter range, as shown\footnote{
 	The stability metric is also among the task-agnostic metrics proposed in~\cite{RC_TaskAgnosticMetrics_v2}, but is not shown here as it is not relevant to non-volatile ASI which do not spontaneously reach a ground state in the absence of input.
-} in~\cref{fig:3:Clocking_Sweeps_binary_TA}.
+} in~\cref{fig:3:Clocking_Sweeps_binary_TA}. \par
+Note that the non-linearity metric will naturally be lower for binary input than for the scalar input it was designed for.
+The reason for this is that binary input offers only two possible values, making it generally easier to fit a linear model to the input-output relationship.
+Therefore, the parity check metric is also shown, as it was specifically designed for binary input. % See ppt 20230207
 
 \xfig{3_RC_OOP/Nonvolatile/Sweeps/Clocking_binary_TA_averaged.pdf}{
 	\label{fig:3:Clocking_Sweeps_binary_TA}
@@ -871,7 +875,7 @@ Systems with stronger MS interaction behave more non-linearly, though only in a 
 The trade-off between non-linearity and memory capacity, which has been extensively discussed~\cite{dambre2012information,MemoryNonlinearityReservoirs,RC_BeyondMemoryNonlinearity,RC_unification} and reported in various systems~\cite{DynamicEmergence_NanomagneticSystem,RC_TaskAgnosticMetrics_v2,TaskAdaptivePRC}, is striking in this system as well.
 As envisioned, the clocking protocol indeed yields a relatively high memory capacity, obtaining values $>2$ over a wide range of the parameter space.
 The parity check reveals that, on average, the parity of the previous 3 input cycles can be recalled over a wide range of the metric map.
-That the parity check reaches higher values than the memory capacity was to be expected, as it is specifically tailored to binary input data whereas memory capacity is more generally applicable to scalar data. % TODO: what does PC actually measure?
+That the parity check reaches higher values than the memory capacity was to be expected, as it is specifically tailored to binary input data whereas memory capacity is more generally applicable to scalar data, though the parity check also includes a notion of non-linearity.
 These metrics provide more insight than the matrix rank-based metrics, as they can directly be related to the performance of the system for certain tasks --- some tasks mostly rely on fading memory while others mostly require non-linearity, and yet others prefer a mix of both. \par
 While $<3$ bits of memory may not sound like much, it is comparable to the memory capacity and parity check of other magnetic reservoirs~\cite{AdaptiveProgrammableRC,hon2021numerical,tsunegi2019STOforcedsyncRC,Venkat_2024}. % AdaptiveProgrammableRC is similar when using a normal square ASI, but width-modulated and pinwheel ASI perform better.
 Higher performance can be achieved by using general RC architectures like the rotating neurons reservoir~\cite{RotatingNeuronsRC} or the single dynamical node paradigm~\cite{appeltant2011information}, as for example used in~\ccite{Venkat_2024,Vidamour2023}.
@@ -918,9 +922,7 @@ The severity of these defects has no substantial impact on these two metrics; th
 The optimal field range always remains centred around the same value, but broadens as the disorder increases.
 This is a consequence of the greater spread of effective energy barriers throughout the ASI due to the increased disorder, widening the range of field strengths at which any of the magnets can switch.
 
-% TODO: explain what I say in the powerpoint presentation of 20230207, or at least check if everything useful has been said
-
-\subsubsection{Alternative input encoding} % Binary vs. byte etc. Sigmoid thingy?
+\subsubsection{Alternative input encoding}
 \label{sec:3:clocking_input_encoding}
 The clocking protocol naturally lends itself to binary input\footnote{
 	Generally speaking, a clocking protocol lends itself to as many possible input values as there are degenerate ground states in the system.
@@ -929,9 +931,10 @@ The clocking protocol naturally lends itself to binary input\footnote{
 }.
 For many real-world RC tasks, however, scalar input is preferable.
 Within the limits of the clocking protocol, we propose two concepts to address this, though neither are desirable. \par
-The first concept is to use an analog-to-digital conversion that encodes analog values as integers represented as bytes consisting of 8 bits.
+The first concept is to use an analog-to-digital conversion that encodes scalar values as integers represented as little-endian bytes consisting of 8 bits.
 This is the natural habitat of conventional computers, but is not a viable solution here since the memory capacity of the system is less than one bit.
-The non-linearity, on the other hand, was found to be mostly unaffected when a little-endian byte representation (i.e., applying the most significant bit last) is used, but all in all this is not a viable method. \par
+The non-linearity, on the other hand, was found to remain mostly unaffected, aside from a slight increase due to the larger input space (256 values as compared to 2 for binary input).
+However, all things considered, this byte-wise method is not a viable alternative to binary input. \par
 The second concept is to use the input magnitude as a scalar input, similar to the thermally active ASI.
 However, non-volatile ASI only exhibit a non-trivial response to the input in a narrow range of field magnitudes.
 Furthermore, one must take care to regularly apply both positive and negative cycles to keep the domain wall dynamics going.
@@ -953,10 +956,11 @@ A limitation of the clocking protocol is that it only allows binary input, but f
 It is, however, non-trivial to devise a scalar input protocol for non-volatile ASI.
 In this sense, the non-volatile and thermally active ASI complement each other --- supporting binary and scalar input, respectively.
 
-\newpage
 \section{Conclusions}
-% TODO: expand with the thermally active conclusions
 Reservoir computing was achieved in both thermally active as well as non-volatile OOP ASI.
+
+[TODO SHORT CONCLUSION ON THERMALLY ACTIVE ASI] % TODO END: expand with the thermally active conclusions
+
 While the clocked input protocol may not easily be practically realisable, the key takeaways from the clocking protocol apply to any (non-volatile) ASI.
 First, the input method must lift the degeneracy that exists between the ground states of the system, such that the input can act on the domains and selectively affect the domain boundaries in the system specifically.
 Second, at least two independently addressable sublattices should exist: an input protocol must never stimulate both of them at once, to prevent avalanches.
