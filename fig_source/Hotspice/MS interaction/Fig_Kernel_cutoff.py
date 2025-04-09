@@ -71,7 +71,7 @@ def run(mm: hotspice.Magnets=None, n: int = 10000, L: int = 400, Lx: int = None,
 
     ## Save
     hotspice.utils.save_results(parameters={'T': mm.T_avg, 'E_B': mm.E_B_avg, 'iterations': n, 'cutoff': cutoff, 'dx': mm.dx, 'dy': mm.dy, 'Lx': Lx, 'Ly': Ly, 'ASI_type': hotspice.utils.full_obj_name(mm), 'PBC': mm.PBC, 'pattern': pattern},
-                                data={'iteration': interesting_iterations, 'switches': switches, 'absdiff_avg': absdiff_avg, 'absdiff_max': absdiff_max, 'E_absdiff': E_absdiff, 'E_incremented': E_incremented, 'E_recalculated': E_recalculated})
+                                data={'iteration': interesting_iterations, 'switches': switches, 'absdiff_avg': absdiff_avg, 'absdiff_max': absdiff_max, 'E_absdiff': E_absdiff, 'E_incremented': E_incremented, 'E_recalculated': E_recalculated, 'mm_type': type(mm)})
     plot()
     
 
@@ -88,16 +88,21 @@ def plot(data_dir=None):
     
     switches, absdiff_avg, absdiff_max = data['switches'], meV(data['absdiff_avg']), meV(data['absdiff_max'])
     switches, absdiff_avg, absdiff_max = np.append(0, switches), np.append(absdiff_avg[0], absdiff_avg), np.append(absdiff_max[0], absdiff_max)
-    cutoff = params['cutoff']
     E_absdiff = meV(asnumpy(data['E_absdiff']))
     E_incremented = meV(asnumpy(data['E_incremented']))
     E_recalculated = meV(asnumpy(data['E_recalculated']))
+    mm: hotspice.Magnets = data['mm_type'](a=1, nx=params['Lx'], ny=params['Ly'])
+    
+    cutoff = params['cutoff']
+    Lx, Ly = params['Lx'], params ['Ly']
+    original_size = f"${2*Lx - 1}" + r" \times " + f"{2*Ly - 1}$"
+    cutoff_size = f"${2*cutoff + 1}" + r" \times " + f"{2*cutoff + 1}$"
     
     ## Initialise plot
     thesis_utils.init_style()
     fig = plt.figure(figsize=(thesis_utils.page_width, 3.6))
     ratio = 2
-    gs = fig.add_gridspec(2, 5, width_ratios=[ratio, ratio+1, .5, ratio+1, 1], height_ratios=[1,1], hspace=.7, wspace=0.1)
+    gs = fig.add_gridspec(2, 5, width_ratios=[ratio, ratio+1, .5, ratio+1, 1], height_ratios=[1,1], hspace=.8, wspace=0.1)
     
     cmap = colormaps.get_cmap('viridis')
     vmin = min(E_recalculated.min(), E_incremented.min())
@@ -110,13 +115,13 @@ def plot(data_dir=None):
     ## PLOT 1: THE EXACT ENERGY PROFILE
     ax1: plt.Axes = fig.add_subplot(gs[1,0])
     im1 = ax1.imshow(E_recalculated, vmin=vmin, vmax=vmax, origin='lower', cmap=cmap)
-    ax1.set_title(r"Exact $E_\mathrm{MS}$", fontsize=11)
+    ax1.set_title(r"Exact $E_\mathrm{MS}$" + f"\n({original_size} kernel)", fontsize=11)
     no_ticks(ax1)
 
     ## PLOT 2: THE TRUNCATED ENERGY PROFILE
     ax2: plt.Axes = fig.add_subplot(gs[1,1])
     im2 = ax2.imshow(E_incremented, vmin=vmin, vmax=vmax, origin='lower', cmap=cmap)
-    ax2.set_title(f"Approximation", fontsize=11)
+    ax2.set_title(f"Approximation" + f"\n({cutoff_size} kernel)", fontsize=11)
     no_ticks(ax2)
 
     ## PLOT 3: THE ABSOLUTE DIFFERENCE
@@ -125,26 +130,27 @@ def plot(data_dir=None):
     c3 = plt.colorbar(im3)
     c3.ax.set_ylabel(f"Magnetostatic\ninteraction\nenergy [{unit}]", rotation=270, fontsize=10)
     c3.ax.get_yaxis().labelpad = 35
-    ax3.set_title(r"Absolute error $E_\mathrm{err}$", fontsize=11)
+    ax3.set_title(r"Absolute error $|E_\mathrm{err}|$", fontsize=11)
     no_ticks(ax3)
 
     ## PLOT 4: THE TIME-DEPENDENCE
     ax4: plt.Axes = fig.add_subplot(gs[0,:])
-    ax4.plot(switches, absdiff_avg, color='C0', label=r"$\langle E_\mathrm{err} \rangle$")
-    ax4.plot(switches, absdiff_max, color='C1', label=r"max($E_\mathrm{err}$)")
+    scale = np.mean(np.abs(E_recalculated[np.where(asnumpy(mm.occupation))]))
+    ax4.plot(switches, absdiff_avg/scale*100, color='C0', label=r"$\langle\!\langle |E_\mathrm{err}| \rangle\!\rangle \,\left/\, \langle\!\langle |E_\mathrm{MS}| \rangle\!\rangle \right.$")
+    ax4.plot(switches, absdiff_max/scale*100, color='C1', label=r"$\mathrm{max}\left(|E_\mathrm{err}|\right) \,\left/\, \langle\!\langle |E_\mathrm{MS}| \rangle\!\rangle \right.$")
     ax4.set_xscale('log')
     ax4.set_xlim([1, np.max(switches)])
     ax4.set_ylim([0, ax4.get_ylim()[1]])
     ax4.set_xlabel("Switches")
-    ax4.set_ylabel(f"Absolute error [{unit}]")
-    ax4.set_title(f"Kernel truncated to {2*cutoff+1}x{2*cutoff+1}", pad=20)
+    ax4.set_ylabel(f"Relative error [%]")
+    ax4.set_title(f"{original_size} kernel truncated to {cutoff_size}", pad=10)
     ax4.legend()
-    thesis_utils.label_ax(ax4, 0, offset=(-0.1, 0.2))
-    thesis_utils.label_ax(ax4, 1, offset=(-0.1, -1.6)) # Put (b) on ax4 to have same x-coordinate as (a)
+    thesis_utils.label_ax(ax4, 0, offset=(-0.085, 0.15))
+    thesis_utils.label_ax(ax4, 1, offset=(-0.085, -1.6)) # Put (b) on ax4 to have same x-coordinate as (a)
 
     ## LAYOUT PLOT AND SAVE
     fig.tight_layout()
-    fig.subplots_adjust(left=0.1, right=0.97, bottom=0.02)
+    fig.subplots_adjust(left=0.08, right=0.99, bottom=0.02, top=0.9)
     
     ## POSITION EXACT-APPROX COLORBAR
     pad = 0.01
@@ -174,11 +180,12 @@ def truncate_colormap(cmap, minval=0.0, maxval=1.0, n=100):
 
 
 if __name__ == "__main__":
-    # run(hotspice.ASI.IP_Pinwheel(2e-6, 100, T=1e6, E_B=5e-22), n=2000, cutoff=20, pattern='uniform') # As many switches as possible
     # run(mm := hotspice.ASI.IP_Pinwheel(2e-6, 100, T=300, E_B=5e-22), n=3*mm.n, cutoff=20, pattern='uniform') # Reasonable values
+    thesis_utils.replot_all(plot)
+    
+    ## Alternatives:
+    # run(hotspice.ASI.IP_Pinwheel(2e-6, 100, T=1e6, E_B=5e-22), n=2000, cutoff=20, pattern='uniform') # As many switches as possible
     # run(hotspice.ASI.IP_Pinwheel(1e-6, 200, T=500, E_B=5e-22), n=10000, cutoff=20, pattern='AFM') # Reasonable values with low T
     # run(hotspice.ASI.IP_Pinwheel(2e-6, 100, T=80, E_B=5e-22), n=1, cutoff=20, pattern='uniform') # Procedurally generated modern art
     # run(hotspice.ASI.OOP_Square(2e-6, 100, T=300, E_B=5e-22), n=1000, cutoff=20, pattern='AFM') # OOP_Square
     # run(hotspice.ASI.IP_Kagome(4e-6, 128, T=500, E_B=5e-22, PBC=True), n=10000, cutoff=20, pattern='uniform') # IP_Kagome
-    
-    thesis_utils.replot_all(plot)

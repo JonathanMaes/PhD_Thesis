@@ -43,10 +43,10 @@ def plot_EB_meanbarrier(N: int = 5): # N: number of bottom plots
     figsize = (thesis_utils.page_width, 3)
     fig = plt.figure(figsize=figsize)
     N_sidepanel_cols = int(np.ceil(N/2))
-    gs = fig.add_gridspec(4, N_sidepanel_cols+2, width_ratios=[N_sidepanel_cols*0.8, 0.5] + [1]*N_sidepanel_cols, wspace=0)
+    gs = fig.add_gridspec(4, N_sidepanel_cols+2, width_ratios=[1]*N_sidepanel_cols + [1, N_sidepanel_cols*0.8], wspace=0)
     
-    ## Main graph showing E_B_eff(Delta E)
-    ax1 = fig.add_subplot(gs[:,0])
+    ## PANEL B: Main graph showing E_B_eff(Delta E)
+    ax1 = fig.add_subplot(gs[:,N_sidepanel_cols + 1])
     lim = (-E_B*5, E_B*5)
     delta_E_range = np.linspace(*lim, 1001)
     
@@ -66,22 +66,22 @@ def plot_EB_meanbarrier(N: int = 5): # N: number of bottom plots
     plt.rc('text', usetex=False)
     ax1.set_xlim(*lim)
     ax1.set_ylim(*lim)
-    thesis_utils.label_ax(ax1, 0, offset=(-0.24, 0.02))
-    thesis_utils.label_ax(ax1, 1, offset=(1.1, 0.02))
+    thesis_utils.label_ax(ax1, 1, offset=(-0.24, 0.02))
     
-    ## Subplots
+    ## PANEL A: Subplots
     for i in range(N):
         start, end = -4*E_B, 4*E_B
         delta_E = start + (end - start)*i/(N-1) if N > 1 else 0
         row = 1 if delta_E == 0 else (0 if delta_E > 0 else 2)
         col = N_sidepanel_cols - abs(N_sidepanel_cols - i - 1)
-        ax = fig.add_subplot(gs[row:row+2,col+1:col+2])
+        ax = fig.add_subplot(gs[row:row+2,col-1:col])
         plot_subplot(ax, delta_E = delta_E, title_bottom=row > 1)
+        if i == N-1: thesis_utils.label_ax(ax, 0, offset=(-0.24, 0.04))
     
     ## Draw the arrow
     L = (2*N_sidepanel_cols+.5)
-    x0 = (2*N_sidepanel_cols-1.6)/L
-    x1 = (2*N_sidepanel_cols-.8)/L
+    x0 = (N_sidepanel_cols-1.8)/L
+    x1 = (N_sidepanel_cols-1)/L
     y = 0.54
     w = 0.03 # Curvature radius
 
@@ -97,7 +97,7 @@ def plot_EB_meanbarrier(N: int = 5): # N: number of bottom plots
 
     ## Adjust layout to avoid overlapping elements
     fig.tight_layout()
-    fig.subplots_adjust(top=0.9, bottom=0.15)
+    fig.subplots_adjust(top=0.9, left=0.05, right=0.98, bottom=0.15)
 
     ## Save
     hotspice.utils.save_results(figures={"EB_meanbarrier": fig}, timestamped=False)
