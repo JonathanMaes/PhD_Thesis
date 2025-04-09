@@ -538,7 +538,7 @@ This construction is illustrated in~\cref{fig:2:Unitcells} for a small in-plane 
 \vspace{-1em}
 \sidefig{2_Hotspice/Unitcells.pdf}{
 	\label{fig:2:Unitcells}
-	Construction of kagome ASI on a \xref{rectilinear grid}, as indicated by dotted lines.
+	Implementation of kagome ASI on a \xref{rectilinear grid}, as indicated by dotted lines.
 	Unit cells are delineated by solid lines.
 	For kagome ASI, a uniform grid suffices, though not all grid points are occupied and a different spacing along the $x$- and $y$-directions is required.
 	Colors relate equivalent magnets --- while a smaller unit cell with 3 magnets can be identified, such a unit cell would not be rectangular.
@@ -662,6 +662,15 @@ The \xref{rectilinear grid} enables the straightforward implementation of first-
 An open-boundary kernel $\vc{\mathcal{K}}^{(q)}$ can be transformed into a PBC kernel by just adding eight offset copies of the kernel to itself.
 Specifically, four copies are shifted along the axes by $\pm L_x$ or $\pm L_y$, while the remaining four are shifted diagonally by $(\pm L_x, \pm L_y)$.
 This is illustrated in~\cref{fig:2:Kernel_PBC} for an example of pinwheel ASI. \par
+This construction works because elements near the edge of a kernel represent interactions between distant magnets on opposite sides of the ASI, which are the interactions most affected by PBC.
+Since the middle region of the open-boundary \link{unit cell kernel}{kernel} already stores the interaction between nearby magnets, PBC can be applied by re-using these central values and moving the kernel by $\pm L_x$ and/or $\pm L_y$. \\\par
+
+This approach has the advantage that PBC do not impact performance, as they are baked into the kernel, contrary to the alternative of using a circular convolution.
+However, this method is limited to ASI consisting of an integer number of \xref{unit cells} as systems with truncated unit cells along an edge can not properly be tiled.
+Higher-order PBC --- beyond only the 8 nearest copies --- can not be calculated based on an open-boundary kernel since it does not include interactions with such distant magnets.
+Due to the rapid $1/r^3$ decline of the \xref{magnetostatic interaction} over distance, the use for such higher-order PBC would be very limited for 2D systems, and they were therefore not implemented.
+% For very small systems, higher-order PBC can be relevant, but it is recommended to instead increase the system size to increase the fidelity of the Monte Carlo simulation.
+% To explain the usage of the magnetostatic kernel, we can possibly refer to ``Real-space observation of emergent magnetic monopoles and associated Dirac strings in artificial kagome spin ice'', which notes that the energy is just a convolution of the interaction potential with the lattice sites at which there are magnets (which, for the Ewald summation, means that in Fourier space it is just a multiplication of the Fourier-transformed versions of those functions), which is pretty much what we are doing during multi-switching.
 
 \xfig[1.0]{2_Hotspice/Kernel_PBC.pdf}{
 	\label{fig:2:Kernel_PBC}
@@ -672,16 +681,7 @@ This is illustrated in~\cref{fig:2:Kernel_PBC} for an example of pinwheel ASI. \
 	The colour of other magnets indicates the magnitude of the magnetostatic interaction between the central and the coloured magnets if they both point `up'.
 	This alignment is preferable for \textcolor{blue}{blue} magnets (low energy) and unstable for \textcolor{red}{red} magnets (high energy).
 }
-
-This construction works because elements near the edge of a kernel represent interactions between distant magnets on opposite sides of the ASI, which are the interactions most affected by PBC.
-Since the middle region of the open-boundary \link{unit cell kernel}{kernel} already stores the interaction between nearby magnets, PBC can be applied by re-using these central values and moving the kernel by $\pm L_x$ and/or $\pm L_y$. \\\par
-
-This approach has the advantage that PBC do not impact performance, as they are baked into the kernel, contrary to the alternative of using a circular convolution.
-However, this method is limited to ASI consisting of an integer number of \xref{unit cells} as systems with truncated unit cells along an edge can not properly be tiled.
-Higher-order PBC --- beyond only the 8 nearest copies --- can not be calculated based on an open-boundary kernel since it does not include interactions with such distant magnets.
-Due to the rapid $1/r^3$ decline of the \xref{magnetostatic interaction} over distance, the use for such higher-order PBC would be very limited for 2D systems, and they were therefore not implemented.
-% For very small systems, higher-order PBC can be relevant, but it is recommended to instead increase the system size to increase the fidelity of the Monte Carlo simulation.
-% To explain the usage of the magnetostatic kernel, we can possibly refer to ``Real-space observation of emergent magnetic monopoles and associated Dirac strings in artificial kagome spin ice'', which notes that the energy is just a convolution of the interaction potential with the lattice sites at which there are magnets (which, for the Ewald summation, means that in Fourier space it is just a multiplication of the Fourier-transformed versions of those functions), which is pretty much what we are doing during multi-switching.
+\vspace{-1em}
 
 \subsubsection{Hard-axis magnetostatic kernel}\label{sec:2:Kernels:Perp}
 If the simulation accounts for the \xref{asymmetric energy barrier}, as detailed in \cref{sec:2:E_B_eff}, then two additional kernels are needed for each site in the unit cell. \par
@@ -703,10 +703,6 @@ As an increasing number of magnets switch, this error will accumulate, as shown 
 After a certain amount of switches, however, the error is observed to stagnate.
 The reason for this is that, whenever a magnet switches back, the error introduced by its original switch gets cancelled, leaving only some residual \xlabel{floating-point error} in its wake.
 This also explains why the plateau starts after $\approx N$ switches ($N=5000$ magnets in the figure): at that point, each magnet will have switched once on average and will begin randomly switching back.
-The error is highly dependent on the situation and size of the truncated kernel.
-The closer to equilibrium the system is initialised, the smaller the error will be while the simulation explores this equilibrium.
-For example, for the particular situation in~\cref{fig:2:Kernel_cutoff} --- a pinwheel ASI at high temperature starting in the uniform state --- the absolute error $\abs{E_\mathrm{err}}$ for a $41 \times 41$ truncated kernel is on average a little over \SI{5}{\percent} of the mean exact magnetostatic energy $\llangle \abs{E_\mathrm{MS}} \rrangle$ across the ASI (blue curve).
-For some magnets, though, the relative error exceeds \SI{15}{\percent} (red curve).
 
 \vspace{-1em}
 \xfig[1.0]{2_Hotspice/Kernel_cutoff.pdf}{
@@ -719,6 +715,10 @@ For some magnets, though, the relative error exceeds \SI{15}{\percent} (red curv
 }
 \vspace{-1em}
 
+The error is highly dependent on the situation and size of the truncated kernel.
+The closer to equilibrium the system is initialised, the smaller the error will be while the simulation explores this equilibrium.
+For example, for the particular situation in~\cref{fig:2:Kernel_cutoff} --- a pinwheel ASI at high temperature starting in the uniform state --- the absolute error $\abs{E_\mathrm{err}}$ for a $41 \times 41$ truncated kernel is on average a little over \SI{5}{\percent} of the mean exact magnetostatic energy $\llangle \abs{E_\mathrm{MS}} \rrangle$ across the ASI (blue curve).
+For some magnets, though, the relative error exceeds \SI{15}{\percent} (red curve). \par
 Note that PBC require extra attention when the magnetostatic kernel is truncated, as this procedure cuts off the eight offset kernel images.
 Previously, \cref{eq:2:Kernel_update} was applied when a magnet switches, where the kernel was cut-out appropriately to the size of the ASI to allow a \link{Hadamard product}{pointwise multiplication}.
 With open boundaries, the truncated kernel presents no issue, but with PBC the cut-out should be applied with care, such that it properly wraps around the edges.
@@ -728,10 +728,10 @@ This wrapping can instead also be achieved by performing a \xlabel{circular conv
 \indexlabel{multi-switching}
 The standard \link{Metropolis-Hastings sampling}{Metropolis-Hastings algorithm} selects a magnet at random and subsequently decides whether or not to switch it.
 Since this algorithm is designed primarily for sampling equilibrium states rather than capturing the temporal evolution of the system, a straightforward performance improvement can be achieved by selecting multiple magnets simultaneously rather than sequentially.
-This allows for better usage of the parallel processing capabilities of the GPU, as the \link{magnetostatic interaction}{magnetostatic energy} can then be updated using a convolution. \par
+This allows for better usage of the parallel processing capabilities of the GPU, as the \link{magnetostatic interaction}{magnetostatic energy} can then be updated using a convolution. \\\par
 Previously, when only a single magnet switched at any instant, the magnetostatic energy was updated by \cref{eq:2:Kernel_update}, which appropriately cut out a piece of the kernel for pointwise multiplication.
 This process is no longer usable if we intend to use multi-switching as a method to efficiently parallelise Metropolis-Hastings iterations: not much performance can be gained if every switching magnet requires a different cut-out.
-Instead, a far more efficient method to calculate the change in magnetostatic energy whenever multiple magnets switch is to perform a convolution of the kernel with an $L_x \times L_y$ array whose only non-zero elements are the values $s_i$ at the positions of the switching magnets. \par
+Instead, a far more efficient method to calculate the change in magnetostatic energy whenever multiple magnets switch is to perform a convolution of the kernel with an $L_x \times L_y$ array whose only non-zero elements are the values $s_i$ at the positions of the switching magnets. \\\par
 For a single switch, convolution with a truncated kernel is far slower than the original \link{Hadamard product}{pointwise multiplication} of \eqref{eq:2:Kernel_update}.
 In fact, with the hardware used for this thesis, only for $\gtrsim 20$ \link{multi-switching}{simultaneous switches} does a convolution of \xref{truncated kernels} become more performant than a sequential sum of offset non-truncated kernels.
 Therefore, \hotspice allows the user to fine-tune both the size of the truncated kernel as well as this threshold between sum and convolution to optimise performance on a particular system.
@@ -1077,6 +1077,12 @@ The result of a \hotspice simulation of this Ising system is shown in \cref{fig:
 Maximal \xref{multi-switching} ($Q=+\infty$) during \xref{Metropolis-Hastings sampling} was used to verify that --- at least for systems with such short-range coupling --- this sort of extreme multi-switching still converges to the correct solution.
 Since the theoretical curves for $\langle M \rangle / M_0$ and $\langle s_i s_{i+1} \rangle$ are monotonically decreasing, the final state from the previous temperature step was retained as the starting point for the next step.
 This preserves progress already made towards equilibrium and avoids the disruption that resetting to the uniform state would cause~\cite{MCinStatPhys}. \par
+The \hotspice result corresponds well to the theoretical predictions of~\cref{eq:2:Verification_exchange_M} and~\cref{eq:2:Verification_exchange_corr}, both below $T_\mathrm{c}$ and in the high-temperature limit.
+The average magnetisation $\langle M \rangle / M_0$ follows the theoretical curve more closely than the NN correlation $\langle s_i s_{i+1} \rangle$.
+However, just above $T_\mathrm{c}$, the average magnetisation $\langle M \rangle / M_0$ evolves only slowly towards the expected value.
+Increasing the number of MCS per temperature step brings the system closer to (the theoretical) equilibrium and reduces the temperature range above $T_\mathrm{c}$ where the simulated system is not at equilibrium.
+However, this yields diminishing returns, as every additional Monte Carlo step converges more slowly towards the equilibrium.
+This slow convergence near the critical point is due to a well-known phenomenon known as ``\xref{critical slowing down}''.
 
 \xfig{2_Hotspice/Verification/OOP_Exchange.pdf}{
 	\label{fig:2:Verification_exchange}
@@ -1086,13 +1092,6 @@ This preserves progress already made towards equilibrium and avoids the disrupti
 	Discrepancies due to \xref{critical slowing down} above $T_c$ improve with increasing MCS.
 }
 % TODO: ? why the discrepancy in the correlation?
-
-The \hotspice result corresponds well to the theoretical predictions of~\cref{eq:2:Verification_exchange_M} and~\cref{eq:2:Verification_exchange_corr}, both below $T_\mathrm{c}$ and in the high-temperature limit.
-The average magnetisation $\langle M \rangle / M_0$ follows the theoretical curve more closely than the NN correlation $\langle s_i s_{i+1} \rangle$.
-However, just above $T_\mathrm{c}$, the average magnetisation $\langle M \rangle / M_0$ evolves only slowly towards the expected value.
-Increasing the number of MCS per temperature step brings the system closer to (the theoretical) equilibrium and reduces the temperature range above $T_\mathrm{c}$ where the simulated system is not at equilibrium.
-However, this yields diminishing returns, as every additional Monte Carlo step converges more slowly towards the equilibrium.
-This slow convergence near the critical point is due to a well-known phenomenon known as ``\xref{critical slowing down}''.
 
 \paragraph{Critical slowing down}
 As the correlation length $\xi$ diverges at a second-order \xref{phase transition}, the autocorrelation time $\tau$ will increase as $L^z$ in finite systems of linear size $L$~\cite{NumericalDynamicalNiedermayer}.
@@ -1149,7 +1148,12 @@ Square ASI has an antiferromagnetic (AFM) ground state, where all vertices have 
 On the other hand, pinwheel ASI exhibits \idx{superferromagnetism}, where all magnets with similarly-oriented \link{easy axis}{easy axes} are magnetised in the same direction~\cite{ApparentFMpinwheel}.
 Therefore, if we consider the continuous range of rotation angles $\ang{0} \leq \alpha \leq \ang{45}$, a critical angle $\ang{0} < \alpha_c < \ang{45}$ must exist where the ground state transitions between these two extremes. \par
 For the dipole model, theoretical calculations predict this transition at $\alpha_c = \arcsin(\sqrt{3}/3) = \ang{35.3}$~\cite{AFM-FM-transition-Pinwheel,MagicAngle}.
-For the \xref{dumbbell model}, the transition angle depends on the distance $d$ between \xref{magnetic monopoles}, but is always larger than for the dipole model~\cite{AFM-FM-transition-Pinwheel}.
+For the \xref{dumbbell model}, the transition angle depends on the distance $d$ between \xref{magnetic monopoles}, but is always larger than for the dipole model~\cite{AFM-FM-transition-Pinwheel}. \\\par
+
+The result of a \hotspice simulation using both models is shown in \cref{fig:2:Pinwheel_angle}.
+To quantify this transition, we measure the fraction of vertices with net zero magnetisation --- this value is 0 for superferromagnetic order while it is 1 for AFM order.
+We used the same lattice compression as described in~\ccite{AFM-FM-transition-Pinwheel}, making our lattice spacing $a=\SI{240}{\nano\metre} / \sin(\ang{45}+\alpha)$ angle-dependent: it varies from \SI{340}{\nano\metre} at $\alpha=\ang{0}$ to \SI{240}{\nano\metre} at $\alpha=\ang{45}$. 
+For the dipole model, the transition occurs at $\approx \ang{35}$ as expected, while the dumbbell model (here with $d = \SI{220}{\nano\metre}$) indeed transitions at a larger rotation angle.
 
 \xfig[0.6]{2_Hotspice/Verification/Pinwheel_angle.pdf}{
 	Fraction of vertices with net zero magnetisation at equilibrium, as square ASI (left) transitions to pinwheel ASI (right) by rotating individual magnets.
@@ -1158,10 +1162,6 @@ For the \xref{dumbbell model}, the transition angle depends on the distance $d$ 
 	\label{fig:2:Pinwheel_angle}
 }
 
-The result of a \hotspice simulation using both models is shown in \cref{fig:2:Pinwheel_angle}.
-To quantify this transition, we measure the fraction of vertices with net zero magnetisation --- this value is 0 for superferromagnetic order while it is 1 for AFM order.
-We used the same lattice compression as described in~\ccite{AFM-FM-transition-Pinwheel}, making our lattice spacing $a=\SI{240}{\nano\metre} / \sin(\ang{45}+\alpha)$ angle-dependent: it varies from \SI{340}{\nano\metre} at $\alpha=\ang{0}$ to \SI{240}{\nano\metre} at $\alpha=\ang{45}$. 
-For the dipole model, the transition occurs at $\approx \ang{35}$ as expected, while the dumbbell model (here with $d = \SI{220}{\nano\metre}$) indeed transitions at a larger rotation angle. \par
 The transition in the dumbbell model seems less abrupt: a stable intermediate state exists at $\alpha=\ang{40}$ with significant random variation between samples, as indicated by the error bar. % A significant error bar is often indicative of a phase transition
 A gradual transition has also been observed experimentally, though the reported range of angles $\alpha$ between which this occurs is often broader and both smaller~\cite{ProbingAFM-PMtransition} and larger~\cite{AFM-FM-transition-Pinwheel} rotation angles than $\ang{40}$ have been reported.
 This variance between experiments may be due to differences in defects or quenching rate, whereas Metropolis-Hastings samples the equilibrium state space, yielding the rather sharp transition seen in the figure.
