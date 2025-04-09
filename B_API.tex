@@ -1,0 +1,63 @@
+\chapter{\hotspice package structure and interface}\label{app:API}
+\glijbaantje{It's not a bug, it's a feature.}{} % Unknown who said this.
+% TODO: good \glijbaantje{}{} about API
+
+%This appendix briefly discusses the structure of the \hotspice software package and the functionality included in the various submodules.
+
+\hotspice\footnote{
+	\hotspice is an abbreviation of ``hot spin ice'', for temperature plays a central role in the \xref{kinetic Monte Carlo} algorithms used for simulating artificial spin ice.
+} is written as a Python 3.10 package and can perform simulations on either CPU or GPU.
+The optimal \xref{hardware} choice depends on the size of the ASI and the \xref{update algorithm} used.
+By default, \hotspice runs on CPU using the popular NumPy~\cite{NumPy} and SciPy~\cite{SciPy} libraries.
+For GPU-accelerated array manipulation, the CuPy v11.4~\cite{CuPy} library is used, but this is an optional dependency. \par
+To run on GPU, the environment variable \python{HOTSPICE_USE_GPU} must be set to \python{"true"} before the \hotspice package is loaded in a Python script with \python{import hotspice}.
+It is not possible to switch between GPU/CPU within a script.
+This behaviour is controlled by the \textbf{\python{hotspice.config}} module.
+
+\paragraph{ASI and energies}
+The \textbf{\python{hotspice.Magnets}} class implements all the core functionality of a simulation.
+It controls the various technical aspects of the topics discussed earlier, like the \xref{multi-switching} methods, choice of \link{update algorithm}{KMC algorithm} and the calculation of the \xref{effective energy barrier} $\EBeff$, as well as more technical parameters such as the size of the \xref{truncated kernel}. \par
+To create an ASI, several attributes of the \python{Magnets} class have to be set appropriately.
+To this end, the \textbf{\python{hotspice.ASI}} module provides two abstract classes, \python{IP_ASI} and \python{OOP_ASI}, which can be used to define a particular ASI lattice through inheritance, as is done for the built-in lattices shown in~\cref{fig:2:ASIs}.
+Two parameters suffice to make a rudimentary ASI: the lattice parameter $a$ (the red indicator in~\cref{fig:2:ASIs}) and the size of the underlying grid $L_x \times L_y$. \par
+The three \xref{energy contributions} in \eqref{eq:2:E} are provided in the \textbf{\python{hotspice.energies}} module and can be accessed from the main \python{hotspice} namespace.
+Choosing between the \link{finite dipole model}{dipole} and \link{dumbbell model}{monopole} representations for the \link{magnetostatic interaction}{magnetostatic energy} is currently done by respectivley using either the \python{DipolarEnergy} or \python{DiMonopolarEnergy} classes.
+By default, an ASI object uses only a \python{DipolarEnergy}.
+When relevant, the user has to explicitly add a \link{Zeeman energy}{\python{ZeemanEnergy}} or \link{exchange coupling}{\python{ExchangeEnergy}} using the \python{add_energy()} method of an ASI object.
+By manually setting the \python{local_interaction} field of an \python{ExchangeEnergy}, longer-range exchange interactions can be applied.
+
+\paragraph{Reservoir computing} % io and experiments modules
+The \python{hotspice.io} module provides several basic input and readout routines for ASI, such as encoding data via an external field.
+These routines can readily be used by the \python{hotspice.experiments} module, which includes methods for determining kernel-rank~\cite{RC_ASI} and task-agnostic~\cite{RC_TaskAgnosticMetrics_v2} RC metrics.
+While these routines suffice for most applications, we refer advanced users to the recently released \texttt{PRCpy} package~\cite{PRCpy}, which is more broadly applicable for the determination of RC metrics. \par
+Additionally, the \python{experiments} module includes the
+\python{Sweep} class, which will be used in \cref{ch:Applications} alongside the \python{utils.ParallelJobs} method to determine RC metrics during parameter sweeps across multiple GPUs or CPUs.
+
+\paragraph{Graphical interface}
+A \xlabel{graphical user interface} (GUI) is available for \hotspice\footnote{
+	This supersedes the deprecated \python{hotspice.plottools} module.
+}, which allows the user to directly interact with the ASI and observe changes in real-time.
+Calling \python{hotspice.gui.show(ASI)} displays the window shown in~\cref{fig:2:GUI}. \par
+The state of the ASI is prominently displayed, with a few useful statistics shown in the bottom left panel.
+The \xref{update algorithm} is controlled by the red box in the bottom right.
+The central panel changes the ASI display between four display modes.
+By default, the magnetisation is shown using an averaging method appropriate for the ASI lattice.
+The second mode displays individual magnets' magnetisation direction $s_i \vc{u}_i$ or the \xref{effective field} $\vc{B}_{\mathrm{eff},i}$ they experience.
+In the third mode, all \xref{energy contributions} ($E_\mathrm{MS}$, $E_\mathrm{Z}$, $E_\mathrm{Exch}$, their sum $E_i$ and resulting $\EBeff$) are shown for each magnet, along both the \link{easy axis}{easy} and hard axis.
+The last mode shows the spatial distribution of some parameters like the temperature $T$, \xref{shape anisotropy} $\EB$ and size of the magnetic moment $\mu$. \par
+The user can interact with the ASI via buttons in the rightmost panels, e.g. progressing through time, setting an initial state, or applying custom functions for more complex simulations.
+By clicking on the ASI display with the mouse, the state of the system can be manually adjusted.
+Both individual magnets and groups of magnets can either all be switched to their opposite state, or be set to a specific `up' or `down' state.
+This can be useful to set a specific initial state or to create domains of a specific type.
+\xfig[1.0]{2_Hotspice/GUI.png}{
+	\label{fig:2:GUI}
+	The \hotspice graphical user interface.
+	This example shows a spatially averaged view of an $80 \times 50$ pinwheel ASI with PBC, \SI{2}{\micro\second} after it was initialised in a random state.
+	System parameters ($\EB=\SI{5}{\electronvolt}$ and lattice spacing $a=\SI{230}{\nano\metre}$) were chosen to obtain a thermally active ASI at $T = \SI{300}{\kelvin}$ which spontaneously forms superferromagnetic domains.
+}
+
+
+\paragraph{Useful functions}
+While most functions in the \textbf{\python{hotspice.utils}} module are meant for internal use, some can be useful in scripts.
+The \python{asnumpy} method is particularly useful for GPU/CPU-agnostic code, as it converts an array to CPU if necessary.
+For long simulations, the \python{free_gpu_memory} method can be needed as Python's garbage collector might not collect all GPU objects.

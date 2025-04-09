@@ -1,0 +1,133 @@
+\chapter{Selection algorithms for Metropolis-Hastings multi-sampling}\label{app:Selection_algorithms}\indexlabel{selection algorithm}
+% TODO: good \glijbaantje{}{} about selection algorithms
+To simultaneously sample multiple magnets during \xref{Metropolis-Hastings sampling}, a selection algorithm is needed that respects the minimal distance requirement.
+Several methods are available to achieve this, whose respective benefits and drawbacks will be explored throughout this appendix. \par
+An open question is whether \xref{multi-switching} could induce non-physical correlations into the system, as there will always be preferential directions or distances between samples.
+Since this can be hard to assess in the general case, the spatial distribution of each sampling method will be compared visually in~\crefrange{fig:2:MultiSwitch_select_Poisson}{fig:2:MultiSwitch_select_Hybrid} to gain insight into the basic properties of their spatial distribution.
+At present, we have encountered no sign of non-physical phenomena due to multi-switching.
+The comparison with analytical solutions in~\cref{sec:2:Verification} while using a high $Q$-value (low $\rmin$) instils confidence that this distribution does not significantly affect the behaviour of the ASI in most cases.
+
+\section{Poisson disc}
+The problem of distributing points in an area is a topic of interest in computer graphics, where \idx{blue noise sampling} is frequently used to generate randomised uniform distributions~\cite{BlueNoiseSurvey}. % REF: elucidates meaning of 'blue noise' and has several nice methods to compare such point sets (i.e., just showing them, voronoi tesselation with coloring of valence (number of neighbors) of each cell, Delaunay triangulation, power spectrum, radial means & anisotropy, Zone plate pattern (also used in~\cite{PoissonDiskParallel}), also see~\href{https://observablehq.com/@fil/poisson-distribution-generators}{this Observable post} for a nice comparison attempt).
+While not all blue noise point sets satisfy a minimal distance requirement, \idx{Poisson disc sampling} is a particular class of blue noise sampling where a minimal distance requirement has to be met.
+Various algorithms for Poisson disc sampling exist, all yielding slightly different spatial distributions~\cite{EfficientBlueNoisePointSets,PoissonDiskComparison,SamplingPolyominoes}.
+Typically, these algorithms sequentially add points to an area, rejecting new points if they are too close to an existing point. \par
+An efficient implementation is \idx{Bridson's algorithm}~\cite{FastPoissonDiskSampling}.
+In essence, this algorithm tracks a set of ``seed'' points (starting with a randomly placed seed), attempts to place $k$ random points in an annulus at a distance $\rmin \leq r \leq 2 \rmin$ from each seed point, and accepts whichever points are sufficiently far from all other points.
+To efficiently check for nearby points, an underlying grid of cell size $r/\sqrt{2}$ is used.
+The new points then become the seed points, while the previous seed points become inactive, and the process repeats until no seed points are left. \par
+Several variants have been proposed over the years to further improve performance, such as Roberts' adjustment to the distribution within the annulus~\cite{PoissonRoberts}.
+Using Bridson's algorithm, $k=4$ yields on average half as many samples as an optimal close packing would achieve, and in \hotspice this results in the highest number of samples per second when including the time required to perform all other ASI calculations during a \link{alg:2:MetropolisHastingsSingle}{Monte Carlo iteration}. \\\par
+
+Insight into the spatial distribution of this algorithm can be gained from~\cref{fig:2:MultiSwitch_select_Poisson}, where Bridson's algorithm was used to sample magnets in an OOP square-lattice ASI.
+Using the algorithm on sparser ASI is non-trivial because they contain unoccupied cells.
+These cells should not be sampled, as this would significantly reduce the number of simultaneously sampled magnets.
+Therefore, rather than randomly placing a point inside the $\rmin \leq r \leq 2 \rmin$ annulus at an integer coordinate, a random magnet should be selected within this annulus instead, which is more computationally demanding.
+
+\xfig[1.0]{2_Hotspice/MultiSwitch_select_Poisson.pdf}{
+	\label{fig:2:MultiSwitch_select_Poisson}
+	Characteristics of \textbf{\link{Bridson's algorithm}{Bridson's} \xref{Poisson disc sampling}} algorithm with PBC, based on $\approx \SI{e6}{}$ samples.
+	\textbf{(a)} Probability density of \link{multi-switching}{simultaneously sampling} the magnet at the centre of the figure (white circle) and at any other point in the figure.
+	The imposed minimal distance $\rmin=16$ cells is indicated by the dashed white circle.
+	\textbf{(b)} Binned (cumulative) probability density of nearest-neighbour distance for simultaneously sampled points.
+	\textbf{(c)} Sample distribution over the simulation domain. This must not display any obvious pattern.
+	\textbf{(d)} \link{periodogram}{Periodogram}, i.e. spatial Fourier transform of simultaneously sampled magnets, averaged over all iterations of the selection algorithm.
+}
+
+\crefSubFigRef{fig:2:MultiSwitch_select_Poisson}{a} shows the probability density of sampling a point in the plane, if a point is also sampled at the centre in the small white circle.
+The imposed minimal distance $\rmin$, indicated by the white dashed circle, is clearly respected.
+The distribution is highly isotropic, apart from some discretisation effects due to the \link{rectilinear grid}{discrete nature} of the ASI. \par
+In the same vein, \crefSubFigRef{fig:2:MultiSwitch_select_Poisson}{b} shows the (cumulative) probability density of having a nearest neighbour at a certain distance.
+Nearly all nearest neighbours are at a distance $\rmin \leq r \leq 2\rmin$, as expected from Bridson's algorithm.
+The probability density is rather spiky, due to the sampling occurring on a rectilinear grid in \hotspice. \par
+\crefSubFigRef{fig:2:MultiSwitch_select_Poisson}{c} checks that the sampling method does not sample any part of the ASI at a higher rate than another part, which would result in a violation of detailed balance.
+Luckily, this panel is very boring, so detailed balance is still satisfied. \par
+Finally, \crefSubFigRef{fig:2:MultiSwitch_select_Poisson}{d} shows the average spatial Fourier spectrum of a set of sampled points, called a \idx{periodogram}.
+This metric is often used to compare the various methods for generating Poisson disc distributions~\cite{PoissonDiskComparison}.
+An ideal blue noise point set exhibits weak low-frequency energy~\cite{EfficientBlueNoisePointSets}, as is the case here in the centre of the periodogram.
+An cross-shaped artefact is visible in the centre, once again due to the \xref{rectilinear grid} upon which \hotspice samples, which is not expected for continuous Poisson disc distributions. \\\par
+
+However, while the distribution shown in~\cref{fig:2:MultiSwitch_select_Poisson} is very smooth, Poisson disk sampling is rather slow due to its sequential nature, which defeats the purpose of this whole \xref{multi-switching} endeavour.
+While a parallel version of this algorithm exists~\cite{PoissonDiskParallel}, it is non-trivial to apply to our situation --- points on a rectilinear grid, possibly with PBC --- without violating the $r \geq \rmin$ constraint. % It would be useful to consider an $L \cross L$ grid, and then do the multiscale technique the paper describes.
+If this can be implemented, the number of sequential operations could be reduced from $\order{N}$ to $\order{\log(N)}$, with $N$ the number of samples, making Poisson disk sampling a viable strategy.
+
+\section{Restricted stratified jittered grid}
+To improve performance, we can use a restricted ``\xlabel{stratified jittered grid}'' (SJG) selection algorithm.
+Normal SJG sampling divides the domain into strata --- typically squares --- and selects a random point in each \xlabel{stratum}~\cite{ProgressiveMultiJittered}.
+Since this procedure does not guarantee a minimal distance between samples, a restricted SJG is used instead, where samples are only taken from the centre area of each square-shaped stratum, as discussed and illustrated in~\ccite{SamplingPolyominoes}. \par % Fig. 3b in SamplingPolyominoes is restricted SJG
+To apply this in \hotspice, the simulation is divided into square subregions of $R_x \times R_y$ grid cells, with $R_x$ and $R_y$ chosen such that each subregion has a physical size of at least $\rmin \times \rmin$.
+These subregions form a ``super-grid'' throughout the simulation domain.
+A quarter of the subregions are then chosen such that they are non-adjacent --- sharing no edges nor corners --- and a single magnet is sampled from each of them. % Q: do we need a simple figure for this? And for the hybrid method?
+This ensures that these sampled magnets are at least a distance $\rmin$ apart, though they will have an average spacing of $2\rmin$.
+By choosing a random quarter of subregions each time, all magnets are equally likely to be chosen. \\\par
+
+Similar to the figure for Poisson disc sampling,~\cref{fig:2:MultiSwitch_select_Grid} shows an analysis of the spatial distribution of the restricted SJG method.
+The contrast with \xref{Poisson disc sampling} is striking, as was to be expected.
+The spatial distribution and \xref{periodogram} are highly anisotropic, with magnets being most likely to be sampled $(2iR_x, 2jR_y), \forall i,j$ relative to each other.
+This may lead to undesirable correlations in the system, though such effects have not been observed at present, even for very low $\rmin$.
+The distance to the nearest neighbours is on average slightly further than for Poisson disc sampling, but is still mostly concentrated between $\rmin \leq r \leq 2\rmin$. \par
+\crefSubFigRef{fig:2:MultiSwitch_select_Grid}{c} shows that all cells in the simulation are equally likely to be sampled with this method, once again ensuring detailed balance is satisfied.
+However, achieving uniform sampling required additional attention in the case of PBC.
+This, and several other edge cases or considerations that had to be addressed to implement this algorithm in \hotspice, are listed below the figure.
+
+\xfig[1.0]{2_Hotspice/MultiSwitch_select_Grid.pdf}{
+	\label{fig:2:MultiSwitch_select_Grid}
+	Characteristics of the \textbf{restricted \xref{stratified jittered grid}} selection algorithm with PBC, based on $\approx \SI{e6}{}$ samples.
+	\textbf{(a)} Probability density of \link{multi-switching}{simultaneously sampling} the magnet at the centre of the figure (white circle) and at any other point in the figure.
+	The imposed minimal distance $\rmin=16$ cells is indicated by the dashed white circle.
+	\textbf{(b)} Binned (cumulative) probability density of nearest-neighbour distance for simultaneously sampled points.
+	\textbf{(c)} Sample distribution over the simulation domain.
+	This must not display any obvious pattern.
+	\textbf{(d)} \link{periodogram}{Periodogram}, i.e. spatial Fourier transform of simultaneously sampled magnets, averaged over all iterations of the selection algorithm.
+}
+
+\begin{itemize}[partopsep=0pt]
+	\item Special attention must be given to PBC with this method.
+	Consider for example a situation where an odd number of subregions exist along one axis, resulting in simultaneous sampling in the first and last subregions along this axis.
+	With PBC, this may result in \link{multi-switching}{simultaneous sampling} of magnets which are physically closer than $\rmin$, but computationally separated by the edge.
+	To prevent this, the super-grid of subregions is taken to be slightly smaller than the ASI.
+	In the example, this would mean that the last subregions along the odd axis are not used.
+	To ensure uniform coverage and proper sampling near the edges, the super-grid then has to be randomly shifted over the simulation domain and wrap around the edges.
+	Note that PBC can make it impossible to maintain a spacing $>r$ in very small systems, or with small $Q$ values; in such cases, we resort to selecting a single magnet.
+	\item The size of the subregions must be lower bounded by $R_x \geq 2$ and $R_y \geq 2$ to avoid forming artefacts in highly ordered systems.
+	In the extreme case where $R_x = R_y = 1$, nearly all randomness would be removed, and only 4 possible multi-samples would remain (one for each quarter of subregions).
+	Think for example of an \link{exchange coupling}{exchange-coupled} OOP square ASI in the uniform state: a regularly-spaced quarter of all magnets would switch simultaneously, without introducing additional spatial variation, which would be non-physical.
+	Avoiding this situation retains sufficient randomness for small $\rmin$.
+	\item The size of a subregion is constrained to an integer amount of \xref{unit cells}, such that all subregions have an identical pattern of (un)occupied grid cells within them.
+	This way, the sampling of magnets can be done in parallel for all subregions without sampling any unoccupied grid points.
+	\item Whereas \xref{Poisson disc sampling} can in theory account for a spatially dependent $\rmin$ (e.g., due to a local variation of $\mu$), this is not possible with the restricted SJG, so a worst-case $\rmin$ across the lattice has to be assumed (as in the derivation of~\cref{eq:2:MultiSwitch_inequality}).
+\end{itemize}
+\par
+In some sense, this method is the opposite of Poisson disc sampling: it is less versatile, sparser and highly anisotropic, but is efficient to compute in parallel --- the number of sequential operations is independent of the number of simultaneous samples --- and synergises well with our \link{rectilinear grid}{grid-based} ASI implementation.
+While not entirely random, this restricted SJG sampling method has shown satisfactory results in maintaining physically correct ASI behaviour, with minimal artefacts in systems with complex long-range correlations.
+This strategy effectively balances efficiency and randomness, reducing complexity and maintaining performance, especially in large simulations.
+
+\section{Hybrid grid-Poisson}
+The \xref{Poisson disc sampling} may have the most natural distribution, but is at least an order of magnitude slower than the \link{stratified jittered grid}{restricted stratified jittered grid}.
+Therefore, we devised a hybrid method, in the hope of achieving a rather smooth distribution relatively quickly.
+This was implemented by selecting subregions using the Poisson disc algorithm, rather than simply selecting a regularly spaced quarter of subregions.
+An adapted version of the Poisson disc sampling was used for this purpose, tailored specifically for selecting non-adjacent subregions.
+Once the subregions have been selected, everything proceeds as in the restricted SJG method: magnets are sampled in parallel, one in each subregion, making use of the fact that the occupation of the \link{rectilinear grid}{underlying grid} is identical for each subregion. \\\par
+Similar to the previous figures,~\cref{fig:2:MultiSwitch_select_Hybrid} shows the spatial distribution of this hybrid ``grid-Poisson'' method.
+The sample distribution visible in~\crefSubFigRef{fig:2:MultiSwitch_select_Hybrid}{a} is, indeed, in every way a hybrid of the spatial distribution of both earlier methods.
+While an iteration of this hybrid grid-Poisson approach is approximately half as fast as the restricted SJG method, this is still a significant improvement over Poisson disc sampling, due to the optimised Poisson sampler used for selecting non-adjacent subregions.
+On the other hand, this approach achieves a more natural-looking distribution of neighbouring magnets compared to the grid-select method.
+
+\vspace{-1em}
+\xfig[1.0]{2_Hotspice/MultiSwitch_select_Hybrid.pdf}{
+	\label{fig:2:MultiSwitch_select_Hybrid}
+	Characteristics of the \textbf{hybrid grid-Poisson} selection algorithm with PBC, based on $\approx \SI{e6}{}$ samples.
+	\textbf{(a)} Probability density of \link{multi-switching}{simultaneously sampling} the magnet at the centre of the figure (white circle) and at any other point in the figure.
+	The imposed minimal distance $\rmin=16$ cells is indicated by the dashed white circle.
+	\textbf{(b)} Binned (cumulative) probability density of nearest-neighbour distance for simultaneously sampled points.
+	\textbf{(c)} Sample distribution over the simulation domain. This must not display any obvious pattern.
+	\textbf{(d)} \link{periodogram}{Periodogram}, i.e. spatial Fourier transform of simultaneously sampled magnets, averaged over all iterations of the selection algorithm.
+}
+
+The implications of a smoother distribution remain an open question.
+Whether it provides tangible benefits to avoid correlations, or is at all necessary, may depend on the specific use case.
+Importantly, all three sampling methods yield results consistent with analytical expectations, at least for the case studies presented later in \cref{sec:2:Verification}.
+If any long-range correlations were to emerge due to the choice of sampling method, they would likely be relevant only in highly specific scenarios. \par
+The hybrid method results in a slightly larger average NN distance compared to the other methods, with distances extending up to $r \leq 3 \rmin$.
+This leads to fewer magnets being sampled simultaneously.
+Ultimately, the modified SJG remains the default sampling method in \hotspice for its superior performance, but the other methods remain available should the highly anisotropic distribution of modified SJG present any issues for a particular simulation.
