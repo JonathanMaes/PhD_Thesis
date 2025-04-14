@@ -74,7 +74,7 @@ def replot_all(plot_function, subdir: str = None, **plot_kwargs):
         replot_dir(data_dir)
         
 
-def label_ax(ax: plt.Axes, i: int = None, form: str = "(%s)", offset: tuple[float, float] = (0,0), fontsize: float = 11, axis_units: bool = True, **kwargs):
+def label_ax(ax: plt.Axes, i: int = None, form: str = "(%s)", offset: tuple[float, float] = (0,0), roman: bool = False, fontsize: float = 11, axis_units: bool = True, **kwargs):
     """ To add a label to `ax`, pass either `i` or `form` (or both).
         If only `i` is passed, the label becomes "(a)", with the letter corresponding to index `i` (0=a, 1=b ...)
         If only `form` is passed, it is used as the complete label.
@@ -93,7 +93,8 @@ def label_ax(ax: plt.Axes, i: int = None, form: str = "(%s)", offset: tuple[floa
         Additional `**kwargs` get passed to the `ax.text()` call.
     """
     if isinstance(i, int):
-        s = 'abcdefghijklmnopqrstuvwxyz'[i]
+        if roman: s = num2roman(i).lower()
+        else: s = 'abcdefghijklmnopqrstuvwxyz'[i]
         text = form % s
     kwargs = dict(ha='left', va='bottom', color='k', weight='bold', fontfamily='DejaVu Sans') | kwargs
     t = ax.text(0 + offset[0], int(bool(axis_units)) + offset[1], text, fontsize=fontsize,
@@ -164,3 +165,12 @@ def std_of_correlated_series(series):
     N = len(series)
     N_eff = N / (2 * autocorr_time)
     return np.sqrt(variance / N_eff)
+
+def num2roman(num):
+    roman = ''
+    while num > 0:
+        for i, r in [(1000, 'M'), (900, 'CM'), (500, 'D'), (400, 'CD'), (100, 'C'), (90, 'XC'), (50, 'L'), (40, 'XL'), (10, 'X'), (9, 'IX'), (5, 'V'), (4, 'IV'), (1, 'I')]:
+            while num >= i:
+                roman += r
+                num -= i
+    return roman

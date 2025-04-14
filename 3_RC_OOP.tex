@@ -533,6 +533,23 @@ The inverse mean squared error (1/MSE) between o(t) and the desired result (the 
 \subsection{Signal transformation task}
 \subsubsection{Motivation} % Why do signal transformation? (scalar, nonlinear, memory...)
 \subsubsection{Baseline}
+\vspace{-1em}
+\makeshiftfig{
+	\includegraphics[width=\linewidth]{3_RC_OOP/Thermally active/Transformation/freq-magn/baseline/averaged.pdf}\\
+	\vspace{-1em}
+	\includegraphics[width=\linewidth]{3_RC_OOP/Thermally active/Transformation/freq-magn/baseline/details.pdf}
+	\vspace{-2.5em} % Looks more natural for this figure
+}{
+	\label{fig:3:Transformation_freq-magn_baseline}
+	Monte Carlo simulations of a sine-to-sawtooth signal transformation performed by a thermally active $11 \times 11$ OOP square-lattice ASI reservoir.
+	The top panel shows the inverse mean squared error $1/\MSE$ as a function of the input magnetic field frequency $f$ and amplitude $B_1$, with constant $B_0 = \SI{-0.35}{\milli\tesla}$.
+	Higher (lower) values in yellow (purple) indicate better (worse) performance.
+	The black contours correspond to $1/\MSE \sim 30$, encompassing regions where the reservoir performs better than the linear transformation of the original input signal.
+	In the top figure, several points are indicated with Roman numerals, corresponding to the panels at the bottom of the figure which show a temporal view of the transformation.
+	There, the input sine-wave signal (black dotted curve) and target sawtooth signal (black dashed line) are shown, alongside the prediction with and without the reservoir (blue and red curve, respectively) for different input frequencies and field magnitudes.
+}
+\vspace{-1em}
+
 \subsubsection{Parameter dependencies}
 \paragraph{Field magnitude}
 \paragraph{Frequency}
