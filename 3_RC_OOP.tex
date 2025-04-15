@@ -59,7 +59,7 @@ The reason for this is that lattices with the same NN spacing can only differ in
 As a result, the ground state is largely determined by NN interactions, which prefer anti-parallel alignment.
 Therefore, OOP lattices in which every closed NN loop contains an even number of magnets --- such as the square and honeycomb lattices --- are unlikely to exhibit geometric frustration.
 
-\subsection{Input and readout: experiment to simulation}
+\subsection{Input and readout: experiment to simulation} \label{sec:3:IO_exp_to_sim}
 While it is possible to use an external field to switch both IP and OOP nanomagnets, this is undesirable in a real device due to stray fields and the need for bulky magnets.
 The main allure of OOP ASI for RC stems from the existence of efficient input and readout mechanisms for such OOP magnets.
 Input can be applied via spin-orbit torque (SOT)~\cite{SOT_FM_AFM,SOTswitchingCoPt}, while the system can be read out using the anomalous Hall effect (AHE)~\cite{AHE}.
@@ -79,7 +79,7 @@ The exact form of this relationship is currently irrelevant for our RC purposes,
 \paragraph{Readout by anomalous Hall effect}
 In our paper~\cite{KUR-24}, \textit{A. Kurenkov} experimentally demonstrated electrical readout of the average magnetisation $\llangle s \rrangle$ using the anomalous Hall effect~\cite{AHE}.
 This can therefore be used as a magnetic state readout in the simulations.
-However, reservoir computing benefits from having multiple readout values, so we will use the average magnetisation of each lattice column $i$ to populate our readout vector $y_i(t)$. \par % Fig. 6a in paper
+However, reservoir computing benefits from having multiple readout values, so a readout vector $y_i(t)$ can for example be populated by the average magnetisation of each lattice column $i$. \par % Fig. 6a in paper
 A discussion about the experimental feasibility of such a grid of local readouts is given in Supplementary Information 7 of our paper~\cite{KUR-24}.
 In short, by adding more electrodes to the Hall bar --- the conductive layer underneath the ASI used to measure the magnetic state through the AHE --- inhomogeneities in the current density distribution result in different currents flowing through the various nanomagnets.
 This consequently results in unequal contributions to the Hall resistance, providing a way to differentiate between magnets.
@@ -486,15 +486,30 @@ This would also explain why the effective anisotropy is on the order of $60 \kBT
 \newpage
 \section{Reservoir computing in thermally active out-of-plane ASI}
 \subsection{Concept}
-% Bartel said the following when coming up with the thermal ASI: ``Relaxation time in the kilohertz range, then we can apply input data at megahertz range.''
-\subsubsection{Input torques: representation in \hotspice}
-Contrary to the binary input in the non-volatile OOP ASI, thermally active ASI can be addressed by a continuous range of input.
-The input --- in reality applied through spin-orbit torque --- was applied in the simulations in the form of an OOP magnetic field $B_z(t)$ acting on the entire system.
-The field was scaled such that its OOP component extends from $B_0$ (minimum) to $B_1$ (maximum), i.e. $B_0 \leq B_z \leq B_1$.
-Hence, an input $0 \leq x \leq 1$ is encoded by a field of magnitude $B_z = B_0 + x (B_1 - B_0)$.
+In order to use these thermally active OOP ASI for reservoir computing, a method must be devised that generates a non-linear response with fading memory.
+One option to achieve this, is to use the transient regime between the AFM ground state and the uniform state: the previously discussed spontaneous relaxation makes the system evolve towards the ground state, while an external stimulus can push the system towards the uniform state instead.
+This allows the usage of analog input, i.e. a continuous range of input values, since the rate at which the system moves away from the ground state is determined by the strength of this stimulus.
+The relaxation towards the ground state, on the other hand, is governed by parameters intrinsic to the ASI itself, like the OOP anisotropy $\EEA$ and MS coupling $\EMC$.
 
-\subsubsection{Readout method}
-The inverse mean squared error (1/MSE) between o(t) and the desired result (the sawtooth) was used as a performance metric.
+\paragraph{Input}
+Practically, such an input method is possible by using spin-orbit torque, in the presence of an in-plane field to break symmetry, as discussed earlier in~\cref{sec:3:IO_exp_to_sim}.
+Applying the SOT current then pushes the ASI closer to a uniform state, while removing the current lets it gradually relax to the AFM ground state.
+Here, the OOP magnetic field $B_z(t)$ that models the SOT in \hotspice was scaled between $B_0$ (minimum) and $B_1$ (maximum).
+Hence, an input $0 \leq x \leq 1$ is encoded by a field of magnitude $B_z = B_0 + x (B_1 - B_0)$, such that $B_0 \leq B_z \leq B_1$.
+
+\paragraph{Readout method and property gradient}
+Reservoir computing benefits from having multiple simultaneous readout values, as this increases the available information for the single-layer perceptron to train on.
+However, in a normal OOP square-lattice ASI, the relaxation dynamics do not differ much between various areas throughout the ASI --- only the magnets near the edge respond somewhat differently than those in the bulk of the system, as they experience a different total MS interaction.
+Without more significant spatial differences, multiple readouts will not provide a large benefit. \\\par
+%For example, when starting from the uniform state, relaxation will occur faster near the centre of the ASI.
+%Therefore, a readout method should be used where magnets at the edges are included in a different readout node than those at the centre. \par
+To increase the richness of system dynamics, a \xlabel{property gradient} can be introduced for greater variation between spatially separated readout nodes. %spread the relaxation over different timescales on opposing sides of the system.
+% This can be beneficial to RC as it can, in turn, provide multiple short-term memory timescales.
+Here, this will be accomplished by gradually increasing the net OOP anisotropy $\EEA$ and magnetic moment $\mu$ of magnets along the $x$-axis --- as if the magnets were larger on one side of the lattice than on the other --- causing different sides of the lattice to relax to the ground state over different timescales.
+Hence, by using the average magnetisation of individual columns as the readout values, greater variation can be obtained since each column is unique (while the magnets within a column are all identical).
+Vice versa, all rows are identical (while the magnets within a row are all different).
+Averaging over multiple columns or enlarging the system can be beneficial as it reduces thermal noise in the output, since each readout value then becomes the average of more magnets.
+
 \subsection{Influence of input on dynamics}
 Since we intend to use the spontaneous relaxation of thermally active OOP ASI for reservoir computing, it is desirable for the relaxation process to span as few orders of magnitude in time as possible.
 To achieve this, a low NN MS coupling $\EMC=2.5\kBT$ will be used as a baseline --- chosen to be as low as possible while avoiding the superparamagnetic regime.
