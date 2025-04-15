@@ -408,19 +408,6 @@ More extensive parameter searches may benefit from using other optimisation tech
 This fitting procedure was used to determine the energy balance in real ASI with different magnet separations $S_\mathrm{ASI}$.
 Due to the logarithmic relaxation, an accurate fit requires measurements separated by multiple orders of magnitude in time.
 Because $\mavg \approx a \log_{10}(t \nu_0) + b$, two measurements should suffice to fit this kind of curve to experimental data.
-
-\vspace{-1em}
-\xfig{3_RC_OOP/MFM_grid.pdf}{
-	\label{fig:3:MFM_grid}
-	Determining system parameters (net OOP anisotropy $\EEA$, NN MS coupling $\EMC$ and exchange coupling $J$) for lattices with different magnet separation $S_\mathrm{ASI}$.
-	All magnets have the same geometry ($t_{\ce{Co}} = \SI{1.45}{\nano\metre}$ and $D_\mathrm{NM} = \SI{170}{\nano\metre}$) and were initialised in a uniform magnetic state by an \SI{0.9}{\tesla} OOP magnetic field at $t=0$.
-	\textbf{(a)} MFM images by \textit{A. Kurenkov}~\cite{KUR-24} of the lattices after they were kept at room temperature for $t \sim \SI{1000}{\second}$ and $t \sim \SI{7e7}{\second}$ (27 months).
-	Black magnets remain in the initial magnetic state while white magnets have switched.
-	Yellow circles indicate magnets that have switched between the two observations.
-	\textbf{(b)} Evolution of normalised average magnetisation $\mavg$ and local antiferromagnetic parameters $\qNN$, $\qNN[2]$, $\qNN[3]$.
-	Each trace shows the average of 200 simulated relaxations (central line) and their standard deviation (shaded area).
-}
-
 Since two measurements are insufficient to prove that the relaxation is indeed logarithmic --- as predicted by simulation --- this logarithmic behaviour was separately verified using multiple measurements over a shorter timescale, as discussed in our paper~\cite[Supp. 5.4]{KUR-24}.
 Consequently, samples were measured soon after initialisation ($\approx \SI{e3}{\second}$, since MFM measurements are not instantaneous) and again after about 2 years $\approx \SI{7e7}{\second}$.
 This provides two sufficiently distinct timescales for a successful fit.
@@ -433,7 +420,19 @@ Only switches from the initial `up' (black) to the `down' (white) state were obs
 From each of these MFM images, $\mavg$, $\qNN$, $\qNN[2]$ and $\qNN[3]$ were determined.
 Their values are indicated by the dots at $t=\SI{e3}{\second}$ and \SI{7e7}{\second} in~\crefSubFigRef{fig:3:MFM_grid}{b}.
 This figure shows the optimal fits through these points --- based on $\gtrsim 1000$ iterations of Bayesian optimisation --- with the corresponding values of $\EEA$, $\EMC$ and $J$ listed in the top right corner of each panel.
-These combinations of $\EEA$ and $\EMC$ have also been indicated in~\cref{fig:3:OOP_relaxation_continuous} as circles ($S_\mathrm{ASI}=\SI{20}{\nano\metre}$), triangles ($S_\mathrm{ASI}=\SI{25}{\nano\metre}$) and crosses ($S_\mathrm{ASI}=\SI{30}{\nano\metre}$). \\\par
+These combinations of $\EEA$ and $\EMC$ have also been indicated in~\cref{fig:3:OOP_relaxation_continuous} as circles ($S_\mathrm{ASI}=\SI{20}{\nano\metre}$), triangles ($S_\mathrm{ASI}=\SI{25}{\nano\metre}$) and crosses ($S_\mathrm{ASI}=\SI{30}{\nano\metre}$).
+
+\vspace{-1em}
+\xfig{3_RC_OOP/MFM_grid.pdf}{
+	\label{fig:3:MFM_grid}
+	Determining system parameters (net OOP anisotropy $\EEA$, NN MS coupling $\EMC$ and exchange coupling $J$) for lattices with different magnet separation $S_\mathrm{ASI}$.
+	All magnets have the same geometry ($t_{\ce{Co}} = \SI{1.45}{\nano\metre}$ and $D_\mathrm{NM} = \SI{170}{\nano\metre}$) and were initialised in a uniform magnetic state by an \SI{0.9}{\tesla} OOP magnetic field at $t=0$.
+	\textbf{(a)} MFM images by \textit{A. Kurenkov}~\cite{KUR-24} of the lattices after they were kept at room temperature for $t \sim \SI{1000}{\second}$ and $t \sim \SI{7e7}{\second}$ (27 months).
+	Black magnets remain in the initial magnetic state while white magnets have switched.
+	Yellow circles indicate magnets that have switched between the two observations.
+	\textbf{(b)} Evolution of normalised average magnetisation $\mavg$ and local antiferromagnetic parameters $\qNN$, $\qNN[2]$, $\qNN[3]$.
+	Each trace shows the average of 200 simulated relaxations (central line) and their standard deviation (shaded area).
+}
 
 However, one should not blindly trust the optimal parameter combination that BO provides: it is possible that a fit of similar quality could be obtained for different $\EEA$, $\EMC$ or $J$.
 For this reason, \cref{fig:3:MFM_fitquality} is also provided, which shows the fit quality $\eta$ for all guesses made by the optimiser, as a function of these three parameters.
