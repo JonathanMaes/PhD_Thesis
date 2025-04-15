@@ -1,25 +1,48 @@
 \chapter{Introduction}\label{ch:Introduction}
 \glijbaantje{It is important to draw wisdom from many different places.\\If you take it from only one place, it becomes rigid and stale.}{Uncle Iroh}
 
+% TODO: talk about machine learning and the advent of neuromorphic computing and the motivation for this research
+
 \section{Reservoir computing}\label{sec:1:RC}\indexlabel{reservoir computing}
 \subsection{Motivation}
 \subsection{Origin}
 \subsubsection{ANN}
 \paragraph{Feedforward NN}
 \paragraph{Recurrent NN}
+%This dynamical system can be modelled as a recurrent neural network (RNN).
 \subsubsection{LSM}
 \subsubsection{ESN}
 \subsubsection{Reservoir computing}
+Reservoir computing is a machine learning framework where a ``reservoir'' --- an unspecified non-linear dynamical system --- maps input data into a higher-dimensional space, which facilitates the separation of said data by a linear transformation~\cite{KUR-24}.
+A weighted sum of the components of the reservoir's state vector then provides the output of the system as a whole: this is called a \xlabel{single-layer perceptron}.
+These weights can be changed in order to produce a desired output, which is referred to as ``training'' the reservoir.
+Crucially, \textit{the properties of the reservoir itself are not modified during training} --- only the perceptron is. \par
+Since the reservoir acts as a ``black box'', its properties can not be changed to obtain the desired response\footnote{
+	It is possible to adjust a physical reservoir to exhibit the desired properties for a given task~\cite{AdaptiveProgrammableRC,gartside2022reconfigurable}, but this is different from mathematically tuning the weights of the perceptron via a simple procedure like linear regression.
+}.
+Therefore, it is beneficial for the reservoir to be a system with short-term memory and high dimensionality~\cite{NeuromorphicAFMspintronics,RC_RecentAdvances}.
+Conveniently, these are properties exhibited by many physical systems~\cite{RC_DipoleNanomagnets,RC_PassiveFrustratedNM,RC_ASI,RC_RecentAdvances,NeuromorphicOscillators,VowelRecognition4STO,RC_DiffusiveMemristors,RC_MemristorTemporal,gartside2022reconfigurable}.
+This allows the usage of physical systems without requiring higher mathematical abstractions --- apart from the single-layer perceptron at the end --- that are for example required for calculating the output of extensive neural networks.
+When using a physical reservoir to perform a temporal task, the physics of the system are most effectively harnessed when the timescale of system dynamics matches that of incoming data patterns~\cite{KUR-24}.
+
+\paragraph{Mathematical description}
+In the reservoir computing paradigm, an input signal $u(t)$ perturbs a reservoir $\mathcal{R}$ --- which can be any non-linear dynamical system, be it physical or abstract --- whose state can then be represented by a response vector $\vc{r}(t)$.
+The output $y(t)$ of the reservoir is then obtained as a weighted sum $y(t) = \vc{r}^\mathrm{T}(t) \cdot \vc{w}$ of the components of this vector $\vc{r}(t)$, called a single-layer perceptron.
+Depending on the task performed, one or multiple perceptrons can be trained, which should then be interpreted in the context of the specific task.
+Here, we consider the training of just a single perceptron.
+
 \subsubsection{Multi-reservoir techniques}
 \paragraph{Single dynamical node}
 \paragraph{Rotating neurons reservoir}
 \subsection{Metrics} \label{sec:1:RC_metrics}
+% TODO: cite relevant papers, like \cite{NeuromorphicFewShot}: in the Methods section there is a good mathematical introduction on MG, NARMA, and MC/NL, so can use this as reference that MG is mostly memory-driven.
 \subsubsection{Kernel-quality, generalisation-capability, compute quality} \label{sec:1:RC_metrics_KQ}
 \subsubsection{Task-agnostic metrics: nonlinearity, memory capacity, complexity (, parity check)}
 % TODO: what does PC actually measure? Explain that its calculation is similar to that of memory capacity, but that the added summation and multiplication introduces some non-linearity aspect to it.
 \subsubsection{Attractors etc.} % More test-like than metric-like. NARMA, MG, Lorentz
 \paragraph{Mackey-Glass}
 \subsubsection{Other} % Memorisation, frequency generation, classification
+ICT task~\cite{farronato2022reservoir,grollier2020neuromorphic} (simple image classification) % Tasks similar to ICT are performed in those refs
 \subsection{Applications or tasks}
 \subsubsection{Digital signal processing} % Chaotic time series, speech recognition, TODO
 \subsection{Physical RC}
