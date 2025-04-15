@@ -568,12 +568,25 @@ In conclusion, the strength of this stimulus determines how hard the ASI will be
 \paragraph{Field magnitude}
 \paragraph{Frequency}
 \paragraph{Gradient}
+A ``gradient of \SI{10}{\percent}'' means that the anisotropy $\EEA$ and magnetic moment $\mu$ on the right (left) side of the lattice is \SI{10}{\percent} higher (lower) than the average.
+The NN MS coupling will now also differ throughout the ASI due to the varying magnetic moment $\mu$.
+The previously stated value of $\EMC = 2.5 \kBT$ corresponds to the MS coupling between NN if their moment $\mu$ would be equal to the average magnetic moment $\llangle \mu \rrangle$ throughout the ASI.
+
 \paragraph{System size and readout resolution}
+The MSE of the reservoir on the training set is too optimistic a measure for the reservoir performance, but it can be used to check for over-fitting.
+Typically, when the reservoir provides too many readout nodes for the perceptron, the OLS can fit the weights to random noise in the data rather than on the general trend.
+This is especially concerning in this system, since the relaxation is a stochastic process.
+Such over-fitting then leads to a far lower MSE on the training set than on the test set, as the test set exhibits different noise.
+
 \paragraph{Exchange/no exchange}
 \paragraph{Transformation}
-\subsubsection{Signal prediction task: Mackey-Glass}
+\subsection{Signal prediction task: chaotic Mackey-Glass oscillator}
+It is also possible to attempt a signal prediction, which relies more on the fading memory of a reservoir rather than its non-linearity.
+Specifically, the chaotic Mackey-Glass oscillator $\mathrm{MG}(t)$ will be used, and a prediction will be attempted
+$\mathrm{MG}(t) \rightarrow \mathrm{MG}(t+\Delta t)$, $\Delta t > 0$.~\cite{MackeyGlass}
+% TODO: Mackey-Glass equations and parameters used
 To find the optimal performance for a Mackey-Glass prediction, we will once again utilise Bayesian optimisation.
-\subsubsection{Reflecting on results} % Is the performance decent? Compare to literature. MSE is not an ideal parameter, should use something that accounts more for the general shape.
+\subsection{Conclusion} % Is the performance decent? Compare to literature. MSE is not an ideal parameter, should use something that accounts more for the general shape.
 
 \newpage
 \section{Reservoir computing in non-volatile out-of-plane ASI}
