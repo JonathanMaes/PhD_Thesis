@@ -26,10 +26,18 @@ This allows the usage of physical systems without requiring higher mathematical 
 When using a physical reservoir to perform a temporal task, the physics of the system are most effectively harnessed when the timescale of system dynamics matches that of incoming data patterns~\cite{KUR-24}.
 
 \paragraph{Mathematical description}
-In the reservoir computing paradigm, an input signal $u(t)$ perturbs a reservoir $\mathcal{R}$ --- which can be any non-linear dynamical system, be it physical or abstract --- whose state can then be represented by a response vector $\vc{r}(t)$.
-The output $y(t)$ of the reservoir is then obtained as a weighted sum $y(t) = \vc{r}^\mathrm{T}(t) \cdot \vc{w}$ of the components of this vector $\vc{r}(t)$, called a single-layer perceptron.
-Depending on the task performed, one or multiple perceptrons can be trained, which should then be interpreted in the context of the specific task.
-Here, we consider the training of just a single perceptron.
+% TODO: figure with right symbols
+In the reservoir computing paradigm, an input signal $u(t)$ perturbs a reservoir $\mathcal{R}$, which can be any non-linear dynamical system, be it physical or abstract.
+The state of the reservoir following this perturbation can then be represented by a response vector $\vc{r}(t)$.
+The final output $\hat{y}(t)$ of the system is then obtained as a weighted sum $\hat{y}(t) = \vc{r}^\mathrm{T}(t) \cdot \vc{w}$ of the components of this vector $\vc{r}(t)$ --- such a weighted sum is also referred to as a single-layer perceptron.
+Depending on the task performed, one or multiple perceptrons can be trained, whose interpretation then depends on the context of the specific task.
+% Here, we consider the training of just a single perceptron.
+When the desired input-output relation $s(t) \mapsto y(t)$ is known for a limited set of data --- the training set --- the weights $\vc{w}$ can be adjusted to minimise the difference between the output $\hat{y}(t)$ and the desired output $y(t)$.
+This is usually done by ordinary least-squares (OLS) regression, which requires only a single matrix inversion.
+The optimal weights then remain fixed, and the performance of the reservoir can be evaluated by feeding it the test set --- a previously unknown, yet similar data set as the training set.
+
+% TODO: should I explain the mathematics of the matrix inversion here? Can take inspiration from~\cite{RC_NNN} eq. 4--7.
+% Training of the weights $\vc{w}$ via linear regression: \hat{y}_i = x_i^T \cdot w + \epsilon_i or in matrix form y = X w + \epsilon. The OLS algorithm adjusts the weight vector w to minimize the MSE between the estimated output and the target function.
 
 \subsubsection{Multi-reservoir techniques}
 \paragraph{Single dynamical node}
@@ -44,6 +52,7 @@ Here, we consider the training of just a single perceptron.
 \subsubsection{Other} % Memorisation, frequency generation, classification
 ICT task~\cite{farronato2022reservoir,grollier2020neuromorphic} (simple image classification) % Tasks similar to ICT are performed in those refs
 \subsection{Applications or tasks}
+Blood glucose level monitoring~\cite{FewMoleculeReservoir}.
 \subsubsection{Digital signal processing} % Chaotic time series, speech recognition, TODO
 \subsection{Physical RC}
 \subsubsection{Why physical systems can be used for RC}
