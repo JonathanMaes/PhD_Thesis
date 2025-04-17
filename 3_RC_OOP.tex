@@ -546,34 +546,28 @@ Therefore, the stochastic nature of the relaxation can, in some cases, prevent t
 In conclusion, the strength of this stimulus determines how hard the ASI will be pushed away from the ground state towards the uniform state, while the frequency of the input determines how much the system can relax back towards the ground state after every input cycle.
 
 \subsection{Analog signal transformation and prediction}
-% TODO: make sure this intro is general for both transformation and prediction
 % TODO END: check references in this intro
 The transient dynamics of thermally active OOP ASI, as were illustrated in~\cref{fig:3:OOP_relaxation_input}, can be harnessed to perform reservoir computing.
-Since this system can respond to analog input signals $s: \mathbb{R} \rightarrow [0, 1]; t \mapsto s(t)$, an alluring test to evaluate the reservoir computing capability of this system is to have it perform a signal transformation or prediction task~\cite{gartside2022reconfigurable,AdaptiveProgrammableRC,RC_NNN,TaskAdaptivePRC}. % REF: AvalanchesChaosNNN also does signal transformation, but this is more of a sidenote.
-%A nonlinear waveform transformation (regression) task (24) was performed.  \par
-This task primarily relies on the non-linearity and high dimensionality of a reservoir, rather than its fading memory capacity~\cite{FewMoleculeReservoir}.
-This task requires non-linearity and high dimensionality in the reservoir, by which the basic computational capability of the reservoir can be evaluated~\cite{FewMoleculeReservoir}. \par
+Since this system can respond to analog input signals $s: \mathbb{R} \rightarrow [0, 1]; t \mapsto s(t)$, an alluring test to evaluate the reservoir computing capability of this system is to have it perform a signal transformation or prediction task~\cite{gartside2022reconfigurable,AdaptiveProgrammableRC,RC_NNN,TaskAdaptivePRC}. \par % REF: AvalanchesChaosNNN also does signal transformation, but it is more of a sidenote there.
 Applying a signal $s(t)$ to the reservoir, here in the form of an external field $B_z(t)$, yields a response $\vc{r}(t) \in \mathbb{R}^p$ from the $p$ readout nodes the reservoir provides.
-The goal is to estimate a ``target'' function $y(t) \in [0,1]$ as well as possible based on the reservoir's response $\vc{r}(t)$.
+The goal is to estimate a ``target'' function $y(t) \in [0,1]$ as accurately as possible based on the reservoir's response $\vc{r}(t)$.
 As explained in~\cref{sec:1:RC}, the reservoir computing paradigm includes a single-layer perceptron that converts the response $\vc{r}(t)$ into an output $\hat{y}(t) = \vc{r}^\mathrm{T}(t) \cdot \vc{w}$.
 Through a training procedure, the weights $\vc{w}$ of the perceptron can be adjusted to minimise the difference between the output $\hat{y}(t)$ and the target function $y(t)$. \par
-In simulation, the continuous input signal $s(t)$ can not be captured at infinite resolution, since \hotspice assumes all aspects of the system remain static until the next switch occurs.
 The continuous input signal $s(t)$ corresponds to a continuously varying external field $B_z(t)$, but in simulation this can not be captured at infinite resolution.
 The reason for this is that \hotspice assumes all aspects of the system remain static until the next switch occurs, as this allows a mean switching time to be calculated for all magnets.
-To approximate a continuous input in simulation, the input signal must be sampled at sufficiently short time intervals while imposing a maximum switching time $t_\mathrm{max}$ equal to this interval.
-To adequately sample an input signal of frequency $f$, we impose $t_\mathrm{max} = 1/20f$.
-This way, the external field $\vc{B}_\mathrm{ext}$ closely resembles the true input signal, as it is updated after each iteration of the first-switch method (\cref{alg:2:FirstSwitchSingle}), regardless of whether a magnet has switched within the short interval $t_\mathrm{max}$. \\\par
+To approximate a continuous input in simulation, the input signal must be sampled at sufficiently short time intervals --- say 20 samples per period.
+This can be done by imposing a maximum switching time $t_\mathrm{max} = 1/20f$ and updating the external field $\vc{B}_\mathrm{ext}$ after each iteration of the first-switch method (\cref{alg:2:FirstSwitchSingle}) --- regardless of whether a magnet has switched within the short interval $t_\mathrm{max}$ --- resulting in adequate sampling of the true input signal. \\\par
 
 By recording the reservoir state $\vc{r}(t_i)$ and the target output $y(t_i)$ at discrete intervals $t_i = i t_\mathrm{max}$ (with $i = 1,\dots,n$), the perceptron can be trained on several periods of the input signal via ordinary least-squares (OLS) regression\footnote{
 	When a magnet switches on a timescale $\Delta t < t_\mathrm{max}$, the external field $B_z(t)$ is updated immediately to more accurately represent the input signal.
 	The reservoir state, however, is only recorded at intervals of $t_\mathrm{max}$ for a consistent measure of reservoir performance that is independent of reservoir dynamics like individual switches.
 }.
 Throughout this section, we will compare the performance of the OOP ASI reservoir as a function of several system parameters.
-For a consistent comparison, the training of the perceptron (which is a deterministic process) is always performed on the first 12 periods of the input signal\footnote{
-	In this section on signal transformation, periodic signals will be considered, so one period should suffice.
-	However, since the reservoir uses thermal relaxation, which is a stochastic process, multiple periods are used to make the estimator more robust to such noise.
+For a consistent comparison, the training of the perceptron for signal transformation (prediction) is always performed on the first 12 (60) periods of the input signal\footnote{
+	For signal transformation, we will only consider periodic signals, for which one period would normally suffice.
+	However, since the thermally active ASI reservoir is subject to thermal noise, multiple periods are used for increased robustness against such noise.
 }.
-After training, the performance of a reservoir will be evaluated based on its prediction on 8 more periods of the input signal, measured by the mean-squared error of the ASI prediction $\hat{y}(t)$ with respect to the target function $y(t)$ at the sampled times $t_i$:
+After training, the performance of a reservoir will be evaluated based on 8 (40) more periods of the input signal, as quantified by the mean-squared error of the ASI prediction $\hat{y}(t)$ with respect to the target function $y(t)$ at the sampled times $t_i$:
 \begin{equation}
 	\mathrm{MSE} = \frac{1}{N} \sum_{i=1}^N (\hat{y}(t_i) - y(t_i))^2 \mathrm{.}
 \end{equation}
@@ -590,9 +584,9 @@ To evaluate the reservoir performance, two estimators will be compared: one that
 If the estimator operating on the reservoir output outperforms the one that uses the raw input --- as measured by the MSE on the test set --- then the reservoir has a positive impact on the signal transformation.
 
 \subsection{Signal transformation task}
-% Why do signal transformation? (scalar, nonlinear, memory...)
+First, we will focus on signal transformation tasks: these primarily rely on the non-linearity and high dimensionality of a reservoir, rather than its fading memory capacity~\cite{FewMoleculeReservoir,gartside2022reconfigurable,TaskAdaptivePRC}. % TODO: elaborate?
+More specifically, the sine-to-sawtooth transformation will be considered here, with several other transformations presented towards the end of this section.
 %Simulations of the signal transformation task are based on~\cite{gartside2022reconfigurable,AdaptiveProgrammableRC}, and the same thing is done in~\cite{TaskAdaptivePRC}.
-A signal transformation task primarily tests the non-linearity of the reservoir~\cite{gartside2022reconfigurable,TaskAdaptivePRC}.
 
 \subsubsection{Baseline}
 \vspace{-1em}
