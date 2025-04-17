@@ -224,6 +224,30 @@
 	\jonathanskip\vspace{0.05cm}
 }
 
+% 2 args: filename1, filename2, caption
+% 1 optional arg: width of figure (in textwidth units, default 0.5)
+\newcommand{\sidefigs}[4][0.5]{
+	\jonathanskip\vspace{1em}
+	\begin{figure}[H] % Use the figure environment for compatibility
+		\centering
+		\begin{tikzpicture}
+			\node[rounded corners=10pt, fill=figcolor, inner sep=10pt] (figbox) {
+				\begin{minipage}[c]{#1\textwidth}
+					\centering
+					\includegraphics[width=\textwidth]{#2}\\
+					\includegraphics[width=\textwidth]{#3}
+				\end{minipage}
+				\hspace{0.02\textwidth}
+				\begin{minipage}[c]{\fpeval{1 - 0.065 - #1}\textwidth}
+					\centering
+					\textsf{\caption{\justifying #4\label{#2}}} % Ensure compatibility with hypcap
+				\end{minipage}
+			};
+		\end{tikzpicture}
+	\end{figure}
+	\jonathanskip\vspace{0.05cm}%
+}
+
 % 2 args: includegraphics calls etc., caption
 \newcommand{\makeshiftfig}[2]{
 	\jonathanskip\vspace{1em}
