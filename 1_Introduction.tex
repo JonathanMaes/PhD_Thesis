@@ -4,6 +4,7 @@
 % TODO: talk about machine learning and the advent of neuromorphic computing and the motivation for this research
 
 \section{Reservoir computing}\label{sec:1:RC}\indexlabel{reservoir computing}
+% Great introduction in~\cite{RC_Tensegrity}, also explains ESN and LSM mathematically later: Classical techniques for training recurrent neural networks, such as backpropagation through time [55], approximate a desired output signal by modifying the internal weights of the neural network (as well as the readout weights, if any). This is often cumbersome and difficult to implement correctly, as one needs gradient information to apply the chain rule. Furthermore, backpropagation through time is prone to local minima. Reservoir computing (RC) is a conceptually much simpler technique to train such recurrent neural networks [68]. Instead of modifying the internal weights, the original network is left as is, and only the readout weights are modified. The original network essentially becomes a computational black box. The outcome of this training procedure typically depends on a few parameters that define the regime of the neural network. RC is known under different names, depending on the type of recurrent network that is trained. Most importantly, we distinguish liquid state machines [43] and echo state networks [34, 35]. The core idea of RC, originally applied only to neural networks, has since been extended to other nonlinear dynamical systems, leading to what we call PRC. There have been demonstrations of the RC approach applied to different domains such as photonics [67] and, more abstractly, electronics [3]. All these implementations share the common idea that a system with complex dynamics is perturbed externally but left untouched otherwise, and a simple readout mechanism is trained to perform the desired computational task. While the idea of PRC originated in the context of neural networks, recent theoretical results have extended the applicability of this computational framework immensely, showing that any dynamical system of a given size, obeying easily satisfied constraints, has the same computational power [17].
 \subsection{Motivation}
 \subsection{Origin}
 \subsubsection{ANN}
@@ -72,7 +73,10 @@ Efficient read-out of IP ASI remains challenging, due to the symmetry of the sys
 Finally, for the OOP ASI efficient input (SOT) and read-out (AMR) mechanisms had been demonstrated experimentally, but their potential for RC had not.
 Therefore, this thesis will fill this gap in knowledge and assess the viability of RC with OOP ASI by making use of numerical simulations.
 \paragraph{Electronic}
-\paragraph{Water bucket}
+\paragraph{Other}
+Reservoir computing is not limited to microscopic substrates of an electronic or magnetic nature.
+In fact, the very first example of reservoir computing employed a bucket of water to perform speech recognition: actuators provided input, generating wave patterns that could be used for computation~\cite{PatternRecognition_Bucket}.
+An extreme example of physical reservoir computing is tensegrity --- tensile structures arranged in trusses, consisting of both springs and incompressible bars --- where the body of a robot provides both computation and locomotion~\cite{RC_Tensegrity}.
 
 \section{Artificial spin ice}\label{sec:1:ASI}\indexlabel{artificial spin ice} % TODO END: decide how exactly to use these labels, which words to label like this. Perhaps a good rule of thumb is to label the list of abbreviations, for easy reference to their first occurrence in the text.
 \subsection{Nanomagnet(ism)}
