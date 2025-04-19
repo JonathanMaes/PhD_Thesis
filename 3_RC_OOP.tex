@@ -620,8 +620,11 @@ At the end of this section, several other transformations will also be considere
 \paragraph{Field magnitude}
 \paragraph{Frequency}
 \paragraph{Gradient}
+The baseline system does not include a property gradient.
+By making the magnets on one side of the system bigger than on the other side, the relaxation timescales can be spread out throughout the system, introducing more variation between the single-column readout nodes.
 Quantitatively, a ``gradient of \SI{10}{\percent}'' means that the net OOP anisotropy $\EEA$ and magnetic moment $\mu$ on the right (left) side of the lattice is \SI{10}{\percent} higher (lower) than the average.
-The varying magnetic moment $\mu$ also affects the NN MS coupling: the previously stated constant value of $\EMC = 2.5 \kBT$ now corresponds to the MS coupling between NN if their moment $\mu$ would be equal to the average magnetic moment $\llangle \mu \rrangle$ throughout the ASI. \par
+The varying magnetic moment $\mu$ also affects the NN MS coupling: the previously stated constant value of $\EMC = 2.5 \kBT$ now corresponds to the MS coupling between NN if their moment $\mu$ would be equal to the average magnetic moment $\llangle \mu \rrangle$ throughout the ASI.
+
 \sidefigs[0.53]{3_RC_OOP/Thermally active/Transformation/grad-magn/freq1/averaged.pdf}{3_RC_OOP/Thermally active/Transformation/grad-magn/freq1/details.pdf}{
 	\label{fig:3:Transformation_grad-magn_freq1}
 	Impact of the gradient on the performance of a sine-to-sawtooth signal transformation by an $11 \times 11$ OOP square-lattice ASI reservoir.
@@ -630,6 +633,14 @@ The varying magnetic moment $\mu$ also affects the NN MS coupling: the previousl
 	The black contours correspond to $1/\MSE \sim 30$, encompassing regions where the reservoir performs better than the linear transformation of the original input signal.
 	The panel at the bottom provides a temporal view of the transformation for a gradient of \SI{52}{\percent} and $B_1=\SI{0.45}{\milli\tesla}$, showing the input sine-wave signal (black dotted curve) and target sawtooth signal (black dashed line) alongside the prediction with and without the reservoir (blue and red curve, respectively).
 }
+
+The impact of such a gradient is illustrated in~\cref{fig:3:Transformation_grad-magn_freq1} as a function of the input magnitude $B_1$.
+A low input frequency of $f=\SI{1}{\hertz}$, constant throughout the figure, to assess whether the introduction of a gradient can improve upon the square-wave signal that was generated for low-frequency input in~\cref{fig:3:Transformation_freq-magn_baseline}.
+Indeed, at the optimum gradient of $\approx \SI{50}{\percent}$ for this particular system, the transformation no longer resembles a square wave despite the low frequency. \par
+For even stronger gradients, the performance drops again, as the range of anisotropies $\EEA$ in the system becomes too wide for an input signal to effectively induce dynamics throughout the whole system.
+It can also be noted that the range of suitable input magnitudes $B_1$ expands as the gradient becomes more severe.
+The reason for this is that the range of coercive fields of individual magnets in the system gets wider due to the gradient.
+AS a final note, the minimal input magnitude in this example was chosen as $B_0=\SI{0}{\milli\tesla}$ to illustrate that the value of $B_0$ is clearly identifiable in such heatmaps by a constant and very low value of $1/\MSE$ at $B_1=B_0$.
 
 \paragraph{System size and readout resolution}
 The MSE of the reservoir on the training set is too optimistic a measure for the reservoir performance, but it can be used to check for over-fitting.
