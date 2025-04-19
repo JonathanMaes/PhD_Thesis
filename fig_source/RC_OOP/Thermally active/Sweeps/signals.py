@@ -298,8 +298,8 @@ class SignalTransformationExperiment(hotspice.experiments.Experiment): # An Expe
         # }
         max_func = lambda data: max(1/data["MSE_reservoir"].max(), 1/data["MSE_rawinput"].max()) # Do not use train for max, because it can overfit
         return { ## 1/MSE
-            "MSE_reservoir": SweepMetricPlotparams('ASI reservoir (test)', lambda data: 1/data["MSE_reservoir"], min_value=0, contours=[lambda data: 1/data["MSE_rawinput"].min()], lower_is_better=False), # This can be ultra bad, so set max value to max of MSE_reservoir_train
-            "MSE_reservoir_train": SweepMetricPlotparams('ASI reservoir (train)', lambda data: 1/data["MSE_reservoir_train"], min_value=0, contours=[lambda data: 1/data["MSE_rawinput"].min()], lower_is_better=False), # This will always be the best, so no max_value needed
+            "MSE_reservoir": SweepMetricPlotparams('ASI reservoir (test set)', lambda data: 1/data["MSE_reservoir"], min_value=0, contours=[lambda data: 1/data["MSE_rawinput"].min()], lower_is_better=False), # This can be ultra bad, so set max value to max of MSE_reservoir_train
+            "MSE_reservoir_train": SweepMetricPlotparams('ASI reservoir (training set)', lambda data: 1/data["MSE_reservoir_train"], min_value=0, contours=[lambda data: 1/data["MSE_rawinput"].min()], lower_is_better=False), # This will always be the best, so no max_value needed
             "MSE_rawinput": SweepMetricPlotparams('Raw input (test)', lambda data: 1/data["MSE_rawinput"], min_value=0, max_value=(lambda data: max_func(data)), omit_if_constant=True) # Last, because it is usually constant so we can just cut it off when putting figure in report
         }
 

@@ -37,7 +37,7 @@ class Sweep_SignalTf_ThermalOOPSquare(hotspice.experiments.Sweep):
             'DD_ratio': "NN DD interaction", 'E_B_ratio': "Energy barrier", 'E_B_std': "Energy barrier standard deviation", 'gradient': "Relative gradient",
             'size': "# magnets along each axis", 'DD_exponent': "Exponent of DD interaction", 'T_factor': "Temperature",
             'signal': "Input signal", 'target': "Target signal", 'offset': "Input offset w.r.t. target",
-            'frequency': "Input frequency $f$", 'magnitude': "Field magnitude of largest input", 'magnitude_min_frac': "Input 0/1 field magnitude fraction", 'magnitude_min': "Field magnitude of smallest input",
+            'frequency': "Input frequency $f$", 'magnitude': "Input 1 field magnitude $B_1$", 'magnitude_min_frac': "Input 0/1 field magnitude fraction", 'magnitude_min': "Input 0 field magnitude $B_0$",
             'res_x': "# readout nodes along x-axis", 'res_y': "# readout nodes along y-axis", 'use_constant': "Constant included in OLS"
         }
         units = {'DD_ratio': "$k_BT$", 'E_B_ratio': "$k_BT$", 'T_factor': "$\cross$300K", 'offset': "periods", 'frequency': "Hz", 'magnitude': "T", "magnitude_min": "T"}
@@ -179,6 +179,7 @@ class Sweep_SignalTf_ThermalOOPSquare(hotspice.experiments.Sweep):
             
         if fig_width is None: fig_width = 3.3*panels_x
         if fig_height is None: fig_height = fig_width/panels_x*panels_y*0.8
+        fig: plt.Figure
         fig, axes = plt.subplots(panels_y, panels_x, figsize=(fig_width, fig_height), sharex=True, sharey=True)
         label_x = name_x if unit_x is None else f"{name_x} [{unit_x}]"
         if names_z is None:
@@ -514,19 +515,27 @@ if __name__ == "__main__":
                 'res_x': 11, 'res_y': 1, 'use_constant': True
             },
             "details": [143, 1074, 1976],
-            # "details": [143, 1074],
-            # "details": [1074],
             "show_train": True
         })
         
         ## GRADIENT-MAGNITUDE sweep to determine effect of gradient (at a set frequency)
-        # all_sweeps.append({
-        #     "directory": "grad-magn/freq1",
-        #     "plot_kwargs": {
-        #         "param_x": "gradient",
-        #         "param_y": "magnitude", "unit_y": "mT", "transform_y": lambda y: y*1e3
-        #     }
-        # })
+        all_sweeps.append({
+            "directory": "grad-magn/freq1",
+            "plot_kwargs": {
+                "param_x": "gradient", "unit_x": "%", "transform_x": lambda x: x*1e2,
+                "param_y": "magnitude", "unit_y": "mT", "transform_y": lambda y: y*1e3, "name_y": "Input 1 field magnitude $B_1$"
+            },
+            "sweep_kwargs": {
+                "gradient": np.linspace(0, 1, 26),
+                "magnitude": np.linspace(0e-4, 10e-4, 21),
+                "signal": Signals.SINE, "target": Signals.SAW, "offset": 0,
+                'DD_ratio': 2.5, 'E_B_std': 0.05,
+                'frequency': 1, 'size': 11, 'DD_exponent': -3,
+                'res_x': 11, 'res_y': 1, 'use_constant': True
+            },
+            "details": [282],
+            "show_train": False
+        })
 
         ## GO THROUGH ALL THOSE DIRECTORIES
         plot_kwargs_all = { # Individual plot_kwargs get added to these

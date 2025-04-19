@@ -610,9 +610,16 @@ More specifically, the sine-to-sawtooth transformation will be considered here, 
 \paragraph{Field magnitude}
 \paragraph{Frequency}
 \paragraph{Gradient}
-A ``gradient of \SI{10}{\percent}'' means that the anisotropy $\EEA$ and magnetic moment $\mu$ on the right (left) side of the lattice is \SI{10}{\percent} higher (lower) than the average.
-The NN MS coupling will now also differ throughout the ASI due to the varying magnetic moment $\mu$.
-The previously stated value of $\EMC = 2.5 \kBT$ corresponds to the MS coupling between NN if their moment $\mu$ would be equal to the average magnetic moment $\llangle \mu \rrangle$ throughout the ASI.
+Quantitatively, a ``gradient of \SI{10}{\percent}'' means that the net OOP anisotropy $\EEA$ and magnetic moment $\mu$ on the right (left) side of the lattice is \SI{10}{\percent} higher (lower) than the average.
+The varying magnetic moment $\mu$ also affects the NN MS coupling: the previously stated constant value of $\EMC = 2.5 \kBT$ now corresponds to the MS coupling between NN if their moment $\mu$ would be equal to the average magnetic moment $\llangle \mu \rrangle$ throughout the ASI. \par
+\sidefigs[0.53]{3_RC_OOP/Thermally active/Transformation/grad-magn/freq1/averaged.pdf}{3_RC_OOP/Thermally active/Transformation/grad-magn/freq1/details.pdf}{
+	\label{fig:3:Transformation_grad-magn_freq1}
+	Impact of the gradient on the performance of a sine-to-sawtooth signal transformation by an $11 \times 11$ OOP square-lattice ASI reservoir.
+	The top panel shows the inverse mean squared error $1/\MSE$ as a function of the gradient and amplitude $B_1$, with constant $B_0 = \SI{0}{\milli\tesla}$.
+	Higher (lower) values in yellow (purple) indicate better (worse) performance.
+	The black contours correspond to $1/\MSE \sim 30$, encompassing regions where the reservoir performs better than the linear transformation of the original input signal.
+	The panel at the bottom provides a temporal view of the transformation for a gradient of \SI{52}{\percent} and $B_1=\SI{0.45}{\milli\tesla}$, showing the input sine-wave signal (black dotted curve) and target sawtooth signal (black dashed line) alongside the prediction with and without the reservoir (blue and red curve, respectively).
+}
 
 \paragraph{System size and readout resolution}
 The MSE of the reservoir on the training set is too optimistic a measure for the reservoir performance, but it can be used to check for over-fitting.
