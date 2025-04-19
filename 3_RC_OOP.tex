@@ -643,10 +643,39 @@ The reason for this is that the range of coercive fields of individual magnets i
 AS a final note, the minimal input magnitude in this example was chosen as $B_0=\SI{0}{\milli\tesla}$ to illustrate that the value of $B_0$ is clearly identifiable in such heatmaps by a constant and very low value of $1/\MSE$ at $B_1=B_0$.
 
 \paragraph{System size and readout resolution}
-The MSE of the reservoir on the training set is too optimistic a measure for the reservoir performance, but it can be used to check for over-fitting.
-Typically, when the reservoir provides too many readout nodes for the perceptron, the OLS can fit the weights to random noise in the data rather than on the general trend.
-This is especially concerning in this system, since the relaxation is a stochastic process.
-Such over-fitting then leads to a far lower MSE on the training set than on the test set, as the test set exhibits different noise.
+Increasing the number of magnets $N$ in the ASI reduces the relative impact of thermal noise, since each readout node then averages over more magnets.
+The central limit theorem states that the standard deviation of a mean scales as $1/\sqrt{N}$, so the relaxation trajectories based on $\mavg$ will be more reproducible in larger systems.
+Hence, increasing the size of the system is expected to enhance the transformation quality as the perceptron output then also becomes less noisy. \par
+When each readout node represents the average magnetisation of one column, a square $L_x \times L_y$ ASI yields $p = L_x = L_y$ nodes ($\vc{r}(t) \in \mathbb{R}$).
+However, as $p$ increases, the danger of overfitting increases as well~\cite{DeepRC_IonGating_Overfitting,lukovsevivcius2009reservoir}.
+Overfitting is a general machine learning phenomenon that occurs when a model has too many trainable weights $\vc{w}$ for the limited data it has been given.
+This causes the model to train on noise present in the data --- rather than on the general trend underlying that noisy data --- resulting in worse performance on the test set.
+Since our thermally active OOP ASI reservoir is inherently noisy due to thermal fluctuations, overfitting is a possible concern.
+Overfitting is the main reason why data is typically split into a training and test set, as the $\MSE$ on the training set may be too optimistic a measure for the reservoir performance. \par
+The reservoir performance with such single-column readouts is shown in~\crefSubFigRef{fig:3:Transformation_size-magn}{a}, as measured by $1/\MSE$ on both the training and test sets as a function of $p=L_x=L_y$.
+At small $p$, performance is similar on both the training and test sets.
+However, as $p$ increases, the training performance eventually improves more rapidly than the test performance --- for instance, at $p=100$, the training set $1/\MSE$ is approximately 120, whereas the test set $1/MSE$ barely surpasses 75.
+This is a clear indication of overfitting. \par
+Overfitting can be avoided by limiting the amount of readout nodes, for example by averaging multiple columns together.
+The performance with a total of $p=11$ readout columns is presented in~\crefSubFigRef{fig:3:Transformation_size-magn}{a} as a function of system size $L_x = L_y$ and the input magnitude $B_1$.
+Contrary to the single-column readout, the performance is now equal between the training and test sets, reaching a maximum of $1/\MSE \approx 60$ for $L_x=L_y=30$ beyond which enlarging the system no longer significantly affects the performance.
+
+\vspace{-1em}
+\makeshiftfig{
+	\includegraphics[width=\linewidth]{3_RC_OOP/Thermally active/Transformation/size-magn/resx==size/averaged.pdf}\\
+	%\vspace{-1em}
+	\includegraphics[width=\linewidth]{3_RC_OOP/Thermally active/Transformation/size-magn/resx=11/averaged.pdf}
+	\vspace{-2.5em} % Looks more natural for this figure
+}{
+	\label{fig:3:Transformation_size-magn}
+	Impact of system size on a sine-to-sawtooth signal transformation by an OOP ASI reservoir as measured by the inverse mean squared error $1/\MSE$ as a function of the input magnetic field magnitude $B_1$.
+	The input frequency and minimal magnitude were kept constant at $f=\SI{800}{\hertz}$ and $B_0=\SI{0}{\milli\tesla}$, respectively.
+	Higher (lower) values in yellow (purple) indicate better (worse) performance.
+	The black contours correspond to $1/\MSE \sim 30$, encompassing regions where the reservoir performs better than the linear transformation of the original input signal.
+	In panel \textbf{(a)}, each column of the ASI constitutes an individual readout node, while in panel \textbf{(b)} the number of readout nodes was kept constant at 11 by averaging multiple columns together.
+	The left (right) panels show performance on the test (training) set, to identify overfitting.
+}
+\vspace{-1em}
 
 \paragraph{Exchange/no exchange}
 \paragraph{Transformation}
