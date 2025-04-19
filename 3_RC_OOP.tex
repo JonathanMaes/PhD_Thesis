@@ -598,7 +598,7 @@ The thermally active OOP ASI reservoir should readily have such information avai
 At the end of this section, several other transformations will also be considered.
 %Simulations of the signal transformation task are based on~\cite{gartside2022reconfigurable,AdaptiveProgrammableRC}, and the same thing is done in~\cite{TaskAdaptivePRC}.
 
-\subsubsection{Baseline}
+\subsubsection{Baseline: frequency dependence}
 \vspace{-1em}
 \makeshiftfig{
 	\includegraphics[width=\linewidth]{3_RC_OOP/Thermally active/Transformation/freq-magn/baseline/averaged.pdf}\\
@@ -617,8 +617,7 @@ At the end of this section, several other transformations will also be considere
 \vspace{-1em}
 
 \subsubsection{Parameter dependencies}
-\paragraph{Field magnitude}
-\paragraph{Frequency}
+\paragraph{Field magnitude range}
 \paragraph{Gradient}
 The baseline system does not include a property gradient.
 By making the magnets on one side of the system bigger than on the other side, the relaxation timescales can be spread out throughout the system, introducing more variation between the single-column readout nodes.
@@ -679,6 +678,7 @@ Contrary to the single-column readout, the performance is now equal between the 
 
 \paragraph{Exchange/no exchange}
 \paragraph{Transformation}
+
 \subsection{Signal prediction task: chaotic Mackey-Glass oscillator}
 It is also possible to attempt a signal prediction, which relies more on the fading memory of a reservoir rather than its non-linearity.
 Specifically, the chaotic Mackey-Glass oscillator $\mathrm{MG}(t)$ will be used, and a prediction will be attempted
