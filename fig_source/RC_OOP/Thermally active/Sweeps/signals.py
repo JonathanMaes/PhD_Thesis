@@ -222,7 +222,7 @@ class SignalTransformationExperiment(hotspice.experiments.Experiment): # An Expe
         self.readout_train, self.readout_test = xp.split(sm.add_constant(self.readout_values) if self.use_constant else self.readout_values, [self.N_train])
         self.target_train, self.target_test = xp.split(self.target_values, [self.N_train])
         
-        # (TODO: perhaps use .fit_regularized() instead (with L1_wt=0 and some nonzero alpha), as in "Reconfigurable Training and Reservoir Computing in an Artificial Spin-Vortex Ice via Spin-Wave Fingerprinting")
+        # Uses regularized fit as in "Reconfigurable Training and Reservoir Computing in an Artificial Spin-Vortex Ice via Spin-Wave Fingerprinting")
         signal_train, signal_test = xp.split(sm.add_constant(self.signal_values) if self.use_constant else self.signal_values, [self.N_train])
         self.OLS_rawinput = sm.OLS(self.target_train, signal_train).fit_regularized(alpha=0.001, L1_wt=0)
         self.OLS_reservoir = sm.OLS(self.target_train, self.readout_train).fit_regularized(alpha=0.001, L1_wt=0)

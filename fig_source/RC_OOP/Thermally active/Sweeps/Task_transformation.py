@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+import pickle
 
 from matplotlib import colorbar, colormaps, colors, widgets
 from matplotlib.transforms import Bbox
@@ -276,10 +277,22 @@ class Sweep_SignalTf_ThermalOOPSquare(hotspice.experiments.Sweep):
         fontsize_header = thesis_utils.fs_medium
         fontsize_axes = thesis_utils.fs_small
         fontsize_legend = thesis_utils.fs_small
+        alpha_signal, alpha_target = 0.5, 1.0
+        
         for row, detail in enumerate(details):
+            ## Load experiment, or create and save experiment
             exp: SignalTransformationExperiment = self.get_iteration(detail)[1]
             print(self.get_iteration(detail)[0] | self.constants)
-            exp.run(**experiment_run_kwargs)
+            filename = os.path.join(outdir, f"detail{detail}.pkl")
+            if os.path.exists(filename):
+                with open(filename, 'rb') as infile:
+                    d = pickle.load(infile)
+                    exp.N, exp.t, exp.signal_values, exp.target_values, exp.readout_values = d["N"], d["t"], d["signal_values"], d["target_values"], d["readout_values"]
+            else:
+                exp.run(**experiment_run_kwargs)
+                with open(filename, 'wb') as outfile:
+                    d = {"N": exp.N, "t": exp.t, "signal_values": exp.signal_values, "target_values": exp.target_values, "readout_values": exp.readout_values}
+                    pickle.dump(d, outfile)
             exp.calculate_all()
             
             ## Determine the best-looking part of the data to show in the plot
@@ -309,11 +322,11 @@ class Sweep_SignalTf_ThermalOOPSquare(hotspice.experiments.Sweep):
             if N_cycles is not None:
                 ax1.set_xlim(exp.t[test_slice[0]]/t_scale, exp.t[test_slice[1]]/t_scale)
                 # ax1.set_xlim([np.min(t), min(np.max(t), np.min(t) + N_cycles/self.frequency/t_scale)])
-            line_target, = ax1.plot(t, exp.get_test(exp.target_values), "k--", alpha=1.0)
+            line_target, = ax1.plot(t, exp.get_test(exp.target_values), "k--", alpha=alpha_target)
             line_input_pred, = ax1.plot(t, exp.prediction_rawinput, "r", alpha=0.5)#, label=f"{1/exp.MSE_rawinput:.2f}")
             if row == 0: line_input_pred.set_label(f"{1/exp.MSE_rawinput:.2f}")
             line_reservoir, = ax1.plot(t, exp.prediction_reservoir, "dodgerblue", label=f"{1/exp.MSE_reservoir:.2f}")
-            if show_signal: line_input, = ax1.plot(t, exp.signal_test, "k:", alpha=1.0)
+            if show_signal: line_input, = ax1.plot(t, exp.signal_test, "k:", alpha=alpha_signal)
             ax1.legend(title=r"1/MSE", fontsize=fontsize_legend, loc='lower right', ncol=1, title_fontproperties={'weight':'bold', 'size': fontsize_legend-2}, handlelength=1, handletextpad=0.4)
             ax1.tick_params(axis='both', labelsize=fontsize_axes)
             ax1.xaxis.set_major_locator(plt.MaxNLocator(5))
@@ -326,10 +339,10 @@ class Sweep_SignalTf_ThermalOOPSquare(hotspice.experiments.Sweep):
                 ax2.set_xlim(exp.t[train_slice[0]]/t_scale, exp.t[train_slice[1]]/t_scale)
                 # ax2.set_xlim([np.min(t), min(np.max(t), np.min(t) + N_cycles/self.frequency/t_scale)])
             ax2.set_ylim([-0.1, 1.1])
-            ax2.plot(t, exp.get_train(exp.target_values), "k--", alpha=1.0)
+            ax2.plot(t, exp.get_train(exp.target_values), "k--", alpha=alpha_target)
             ax2.plot(t, exp.fit_rawinput, "r", alpha=0.5)#, label=f"{1/exp.MSE(exp.fit_rawinput, exp.target_train):.2f}")
             ax2.plot(t, exp.fit_reservoir, "dodgerblue", label=f"{1/exp.MSE(exp.fit_reservoir, exp.target_train):.2f}")
-            if show_signal: ax2.plot(t, exp.signal_train, "k:", alpha=1.0)
+            if show_signal: ax2.plot(t, exp.signal_train, "k:", alpha=alpha_signal)
             ax2.legend(title=r"1/MSE", fontsize=fontsize_legend, loc='lower right', ncol=1, title_fontproperties={'weight':'bold', 'size': fontsize_legend-2}, handlelength=1, handletextpad=0.4)
             ax2.tick_params(axis='both', labelsize=fontsize_axes)
             ax2.xaxis.set_major_locator(plt.MaxNLocator(5))
@@ -538,7 +551,7 @@ if __name__ == "__main__":
                 'frequency': 1, 'size': 11, 'DD_exponent': -3,
                 'res_x': 11, 'res_y': 1, 'use_constant': True
             },
-            "details": [282],
+            "details": [281],
             "show_train": False
         })
         
@@ -604,7 +617,7 @@ if __name__ == "__main__":
                        **plot_kwargs)
             if len(details):
                 experiment_run_kwargs = {
-                    'num_periods': 20 if sweep_kwargs.get("signal", Signals.SINE) is not Signals.MACKEYGLASS else 200,
+                    'num_periods': 20 if sweep_kwargs.get("signal", Signals.SINE) is not Signals.MACKEYGLASS else 100,
                     'samples_per_period': 20,
                     'warmup_periods': 5
                 }
