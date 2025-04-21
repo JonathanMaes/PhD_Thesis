@@ -613,6 +613,44 @@ if __name__ == "__main__":
             },
             "show_train": True
         })
+        
+        ## OTHER TRANSFORMATIONS
+        all_sweeps.append({
+            "directory": "freq-magn/target_SINESQ",
+            "plot_kwargs": {
+                "param_x": "frequency",
+                "param_y": "magnitude", "unit_y": "mT", "transform_y": lambda y: y*1e3, "name_y": "Input 1 field magnitude $B_1$",
+                "logarithmic_vars": ["frequency"]
+            },
+            "sweep_kwargs": {
+                "frequency": np.logspace(-4, 5, 28),
+                "magnitude": np.linspace(0e-4, 10e-4, 21),
+                "signal": Signals.SINE, "target": Signals.SINESQUARED, "offset": 0,
+                'DD_ratio': 2.5, 'E_B_std': 0.05,
+                'gradient': 0, 'size': 11, 'DD_exponent': -3,
+                'res_x': 11, 'res_y': 1, 'use_constant': True
+            },
+            "details": [236],
+            "show_train": False
+        })
+        all_sweeps.append({
+            "directory": "freq-magn/target_SQUARE",
+            "plot_kwargs": {
+                "param_x": "frequency",
+                "param_y": "magnitude", "unit_y": "mT", "transform_y": lambda y: y*1e3, "name_y": "Input 1 field magnitude $B_1$",
+                "logarithmic_vars": ["frequency"]
+            },
+            "sweep_kwargs": {
+                "frequency": np.logspace(-4, 5, 28),
+                "magnitude": np.linspace(0e-4, 10e-4, 21),
+                "signal": Signals.SINE, "target": Signals.SQUARE, "offset": 0,
+                'DD_ratio': 2.5, 'E_B_std': 0.05,
+                'gradient': 0, 'size': 11, 'DD_exponent': -3,
+                'res_x': 11, 'res_y': 1, 'use_constant': True
+            },
+            "details": [113],
+            "show_train": False
+        })
 
         ## GO THROUGH ALL THOSE DIRECTORIES
         plot_kwargs_all = { # Individual plot_kwargs get added to these

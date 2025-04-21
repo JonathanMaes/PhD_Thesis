@@ -697,8 +697,25 @@ Contrary to the single-column readout, the performance is now equal between the 
 }
 \vspace{-1em}
 
-\paragraph{Exchange/no exchange}
-\paragraph{Transformation}
+\paragraph{Double-frequency transformation}
+For an appropriate set of system parameters --- with the input being applied at the right frequency and strength --- other transformations than the sine-to-sawtooth transformation can be targeted without changing the system.
+Only the weights $\vc{w}$ of the perceptron have to be adjusted.
+For example,~\cref{fig:3:Transformation_freq-magn_SINESQ} shows results for a double-frequency sine wave as target function. \par
+For this transformation, the best fit attainable with a linear scaling of the input signal is simply a constant, as represented by the red line in the waveform at the bottom of~\cref{fig:3:Transformation_freq-magn_SINESQ}.
+
+\sidefigs[0.53]{3_RC_OOP/Thermally active/Transformation/freq-magn/target_SINESQ/Sweep20231023131601.pdf}{3_RC_OOP/Thermally active/Transformation/freq-magn/target_SINESQ/details.pdf}{
+	\label{fig:3:Transformation_freq-magn_SINESQ}
+	Transformation of a sine wave input signal into a double-period sine wave by an $11 \times 11$ OOP square-lattice ASI reservoir.
+	The top panel shows the inverse mean squared error $1/\MSE$ as a function of the input frequency and amplitude $B_1$, with constant $B_0 = \SI{0}{\milli\tesla}$.
+	Higher (lower) values in yellow (purple) indicate better (worse) performance.
+	The black contours correspond to $1/\MSE \sim 8$, encompassing regions where the reservoir performs better than the linear transformation of the original input signal.
+	The panel at the bottom provides a temporal view of the transformation for $f=\SI{0.5}{\hertz}$ and $B_1=\SI{0.25}{\milli\tesla}$, showing the input sine-wave signal (black dotted curve) and target double-frequency sine (black dashed line) alongside the prediction with and without the reservoir (blue and red curve, respectively).
+}
+
+For the ASI to accurately produce a double-frequency sine, the input frequency must not be too high, as otherwise the system dynamics can not keep up to accurately produce a sine of double that period.
+Therefore, the quality of the double-period sine quickly deteriorates above the critical frequency $f_c \approx \SI{10}{\hertz}$.
+It is no coincidence that this value is similar to the timescale at which $\mavg \approx 0$ in panel 8 of~\cref{fig:3:OOP_relaxation}, which shows the relaxation in the absence of external stimuli for this system.
+The same cut-off at $f_c$ is observed when the target is a square wave, though this is not displayed in a figure as a sine-to-square transformation is not otherwise noteworthy.
 
 \subsection{Signal prediction task: chaotic Mackey-Glass oscillator}
 It is also possible to attempt a signal prediction, which relies more on the fading memory of a reservoir rather than its non-linearity.
