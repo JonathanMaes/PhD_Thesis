@@ -608,7 +608,7 @@ At the end of this section, several other transformations will also be considere
 }{
 	\label{fig:3:Transformation_freq-magn_baseline}
 	Monte Carlo simulations of a sine-to-sawtooth signal transformation performed by a thermally active $11 \times 11$ OOP square-lattice ASI reservoir.
-	The top panel shows the inverse mean squared error $1/\MSE$ as a function of the input magnetic field frequency $f$ and amplitude $B_1$, with constant $B_0 = \SI{-0.35}{\milli\tesla}$.
+	The top panel shows the inverse mean squared error $1/\MSE$ as a function of the input magnetic field frequency $f$ and amplitude $B_1$, with constant $B_0 = \SI{-0.35}{\milli\tesla}$, averaged over 5 runs with random $\sigma(\EEA)=\SI{5}{\percent}$ defects.
 	Higher (lower) values in yellow (purple) indicate better (worse) performance.
 	The black contours correspond to $1/\MSE \sim 30$, encompassing regions where the reservoir performs better than the linear transformation of the original input signal.
 	In the top figure, several points are indicated with Roman numerals, corresponding to the panels at the bottom of the figure which show a temporal view of the transformation.
@@ -618,16 +618,37 @@ At the end of this section, several other transformations will also be considere
 
 \subsubsection{Parameter dependencies}
 \paragraph{Field magnitude range}
+The minimal field magnitude $B_0$ for the baseline system in~\cref{fig:3:Transformation_freq-magn_baseline} was set to \SI{-0.35}{\milli\tesla}.
+This was determined through a similar parameter sweep over $B_0$ and $B_1$, at a constant frequency $f=\SI{100}{\hertz}$ since this corresponds to the timescale at which this system reaches $\mavg \approx 0$ (according to panel 8 in~\cref{fig:3:OOP_relaxation}).
+The results of this parameter sweep for the baseline system are presented in~\cref{fig:3:Transformation_magn-magnmin}: 
+indeed, optimal performance is found around $B_0=\SI{-0.35}{\milli\tesla}$.
+
+\vspace{-1em}
+\sidefig[0.53]{3_RC_OOP/Thermally active/Transformation/magn-magnmin/averaged.pdf}{
+	\label{fig:3:Transformation_magn-magnmin}
+	Inverse mean squared error $1/\MSE$ of a sine-to-sawtooth signal transformation using a thermally active $11 \times 11$ OOP square-lattice ASI, as a function of the input magnetic field range $B_0 \rightarrow B_1$ at a constant input frequency $f=\SI{100}{\hertz}$.
+	Averaged results are shown over 5 runs with random $\sigma(\EEA)=\SI{5}{\percent}$ defects.
+	Higher (lower) values in yellow (purple) indicate better (worse) performance.
+	The black contours correspond to $1/\MSE \sim 30$, encompassing regions where the reservoir performs better than the linear transformation of the original input signal.
+}
+
+A point symmetry is visible about the origin of~\cref{fig:3:Transformation_magn-magnmin}: $\MSE(B_0, B_1) = \MSE(-B_0, -B_1)$.
+The reason for this is the planar symmetry of the ASI, whose operation remains identical when it is flipped upside down.
+While the optimal input frequency often remains of a similar order of magnitude regardless of the transformation --- since the frequency is mostly dictated by the relaxation dynamics --- the optimal range of input field magnitudes is highly dependent on the desired transformation.
+For example, performance is somewhat reduced along the $B_0 = -B_1$ diagonal for the sine-to-sawtooth transformation considered here because this choice of input puts the sharp drop of the sawtooth at the moment when the input field is zero.
+Other transformations can behave very differently: this kind of $\MSE(B_0, B_1)$-map can be used to identify their optimal input field range at a given frequency.
+
 \paragraph{Gradient}
 The baseline system does not include a property gradient.
 By making the magnets on one side of the system bigger than on the other side, the relaxation timescales can be spread out throughout the system, introducing more variation between the single-column readout nodes.
 Quantitatively, a ``gradient of \SI{10}{\percent}'' means that the net OOP anisotropy $\EEA$ and magnetic moment $\mu$ on the right (left) side of the lattice is \SI{10}{\percent} higher (lower) than the average.
 The varying magnetic moment $\mu$ also affects the NN MS coupling: the previously stated constant value of $\EMC = 2.5 \kBT$ now corresponds to the MS coupling between NN if their moment $\mu$ would be equal to the average magnetic moment $\llangle \mu \rrangle$ throughout the ASI.
 
+\vspace{-1em}
 \sidefigs[0.53]{3_RC_OOP/Thermally active/Transformation/grad-magn/freq1/averaged.pdf}{3_RC_OOP/Thermally active/Transformation/grad-magn/freq1/details.pdf}{
 	\label{fig:3:Transformation_grad-magn_freq1}
 	Impact of the gradient on the performance of a sine-to-sawtooth signal transformation by an $11 \times 11$ OOP square-lattice ASI reservoir.
-	The top panel shows the inverse mean squared error $1/\MSE$ as a function of the gradient and amplitude $B_1$, with constant $B_0 = \SI{0}{\milli\tesla}$.
+	The top panel shows the inverse mean squared error $1/\MSE$ as a function of the gradient and amplitude $B_1$, with constant $B_0 = \SI{0}{\milli\tesla}$, averaged over 5 runs with random $\sigma(\EEA)=\SI{5}{\percent}$ defects.
 	Higher (lower) values in yellow (purple) indicate better (worse) performance.
 	The black contours correspond to $1/\MSE \sim 30$, encompassing regions where the reservoir performs better than the linear transformation of the original input signal.
 	The panel at the bottom provides a temporal view of the transformation for a gradient of \SI{52}{\percent} and $B_1=\SI{0.45}{\milli\tesla}$, showing the input sine-wave signal (black dotted curve) and target sawtooth signal (black dashed line) alongside the prediction with and without the reservoir (blue and red curve, respectively).
@@ -667,7 +688,7 @@ Contrary to the single-column readout, the performance is now equal between the 
 	\vspace{-2.5em} % Looks more natural for this figure
 }{
 	\label{fig:3:Transformation_size-magn}
-	Impact of system size on a sine-to-sawtooth signal transformation by an OOP ASI reservoir as measured by the inverse mean squared error $1/\MSE$ as a function of the input magnetic field magnitude $B_1$.
+	Impact of system size on a sine-to-sawtooth signal transformation by an OOP ASI reservoir as measured by the inverse mean squared error $1/\MSE$ as a function of the input magnetic field magnitude $B_1$, averaged over 5 runs with random $\sigma(\EEA)=\SI{5}{\percent}$ defects.
 	The input frequency and minimal magnitude were kept constant at $f=\SI{800}{\hertz}$ and $B_0=\SI{0}{\milli\tesla}$, respectively.
 	Higher (lower) values in yellow (purple) indicate better (worse) performance.
 	The black contours correspond to $1/\MSE \sim 30$, encompassing regions where the reservoir performs better than the linear transformation of the original input signal.

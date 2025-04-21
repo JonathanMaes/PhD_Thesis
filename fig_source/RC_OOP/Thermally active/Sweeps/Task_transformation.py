@@ -559,6 +559,25 @@ if __name__ == "__main__":
             "show_train": False
         })
         
+        ## MINIMAL MAGNITUDE vs. MAGNITUDE sweep to determine optimal minimal magnitude (at a set frequency)
+        all_sweeps.append({
+            "directory": "magn-magnmin/freq100",
+            "plot_kwargs": {
+                "param_x": "magnitude_min", "unit_x": "mT", "transform_x": lambda x: x*1e3,
+                "param_y": "magnitude", "unit_y": "mT", "transform_y": lambda y: y*1e3
+            },
+            "sweep_kwargs": {
+                "magnitude_min": np.linspace(-5e-4, 5e-4, 21),
+                "magnitude": np.linspace(-5e-4, 5e-4, 21),
+                'DD_ratio': 2.5, 'E_B_std': 0.05, 'gradient': 0, # Extreme case with DD_ratio = 0, just to make sure we are seeing the effect of J here
+                'size': 11, 'DD_exponent': -3,
+                'signal': Signals.SINE, 'target': Signals.SAW, 'offset': 0,
+                'frequency': 100,
+                'res_x': 11, 'res_y': 1, 'use_constant': True
+            },
+            "show_train": False
+        })
+        
         ## SIZE vs. MAGNITUDE (both res_x==size and res_x=11)
         all_sweeps.append({
             "directory": "size-magn/resx==size",
