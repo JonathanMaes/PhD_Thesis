@@ -133,6 +133,10 @@ class Sweep_SignalTf_ThermalOOPSquare(hotspice.experiments.Sweep):
             else:
                 for i, metric_params in enumerate(metrics_dict.values()):
                     metrics[i] = np.asarray(metric_params.data_extractor(data)).reshape(len(x_vals), -1)
+                    if param_x != data.df.columns[0]:
+                        metrics[i] = metrics[i].T
+                        if param_x != data.df.columns[1] or vary_name != data.df.columns[0]:
+                            raise ValueError("Parameters to be plotted are not the first two columns in dataframe. Use check=True in sweep.plot().")
             for i, metric in enumerate(metrics):
                 all_metrics[i] += np.asarray(metric)
         all_metrics = [metric/len(summary_files) for metric in all_metrics]
