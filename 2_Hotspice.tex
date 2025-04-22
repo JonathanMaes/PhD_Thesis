@@ -178,7 +178,7 @@ These $\mathcal{I}$ are calculated similar to a moment of inertia:
 \begin{equation}
 	\mathcal{I}_i = \int_{\Omega_i} \abs{\vc{r} - \ab(\int_{\Omega_i} \vc{r} d\vc{r})}^2 d\vc{r} \mathrm{,}
 \end{equation}
-with $\Omega_i$ the volume of magnet $i$.
+with $\Omega_i$ the geometry of magnet $i$.
 We assume all magnets have the same shape, such that $\mathcal{I}_{ij} = \mathcal{I}_i = \mathcal{I}_j$.
 For elliptic cylinders, these moments of inertia reduce to the simple expression $\mathcal{I}_{ij} = \frac{1}{4}(a^2 + b^2)$.
 Therefore, \hotspice assumes the magnets in an ASI to be round (OOP ASI, e.g.~\cite{PerpendicularMagnetizationASI}) or elliptical (IP ASI), and allows the user to set the semi-major axis $a$ and semi-minor axis $b$ of the magnets comprising an ASI.
