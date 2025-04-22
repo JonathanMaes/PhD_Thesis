@@ -303,7 +303,7 @@ class SignalTransformationExperiment(hotspice.experiments.Experiment): # An Expe
             "MSE_rawinput": SweepMetricPlotparams('Raw input (test)', lambda data: 1/data["MSE_rawinput"], min_value=0, max_value=(lambda data: max_func(data)), omit_if_constant=True) # Last, because it is usually constant so we can just cut it off when putting figure in report
         }
 
-    def plot(self, N_cycles: int = None, show=True, show_signal=True, samples_per_period=None, fig_height=3):
+    def plot(self, N_cycles: int = None, show=True, show_signal=True, samples_per_period=None, fig_height=3, ax: plt.Axes = None):
         ## Plot font sizes
         fontsize_header = 14
         fontsize_axes = 16
@@ -324,12 +324,14 @@ class SignalTransformationExperiment(hotspice.experiments.Experiment): # An Expe
         test_slice = (best_start_idx, best_start_idx + N_idx_full)
         
         ## Draw the plots
-        fig, axes = plt.subplots(1, 2, figsize=(14, fig_height))
-        fig.suptitle(f"{self.signal.name} $\\rightarrow$ {self.target.name}", x=0.01, ha='left', fontsize=fontsize_header)
+        if ax is None:
+            fig, axes = plt.subplots(1, 2, figsize=(14, fig_height))
+            fig.suptitle(f"{self.signal.name} $\\rightarrow$ {self.target.name}", x=0.01, ha='left', fontsize=fontsize_header)
         t_rescaled, t_unit = hotspice.utils.appropriate_SIprefix(self.t)
         t_scale = 10**hotspice.utils.SIprefix_to_magnitude[t_unit]
         
-        ax1: Axes = axes[0]
+        if ax is None: ax1: Axes = axes[0]
+        else: ax1 = ax
         ax1.set_title(f"Training set", fontsize=fontsize_header)
         ax1.set_xlabel(f"Time ({t_unit}s)", fontsize=fontsize_axes)
         ax1.set_ylim([-0.1, 1.1])
@@ -344,6 +346,7 @@ class SignalTransformationExperiment(hotspice.experiments.Experiment): # An Expe
         ax1.legend(title=r"1/MSE", fontsize=fontsize_legend, loc='lower right', ncol=1, title_fontproperties={'weight':'bold', 'size': fontsize_legend-2})
         ax1.tick_params(axis='both', labelsize=fontsize_axes)
         ax1.xaxis.set_major_locator(plt.MaxNLocator(5))
+        if ax is not None: return
         
         ax2: Axes = axes[1]
         ax2.set_title(f"Test set", fontsize=fontsize_header)
@@ -361,7 +364,7 @@ class SignalTransformationExperiment(hotspice.experiments.Experiment): # An Expe
         ax2.tick_params(axis='both', labelsize=fontsize_axes)
         ax2.xaxis.set_major_locator(plt.MaxNLocator(5))
         
-        fig.legend(handles=[line_input, line_target, line_input_pred, line_reservoir, line_input], labels=["Input signal", "Target", "Prediction with input only", "Prediction with ASI"],
+        fig.legend(handles=[line_input, line_target, line_input_pred, line_reservoir], labels=["Input signal", "Target", "Prediction with input only", "Prediction with ASI"],
                    loc='upper center', ncol=4, fontsize=fontsize_header)
         fig.tight_layout()
         # fig.subplots_adjust(left=0.1, right=0.99)

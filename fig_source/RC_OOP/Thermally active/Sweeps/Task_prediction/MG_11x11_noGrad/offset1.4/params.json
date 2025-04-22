@@ -1,0 +1,19 @@
+{
+	"n_avg": 5,
+	"static_params": {
+		"size": 11,
+		"res_x": 11,
+		"E_B_ratio": 20,
+		"DD_ratio": 2.5,
+		"gradient": 0,
+		"signal": "MackeyGlass",
+		"target": "MackeyGlass",
+		"offset": 1.4,
+		"num_periods": 1000
+	},
+	"variables": {
+		"frequency_log": [2, 5],
+		"magnitude": [0, 0.0007],
+		"magnitude_min": [-0.0007, 0]
+	}
+}
