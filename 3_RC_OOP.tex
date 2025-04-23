@@ -928,7 +928,7 @@ Since some information from previous input cycles is often retained in this mann
 Even though this system is non-volatile and defect-free, it can still exhibit some stochasticity.
 One clear example of this is found in~\cref{fig:3:Clocking_clearly_EBstd0}: even though the three magnets at the bottom right switch during the first $A$-cycle, they do not switch during the first $B$-cycle.
 The reason for this is the relatively low MS coupling $\EMC=40\kBT$, due to which the input strength must strike a delicate balance to avoid switching magnets that are not part of a domain wall.
-These events can be suppressed by increasing the MS coupling, though a stronger input is then also required. \\\par
+These events can be suppressed by increasing the MS coupling, though a stronger input is then also required. \par % \\\par
 
 Note also that, during the $B$-cycles in~\cref{fig:3:Clocking_clearly_EBstd0}, the central white-coloured domain does not re-grow with the same Petit-Beurre-shape\footnote{
 	The ``Petit Beurre'' is a French biscuit decorated with serrated edges and four corners in the shape of ears, schematically resembling the central white-coloured domain that appears during the $A$-cycles of~\cref{fig:3:Clocking_clearly_EBstd0}.
@@ -1091,7 +1091,7 @@ As envisioned, the clocking protocol indeed yields a relatively high memory capa
 The parity check reveals that, on average, the parity of the previous 3 input cycles can be recalled over a wide range of the metric map.
 That the parity check reaches higher values than the memory capacity was to be expected, as it is specifically tailored to binary input data whereas memory capacity is more generally applicable to scalar data, though the parity check also includes a notion of non-linearity.
 These metrics provide more insight than the matrix rank-based metrics, as they can directly be related to the performance of the system for certain tasks --- some tasks mostly rely on fading memory while others mostly require non-linearity, and yet others prefer a mix of both. \par
-While $<3$ bits of memory may not sound like much, it is comparable to the memory capacity and parity check of other magnetic reservoirs~\cite{AdaptiveProgrammableRC,hon2021numerical,tsunegi2019STOforcedsyncRC,Venkat_2024}. % AdaptiveProgrammableRC is similar when using a normal square ASI, but width-modulated and pinwheel ASI perform better.
+While $<3$ bits of memory may sound low, it is comparable to the memory capacity and parity check of other magnetic reservoirs~\cite{AdaptiveProgrammableRC,hon2021numerical,tsunegi2019STOforcedsyncRC,Venkat_2024}. % AdaptiveProgrammableRC is similar when using a normal square ASI, but width-modulated and pinwheel ASI perform better.
 Higher performance can be achieved by using general RC architectures like the rotating neurons reservoir~\cite{RotatingNeuronsRC} or the single dynamical node paradigm~\cite{appeltant2011information}, as for example used in~\ccite{Venkat_2024,Vidamour2023}.
 However, here we only consider the performance of the clocked ASI by itself, as these architectures can be applied to any reservoir.
 
