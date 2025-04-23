@@ -1094,15 +1094,15 @@ This slow convergence near the critical point is due to a well-known phenomenon 
 % TODO: ? why the discrepancy in the correlation?
 
 \paragraph{Critical slowing down}
-As the correlation length $\xi$ diverges at a second-order \xref{phase transition}, the autocorrelation time $\tau$ will increase as $L^z$ in finite systems of linear size $L$~\cite{NumericalDynamicalNiedermayer}.
+As the correlation length $\xi$ diverges at a second-order \xref{phase transition}, the autocorrelation time $\Theta$ will increase as $L^z$ in finite systems of linear size $L$~\cite{NumericalDynamicalNiedermayer}.
 The \xlabel{dynamical critical exponent} $z$ is typically $\gtrsim 2$ for local dynamics --- \textit{Niedermayer}~\cite{niedermayer1988general} notes that this is intuitively analogous to the problem of a random walk, where $\order{R^2}$ steps are required to traverse a distance $R$.
 The significant rise in the autocorrelation time causes successive Monte Carlo configurations to be highly correlated, resulting in a very slow exploration of the phase space that impedes convergence towards equilibrium~\cite{NumericalDynamicalNiedermayer,CompStatPhys,StatisticalMechanicsAlgorithmsComputations}. \par
 This phenomenon is termed \idx{critical slowing down} in second-order phase transitions --- supercritical slowing down is an analogous phenomenon for discontinuous transitions~\cite{PhD_Reynal}.
 It is particularly problematic for single-spin flip algorithms like \xref{Metropolis-Hastings sampling}, as single-spin flips are no longer physically relevant in this region~\cite{PhD_Reynal}.
 Such local-update Monte Carlo algorithms only change a small portion of the system in each step, resulting in minimal differences between successive states.
-Consequently, even after many MCS, the number of statistically independent configurations remains low, as the large autocorrelation time yields a very low effective number of independent samples $N_\mathrm{eff} = N_\mathrm{MCS}/\tau$~\cite{niedermayer1988general,BeatCriticalSlowingDown1990}. \par
+Consequently, even after many MCS, the number of statistically independent configurations remains low, as the large autocorrelation time yields a very low effective number of independent samples $N_\mathrm{eff} = N_\mathrm{MCS}/\Theta$~\cite{niedermayer1988general,BeatCriticalSlowingDown1990}. \par
 
-While CSD is to some extent an inherent property of the physical system --- physical quantities like $\xi$ and $\tau$ diverge near the \xref{phase transition} --- the choice of simulation algorithm also has a significant impact~\cite{PhD_Reynal}.
+While CSD is to some extent an inherent property of the physical system --- physical quantities like $\xi$ and $\Theta$ diverge near the \xref{phase transition} --- the choice of simulation algorithm also has a significant impact~\cite{PhD_Reynal}.
 By employing algorithms that make abstraction of the time variable, we need not be limited by the divergent autocorrelation time. % TODO: fully address Jonathan's comment on this
 Because CSD originates from long-range correlations, the \link{Metropolis-Hastings sampling}{Metropolis-Hastings algorithm} exacerbates the issue due to its single-spin flip nature.
 Other algorithms have been devised that alleviate CSD by non-local spin updates, thereby acting on collective modes~\cite{BeatCriticalSlowingDown1990}.
