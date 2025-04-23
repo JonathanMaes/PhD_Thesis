@@ -167,7 +167,7 @@ def plot_MSE_offset(ax: plt.Axes, params: list, data: list, legend_cols: int = 0
     ax.errorbar(offsets, results_avg["MSE_reservoir_test"], yerr=results_std["MSE_reservoir_test"], marker="H", color="b", label=f"Reservoir (test)")
     ax.errorbar(offsets, results_avg["MSE_reservoir_train"], yerr=results_std["MSE_reservoir_train"], linestyle=":", color='b', alpha=0.5, label=f"Reservoir (train)")
     ax.set_ylabel("MSE", fontsize=fontsize_axes)
-    ax.set_xlabel(r"Offset $h/f_\mathrm{MG}$", fontsize=fontsize_axes)
+    ax.set_xlabel(r"Offset $h$", fontsize=fontsize_axes)
     ax.set_ylim(bottom=0)
     ax.tick_params(axis='both', labelsize=fontsize_axes)
     if len(idx0 := np.where(offsets == 0)[0]): # offset=0 shows the minimum possible MSE, because there only thermal noise creates discrepancy

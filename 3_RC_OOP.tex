@@ -744,11 +744,60 @@ It is no coincidence that this value is similar to the timescale at which $\mavg
 The same cut-off at $f_c$ is observed when the target is a square wave, though this is not displayed in a figure as a sine-to-square transformation is not otherwise noteworthy.
 
 \subsection{Signal prediction task: chaotic Mackey-Glass oscillator}
-It is also possible to attempt a signal prediction, which relies more on the fading memory of a reservoir rather than its non-linearity.
-Specifically, the chaotic Mackey-Glass oscillator $\mathrm{MG}(t)$ will be used, and a prediction will be attempted
-$\mathrm{MG}(t) \rightarrow \mathrm{MG}(t+\Delta t)$, $\Delta t > 0$.~\cite{MackeyGlass}
-% TODO: Mackey-Glass equations and parameters used
-To find the optimal performance for a Mackey-Glass prediction, we will once again utilise Bayesian optimisation.
+A special kind of ``transformation'' is a signal prediction, where the target function $y(t) = s(t + \Delta t)$ is essentially the input signal offset through time.
+Such a prediction task can make use of the fading memory property of a reservoir to better infer the future evolution of the signal, while it benefits less from a reservoir's non-linearity~\cite{TaskAdaptivePRC}.
+The particular signal we will be attempting to predict with the thermally active OOP ASI is the chaotic Mackey-Glass oscillator $\mathrm{MG}(t)$~\cite{MackeyGlass}, as this is a popular benchmark in literature~\cite{RotatingNeuronsRC,AdaptiveProgrammableRC,TaskAdaptivePRC,Moon_2021,JaegerHaasWireless,ArchitecturalMarkovianESN}.
+It can not be written in closed form; instead, it is implicitly defined by the delay-differential equation
+\begin{equation}
+	\label{eq:3:MG}
+	\frac{d\mathrm{MG}(t)}{dt} = \frac{\beta \mathrm{MG}(t - \tau)}{1 + \mathrm{MG}(t - \tau)^n} - \gamma \mathrm{MG}(t) \mathrm{,}
+\end{equation}
+which was discretised by a time step $\tau/1000$ following~\ccite[Appendix A]{MeasuringStrangenessAttractors}.
+Typical values for the parameters $\beta=0.2, \gamma=0.1$ and $n=10$ were used.
+For $\tau \gtrsim 16.8$, this system is chaotic~\cite{jaeger2001echo}: $\tau=23$ was used here to get sufficiently chaotic behaviour, though $\tau=17$ is a more common choice.
+To extinguish transients after releasing the oscillator from its initial state (set to $\mathrm{MG}(t \leq 0) = 0.5$), a first timeframe of $t \leq 25\tau$ is discarded.
+Meanwhile, the extrema attained during this initial timeframe were recorded to allow a scaling of subsequent input to the appropriate field range between $B_0$ and $B_1$. \par
+While the Mackey-Glass oscillator is not strictly periodic, its delay parameter $\tau$ still provides a characteristic timeframe for its oscillations.
+Therefore, the specific transformation attempted here is written as
+\begin{equation}
+	s(t) = \mathrm{MG}(ft\tau) \mapsto y(t) = \mathrm{MG}((ft + h)\tau) \mathrm{,}
+\end{equation}
+where $f$ fulfils the role of a ``frequency'' to synchronise the Mackey-Glass oscillator with the reservoir's relaxation dynamics despite the non-periodic nature of the signal.
+This also provides the definition of the ``offset'' $h$, i.e. a dimensionless measure for how far ahead the reservoir must predict, which has a large impact on the quality of the prediction. \\\par
+
+The previous discussion regarding the signal transformation task demonstrated that many system parameters --- including the input frequency $f$, the input magnitudes $B_0$ and $B_1$, the size $L_x \times L_y$ of the ASI, the \xref{property gradient} $\Gamma$, the number of readout nodes $p$ \dots --- affect the transformation quality.
+Since the absolute values of $f$, $B_0$ and $B_1$ provide limited additional insight, we will henceforth use Bayesian optimisation~\cite{BayesOpt_Mockus1975} over the $f \times B_0 \times B_1$-space to identify the optimal input characteristics for a given ASI. \par % This was not done for the figures relating to the signal transformation task, as it would be prohibitively expensive to compute the optimal system parameters for each pixel in those figures.
+This allows us to concentrate on the most critical variable for a prediction task: the offset $h$, whose impact is illustrated in~\crefSubFigRef{fig:3:Prediction_MG}{a} for three particular systems with a different size and \xref{property gradient}.
+For the systems with a gradient, $\Gamma$ was also optimised during the Bayesian optimisation procedure, which typically yields $\Gamma \approx \SIrange{25}{30}{\percent}$, though less severe gradients also perform decently. \par
+
+Most strikingly, as a function of the offset $h$, the optimum MSE\footnote{
+	\crefSubFigRef{fig:3:Prediction_MG}{a} uses $\MSE$ rather than $1/\MSE$, as $1/\MSE$ for $h=0$ is much larger than for other $h > 0$.
+	Furthermore, it is most common in literature to use $\MSE$ when reported as a function of the offset $h$.
+} exhibits both a maximum and a minimum.
+The resulting wave-like appearance of $\MSE(h)$, typical for this kind of input signal~\cite{AdaptiveProgrammableRC}, originates from the definition of $\mathrm{MG}(t)$ as a delay-differential equation~\eqref{eq:3:MG}.
+The characteristic delay $\tau$ makes it easier to predict $\mathrm{MG}(t + \tau)$ --- a delay $\tau$ corresponds to $h=1$, which closely aligns with the observed minimum of $\MSE(h)$.
+For larger offsets $h$, more such minima will appear close to $h \in \mathbb{N}$, though they become increasingly less pronounced because the oscillator is not strictly periodic over $\tau$.
+The height of the first maximum can be used as a performance indicator to compare different reservoirs. \par
+The performance at $h=0$ presents the limit of what the thermally active ASI reservoir can achieve, due to the stochastic nature of the relaxation process it employs.
+Unsurprisingly, this limit improves by adding a gradient and increasing the system size.
+
+\vspace{-1em}
+\xfig{3_RC_OOP/Thermally active/Prediction/MG.pdf}{
+	\label{fig:3:Prediction_MG}
+	Performance of a thermally active OOP square-lattice ASI on a prediction task for the Mackey-Glass oscillator, for ASI of different size and gradient $\Gamma$.
+	The number of readout nodes is fixed at $p=11$ for the $11 \times 11$ systems and $p=10$ for the $20 \times 20$ ASI.
+	\textbf{(a)} Mean-squared error as a function of the offset $h$, for the reservoir prediction (blue) and a linear transformation of the original input signal (red).
+	The ultimate performance limit of each reservoir, i.e. $\MSE(h=0)$, is indicated by the horizontal grey dotted line.
+	\textbf{(b)} Comparison of waveforms generated by an $11 \times 11$ ASI without a gradient (left) and a $20 \times 20$ ASI with a gradient $\Gamma = \SI{10}{\percent}$ (right), both for an offset $h=1.4$.
+}
+\vspace{-0.5em}
+
+The $11 \times 11$ ASI reservoir without gradient (blue) only outperforms a linear scaling of the input (red) for $h > 0.4$.
+Including a gradient and enlarging the system improves the $\MSE$, though the gradient appears more impactful than a subsequent enlargement.
+More importantly than the $\MSE$, the resulting waveform is also of better quality, as~\crefSubFigRef{fig:3:Prediction_MG}{b} shows for $h=1.4$.
+The smaller ASI without gradient struggles to reproduce the peaks of the desired waveform, as it only responds in a narrow field range.
+On the other hand, the larger ASI with an appreciable gradient $\Gamma \approx \SI{25}{\percent}$ contains magnets of various coercive fields, enabling it to capture both the peaks (valleys) since these are likely to coincide with low (high) input fields.
+%Besides the peaks and valleys, also the relatively constant $y(t)$ from $t=\SIrange{0.732}{0.736}{\second}$ is captured decently by the reservoir.
 
 \subsection{Conclusion}
 % TODO: MORE REF? Actual numbers?
