@@ -35,7 +35,7 @@ class Sweep_SignalTf_ThermalOOPSquare(hotspice.experiments.Sweep):
             'res_x': None, 'res_y': None, 'use_constant': True
             } | kwargs # Dict with all parameter values as tuples of length 1 or greater
         names = {
-            'DD_ratio': "NN DD interaction", 'E_B_ratio': "Energy barrier", 'E_B_std': "Energy barrier standard deviation", 'gradient': "Relative gradient",
+            'DD_ratio': "NN DD interaction", 'E_B_ratio': "Energy barrier", 'E_B_std': "Energy barrier standard deviation", 'gradient': r"Property gradient $\Gamma$",
             'size': "# magnets along each axis $L_x = L_y$", 'DD_exponent': "Exponent of DD interaction", 'T_factor': "Temperature",
             'signal': "Input signal", 'target': "Target signal", 'offset': "Input offset w.r.t. target",
             'frequency': "Input frequency $f$", 'magnitude': "Input 1 field magnitude $B_1$", 'magnitude_min_frac': "Input 0/1 field magnitude fraction", 'magnitude_min': "Input 0 field magnitude $B_0$",
