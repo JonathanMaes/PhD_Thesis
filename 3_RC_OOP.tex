@@ -800,10 +800,23 @@ On the other hand, the larger ASI with an appreciable gradient $\Gamma \approx \
 %Besides the peaks and valleys, also the relatively constant $y(t)$ from $t=\SIrange{0.732}{0.736}{\second}$ is captured decently by the reservoir.
 
 \subsection{Conclusion}
-% TODO: MORE REF? Actual numbers?
-The signal transformation or prediction performed using thermally active OOP ASI as a reservoir is not perfect, though it is comparable to the performance of several other magnetic reservoirs like reconfigurable artificial spin-vortex ice~\cite{gartside2022reconfigurable}.
-The skyrmion-based system presented in~\ccite{TaskAdaptivePRC} achieves better results overall, since the balance between non-linearity and memory capacity can be shifted depending on the task at hand.
-Other types of reservoirs which exhibit more complex dynamics, like nanowire networks~\cite{RC_NNN}, can achieve a better signal transformation than our OOP ASI, while others~\cite{NanoarchitectonicAtomicSwitch} achieve similar performance.
+Thermally active OOP ASI can perform a meaningful signal transformation when used as a reservoir.
+However, thermal noise in such systems forms a limiting factor to the ultimate performance achievable.
+A major advantage of this kind of reservoir is that the range of frequencies for which it can perform a decent transformation is rather wide --- spanning two orders of magnitude or more --- owing to the logarithmic nature of the relaxation dynamics. \\\par
+
+While a signal transformation and prediction performed using this kind of reservoir is not perfect, it is of comparable quality to several other magnetic reservoirs.
+Generally speaking, the thermally active OOP ASI presented here achieves $\MSE \gtrsim 0.015$, both for signal transformation and a Mackey-Glass prediction.
+A system of magnetic nanorings has been demonstrated to yield a very similar $\MSE \approx 0.014$ on a sine-to-sawtooth transformation~\cite{Vidamour2023}.
+Comparable results have been obtained with an artificial spin-vortex ice reservoir, which achieves $\MSE \approx 0.019$ for a sine-to-sawtooth transformation and $\MSE \approx 0.01$ for a Mackey-Glass prediction at $k \approx 1.4$~\cite{gartside2022reconfigurable}.
+Combining multiple in-plane square and pinwheel ASI reservoirs in series has resulted in $\MSE \approx 0.011$ for Mackey-Glass with $k \approx 0.8$ and $\MSE \approx 0.01$ on a sine-to-sawtooth transformation~\cite{AdaptiveProgrammableRC}. \par
+
+A skyrmion/conical reservoir~\cite{TaskAdaptivePRC} is more performant, as it can be reconfigured based on the task at hand: it obtains a better sine-to-sawtooth transformation ($\MSE \approx \SIrange{e-4}{3e-7}{}$) and Mackey-Glass signal prediction ($\MSE \approx 0.0037$), though only at very low temperature $T = \SI{4}{\kelvin}$.
+Above room temperature, $\MSE \approx 0.018$ was reported for an offset $k \approx 0.25$, again similar to the thermally active OOP ASI. \par
+
+Other types of reservoirs exists beside magnetic reservoirs.
+For example, nanowire networks~\cite{RC_NNN} exhibit more complex dynamics, allowing them to achieve a better signal transformation.
+Still others~\cite{NanoarchitectonicAtomicSwitch,FewMoleculeReservoir} achieve similar performance.
+A mathematical echo state network has reportedly achieved $\MSE \approx 0.006$ for a large $k \approx 5$~\cite{Moon_2021}. % They gets NRMSE of 0.045 for their single-reservoir ESN, which corresponds to MSE 0.002, but their definition divides the normal MSE by the average square deviation, which is never more than 0.25. So the correspondence is quite vague.
 
 % MSE is not an ideal parameter, should use something that accounts more for the general shape, because plateaus can have equal weight as noise, while they are visually quite different.
 
