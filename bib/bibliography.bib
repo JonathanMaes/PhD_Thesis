@@ -984,6 +984,19 @@
 	abstract      = {Monte Carlo methods rely on sequences of random numbers to obtain solutions to many problems in science and engineering. In this work, we evaluate the performance of different pseudo-random number generators (PRNGs) of the Curand library on a number of modern Nvidia GPU cards. As a numerical test, we generate pseudo-random number (PRN) sequences and obtain non-uniform distributions using the acceptance-rejection method. We consider GPU, CPU, and hybrid CPU/GPU implementations. For the GPU, we additionally consider two different implementations using the host and device application programming interfaces (API). We study how the performance depends on implementation parameters, including the number of threads per block and the number of blocks per streaming multiprocessor. To achieve the fastest performance, one has to minimize the time consumed by PRNG seed setup and state update. The duration of seed setup time increases with the number of threads, while PRNG state update decreases. Hence, the fastest performance is achieved by the optimal balance of these opposing effects.}
 }
 
+@inproceedings{CarbonNanotubeRC,
+	title         = {Evolving Carbon Nanotube Reservoir Computers},
+	author        = {Dale, Matthew and Miller, Julian F. and Stepney, Susan and Trefzer, Martin A.},
+	year          = {2016},
+	booktitle     = {Unconventional Computation and Natural Computation},
+	publisher     = {Springer International Publishing},
+	address       = {Cham},
+	pages         = {49--61},
+	isbn          = {978-3-319-41312-9},
+	editor        = {Amos, Martyn and CONDON, ANNE},
+	abstract      = {Reservoir Computing is a useful general theoretical model for many dynamical systems. Here we show the first steps to applying the reservoir model as a simple computational layer to extract exploitable information from physical substrates consisting of single-walled carbon nanotubes and polymer mixtures. We argue that many physical substrates can be represented and configured into working reservoirs given some pre-training through evolutionary selected input-output mappings and targeted input stimuli.}
+}
+
 @book{ExactlySolvedModelsStatMech,
 	title         = {Exactly solved models in statistical mechanics},
 	author        = {Baxter, Rodney J},
@@ -1970,6 +1983,21 @@
 	pdf           = {https://theses.hal.science/tel-00010256v1/file/tel-00010256.pdf},
 	hal_id        = {tel-00010256},
 	hal_version   = {v1}
+}
+
+@article{ElectrochemicalPRC,
+	title         = {Physical Implementation of Reservoir Computing through Electrochemical Reaction},
+	author        = {Kan, Shaohua and Nakajima, Kohei and Asai, Tetsuya and Akai-Kasaya, Megumi},
+	year          = {2022},
+	journal       = {Advanced Science},
+	volume        = {9},
+	number        = {6},
+	pages         = {2104076},
+	doi           = {https://doi.org/10.1002/advs.202104076},
+	url           = {https://advanced.onlinelibrary.wiley.com/doi/abs/10.1002/advs.202104076},
+	keywords      = {electrochemical reactions, ionic currents, multiway data acquisition systems, reservoir computing},
+	eprint        = {https://advanced.onlinelibrary.wiley.com/doi/pdf/10.1002/advs.202104076},
+	abstract      = {Abstract Nonlinear dynamical systems serving reservoir computing enrich the physical implementation of computing systems. A method for building physical reservoirs from electrochemical reactions is provided, and the potential of chemical dynamics as computing resources is shown. The essence of signal processing in such systems includes various degrees of ionic currents which pass through the solution as well as the electrochemical current detected based on a multiway data acquisition system to achieve switchable and parallel testing. The results show that they have respective advantages in periodic signals and temporal dynamic signals. Polyoxometalate molecule in the solution increases the diversity of the response current and thus improves their abilities to predict periodic signals. Conversely, distilled water exhibits great computing power in solving a second-order nonlinear problem. It is expected that these results will lead to further exploration of ionic conductance as a nonlinear dynamical system and provide more support for novel devices as computing resources.}
 }
 
 @article{tsunegi2019STOforcedsyncRC,
