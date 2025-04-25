@@ -485,13 +485,13 @@ This would also explain why the effective anisotropy is on the order of $60 \kBT
 \newpage
 \section{Reservoir computing in thermally active out-of-plane ASI}
 \subsection{Concept}
-In order to use these thermally active OOP ASI for reservoir computing, a method must be devised that generates a non-linear response with fading memory.
-One option to achieve this, is to use the transient regime between the AFM ground state and the uniform state: the previously discussed spontaneous relaxation makes the system evolve towards the ground state, while an external stimulus can push the system towards the uniform state instead.
-This allows the usage of analog input, i.e. a continuous range of input values, since the rate at which the system moves away from the ground state is determined by the strength of this stimulus.
+In order to use these thermally active OOP ASI as a reservoir, a method must be devised that generates a non-linear response with fading memory.
+One option to achieve this, is to use the transient regime between the AFM ground state and the uniform state: the previously discussed spontaneous relaxation makes the system evolve towards the ground state, while an external stimulus can instead push the system towards the uniform state.
+This allows the usage of analog input, i.e. a continuous range of input values, since the rate at which the system is pushed away from the ground state is determined by the strength of this stimulus.
 The relaxation towards the ground state, on the other hand, is governed by parameters intrinsic to the ASI itself, like the OOP anisotropy $\EEA$ and MS coupling $\EMC$.
 
 \paragraph{Input}
-Practically, such an input method is possible by using spin-orbit torque, in the presence of an in-plane field to break symmetry, as discussed earlier in~\cref{sec:3:IO_exp_to_sim}.
+Practically, such an input method can be realised through spin-orbit torque in the presence of a symmetry-breaking in-plane field, as discussed earlier in~\cref{sec:3:IO_exp_to_sim}.
 Applying the SOT current then pushes the ASI closer to a uniform state, while removing the current lets it gradually relax to the AFM ground state.
 Here, the OOP magnetic field $B_z(t)$ that models the SOT in \hotspice was scaled between $B_0$ (minimum) and $B_1$ (maximum).
 Hence, an input $0 \leq x \leq 1$ is encoded by a field of magnitude $B_z = B_0 + x (B_1 - B_0)$, such that $B_0 \leq B_z \leq B_1$.
@@ -502,12 +502,12 @@ However, in a normal OOP square-lattice ASI, the relaxation dynamics do not diff
 Without more significant spatial differences, multiple readouts will not provide a large benefit. \\\par
 %For example, when starting from the uniform state, relaxation will occur faster near the centre of the ASI.
 %Therefore, a readout method should be used where magnets at the edges are included in a different readout node than those at the centre. \par
-To increase the richness of system dynamics, a \xlabel{property gradient} can be introduced for greater variation between spatially separated readout nodes. %spread the relaxation over different timescales on opposing sides of the system.
+To obtain a richer output from the reservoir, a \xlabel{property gradient} can be introduced for greater variation between spatially separated readout nodes. %spread the relaxation over different timescales on opposing sides of the system.
 % This can be beneficial to RC as it can, in turn, provide multiple short-term memory timescales.
 Here, this will be accomplished by gradually increasing the net OOP anisotropy $\EEA$ and magnetic moment $\mu$ of magnets along the $x$-axis --- as if the magnets were larger on one side of the lattice than on the other --- causing different sides of the lattice to relax to the ground state over different timescales.
-Hence, by using the average magnetisation of individual columns as the readout values, greater variation can be obtained since each column is unique (while the magnets within a column are all identical).
-Vice versa, all rows are identical (while the magnets within a row are all different).
-Averaging over multiple columns or enlarging the system can be beneficial as it reduces thermal noise in the output, since each readout value then becomes the average of more magnets.
+Hence, by using the average magnetisation of individual columns of magnets as the readout values, greater variation can be obtained since each column is unique (while the magnets within a column are all identical).
+Vice versa, all rows of magnets in this square-lattice ASI are identical (while the magnets within a row are all different).
+Averaging over multiple columns or enlarging the system is expected to be beneficial, as this reduces thermal noise in the output since each readout value then becomes the average of more magnets.
 % TODO: schematic as in fig. 6a to illustrate column-wise readout?
 
 \subsection{Influence of input on dynamics}
@@ -530,14 +530,13 @@ Therefore, all subsequent simulations of reservoir computing in thermally active
 }
 
 The main factors influencing the dynamics, beyond those intrinsic to the ASI, are the input frequency $f$ and the magnitude $B$ of the excitation.
-Their effect is illustrated in~\cref{fig:3:OOP_relaxation_input}, where a random scalar input sequence is applied to the system.
-More specifically, the external field that provides the input can take any random magnitude between 0 and $B$, with each value being maintained for a period determined by the input frequency $f$. \par % \\\par
-The higher the applied input value, the harder the system gets pulled away from the ground state.
-Conversely, when a small input value is applied for a sufficiently long time, the system can gradually relax back towards the ground state.
-This resembles the behaviour of a leaky integrator~\cite{jaeger2001echo}.
-For sufficiently small input values $x$ (corresponding to an applied field $xB$), the relaxation is independent of the input field magnitude $B$, but not of the input frequency $f$.
-In~\cref{fig:3:OOP_relaxation_input}, this can for example be observed during cycles 12 and 14: for $f=\SI{1}{\kilo\hertz}$ (panels 1--3), $\mavg$ drops to the same value ($\mavg \approx 0.2$) regardless of $B$, but for $f=\SI{100}{\kilo\hertz}$ it drops to a different value ($\mavg \approx 0.55$).
-The only exception to this is panel 4, where the input with $(f,B)=(\SI{100}{\kilo\hertz}, \SI{200}{\micro\tesla})$ is not sufficiently impactful to bring the system that far from equilibrium. \par
+Their effect is illustrated in~\cref{fig:3:OOP_relaxation_input}, where a random scalar input sequence is applied to the ASI.
+More specifically, the upwards-pointing OOP external field that provides the input can take any random magnitude between 0 and $B$, with each value being maintained for a period determined by the input frequency $f$. \par % \\\par
+Larger input values $x$ drive the system further from its ground state, while smaller values applied for a sufficiently long time allow a gradual relaxation back towards $\mavg \approx 0$.
+The equilibrium magnetisation depends only on the input field magnitude $xB$, resembling the behaviour of a leaky integrator~\cite{jaeger2001echo}.
+When $xB$ is sufficiently small, the equilibrium magnetisation $\mavg$ approaches zero, in which case the system always reaches roughly the same state after one input period, with this state depending on the frequency $f$.
+This can, for instance, be observed during cycles 12 and 14 in~\cref{fig:3:OOP_relaxation_input}, where the input is very weak: for $f=\SI{1}{\kilo\hertz}$ (panels 1--3), $\mavg$ always returns to $\approx 0.2$, whereas for $f=\SI{100}{\kilo\hertz}$ it drops to a different value ($\mavg \approx 0.55$).
+The sole exception is panel 4, where the input with $(f,B)=(\SI{100}{\kilo\hertz}, \SI{200}{\micro\tesla})$ is not sufficiently impactful to bring the system far from its ground state. \par
 In contrast to these minima of $\mavg$, the maxima do depend on the input magnitude.
 Logically, the lower the frequency $f$ and the higher the input magnitude $B$, the easier the system reaches saturation, i.e. the uniform state, characterised by $\mavg=1$ and $\qNN=0$.
 Optimal reservoir performance can be expected when the system never saturates, yet still uses as much of the available $\mavg$-range as possible to minimise the relative impact of the stochasticity intrinsic to the relaxation process. \par
@@ -555,8 +554,8 @@ The goal is to estimate a ``target'' function $y(t) \in [0,1]$ as accurately as 
 As explained in~\cref{sec:1:RC}, the reservoir computing paradigm includes a single-layer perceptron that converts the response $\vc{r}(t)$ into an output $\hat{y}(t) = \vc{r}^\mathrm{T}(t) \cdot \vc{w}$.
 Through a training procedure, the weights $\vc{w}$ of the perceptron can be adjusted to minimise the difference between the output $\hat{y}(t)$ and the target function $y(t)$. \par
 The continuous input signal $s(t)$ corresponds to a continuously varying external field $B_z(t)$, but in simulation this can not be captured at infinite resolution.
-The reason for this is that \hotspice assumes all aspects of the system remain static until the next switch occurs, as this allows a mean switching time to be calculated for all magnets.
-To approximate a continuous input in simulation, the input signal must be sampled at sufficiently short time intervals --- say 20 samples per period.
+The reason for this is that \hotspice assumes all aspects of the system remain static until the next switch occurs, as this assumption allows a mean switching time to be calculated for all magnets.
+To approximate a continuous input in simulation, the input signal must be sampled at sufficiently short time intervals --- say, 20 samples per period.
 This can be done by imposing a maximum switching time $t_\mathrm{max} = 1/20f$ and updating the external field $\vc{B}_\mathrm{ext}$ after each iteration of the first-switch method (\cref{alg:2:FirstSwitchSingle}) --- regardless of whether a magnet has switched within the short interval $t_\mathrm{max}$ --- resulting in adequate sampling of the true input signal. \\\par
 
 By recording the reservoir state $\vc{r}(t_i)$ and the target output $y(t_i)$ at discrete intervals $t_i = i t_\mathrm{max}$ (with $i = 1,\dots,n$)\footnote{
@@ -565,54 +564,55 @@ By recording the reservoir state $\vc{r}(t_i)$ and the target output $y(t_i)$ at
 }, the perceptron can be trained on several periods of the input signal via ordinary least-squares (OLS) regression\footnote{
 	Regularised OLS fitting was performed using the \python{statsmodels}~\cite{statsmodels} Python package.
 }.
-Throughout this section, we will compare the performance of the OOP ASI reservoir as a function of several system parameters.
+Throughout the remainder of this section, we will compare the performance of the OOP ASI reservoir as a function of several system parameters.
 For a consistent comparison, the training of the perceptron for signal transformation (prediction) is always performed on the first 12 (60) periods\footnote{
-	For signal transformation, we will only consider periodic signals, for which one period would normally suffice.
+	For signal transformation on periodic signals, as considered here, one period would normally suffice.
 	However, since the thermally active ASI reservoir is subject to thermal noise, multiple periods are used for increased robustness against such noise.
 } of the input signal.
-After training, the performance of a reservoir will be evaluated based on 8 (40) more periods of the input signal, as quantified by the mean-squared error of the ASI prediction $\hat{y}(t)$ with respect to the target function $y(t)$ at the sampled times $t_i$:
+After training, the performance of a reservoir will be evaluated based on 8 (40) more periods of the input signal, as quantified by the mean squared error of the ASI prediction $\hat{y}(t)$ with respect to the target function $y(t)$ at the sampled times $t_i$:
 \begin{equation}
 	\label{eq:3:MSE}
-	\MSE = \frac{1}{n} \sum_{i=1}^n (\hat{y}(t_i) - y(t_i))^2 \mathrm{.}
+	\MSE = \frac{1}{n} \sum_{i=1}^n \big(\hat{y}(t_i) - y(t_i)\big)^2 \mathrm{.}
 \end{equation}
-Since all relevant signals are normalised to the unit interval $[0,1]$, no additional normalisation is necessary. \par
-To evaluate the reservoir performance, two estimators will be compared: one that is trained on the reservoir output $\vc{r}(t)$ as described before, and one that is trained only on the raw 1D input signal $s(t)$ (augmented with a constant\footnote{
-	Training an OLS estimator on a 1D signal simply boils down to finding an optimal scaling factor for the signal to ``resemble'' the target function.
-	By including a constant factor, the input signal can be offset vertically for a better fit (resulting in up to $10 \times$ lower baseline MSE).
-	Omitting the constant --- as done in some studies~\cite{gartside2022reconfigurable} --- therefore artificially inflates the apparent advantage of the reservoir over a raw-input baseline.
-	Including the constant offset enables a fair comparison, as the ASI reservoir also has access to some near-constant bias in the form of high-anisotropy magnets that remain unchanged during reservoir operation.
+Since all signals considered here will be normalised to the unit interval $[0,1]$, no additional normalisation is necessary. \par
+To evaluate the reservoir performance, the mean squared error of two estimators will be compared: one that is trained on the reservoir output $\vc{r}(t)$ as described before, and one that is trained only on the raw 1D input signal $s(t)$ (augmented with a constant\footnote{
+	Training an OLS estimator on a 1D signal is equivalent to an optimal scaling to fit the signal to the target function.
+	The inclusion of a constant factor enables a vertical offset of the input signal for a better fit (yielding up to $10 \times$ lower baseline MSE).
+	Omitting this constant --- as done in some studies~\cite{gartside2022reconfigurable} --- therefore artificially inflates the apparent advantage of the reservoir over a raw-input baseline.
+	Including the constant offset enables a fair comparison, as high-anisotropy magnets may also provide access to a near-constant bias for the reservoir.
 	% Note that the estimator should not be able to offset the input signal in time: this would make the baseline irrelevant in cases where the target is simply a time-offset version of the input, like a Mackey-Glass prediction.
 } to improve the fit).
 % They are denoted by subscripts $s$ and $r$, respectively.
-If the estimator operating on the reservoir output outperforms the one that uses the raw input --- as measured by the MSE on the test set --- then the reservoir has a positive impact on the signal transformation.
+If the estimator operating on the reservoir output outperforms the one that uses the raw input, then the reservoir has a positive impact on the signal transformation.
 
 \subsection{Signal transformation task}
-First, we will consider signal transformation.
-This task primarily relies on the non-linearity and high dimensionality of a reservoir, rather than its fading memory capacity, though the balance between these may differ depending on the specific transformation~\cite{FewMoleculeReservoir,gartside2022reconfigurable,TaskAdaptivePRC}.
+First, we will consider signal transformation --- a prediction task will follow in~\cref{sec:3:Thermal_Prediction}.
+Signal transformation primarily relies on the non-linearity and high dimensionality of a reservoir, rather than its fading memory capacity, though the balance between these can differ depending on the specific transformation~\cite{FewMoleculeReservoir,gartside2022reconfigurable,TaskAdaptivePRC}.
 Here, we will focus on the sine-to-sawtooth transformation with a given frequency $f$, i.e. $s(t) = \sin(2 \pi f t) \mapsto y(t) = ft - \lfloor ft \rfloor$.
-While this is a non-linear transformation, it nonetheless requires some limited memory capacity since the sine wave rises and falls once during each period, while the sawtooth always rises apart from a discontinuous drop after each period.
-Hence, any value of the input signal $s$ is reached at two distinct instants $t_1$ and $t_2$ during each period ($s(t_1) = s(t_2)$), but the target function at those two instants is not the same ($y(t_1) \neq y(t_2)$). % A sine wave is symmetric in time, while the sawtooth is not.
+While this is a non-linear transformation, it nonetheless requires some limited memory capacity since the sine wave both rises and falls during each period, while the sawtooth always rises apart from a discontinuous drop after each period.
+Hence, any value of the input signal $s$ is reached at two distinct instants $t_1$ and $t_2$ during each period $\big(s(t_1) = s(t_2)\big)$, but the target function is not the same at those two instants $\big(y(t_1) \neq y(t_2)\big)$. % A sine wave is symmetric in time, while the sawtooth is not.
 For example, compare $t_1 = 0$ and $t_2 = 0.5/f$: $\sin(0) = 0 \mapsto y(0) = 0$ but $\sin(\pi) = 0 \mapsto y(0.5) = 0.5$.
-Hence, the reservoir must somehow capture the derivative of the input signal (or an equivalent measure) at the current time in order for the linear estimator to be able to accurately predict the sawtooth during both the increasing and decreasing parts of the sine wave.
-The thermally active OOP ASI reservoir should readily have such information available, since it resembles a leaky integrator. 
-At the end of this section, several other transformations will also be considered.
+Hence, the reservoir can not only rely on the input signal at the current time, but must also retain information on e.g. the derivative of the input signal, in order for the linear estimator to be able to accurately predict the sawtooth during both the increasing and decreasing parts of the sine wave.
+The thermally active OOP ASI reservoir should readily have such information available, since its operation resembles that of a leaky integrator.
+While most transformations indeed require some limited memory, some examples like a sine-to-square wave transformation do not.
 %Simulations of the signal transformation task are based on~\cite{gartside2022reconfigurable,AdaptiveProgrammableRC}, and the same thing is done in~\cite{TaskAdaptivePRC}.
 
-\subsubsection{Baseline: frequency dependence}
-Let us first consider a baseline system --- an $11 \times 11$ OOP square-lattice ASI without any \xref{property gradient}, using one readout per column.
+\paragraph{Frequency dependence}
+Consider first the simplest form of OOP square-lattice ASI: a small $11 \times 11$ system without any \xref{property gradient}, using one readout per column.
 The sine-to-sawtooth transformation using this system is illustrated in~\cref{fig:3:Transformation_freq-magn_baseline} for a range of input magnitudes $B_1$ and frequencies $f$.
-The minimal input magnitude (corresponding to $s(t) = 0$) was chosen as $B_0 = \SI{-0.35}{\milli\tesla}$, for this was found to yield better results than the more natural choice of $B_0 = \SI{0}{\tesla}$ (see~\cref{fig:3:Transformation_magn-magnmin}).
-The inverse error $1/\MSE$ is used to quantify performance because this allows for easier discrimination in regions of high performance where the $\MSE$ is low.
+The minimal input magnitude (corresponding to $s(t) = 0$) was chosen as $B_0 = \SI{-0.35}{\milli\tesla}$, for this value was found to be optimal (see~\cref{fig:3:Transformation_magn-magnmin}).
+The inverse error $1/\MSE$ is used to quantify performance, because this allows for easier discrimination in regions of high performance where the $\MSE$ is low.
 Panels on the left side relate to the test set, while those on the right side show the same for the training set.
 Since both sides appear very similar, we may conclude that the perceptron is not overfitting on the limited data (12 periods) it has available. \par
 The performance map in~\cref{fig:3:Transformation_freq-magn_baseline} exhibits 3 distinct regions of both decent and poor transformation quality.
-Within each of them, one $(f, B_1)$-combination has been marked with Roman numerals: the waveforms generated by the baseline ASI for those particular input magnitudes and frequencies are shown in the bottom half of the figure.
-At low frequency, there are two separate bands where $1/\MSE$ is relatively high: one at $B_1 \approx \SI{0.1}{\milli\tesla}$  and one at $B_1 \approx \SI{0.5}{\milli\tesla}$ \textsf{(i)}.
-As the frequency increases, both bands curve up towards higher $B_1$, because the system has less time to react and therefore requires the input to be stronger.
-Conversely, performance is very poor for weak high-frequency input \textsf{(iii)} for the same reason.
-The lower of the two bands culminates in the region of greatest performance of this baseline system \textsf{(ii)}. \par % Let us now take a closer look at the generated waveforms in these various regimes.
+Within each of them, one $(f, B_1)$-combination has been marked with Roman numerals: the waveforms generated by this ASI for those particular input magnitudes and frequencies are shown in the bottom half of the figure.
+At low frequency, two separate bands with relatively high $1/\MSE$ are visible: one at $B_1 \approx \SI{0.1}{\milli\tesla}$  and one at $B_1 \approx \SI{0.5}{\milli\tesla}$ \textsf{(i)}.
+These remain invariant for $f \lesssim \SI{0.1}{\hertz}$, as this corresponds to the timescale of complete relaxation $\qNN = 1$ (\cref{fig:3:OOP_relaxation}, panel 8).
+As the frequency increases, both bands curve up towards higher $B_1$, because the system has less time to react and therefore requires a stronger input to maintain the transformation.
+For this reason, performance is very poor for weak high-frequency input \textsf{(iii)}.
+The lower of the two bands culminates in the region of greatest performance of this particular system at intermediate frequencies \textsf{(ii)}. \par % Let us now take a closer look at the generated waveforms in these various regimes.
 The first marked point \textsf{(i)} in the upper band corresponds to a relatively strong low-frequency input, for which the reservoir waveform resembles a square wave rather than a sawtooth.
-The reason for this is twofold: at low frequencies, the system has sufficient time to reach the end of stage $\circled{1}$ of relaxation ($\mavg \approx 0$), while a relatively strong input will easily saturate the system into a uniform magnetic state. % when the sine wave exceeds a certain threshold, as the strongest magnetic fields are applied around that time.
+The reason for this is twofold: at low frequencies, the system has sufficient time to reach the end of stage $\circled{1}$ of relaxation ($\mavg \approx 0$), while a relatively strong input easily saturates the system into a uniform magnetic state. % when the sine wave exceeds a certain threshold, as the strongest magnetic fields are applied around that time.
 Since the $\MSE$ metric considers a square wave a better fit to a sawtooth than the original sine wave, the reservoir is considered to improve the transformation, though this can hardly be called a successful sine-to-sawtooth transformation.
 
 \vspace{-1em}
@@ -627,27 +627,26 @@ Since the $\MSE$ metric considers a square wave a better fit to a sawtooth than 
 	The top panel shows the inverse mean squared error $1/\MSE$ as a function of the input magnetic field frequency $f$ and amplitude $B_1$, with constant $B_0 = \SI{-0.35}{\milli\tesla}$, averaged over 5 runs with random $\sigma(\EEA)=\SI{5}{\percent}$ defects.
 	Higher (lower) values in yellow (purple) indicate better (worse) performance.
 	The black contours correspond to $1/\MSE \sim 30$, encompassing regions where the reservoir performs better than the linear transformation of the original input signal.
-	In the top figure, several points are indicated with Roman numerals, corresponding to the panels at the bottom of the figure which show a temporal view of the transformation.
-	There, the input sine-wave signal (black dotted curve) and target sawtooth signal (black dashed line) are shown, alongside the prediction with and without the reservoir (blue and red curve, respectively) for different input frequencies and field magnitudes.
+	In the top panel, several points are indicated with Roman numerals, corresponding to the bottom panels which show a temporal view of the transformation.
+	There, the input sine-wave signal (grey dotted curve) and target sawtooth signal (black dashed line) are shown, alongside the prediction with and without the reservoir (blue and red curve, respectively).
 }
 \vspace{-1em}
 
-To better capture the slope of the sawtooth, a faster input frequency is required.
-It turns out that, for this baseline system, a rather broad range of well-performing input frequencies exists between $f \approx \SIrange{10}{e3}{\hertz}$, in combination with a maximum field magnitude $B_1 \approx \SI{0.2}{\milli\tesla}$, as indicated by the symbol \textsf{(ii)}.
+To better capture the slope of the sawtooth, a higher input frequency is required.
+It turns out that a rather broad range of well-performing input frequencies exists between $f \approx \SIrange{10}{e3}{\hertz}$, in combination with a maximum field magnitude $B_1 \approx \SI{0.2}{\milli\tesla}$, as indicated by the symbol \textsf{(ii)}.
 Such a broad range of usable frequencies was to be expected considering the logarithmic nature of the relaxation dynamics.
-With such input, the waveform resembles a sawtooth much better than for low-frequency input.
-Still, the waveform is quite noisy due to the stochastic nature of the reservoir.
-While the bottom of the sawtooth is captured rather well, the top exhibits a plateau --- this coincides with the minimum of the input sine wave, meaning the system is given too much time to relax. \par
+At these frequencies, the waveform more closely resembles a sawtooth.
+Still, the waveform is quite noisy due to the stochastic nature of the reservoir dynamics.
+While the bottom of the sawtooth is captured rather well, the top exhibits a plateau which coincides with the minimum of the input sine wave, meaning the system is still given slightly too much time to relax. \par
 Increasing the frequency further has a negative impact on the transformation, as is the case for \textsf{(iii)}.
 The system becomes increasingly unable to approach the $\mavg \approx 0$ state and can only respond to the input when it is sufficiently strong, as evidenced by the sloped $1/\MSE=30$ border that separates points \textsf{(ii)} and \textsf{(iii)} in the top panels of~\cref{fig:3:Transformation_freq-magn_baseline}.
 Instead, while there is still some periodic structure visible in the waveform generated by reservoir \textsf{(iii)}, it is dominated by noise since only a few random magnets will switch in the limited available timeframe.
 
-\subsubsection{Parameter dependencies}
 \paragraph{Field magnitude range}
-The minimal field magnitude $B_0$ for the baseline system in~\cref{fig:3:Transformation_freq-magn_baseline} was set to \SI{-0.35}{\milli\tesla}.
-This was determined through a similar parameter sweep over $B_0$ and $B_1$, at a constant frequency $f=\SI{100}{\hertz}$ since this corresponds to the timescale at which this system reaches $\mavg \approx 0$ (according to panel 8 in~\cref{fig:3:OOP_relaxation}).
-The results of this parameter sweep for the baseline system are presented in~\cref{fig:3:Transformation_magn-magnmin}: 
-indeed, optimal performance is found around $B_0=\SI{-0.35}{\milli\tesla}$.
+The minimal field magnitude $B_0$ for this system without gradient was set to \SI{-0.35}{\milli\tesla}.
+This was determined through a similar parameter sweep as in~\cref{fig:3:Transformation_freq-magn_baseline}, but sweeping over $B_0$ and $B_1$ instead.
+A constant frequency $f=\SI{100}{\hertz}$ was chosen, corresponding to the timescale at which this system reaches $\mavg \approx 0$ (\cref{fig:3:OOP_relaxation}, panel 8).
+The results of this parameter sweep are presented in~\cref{fig:3:Transformation_magn-magnmin}, from which the optimal performance $B_0=\SI{-0.35}{\milli\tesla}$ was deduced.
 
 \vspace{-1em}
 \sidefig[0.53]{3_RC_OOP/Thermally active/Transformation/magn-magnmin/averaged.pdf}{
@@ -665,46 +664,49 @@ For example, performance is somewhat reduced along the $B_0 = -B_1$ diagonal for
 Other transformations can behave very differently: this kind of $\MSE(B_0, B_1)$-map can be used to identify their optimal input field range at a given frequency.
 
 \paragraph{Gradient}
-The baseline system does not include a property gradient.
+The previous discussion on input frequencies and magnitudes used a system without a \xref{property gradient}.
 By making the magnets on one side of the system bigger than on the other side, the relaxation timescales can be spread out throughout the system, introducing more variation between the single-column readout nodes.
-Quantitatively, in an ASI with a gradient $\Gamma$, the net OOP anisotropy $\EEA$ and magnetic moment $\mu$ on the right (left) side of the lattice are a factor $\Gamma$ higher (lower) than the average.
+Quantitatively, a gradient $\Gamma$ means that the net OOP anisotropy $\EEA$ and magnetic moment $\mu$ on the right (left) side of the lattice are a factor $\Gamma$ higher (lower) than their average value throughout the ASI.
 The varying magnetic moment $\mu$ also affects the NN MS coupling: the previously stated constant value of $\EMC = 2.5 \kBT$ now corresponds to the MS coupling between NN if their moment $\mu$ would be equal to the average magnetic moment $\llangle \mu \rrangle$ throughout the ASI.
 
 \vspace{-1em}
 \sidefigs[0.53]{3_RC_OOP/Thermally active/Transformation/grad-magn/freq1/averaged.pdf}{3_RC_OOP/Thermally active/Transformation/grad-magn/freq1/details.pdf}{
 	\label{fig:3:Transformation_grad-magn_freq1}
-	Impact of the \xref{property gradient} $\Gamma$ on the performance of a sine-to-sawtooth signal transformation by an $11 \times 11$ OOP square-lattice ASI reservoir.
+	Impact of the \xref{property gradient} $\Gamma$ on the performance of a \SI{1}{\hertz} sine-to-sawtooth signal transformation by an $11 \times 11$ OOP square-lattice ASI reservoir.
 	The top panel shows the inverse mean squared error $1/\MSE$ as a function of the gradient $\Gamma$ and amplitude $B_1$, with constant $B_0 = \SI{0}{\milli\tesla}$, averaged over 5 runs with random $\sigma(\EEA)=\SI{5}{\percent}$ defects.
 	Higher (lower) values in yellow (purple) indicate better (worse) performance.
 	The black contours correspond to $1/\MSE \sim 30$, encompassing regions where the reservoir performs better than the linear transformation of the original input signal.
 	The panel at the bottom provides a temporal view of the transformation for a gradient $\Gamma = \SI{52}{\percent}$ and $B_1=\SI{0.45}{\milli\tesla}$, showing the input sine-wave signal (black dotted curve) and target sawtooth signal (black dashed line) alongside the prediction with and without the reservoir (blue and red curve, respectively).
 }
+\vspace{-0.5em}
 
-The impact of such a gradient is illustrated in~\cref{fig:3:Transformation_grad-magn_freq1} as a function of the input magnitude $B_1$.
-A low input frequency of $f=\SI{1}{\hertz}$, constant throughout the figure, to assess whether the introduction of a gradient can improve upon the square-wave signal that was generated for low-frequency input in~\cref{fig:3:Transformation_freq-magn_baseline}.
-Indeed, with the optimal gradient for this particular system, $\Gamma \approx \SI{50}{\percent}$, the transformation no longer resembles a square wave despite the low frequency. \par
+The impact of the gradient is illustrated in~\cref{fig:3:Transformation_grad-magn_freq1} as a function of the input magnitude $B_1$\footnote{
+	$B_0 = \SI{0}{\milli\tesla}$ was chosen to show it can be deduced from the figure by a very low $1/\MSE$ at $B_1 = B_0$.
+}.
+A low input frequency of $f=\SI{1}{\hertz}$ is used to assess whether the introduction of a gradient can improve upon the square-wave output that was generated at low frequencies in~\cref{fig:3:Transformation_freq-magn_baseline}.
+Indeed, with the optimal gradient for this particular system, $\Gamma \approx \SI{50}{\percent}$, the transformation no longer resembles a square wave despite the low frequency.
 For even stronger gradients, the performance drops again, as the range of anisotropies $\EEA$ in the system becomes too wide for an input signal to effectively induce dynamics throughout the whole system.
 It can also be noted that the range of suitable input magnitudes $B_1$ expands as the gradient becomes more severe.
 The reason for this is that the range of coercive fields of individual magnets in the system gets wider due to the property gradient.
-As a final note, the minimal input magnitude in this example was chosen as $B_0=\SI{0}{\milli\tesla}$ to illustrate that the value of $B_0$ is clearly identifiable in such heatmaps by a constant and very low value of $1/\MSE$ at $B_1=B_0$.
 
 \paragraph{System size and readout resolution}
 Increasing the number of magnets $N$ in the ASI reduces the relative impact of thermal noise, since each readout node then averages over more magnets.
-The central limit theorem states that the standard deviation of a mean scales as $1/\sqrt{N}$, so the relaxation trajectories based on $\mavg$ will be more reproducible in larger systems.
-Hence, increasing the size of the system is expected to enhance the transformation quality as the perceptron output then also becomes less noisy. \par
+The central limit theorem states that the standard deviation of a mean scales as $1/\sqrt{N}$, so the value of $\mavg$ during relaxation will be more consistent in larger systems.
+Hence, increasing the size of the system is expected to enhance the transformation quality as the perceptron output then also becomes less noisy. \\\par
 When each readout node represents the average magnetisation of one column, a square $L_x \times L_y$ ASI yields $p = L_x = L_y$ nodes ($\vc{r}(t) \in \mathbb{R}$).
 However, as $p$ increases, the danger of overfitting increases as well~\cite{DeepRC_IonGating_Overfitting,lukovsevivcius2009reservoir}.
 Overfitting is a general machine learning phenomenon that occurs when a model has too many trainable weights $\vc{w}$ for the limited data it has been given.
 This causes the model to train on noise present in the data --- rather than on the general trend underlying that noisy data --- resulting in worse performance on the test set.
 Since our thermally active OOP ASI reservoir is inherently noisy due to thermal fluctuations, overfitting is a possible concern.
-Overfitting is the main reason why data is typically split into a training and test set, as the $\MSE$ on the training set may be too optimistic a measure for the reservoir performance. \par
-The reservoir performance with such single-column readouts is shown in~\crefSubFigRef{fig:3:Transformation_size-magn}{a}, as measured by $1/\MSE$ on both the training and test sets as a function of $p=L_x=L_y$.
+Overfitting is one reason for why data is typically split into a training and test set, as the $\MSE$ on the training set may be too optimistic a measure for the reservoir performance. \\\par
+
+The transformation performance with such single-column readouts is shown in~\crefSubFigRef{fig:3:Transformation_size-magn}{a}, as measured by $1/\MSE$ on both the training and test sets as a function of the number of readout nodes $p=L_x=L_y$.
 At small $p$, performance is similar on both the training and test sets.
-However, as $p$ increases, the training performance eventually improves more rapidly than the test performance --- for instance, at $p=100$, the training set $1/\MSE$ is approximately 120, whereas the test set $1/MSE$ barely surpasses 75.
+However, as $p$ increases, the training performance improves more rapidly than the test performance --- at $p=100$, for instance, $1/\MSE \approx 120$ on the training set, whereas it barely surpasses 75 on the test set.
 This is a clear indication of overfitting. \par
-Overfitting can be avoided by limiting the amount of readout nodes, for example by averaging multiple columns together.
-The performance with a total of $p=11$ readout columns is presented in~\crefSubFigRef{fig:3:Transformation_size-magn}{a} as a function of system size $L_x = L_y$ and the input magnitude $B_1$.
-Contrary to the single-column readout, the performance is now equal between the training and test sets, reaching a maximum of $1/\MSE \approx 60$ for $L_x=L_y=30$ beyond which enlarging the system no longer significantly affects the performance.
+Overfitting can be avoided by limiting the amount of readout nodes: in this system, for example, multiple columns can be averaged together.
+The performance with a total of $p=11$ such readout nodes is presented in~\crefSubFigRef{fig:3:Transformation_size-magn}{b} as a function of system size $L_x = L_y$ and the input magnitude $B_1$.
+Contrary to the single-column readout, the performance is now equal between the training and test sets, reaching a maximum of $1/\MSE \approx 60$ for $L_x=L_y=30$, beyond which enlarging the system no longer significantly affects the performance.
 
 \vspace{-1em}
 \makeshiftfig{
@@ -724,10 +726,10 @@ Contrary to the single-column readout, the performance is now equal between the 
 \vspace{-1em}
 
 \paragraph{Double-frequency transformation}
-For an appropriate set of system parameters --- with the input being applied at the right frequency and strength --- other transformations than the sine-to-sawtooth transformation can be targeted without changing the system.
-Only the weights $\vc{w}$ of the perceptron have to be adjusted.
-For example,~\cref{fig:3:Transformation_freq-magn_SINESQ} shows results for a double-frequency sine wave as target function. \par
-For this transformation, the best fit attainable with a linear scaling of the input signal is simply a constant, as represented by the red line in the waveform at the bottom of~\cref{fig:3:Transformation_freq-magn_SINESQ}.
+With an ASI that can perform a decent sine-to-sawtooth transformation, other transformations can be targeted without changing the ASI --- provided the input is applied with an appropriate strength and frequency.
+Only the weights $\vc{w}$ of the perceptron have to be adjusted to reflect this new target.
+For example,~\cref{fig:3:Transformation_freq-magn_SINESQ} shows results for a double-frequency sine wave as target function.
+For this transformation, the best fit attainable with a linear scaling of the input signal --- the red line in the bottom panel of~\cref{fig:3:Transformation_freq-magn_SINESQ} --- is simply a constant.
 
 \sidefigs[0.53]{3_RC_OOP/Thermally active/Transformation/freq-magn/target_SINESQ/Sweep20231023131601.pdf}{3_RC_OOP/Thermally active/Transformation/freq-magn/target_SINESQ/details.pdf}{
 	\label{fig:3:Transformation_freq-magn_SINESQ}
@@ -738,46 +740,44 @@ For this transformation, the best fit attainable with a linear scaling of the in
 	The panel at the bottom provides a temporal view of the transformation for $f=\SI{0.5}{\hertz}$ and $B_1=\SI{0.25}{\milli\tesla}$, showing the input sine-wave signal (black dotted curve) and target double-frequency sine (black dashed line) alongside the prediction with and without the reservoir (blue and red curve, respectively).
 }
 
-For the ASI to accurately produce a double-frequency sine, the input frequency must not be too high, as otherwise the system dynamics can not keep up to accurately produce a sine of double that period.
-Therefore, the quality of the double-period sine quickly deteriorates above the critical frequency $f_c \approx \SI{10}{\hertz}$.
+For this ASI reservoir to accurately produce a double-frequency sine, the input frequency must not exceed a threshold frequency $f_\mathrm{c} \approx \SI{10}{\hertz}$.
+The quality of the double-period sine quickly deteriorates above $f_c$, as the system dynamics can no longer keep up to accurately produce a sine of double that frequency.
 It is no coincidence that this value is similar to the timescale at which $\mavg \approx 0$ in panel 8 of~\cref{fig:3:OOP_relaxation}, which shows the relaxation in the absence of external stimuli for this system.
-The same cut-off at $f_c$ is observed when the target is a square wave, though this is not displayed in a figure as a sine-to-square transformation is not otherwise noteworthy.
+The same cut-off at $f_c$ is observed (though not shown in a figure) when the target function is a square wave.
 
-\subsection{Signal prediction task: chaotic Mackey-Glass oscillator}
-A special kind of ``transformation'' is a signal prediction, where the target function $y(t) = s(t + \Delta t)$ is essentially the input signal offset through time.
-Such a prediction task can make use of the fading memory property of a reservoir to better infer the future evolution of the signal, while it benefits less from a reservoir's non-linearity~\cite{TaskAdaptivePRC}.
+\subsection{Signal prediction task: chaotic Mackey-Glass oscillator} \label{sec:3:Thermal_Prediction}
+A special kind of ``transformation'' is a signal prediction, where the target function $y(t) = s(t + \Delta t)$ is the input signal offset through time.
+Such a prediction task benefits from the fading memory property of a reservoir to better infer the future evolution of the signal, while it relies less on a reservoir's non-linearity~\cite{TaskAdaptivePRC}.
 The particular signal we will be attempting to predict with the thermally active OOP ASI is the chaotic Mackey-Glass oscillator $\mathrm{MG}(t)$~\cite{MackeyGlass}, as this is a popular benchmark in literature~\cite{RotatingNeuronsRC,AdaptiveProgrammableRC,TaskAdaptivePRC,Moon_2021,JaegerHaasWireless,ArchitecturalMarkovianESN}.
 It can not be written in closed form; instead, it is implicitly defined by the delay-differential equation
 \begin{equation}
 	\label{eq:3:MG}
 	\frac{d\mathrm{MG}(t)}{dt} = \frac{\beta \mathrm{MG}(t - \tau)}{1 + \mathrm{MG}(t - \tau)^n} - \gamma \mathrm{MG}(t) \mathrm{,}
 \end{equation}
-which was discretised by a time step $\tau/1000$ following~\ccite[Appendix A]{MeasuringStrangenessAttractors}.
+which was discretised by a time step $\tau/1000$ using the integration of~\ccite[Appendix A]{MeasuringStrangenessAttractors}.
 Typical values for the parameters $\beta=0.2, \gamma=0.1$ and $n=10$ were used.
 For $\tau \gtrsim 16.8$, this system is chaotic~\cite{jaeger2001echo}: $\tau=23$ was used here to get sufficiently chaotic behaviour, though $\tau=17$ is a more common choice.
-To extinguish transients after releasing the oscillator from its initial state (set to $\mathrm{MG}(t \leq 0) = 0.5$), a first timeframe of $t \leq 25\tau$ is discarded.
-Meanwhile, the extrema attained during this initial timeframe were recorded to allow a scaling of subsequent input to the appropriate field range between $B_0$ and $B_1$. \par
+To extinguish transients after releasing the oscillator from its initial state $\big(\mathrm{MG}(t \leq 0) = 0.5\big)$, a first timeframe $t \leq 25\tau$ is discarded.
+Meanwhile, the extrema attained during this initial timeframe were recorded, to allow a scaling of subsequent input to the appropriate field range between $B_0$ and $B_1$. \par
 While the Mackey-Glass oscillator is not strictly periodic, its delay parameter $\tau$ still provides a characteristic timeframe for its oscillations.
 Therefore, the specific transformation attempted here is written as
 \begin{equation}
 	s(t) = \mathrm{MG}(ft\tau) \mapsto y(t) = \mathrm{MG}((ft + h)\tau) \mathrm{,}
 \end{equation}
 where $f$ fulfils the role of a ``frequency'' to synchronise the Mackey-Glass oscillator with the reservoir's relaxation dynamics despite the non-periodic nature of the signal.
-This also provides the definition of the ``offset'' $h$, i.e. a dimensionless measure for how far ahead the reservoir must predict, which has a large impact on the quality of the prediction. \\\par
+This also provides the definition of the ``offset'' $h$, a dimensionless measure for how far ahead the reservoir must predict. \\\par
 
-The previous discussion regarding the signal transformation task demonstrated that many system parameters --- including the input frequency $f$, the input magnitudes $B_0$ and $B_1$, the size $L_x \times L_y$ of the ASI, the \xref{property gradient} $\Gamma$, the number of readout nodes $p$ \dots --- affect the transformation quality.
-Since the absolute values of $f$, $B_0$ and $B_1$ provide limited additional insight, we will henceforth use Bayesian optimisation~\cite{BayesOpt_Mockus1975} over the $f \times B_0 \times B_1$-space to identify the optimal input characteristics for a given ASI. \par % This was not done for the figures relating to the signal transformation task, as it would be prohibitively expensive to compute the optimal system parameters for each pixel in those figures.
+The previous discussion regarding the signal transformation task demonstrated that many system parameters affect the transformation quality --- including the input frequency $f$, the input magnitudes $B_0$ and $B_1$, the size $L_x \times L_y$ of the ASI, the \xref{property gradient} $\Gamma$, the number of readout nodes $p$ \dots\,
+Since the absolute values of $f$, $B_0$ and $B_1$ provide limited additional insight and are unrelated to the ASI itself, we will henceforth use Bayesian optimisation~\cite{BayesOpt_Mockus1975} over the $f \times B_0 \times B_1$-space to identify the optimal input characteristics for a given set of ASI parameters. \par % This was not done for the figures relating to the signal transformation task, as it would be prohibitively expensive to compute the optimal system parameters for each pixel in those figures.
 This allows us to concentrate on the most critical variable for a prediction task: the offset $h$, whose impact is illustrated in~\crefSubFigRef{fig:3:Prediction_MG}{a} for three particular systems with a different size and \xref{property gradient}.
 For the systems with a gradient, $\Gamma$ was also optimised during the Bayesian optimisation procedure, which typically yields $\Gamma \approx \SIrange{25}{30}{\percent}$, though less severe gradients also perform decently. \par
-
-Most strikingly, as a function of the offset $h$, the optimum MSE\footnote{
+Most strikingly, the optimum MSE\footnote{
 	\crefSubFigRef{fig:3:Prediction_MG}{a} uses $\MSE$ rather than $1/\MSE$, as $1/\MSE$ for $h=0$ is much larger than for other $h > 0$.
 	Furthermore, it is most common in literature to use $\MSE$ when reported as a function of the offset $h$.
-} exhibits both a maximum and a minimum.
-The resulting wave-like appearance of $\MSE(h)$, typical for this kind of input signal~\cite{AdaptiveProgrammableRC,ForecastingNeuralODE}, originates from the definition of $\mathrm{MG}(t)$ as a delay-differential equation~\eqref{eq:3:MG}.
+} exhibits both a minimum and a maximum as a function of the offset $h$.
+The resulting wave-like appearance of $\MSE(h)$ --- typical for this kind of input signal~\cite{AdaptiveProgrammableRC,ForecastingNeuralODE} --- originates from the definition of $\mathrm{MG}(t)$ as a delay-differential equation~\eqref{eq:3:MG}.
 The characteristic delay $\tau$ makes it easier to predict $\mathrm{MG}(t + \tau)$ --- a delay $\tau$ corresponds to $h=1$, which closely aligns with the observed minimum of $\MSE(h)$.
-For larger offsets $h$, more such minima will appear close to $h \in \mathbb{N}$, though they become increasingly less pronounced because the oscillator is not strictly periodic over $\tau$.
-The height of the first maximum can be used as a performance indicator to compare different reservoirs. \par
+For larger offsets $h$, more such minima will appear near $h \in \mathbb{N}$, though they quickly become less pronounced since the oscillator is not strictly periodic over $\tau$.
 The performance at $h=0$ presents the limit of what the thermally active ASI reservoir can achieve, due to the stochastic nature of the relaxation process it employs.
 Unsurprisingly, this limit improves by adding a gradient and increasing the system size.
 
@@ -786,41 +786,41 @@ Unsurprisingly, this limit improves by adding a gradient and increasing the syst
 	\label{fig:3:Prediction_MG}
 	Performance of a thermally active OOP square-lattice ASI on a prediction task for the Mackey-Glass oscillator, for ASI of different size and gradient $\Gamma$.
 	The number of readout nodes is fixed at $p=11$ for the $11 \times 11$ systems and $p=10$ for the $20 \times 20$ ASI.
-	\textbf{(a)} Mean-squared error as a function of the offset $h$, for the reservoir prediction (blue) and a linear transformation of the original input signal (red).
-	The ultimate performance limit of each reservoir, i.e. $\MSE(h=0)$, is indicated by the horizontal grey dotted line.
+	\textbf{(a)} Mean squared error as a function of the offset $h$, for the reservoir prediction (blue) and a linear transformation of the original input signal (red).
+	The ultimate performance limit of each reservoir, $\MSE(h=0)$, is indicated by the horizontal grey dotted line.
 	\textbf{(b)} Comparison of waveforms generated by an $11 \times 11$ ASI without a gradient (left) and a $20 \times 20$ ASI with a gradient $\Gamma = \SI{10}{\percent}$ (right), both for an offset $h=1.4$.
 }
 \vspace{-0.5em}
 
 The $11 \times 11$ ASI reservoir without gradient (blue) only outperforms a linear scaling of the input (red) for $h > 0.4$.
-Including a gradient and enlarging the system improves the $\MSE$, though the gradient appears more impactful than a subsequent enlargement.
-More importantly than the $\MSE$, the resulting waveform is also of better quality, as~\crefSubFigRef{fig:3:Prediction_MG}{b} shows for $h=1.4$.
-The smaller ASI without gradient struggles to reproduce the peaks of the desired waveform, as it only responds in a narrow field range.
-On the other hand, the larger ASI with an appreciable gradient $\Gamma \approx \SI{25}{\percent}$ contains magnets of various coercive fields, enabling it to capture both the peaks (valleys) since these are likely to coincide with low (high) input fields.
+Including a gradient and enlarging the system improves the $\MSE$, though the gradient appears more impactful than the subsequent enlargement.
+More importantly than just the $\MSE$, the resulting waveform is also of better quality, as~\crefSubFigRef{fig:3:Prediction_MG}{b} shows for $h=1.4$.
+The smaller ASI without gradient struggles to reproduce the peaks of the desired waveform, as its magnets only respond to a narrow field range.
+On the other hand, the larger ASI with an appreciable gradient $\Gamma \approx \SI{25}{\percent}$ contains magnets with various coercive fields, enabling it to capture both the peaks and valleys, since these are likely to respectively coincide with low and high input fields.
 %Besides the peaks and valleys, also the relatively constant $y(t)$ from $t=\SIrange{0.732}{0.736}{\second}$ is captured decently by the reservoir.
 
 \subsection{Comparison with other reservoirs}
-Generally speaking, our thermally active OOP ASI achieves an $\MSE$ of roughly 0.015 on both the sine-to-sawtooth signal transformation and the Mackey-Glass prediction task.
+Generally speaking, our thermally active OOP ASI achieves an $\MSE$ of roughly 0.015 on both the sine-to-sawtooth transformation and the Mackey-Glass prediction task.
 This performance is on par with several other magnetic reservoirs.
-For example, using a network of magnetic nanorings, an MSE of $\approx 0.014$ has been reported for the same transformation~\cite{Vidamour2023}.
-Comparable results have been obtained with an artificial spin-vortex ice reservoir, which achieves $\MSE \approx 0.019$ for a sine-to-sawtooth transformation and $\MSE \approx 0.01$ for a Mackey-Glass prediction at an offset $k \approx 1.4$~\cite{gartside2022reconfigurable}.
-Combining multiple in-plane square and pinwheel ASI reservoirs in series has resulted in $\MSE \approx 0.011$ for Mackey-Glass with $k \approx 0.8$ and $\MSE \approx 0.01$ on a sine-to-sawtooth transformation~\cite{AdaptiveProgrammableRC}. \par
+For instance, with a network of magnetic nanorings, an MSE of $\approx 0.014$ has been reported for the same transformation~\cite{Vidamour2023}.
+Comparable results have been obtained with an artificial spin-vortex ice, which achieves $\MSE \approx 0.019$ for a sine-to-sawtooth transformation and $\MSE \approx 0.01$ for a Mackey-Glass prediction at an offset $k \approx 1.4$~\cite{gartside2022reconfigurable}.
+Furthermore, combining multiple in-plane square and pinwheel ASI reservoirs in series has yielded $\MSE \approx 0.011$ for Mackey-Glass with $k \approx 0.8$ and $\MSE \approx 0.01$ on a sine-to-sawtooth transformation~\cite{AdaptiveProgrammableRC}. \par
 Reconfigurable reservoirs can achieve better results as they are able to adapt to the task at hand.
 One example of these is a skyrmion/conical reservoir~\cite{TaskAdaptivePRC}, which obtains a better sine-to-sawtooth transformation ($\MSE \approx \SIrange{e-4}{3e-7}{}$) and Mackey-Glass signal prediction ($\MSE \approx 0.0037$), though only at very low temperature $T = \SI{4}{\kelvin}$.
 Above room temperature, $\MSE \approx 0.018$ was reported for an offset $k \approx 0.25$, closely matching the performance of our ASI reservoir. \par
 Various non-magnetic physical reservoirs have also been benchmarked using these same tasks.
 A carbon nanotube reservoir, for example, has been used to get $\MSE \approx 0.008$ on a sine-to-sawtooth transformation~\cite{CarbonNanotubeRC}.
 Nanowire networks~\cite{NanoarchitectonicAtomicSwitch,RC_NNN} appear to achieve similar performance, as does the use of molecular vibration dynamics for reservoir computing~\cite{FewMoleculeReservoir}.
-Chemical dynamics can also be utilised as a reservoir; for example, the use of electrochemical currents in a solution has yielded an $\MSE$ of $\approx 0.002$ for a sine-to-sawtooth task~\cite{ElectrochemicalPRC}. % 0.002 for polyoxometalate. For water, $\MSE \approx 0.04$.
+Chemical dynamics can also be utilised as a reservoir; for example, the use of electrochemical currents in a solution has yielded an $\MSE$ of $\approx 0.002$ for the sawtooth transformation task~\cite{ElectrochemicalPRC}. % 0.002 for polyoxometalate. For water, $\MSE \approx 0.04$.
 Abstract echo state networks do outperform our system, as they have reportedly achieved $\MSE \approx 0.006$ for a very far future prediction of $k \approx 5$~\cite{Moon_2021}. % They gets NRMSE of 0.045 for their single-reservoir ESN, which corresponds to MSE 0.002, but their definition divides the normal MSE by the average square deviation, which is never more than 0.25. So the correspondence is quite vague.
 
 \subsection{Conclusion}
 By harnessing the spontaneous relaxation dynamics of thermally active OOP ASI, this type of system can be used as a reservoir thanks to its gradual response to external stimuli.
-It performs comparably to many other single reservoirs, on both signal transformation and prediction tasks.
+Its performance is comparable to many other single reservoirs, on both signal transformation and prediction tasks.
 The computational capability of thermally active OOP ASI can be boosted by including a property gradient and enlarging the system.
 However, the working principle adopted here --- using thermal relaxation --- inevitably suffers from thermal noise, imposing a limit to the achievable performance.
 A major advantage of thermally active ASI is that it can respond to a wide range of input frequencies --- spanning two orders of magnitude or more --- owing to the logarithmic nature of its relaxation dynamics.
-Still, manufacturing thermally active ASI remains challenging, as this requires great control over the effective anisotropy $\EEA$.
+Still, manufacturing thermally active ASI remains challenging, as this requires great control over the effective OOP anisotropy, which must not exceed several tens of $\kBT$.
 
 % MSE is not an ideal parameter, should use something that accounts more for the general shape, because plateaus can have equal weight as noise, while they are visually quite different.
 
