@@ -511,13 +511,13 @@ Averaging over multiple columns or enlarging the system is expected to be benefi
 % TODO: schematic as in fig. 6a to illustrate column-wise readout?
 
 \subsection{Influence of input on dynamics}
-Since we intend to use the spontaneous relaxation of thermally active OOP ASI for reservoir computing, it is desirable for the relaxation process to span as few orders of magnitude in time as possible.
-To achieve this, a low NN MS coupling $\EMC=2.5\kBT$ will be used as a baseline --- chosen to be as low as possible while avoiding the superparamagnetic regime.
+Since we intend to use the spontaneous relaxation of thermally active OOP ASI for reservoir computing, it is desirable to maximally use the available range of intermediate states, meaning the relaxation process should not span too many timescales.
+Hence, a low NN MS coupling $\EMC=2.5\kBT$ will be used as a baseline, as this is the lowest value that fully avoids the superparamagnetic regime, though its relaxation already spans $>5$ orders of magnitude.
 As previously seen in~\cref{fig:3:OOP_relaxation}, systems with this level of coupling relax over timescales suitable for computation (i.e., $\mavg \rightarrow 0$ within $\approx \SI{1}{\milli\second}$) when $\EEA \leq 20\kBT$.
 While a further reduction of $\EEA$ would accelerate the relaxation, accurate control over the anisotropy is challenging in practice.
 Therefore, all subsequent simulations of reservoir computing in thermally active ASI will use the standard values $\EEA=20\kBT$ and $\EMC=2.5\kBT$ (unless otherwise specified) while varying other parameters to determine the optimal input conditions for such a system.
 
-\vspace{-1em}
+\vspace{-1.5em}
 \xfig{3_RC_OOP/OOP_relaxation_input.pdf}{
 	\label{fig:3:OOP_relaxation_input}
 	Dependence of the system dynamics on the input frequency $f$ and magnitude $B$ in an $11 \times 11$ exchange-coupled OOP square-lattice ASI.
@@ -528,6 +528,7 @@ Therefore, all subsequent simulations of reservoir computing in thermally active
 	Blue traces show the absolute value of the normalised average magnetisation $\mavg$ while orange traces represent the local antiferromagnetic parameter $\qNN$.
 	Each trace shows the mean (central line), standard deviation (central shaded area), and 1st/99th percentile (outer shaded area) of 200 repeated relaxations with randomly sampled $\EEA$ profiles.
 }
+\vspace{-1em}
 
 The main factors influencing the dynamics, beyond those intrinsic to the ASI, are the input frequency $f$ and the magnitude $B$ of the excitation.
 Their effect is illustrated in~\cref{fig:3:OOP_relaxation_input}, where a random scalar input sequence is applied to the ASI.
