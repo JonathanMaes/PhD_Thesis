@@ -300,7 +300,7 @@ This way, $\Delta E$ serves as the barrier when the original energy barrier disa
 This adjustment is shown in red in~\cref{fig:2:EB_meanbarrier}: it is closer to the exact solution except for $-4 \EB < \Delta E < -2 \EB$.
 Notwithstanding that the original mean-barrier approximation~\eqref{eq:2:EB_meanbarrier_original} lies closer to the exact solution in this range, we choose not to use it as this lies outside its valid range of $\abs{\Delta E} < 2 \EB$.
 
-\subsubsection{Asymmetric barrier}\indexlabel{asymmetric energy barrier}
+\subsubsection{Asymmetric barrier}\indexlabel{asymmetric energy barrier}\label{sec:2:E_B_asymm}
 The simple \xref{mean-barrier model} is insufficient for many IP ASI.
 In real nanomagnets, reversal by \xref{coherent rotation} can occur via two pathways; clockwise ($\clockwise$) or counter-clockwise ($\counterclockwise$) rotation of the magnetisation.
 In an asymmetrical environment --- when the \xref{effective field} has a non-zero component perpendicular to the \xref{easy axis} --- one of these two rotation directions will be preferred~\cite{leo2021chiral,DirectionalEnergyBarrier}.
@@ -1175,16 +1175,80 @@ This variance between experiments may be due to differences in defects or quench
 \newpage
 \section{Applications}
 % TODO: add the applications from the paper here, except the clocking in OOP ASI
+Whereas the previous section verified that \hotspice works as intended, this section will investigate the impact of the different model variants proposed in~\cref{sec:2:Energy}.
+Firstly, accounting for the \link{asymmetric energy barrier}{asymmetry} between the clockwise and counter-clockwise effective energy barriers is most noticeable in pinwheel ASI, where each magnet points perpendicularly into the side of its nearest neighbours.
+Hence, a hysteresis in pinwheel ASI will be used to investigate the importance of the parameter $\rho = \mu_\perp/\mu_\parallel > 0$ that models \xref{non-coherent magnetisation reversal} in~\cref{eq:2:EB_asymmetric}.
+Secondly, the \link{finite dipole model}{finite-size corrections} are most impactful in ASI where magnets are aligned end-to-end, such as kagome ASI.
+Therefore, we will also perform a hysteresis in kagome ASI to unveil some differences between the \xref{point dipole model} and \xref{dumbbell model}.
+Note that hysteresis can not be simulated using \xref{Metropolis-Hastings sampling}, since it ignores the uniaxial anisotropy (i.e., the energy barrier $\EB$) to sample the equilibrium state space.
+Since a hysteresis only exists because the equilibrium is not reached within the timescale of the observation, Metropolis-Hastings sampling would therefore not capture the experimentally observed hysteresis at all.
+Hence, the \xref{first-switch method} must be used, with an appropriate maximum switching time $t_\mathrm{max}$. 
+
 \subsection{Pinwheel reversal}\label{sec:2:Applications_reversal_Pinwheel}
-% TODO: This can show some interesting things about the energy barrier approximations etc.
-This will result in a \xlabel{hysteresis}.
-Note that any hysteresis must be simulated using the \xref{first-switch method}, as \xref{Metropolis-Hastings sampling} ignores the uniaxial anisotropy (i.e., the energy barrier $\EB$) and therefore does not yield a representative hysteresis --- if it yields any hysteresis at all.
+% TODO: Make sure this section fits into the thesis, without loose references to things from the paper.
+% TODO: Discuss the impact of the energy barrier approximations on the Pinwheel reversal.
+Pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a-b}) can be seen as consisting of two intertwined sublattices whose magnets are perpendicular to each other.
+The ground state of this system consists of superferromagnetic domains, where all magnets within each sublattice are magnetised in the same direction~\cite{EmergentChiralityRatchet,ApparentFMpinwheel,RC_ASI}.
+This lattice exhibits hysteresis: when a strong field drives it towards a uniform state, it will remain in that state after the field is removed since this is a ground state of the system. \par
+Li \textit{et al.}~\cite{li2018pinwheel} performed an experimental study to observe the reversal of `diamond'-edge pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a}) under the influence of an external field.
+Notably, when Li~\textit{et al.} applied the field at an oblique angle (\ang{30}) to the ASI edges, the reversal occurred in two distinct steps: the sublattice which was more aligned with the field (\ang{15} to the easy axis) reversed first, followed by the second sublattice for which the field was at \ang{75}.
+Accurate simulation of the second reversal step requires accounting for the asymmetry in the energy barrier between clockwise and counter-clockwise switching, due to the near-perpendicular field for the second sublattice. \par
+We replicated this experiment using \hotspice for a few values of $\rho=\mu_\perp/\mu_\parallel$ to clearly observe the effect of the asymmetric barrier, resulting in the hysteresis loops shown in~\cref{fig:2:Hysteresis_Pinwheel}.
+When possible, simulation parameters were derived from the experimental configuration: an ASI of $25 \times 25$ unit cells with a NN centre-to-centre distance of \qty{420}{\nano\meter} was used, at room temperature (\qty{300}{\kelvin}).
+The magnetic moment and energy barrier of each magnet can be derived from the geometry of the $470\times170\times\qty{10}{\nano\meter}$ stadium-shaped magnets and the permalloy (\ce{Ni_80 Fe_20}) saturation magnetisation $M_\mathrm{sat}=\qty{800}{\kilo\ampere\per\meter}$.
+This yields a magnetic moment $\mu = M_\mathrm{sat} V = \qty{5.9e-16}{\ampere\meter\squared}$, and a \mumax~\cite{mumax3} simulation reveals that the energy barrier of such magnets is $\approx \qty{60}{\electronvolt}$.
+These values result in a good match with the experimental field magnitude for the first reversal step.
+The simulations used the point dipole model; performing the same simulations with the dumbbell model results in a nearly identical hysteresis since changing to the dumbbell model has little effect in pinwheel ASI.
+
+\xfig{2_Hotspice/Hysteresis_Pinwheel.pdf}{
+	\label{fig:2:Hysteresis_Pinwheel}
+	Hysteresis of the pinwheel ASI for an external magnetic field applied at \ang{30} with respect to the system edges.
+	The parameter $\rho = \mu_\perp/\mu_\parallel$ modulates the effect of the asymmetric barrier as described in~\cref{sec:2:E_B_asymm}.
+	\textbf{(a)} Component of the average magnetisation along the direction of the external field.
+	The experimental hysteresis by Li \textit{et al.}~\cite{li2018pinwheel} is shown in black.
+	\textbf{(b)} In-plane path of the average magnetisation vector.
+	Triangles pointing up (down) correspond to the ramp-up (down) of the external field, whose direction is indicated by the double-headed arrow.
+	\textbf{(c-e)} Snapshots of the system when passing through threshold values of $M_\parallel/M_{\parallel,\mathrm{sat}}$, in chronological order through the hysteresis loop.
+	The colour of each pixel shows the local average magnetisation angle of the ASI, as encoded by the colour wheel shown on the right.
+	Snapshots (1,5,9) are taken near the saturated $M_\parallel/M_{\parallel,\mathrm{sat}} \approx \pm 1$ state, (3) and (7) at the zero-average $M_\parallel/M_{\parallel,\mathrm{sat}} = 0$, and (2,4,6,8) at $M_\parallel/M_{\parallel,\mathrm{sat}} = \pm\sqrt{3}/3 \approx 0.58$ i.e., the value at the plateau between the two steps for $\rho=0$ and $\rho=0.4$.
+}
+
+In the experiment, the two reversal steps occurred gradually over a range of fields, resembling more of an S-curve rather than a sharp step.
+This is due to a random spread on the coercive field of each nanomagnet due to imperfections in lithography~\cite{fraleigh2017characterization}. % REF: 'fraleigh2017characterization' examines this spread in OOP square: they infer the coercive field distribution of the magnets in their system from the width of the hysteresis loop.
+We modelled this in the simulation by introducing a random Gaussian variation on the energy barrier, with $\sigma(E_\mathrm{B})/\langle E_\mathrm{B} \rangle=\qty{7}{\percent}$ yielding the closest agreement to the experiment.
+Note that the experimental hysteresis curve is not symmetric, in contrast to our simulations, which Li \textit{et al.} attributed to a small sample movement during their measurement which changed the applied field angle with respect to the array. \par
+As can be noted from the figure, the resulting hysteresis, and particularly the field magnitude for the second reversal step, is highly dependent on the choice of $\rho=\mu_\perp/\mu_\parallel$.
+When the asymmetry of the energy barrier is neglected ($\rho=0$), the field magnitude required for the second step is significantly overestimated, as seen in the blue curve of~\crefSubFigRef{fig:2:Hysteresis_Pinwheel}{a} ($\approx\qty{60}{\milli\tesla}$ vs. experiment $\approx\qty{25}{\milli\tesla}$).
+Increasing $\rho$ reduces the field magnitude at which the second step occurs but has little effect on the first step.
+Notably, for $\rho \gtrapprox 0.6$, the second step disappears entirely, and the reversal instead occurs by domain nucleation at the edges of the ASI, as illustrated in \crefSubFigRef{fig:2:Hysteresis_Pinwheel}{e}. \par
+Hence, $\rho \approx 0.4$ yields the best correspondence to the experiment.
+A possible explanation for this is that the switching of magnets in the experimental ASI does not occur by uniform rotation, as assumed by the N\'eel-Arrhenius switching law (\cref{eq:2:Néel}).
+Indications of non-uniform rotation or domain wall-mediated reversal were previously noticed by Morley~\textit{et al.}~\cite{VogelFulcherTammannFreezing}
 
 \subsection{Kagome reversal}
-% TODO: This can show some interesting things about the monopole vs. dipole models.
+% TODO: This can show some interesting things about the dumbbell vs. point dipole models.
 
-%\subsection{RC by clocking in Pinwheel ASI} % TODO: remove this or not?
-%This probably won't be added since it is mostly Ian's work, and concerns RC rather than the simulator itself.
+
+
+%\begin{figure*}[!ht]
+%	\centering
+%	\includegraphics[width=\textwidth]{Figures/kagome_reversal.pdf}
+%	\caption{Reversal of a kagome ASI under an external field applied at \ang{-93.6} relative to the horizontal axis. (a) Comparison between the dumbbell and dipole models at different external field magnitudes $B$. Note that the critical field $B_C$ differs between the models:  $B_C = \qty{26.7}{\milli\tesla}$ for the dumbbell model and $B_C = \qty{23.9}{\milli\tesla}$ for the dipole model. The NN center-to-center distance is \qty{500}{\nano\meter}, with a length $d=\qty{470}{\nano\meter}$ used in the dumbbell model. The magnets have a magnetic moment $\mu=\qty{1.1}{\femto\ampere\meter^2}$, and their energy barrier is normally distributed with a mean of \qty{120}{\electronvolt} and \qty{5}{\percent} standard deviation. Arrows represent the magnetic moment of the magnets, and the blue and red points ({\color{blue}\textbullet} and {\color{red}\textbullet}) represent the net change in charge of a vertex. (b) The effect of an externally applied magnetic field on a vertical and sloped magnet for different values of the energy barrier. $E_\mathrm{MS}$ is the same for each $E_\mathrm{B}$, however it is higher for the sloped magnets compared to the vertical ones. When $E_\mathrm{B}<E_\mathrm{B}^c$ ($E_\mathrm{B}>E_\mathrm{B}^c$), the sloped (vertical) magnet will flip first since the Zeeman energy $E_\mathrm{Z}$ increases faster for the vertical magnets.}
+%	\label{fig:kagome_reversal}
+%\end{figure*}
 
 \section{Conclusion}
-% TODO END: summarise the main takeaways of all the different sections and subsections.
+% TODO: check if this conclusion is sufficiently concluding for a thesis, i.e. not just a summary but also discussing the lessons learnt.
+We have presented in detail the underlying models used by \hotspice{}, an open-source and easily extensible Monte Carlo simulator designed to simulate ASI dynamics.
+In particular, we focused on the evaluation of several model variants extending beyond the basic Ising model typically used for ASI simulations. \par
+Firstly, we considered more accurate calculations for magnetostatic interactions: OOP systems were found to benefit from a second-order correction, while IP systems achieve far more accurate results with a dumbbell model.
+Secondly, accounting for asymmetric switching channels proved key to e.g., correctly reproduce coercive fields in pinwheel ASI, provided that the reduced magnetization during non-coherent reversal processes was also accounted for.
+Finally, we provided two algorithms for handling switching events.
+The N\'eel-Arrhenius approach is best suited for simulating the temporal evolution of the system, including out-of-equilibrium dynamics.
+The Metropolis-Hastings algorithm efficiently explores equilibrium configurations, especially when multiple magnets switch simultaneously.
+These methods were compared to experimental and theoretical results for pinwheel, kagome, and square ASI. \par
+This approach makes \hotspice{} complementary to traditional micromagnetic simulations.
+By sacrificing the detailed simulation of the internal magnetization structure of individual nanomagnets, the higher-level approximations employed by \hotspice{} enable the study of complex ASI dynamics in much larger systems and over significantly longer timescales.
+This opens new opportunities to use ASI for applied machine learning tasks like reservoir computing (RC).
+The ability of \hotspice{} to quickly sweep parameters and evaluate RC metrics facilitates the optimization of ASI configurations and the identification of suitable input protocols, as demonstrated by our simulation of clocking protocols in pinwheel and OOP square ASI. \par
+In conclusion, \hotspice{}'s combination of speed, flexibility, and accuracy makes it a powerful tool to explore the rich physics of ASI systems and advance their use in innovative applications like reservoir computing.
