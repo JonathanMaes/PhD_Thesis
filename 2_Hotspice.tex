@@ -1,6 +1,6 @@
 \chapter{Methods: ``\hotspice'' simulator for artificial spin ice}\label{ch:Hotspice}
 % \glijbaantje{It's not a bug, it's a feature.}{Someone}
-% TODO: apply changes applied in response letter, when response letter is sent
+
 
 To assess the potential of \link{reservoir computing}{Reservoir Computing} in (perpendicular-anisotropy) \link{artificial spin ice}{Artificial Spin Ice}, as is the main topic of this thesis, a simulation framework is needed to efficiently explore the impact of various system parameters and input methods on reservoir performance. \par
 Nanomagnetic systems are often simulated using \indexlabel{micromagnetic simulations}micromagnetic codes, such as the finite-difference-based \mumax~\cite{mumax3} and \oommf~\cite{OOMMF} or the finite-element-based \nmag~\cite{Nmag}, which capture the magnetisation dynamics of individual nanomagnets in great detail.
@@ -12,23 +12,30 @@ When the simulated time extends beyond several microseconds, as is typically the
 To address these limitations, specialised ASI simulation tools have been developed.
 An example of this is the flatspin simulator~\cite{flatspin}, which implements deterministic spin flipping via a \xlabel{Stoner-Wohlfarth} model~\cite{StonerWohlfarth2008}.
 Using such higher-level approximations enables the study of collective behaviour in much larger systems and over far longer timescales than is feasible with micromagnetic simulations, though at the cost that the internal magnetisation structure of individual nanomagnets is no longer simulated in detail.
-Additionally, Monte Carlo methods are often used to simulate spin ices, including ASI, but these are typically specialised to a select few lattice geometries and often only account for nearest-neighbour interactions, whose strength is often arbitrarily set or calculated separately using micromagnetic codes.~\cite{MeltingASI,sklenar2019field,gilbert2014emergent,zhang2013crystallites} \\\par % REFS: 'gilbert2014emergent': Monte Carlo sims based on a vertex model and interacting magnetic charges. 'zhang2013crystallites': uses monopoles and NN couplings to model kagome ASI with Metropolis and loop update. 'moller2006artificial': bit broader using dipolar interaction, though seemingly still only for nearest neighbors. 'mengotti2011kagome' use a full dipole model with Ewald summation for PBC. 'lou2023competing': dipole model for half-occupation IP Ising. 'sendetskyi2019continuous': dipole model for square ASI. 'EngineeringRelaxationComputation': KMC on dipole model, seemingly for square arrays. 'sklenar2019field': NN interactions calculated by mumax on quadrupole lattice. 'MeltingASI': 16-vertex ice model
-
-Our goal was to blend these two approaches, resulting in \hotspice: a versatile Monte Carlo simulator meant to capture ASI physics with minimal parameters, allowing various lattice configurations to be evaluated.
-It supports both in-plane (IP) and out-of-plane (OOP) ASI, which may contain thousands of magnets. 
+Additionally, Monte Carlo methods are often used to simulate spin ices, including in-plane (IP)~\cite{Qi2008,Cugliandolo2017,LocalizedFrustratedKagome,Brunn2021,Farhan2013,ApparentFMpinwheel} and out-of-plane (OOP)~\cite{Chioar2014,PerpendicularMagnetizationASI} ASI. % REFS: 'Qi2008': kagome NN model. 'Cugliandolo2017': square vertex-based model. 'LocalizedFrustratedKagome': kagome NN model. 'Brunn2021': IP square 10NN model. 'ApparentFMpinwheel': full MS model. 'Chioar2014': square MS model.
+Many early works accounted only for nearest-neighbour (NN) interactions, whose strength was set manually or calculated separately using micromagnetic codes~\cite{Qi2008,PerpendicularMagnetizationASI}. % REFS: 'moller2006artificial': bit broader using dipolar interaction, though seemingly still only for nearest neighbors.  'lou2023competing': dipole model for half-occupation IP Ising. 'sendetskyi2019continuous': dipole model for square ASI. 'EngineeringRelaxationComputation': KMC on dipole model, seemingly for square arrays.
+More recently, the importance of long-range magnetostatic interactions has been emphasised to improve correspondence to experiments~\cite{Chioar2014,Rougemaille2011,Brunn2021}.
+As such, vertex~\cite{gilbert2014emergent,Saglam2022Tetris,Goryca2021Plasma,MeltingASI} or hybrid NN/vertex-charge~\cite{Canals2016,zhang2013crystallites} models have become more prevalent, especially for square-lattice ASI. % REFS: 'MeltingASI': 16-vertex ice model. 'gilbert2014emergent': MC sims based on a vertex model and interacting magnetic charges. 'zhang2013crystallites': uses monopoles and NN couplings to model kagome ASI with Metropolis and loop update.
+Beyond-NN interaction models, including full magnetostatically coupled models~\cite{ApparentFMpinwheel,mengotti2011kagome}, are also used for e.g. square-~\cite{Brunn2021,Farhan2013,sklenar2019field} and triangle-based~\cite{Chioar2014,Rougemaille2011,Hofhuis2020} lattices. \par % 'sklenar2019field': 3NN interactions calculated by mumax on quadrupole lattice. 'mengotti2011kagome' use a full dipole model with Ewald summation for PBC.
+Our goal was to blend these approaches, resulting in \hotspice: a versatile Monte Carlo simulator meant to capture ASI physics with minimal parameters, allowing various lattice configurations to be evaluated.
+It supports both IP and OOP ASI, which may contain thousands of magnets. 
 This software approximates each single-domain nanomagnet as a single Ising spin, associating energies with the various ASI states.
-\hotspice explicitly accounts for the \link{magnetostatic interaction}{magnetostatic (MS) interaction} between all magnets.
-The importance of considering long-range magnetostatic interactions, particularly for OOP systems, has been highlighted by Chioar~\textit{et al.}~\cite{Chioar2014}.
+Since the importance of considering long-range \link{magnetostatic interaction}{magnetostatic (MS) interactions} --- particularly for OOP systems --- has been highlighted by Chioar~\textit{et al.}~\cite{Chioar2014}, \hotspice{} explicitly accounts for the MS interactions between all magnets.
 Simulations can span arbitrary timescales, as determined by the switching time of magnets in the system. \\\par
 
 In this chapter, we discuss several model variants that have been implemented, and assess their accuracy in simulating the behaviour of ASI.
-These variants differ in their choice of Monte Carlo spin-flip algorithm and their calculation of the magnetostatic interactions and energy barriers. \\\par
+These variants differ in their choice of Monte Carlo spin-flip algorithm and their calculation of the magnetostatic interactions and energy barriers.
 
 \begin{adjustwidth}{2em}{2em} % TODO END: update once published.
+	\vspace{0em}
+	\begin{center}
+		\centering\rule{0.7\linewidth}{0.4pt}
+	\end{center}
+	\vspace{0em}
 	\begin{center}
 		\textbf{Material from this chapter has also been published in:} \\
 	\end{center}
-	\vspace{1em}
+	\vspace{0em}
 	\begin{adjustwidth}{0em}{1.5em}
 		\begin{itemize}
 			\item[\cite{MAES-24}] J.~Maes, D.~De~Gusem, I.~Lateur, J.~Leliaert, A.~Kurenkov, and B.~Van Waeyenberge.
@@ -36,22 +43,18 @@ These variants differ in their choice of Monte Carlo spin-flip algorithm and the
 			\newblock \emph{ArXiV}, arXiv:\penalty0 2409.05580, 2024.
 		\end{itemize}
 	\end{adjustwidth}
-	\vspace{.5em}
+	\vspace{-0.5em}
 	\begin{center}
 		\centering\rule{0.7\linewidth}{0.4pt}
 	\end{center}
-	\vspace{.0em}
+	\vspace{-1em}
 	\begin{center}
 		The \hotspice simulator discussed in this chapter\\
 		is open-source and available on \href{https://github.com/bvwaeyen/Hotspice}{GitHub}.
 	\end{center}
-	%\vspace{0em}
-	\begin{center}
-		\centering\rule{0.7\linewidth}{0.4pt}
-	\end{center}
-	\vspace{1em}
 \end{adjustwidth}
 
+\newpage
 \section{Artificial spin ice model}\indexlabel{point dipole model}
 In single-domain IP nanomagnets, the magnetisation prefers to align along the fixed \xref{easy axis} of the geometry, while for OOP magnets a strong interfacial anisotropy with the substrate causes a preferential orientation along the $z$-axis.
 Either way, it is natural to use an Ising-like approximation for simulating such single-domain nanomagnets.
@@ -66,19 +69,10 @@ Thus, the total magnetic moment vector $\vc{\mu}_i$ of magnet $i$ can be express
 \end{equation}
 where $s_i = \pm 1$, and $\vc{u}_i$ is a fixed unit vector parallel to the easy axis. \par
 The switching rate between these two states is determined by the energy barrier that separates them, as well as the temperature $T$.
-For an isolated nanomagnet, the energy barrier $\EB$ originates from its \xref{shape anisotropy}.
+For an isolated nanomagnet, the energy barrier $\EB$ originates from its \xref{shape anisotropy} and can, for instance, be estimated from micromagnetic simulations.
 However, interactions with other magnets or \xref{external magnetic fields} modify the energy landscape, leading to an effective barrier which we will denote as $\EBeff$~\cite{leo2021chiral}.
 Each magnet can have a unique magnetic moment size $\mu_i$, temperature $T_i$ and energy barrier $E_{\mathrm{B},i}$.
-This enables, for instance, modelling some of the disorder due to lithographic variations by assigning a different shape anisotropy to each magnet, typically sampled from a Gaussian distribution with mean $\EB$ and standard deviation $\sigma(\EB)$.
-
-\xfig[1.0]{2_Hotspice/ASIs.pdf}{
-	Predefined artificial spin ice (ASI) lattices available in \hotspice.
-	The unit cell of each lattice is delineated by a central dark grey rectangle.
-	The red indicator defines the lattice parameter $a$.
-	In the Ising approximation, the magnetisation of in-plane magnets (top) aligns along the major axis of the depicted ellipses.
-	Out-of-plane magnets (bottom) are illustrated as circles.
-	\label{fig:2:ASIs}
-}
+This enables, for instance, modelling some of the disorder due to lithographic variations by assigning a different shape anisotropy to each magnet, typically sampled from a Gaussian distribution with mean $\EB$ and standard deviation $\sigma(\EB)$~\cite{DisorderGroundStateASI}. \\\par
 
 Due to the periodic nature of many ASI, \hotspice chooses to perform the simulation on a rectilinear grid as this allows efficient matrix and array manipulations, as well as straightforward implementation of both open and periodic boundary conditions (PBC).
 Each grid point may or may not contain a magnet, and the magnets must either all be of the IP type, or all OOP.
@@ -93,7 +87,17 @@ The same can be said of the triangle (f) and kagome (g) lattices where individua
 The Cairo lattice (h) can be continuously deformed into the Shakti lattice~\cite{ShaktiCairo,ShaktiCairoSquare}, but note that the \xref{point dipole model} is no longer appropriate for the latter; instead, a dumbbell model (see~\cref{sec:2:Dumbbell}) would be more accurate. \par
 The remaining four IP and four OOP lattices are also related: the magnets in the OOP lattices (i)-(l) are positioned at the vertices where magnets meet in their respective IP counterparts (e)-(h).
 
-\section{Energy calculation}
+\xfig[1.0]{2_Hotspice/ASIs.pdf}{
+	Predefined artificial spin ice (ASI) lattices available in \hotspice.
+	The unit cell of each lattice is delineated by a central dark grey rectangle.
+	The red indicator defines the lattice parameter $a$.
+	In the Ising approximation, the magnetisation of in-plane magnets (top) aligns along the major axis of the depicted ellipses.
+	Out-of-plane magnets (bottom) are illustrated as circles.
+	\label{fig:2:ASIs}
+}
+
+\newpage
+\section{Energy calculation}\label{sec:2:Energy}
 %The energy of the system is an essential quantity in these Monte Carlo simulations.
 In this section, we will list the various energy contributions used in \hotspice, explain how we may account for the finite size of real nanomagnets within this Ising-like model, and show how the effective energy barrier $\EBeff$ is calculated.
 
@@ -186,16 +190,16 @@ Although IP magnets are typically more stadium-shaped~\cite{EmergentChiralityRat
 %While this correction can be applied to both IP and OOP magnetic dipoles, it is most effective for OOP systems, as can be seen in~\cref{fig:2:MS_distance}.
 
 \subsubsection{Dumbbell model}\label{sec:2:Dumbbell}
-Instead of representing a magnet as a \link{point dipole model}{point dipole}, one may instead choose to represent it as a pair of \idx{magnetic monopoles}~\cite{MagneticMonopoles2008,MagneticMonopoleDynamics}.
+Instead of representing a magnet as a \link{point dipole model}{point dipole}, one may instead choose to represent it as a pair of opposite \indexlabel{magnetic charge}magnetic charges~\cite{MagneticMonopoles2008,MagneticMonopoleDynamics}.
 This introduces a new parameter $d$: the effective distance between the north and south poles of a magnet, with respective positions $\vc{r_N}_i = \vc{r}_i + s_i\frac{d_i}{2}\vc{u}_i$ and $\vc{r_S}_i = \vc{r}_i - s_i\frac{d_i}{2}\vc{u}_i$.
 An appropriate choice of $d_i$ (slightly smaller than the physical length $l$ of the nanomagnet~\cite{DDG_Masterproef}) allows this \idx{dumbbell model} to emulate the spatial extent of a real nanomagnet. \par
-The north and south monopoles are assigned \indexlabel{magnetic charge}magnetic charges $+q_i$ and $-q_i$, respectively, with $q_i=\mu_i/d_i$~\cite{MagneticMonopoles2008}.
+The north and south poles are assigned the magnetic charges $+q_i$ and $-q_i$, respectively, with $q_i=\mu_i/d_i$~\cite{MagneticMonopoles2008}.
 This choice yields the same effective dipole moment at long distance.
 The interaction energy between two magnetic charges $q$ and $q'$ can be derived from the magnetic version of Coulomb's law~\cite{ForceMagneticDipole} as
 \begin{equation}
 	E = -\int_\infty^{\vc{r}} \frac{\mu_0}{\num{4}\pi}\frac{qq'}{\abs{\vc{r}}^3} \vc{r} \cdot d\vc{r} = \frac{\mu_0}{\num{4}\pi} \frac{qq'}{\abs{\vc{r}}} \mathrm{.}
 \end{equation}
-The magnetostatic interaction energy between two nanomagnets is then the sum of their four mutual monopole interactions, finally resulting in
+The magnetostatic interaction energy between two nanomagnets is then the sum of their four mutual magnetic charge interactions, finally resulting in
 \begin{equation}
 	E_{\mathrm{MS},i,j} = \frac{\mu_0 \mu_i \mu_j}{4\pi d_i d_j} \Bigg(\frac{1}{\abs{\mathbf{r_N}_i - \mathbf{r_N}_j}} + \frac{1}{\abs{\mathbf{r_S}_i - \mathbf{r_S}_j}}\\ - \frac{1}{\abs{\mathbf{r_N}_i - \mathbf{r_S}_j}} - \frac{1}{\abs{\mathbf{r_S}_i - \mathbf{r_N}_j}}\Bigg) \mathrm{.} \label{eq:2:E_MS_mono}
 \end{equation}
@@ -205,19 +209,19 @@ The minus sign in the equation appears because north and south poles have opposi
 \subsubsection{Comparison}
 To assess whether these two corrections constitute an improvement to the resulting \link{magnetostatic interaction}{magnetostatic energy}, we must quantify their impact by comparing them against a known solution.
 For this, we use the \link{micromagnetic simulations}{micromagnetic simulation} package \mumax~\cite{mumax3}, which can determine the magnetostatic interaction energy for a given arrangement of ferromagnetic material.
-While this solution is not exact, as \mumax uses a \xlabel{finite-difference} (FD) discretisation, the result will approach the true value for sufficiently small FD cell sizes. \\\par
-
+While this solution is not exact, as \mumax uses a \xlabel{finite-difference} (FD) discretisation, the result will approach the true value for sufficiently small FD cell sizes.
 \cref{fig:2:MS_distance} compares the original \link{point dipole model}{point dipole approximation} and the two corrections (``\link{finite dipole model}{finite dipole}'' and ``\link{dumbbell model}{dumbbell}'') against the solution obtained with \mumax.
-The figure shows 3 typical arrangements of neighbouring magnets in an ASI: two circular OOP magnets and two elliptical IP neighbours aligned along their \link{easy axis}{easy} and hard axes.
-The magnetostatic interaction energy between the pair of magnets, divided by $\mu^2$ to be independent of material parameters and magnet size, is shown as a function of their normalised centre-to-centre distance.
-A uniform magnetisation was used in the \mumax simulation, as this is the assumption under which the corrections were derived and because the non-uniform lowest energy magnetisation state is size-dependent while the figure uses dimensionless units. \\\par
 
 \xfig[1.0]{2_Hotspice/MS_distance.pdf}{
 	Magnitude of the magnetostatic interaction between two magnets as a function of their normalised centre-to-centre distance, for the three \hotspice{} calculation methods (\link{point dipole model}{point dipole}, \link{finite dipole model}{second-order correction for dipoles}, and \link{dumbbell model}{dumbbell}) compared to a \link{micromagnetic simulations}{micromagnetic} \mumax{} calculation assuming uniform magnetisation.
 	OOP magnets are assumed to be circular with diameter $2r$, IP magnets are ellipses with length $l$ and width $w=4l/11$.
-	Positions of north and south \link{magnetic monopoles}{monopoles} used in the dumbbell model are shown as red {\color{red}$\odot$} and blue {\color{blue}$\odot$} dots and are a distance $d=0.9l$ apart.
+	Positions of north and south \xref{magnetic charges} used in the dumbbell model are shown as red {\color{red}$\odot$} and blue {\color{blue}$\odot$} dots and are a distance $d=0.9l$ apart.
 	\label{fig:2:MS_distance}
 }
+
+The figure shows 3 typical arrangements of neighbouring magnets in an ASI: two circular OOP magnets and two elliptical IP neighbours aligned along their \link{easy axis}{easy} and hard axes.
+The magnetostatic interaction energy between the pair of magnets, divided by $\mu^2$ to be independent of material parameters and magnet size, is shown as a function of their normalised centre-to-centre distance.
+A uniform magnetisation was used in the \mumax simulation, as this is the assumption under which the corrections were derived and because the non-uniform lowest energy magnetisation state is size-dependent while the figure uses dimensionless units. \\\par
 
 For out-of-plane (OOP) systems, the \xref{dumbbell model} is inadequate due to the small fringe fields and the limited thickness of the magnets.
 Instead, the \link{finite dipole model}{second-order dipole correction} is more appropriate, yielding a significant improvement towards the \mumax result.
@@ -225,7 +229,7 @@ Still, a discrepancy remains for separations below $r_{ij}/2r \lessapprox 1.5$, 
 
 For IP systems, the dumbbell model constitutes a vast improvement over the standard \link{point dipole model}{point dipole} treatment.
 The dumbbell model does, however, require an additional parameter $d$, which affects the interaction energy.
-For the best correspondence with \mumax, the monopole-monopole distance $d$ should be set slightly shorter than the length $l$ of a magnet, typically around $d/l\approx0.9$. % Analytical: pi/4?
+For the best correspondence with \mumax, the charge-to-charge distance $d$ should be set slightly shorter than the length $l$ of a magnet, typically around $d/l\approx0.9$. % Analytical: pi/4?
 This adjustment accounts for the curvature of real nanomagnets, which results in a spatially distributed magnetic charge whose mean position is not at the end of the nanomagnet, but rather slightly closer to its centre.
 Similar values for $d/l$ were previously found in~\ccite{DDG_Masterproef} for typical nanomagnet shapes like ellipses and stadiums. \par
 In contrast, the second-order dipole correction has little effect in IP systems and can even increase the discrepancy with \mumax.
@@ -242,6 +246,7 @@ In this section, we will explore some of these approximations for $\EBeff$.
 All of them make use of the switching energy $\Delta E$ between the current and opposite state of a magnet, since this is cheap to compute\footnote{
 	Recall that the terms in \cref{eq:2:E} simply change sign when the magnetisation $\vc{\mu}$ of a magnet is reversed.
 } as $\Delta E = -2 E$.
+The subscript $i$ will be omitted for the remainder of this section; it is implied that the following discussion and equations apply to each magnet individually.
 
 \xfig[1.0]{2_Hotspice/EB_meanbarrier.pdf}{
 	Mean-barrier approximation (\ref{eq:2:EB_meanbarrier_original}, \textcolor{lightblue}{blue}) and its conditional form (\ref{eq:2:EB_meanbarrier_cases}, \textcolor{lightred}{red}) compared to the exact energy barrier (\ref{eq:2:EB_exact}, \textcolor{mplgrey}{grey}).
@@ -254,7 +259,6 @@ All of them make use of the switching energy $\Delta E$ between the current and 
 	\label{fig:2:EB_meanbarrier}
 }
 \vspace{-1em}
-We will omit the subscript $i$ for the remainder of this section; it is implied that the following discussion and equations apply to each magnet individually.
 
 \subsubsection{Intrinsic barrier due to \xlabel{shape anisotropy}} % TODO END: is any of this more relevant in the introduction?
 \label{sec:2:shape_anisotropy}
@@ -501,7 +505,8 @@ For a MCMC algorithm to sample the equilibrium state space, it must satisfy two 
 	\item To guarantee that a Monte Carlo Markov chain algorithm will eventually reach this equilibrium, it must be \textit{ergodic}, i.e. from a given state it must be possible to reach any other state via some route~\cite{kyimba2006comparisonIsingAlgorithms}.
 	This is clearly satisfied by~\cref{alg:2:MetropolisHastingsSingle}, for both $P_\mathrm{MH}$ and $P_\mathrm{GD}$, as the acceptance probability is strictly positive at non-zero temperatures.
 \end{itemize}
-As such, \cref{alg:2:MetropolisHastingsSingle} is guaranteed to reach equilibrium eventually, though the rate of convergence may vary, as noted in~\cref{sec:2:Verification_OOP_Exchange}~\cite{jang2004stochastic}. % MH seems to be the most physically accurate from a theoretical point of view, though a point can be made for either of them depending on the physics of the problem~\cite{jang2004stochastic}.
+As such, \cref{alg:2:MetropolisHastingsSingle} is guaranteed to reach equilibrium eventually.
+However, the rate of convergence may vary, as noted in~\cref{sec:2:Verification_OOP_Exchange}~\cite{jang2004stochastic}: end users must take care to perform sufficient Monte Carlo steps to ensure thermalisation. % MH seems to be the most physically accurate from a theoretical point of view, though a point can be made for either of them depending on the physics of the problem~\cite{jang2004stochastic}.
 
 \sidefig{2_Hotspice/RejectionKMC.pdf}{
 	\label{fig:2:RejectionKMC}
@@ -617,7 +622,8 @@ It stores the magnetostatic interactions in such a way that, when the ASI grid i
 So, in the figure, these are the elements in kernel A shown to contain a grey magnet\footnote{
 	The exact values stored at these elements are omitted as they are irrelevant to illustrate the concept. See \cref{fig:2:Kernel_PBC} for an example of the particular values stored in kernel A for a larger $16 \times 16$ lattice.
 }. \par
-The concept is illustrated a second time, now for the red magnet in the pinwheel ASI, which instead occupies position $q=\mathrm{B}$ in the \xref{unit cell} and therefore uses a different kernel; the red kernel $\vc{\mathcal{K}}^\mathrm{(B)}$. \\\par
+The concept is illustrated a second time, now for the red magnet in the pinwheel ASI, which instead occupies position $q=\mathrm{B}$ in the \xref{unit cell} and therefore uses a different kernel; the red kernel $\vc{\mathcal{K}}^\mathrm{(B)}$.
+Note that this structure easily allows a cut-off radius for the magnetostatic interaction to be imposed by setting the relevant kernel values to zero. \\\par
 
 This construction can be used to efficiently update the \link{magnetostatic interaction}{magnetostatic energy} $E_\mathrm{MS}$ of all magnets whenever a magnet switches.
 \link{rectilinear grid}{Recall} that the grid stores the state $s_i$ of all magnets in a matrix $\vc{S}$ and the size of their magnetic moment $\mu_i$ in $\vc{\bigmu}$.
@@ -1148,7 +1154,7 @@ Square ASI has an antiferromagnetic (AFM) ground state, where all vertices have 
 On the other hand, pinwheel ASI exhibits \idx{superferromagnetism}, where all magnets with similarly-oriented \link{easy axis}{easy axes} are magnetised in the same direction~\cite{ApparentFMpinwheel}.
 Therefore, if we consider the continuous range of rotation angles $\ang{0} \leq \alpha \leq \ang{45}$, a critical angle $\ang{0} < \alpha_c < \ang{45}$ must exist where the ground state transitions between these two extremes. \par
 For the dipole model, theoretical calculations predict this transition at $\alpha_c = \arcsin(\sqrt{3}/3) = \ang{35.3}$~\cite{AFM-FM-transition-Pinwheel,MagicAngle}.
-For the \xref{dumbbell model}, the transition angle depends on the distance $d$ between \xref{magnetic monopoles}, but is always larger than for the dipole model~\cite{AFM-FM-transition-Pinwheel}. \\\par
+For the \xref{dumbbell model}, the transition angle depends on the distance $d$ between the \xref{magnetic charges} within a magnet, but is always larger than for the dipole model~\cite{AFM-FM-transition-Pinwheel}. \\\par
 
 The result of a \hotspice simulation using both models is shown in \cref{fig:2:Pinwheel_angle}.
 To quantify this transition, we measure the fraction of vertices with net zero magnetisation --- this value is 0 for superferromagnetic order while it is 1 for AFM order.
@@ -1158,7 +1164,7 @@ For the dipole model, the transition occurs at $\approx \ang{35}$ as expected, w
 \xfig[0.6]{2_Hotspice/Verification/Pinwheel_angle.pdf}{
 	Fraction of vertices with net zero magnetisation at equilibrium, as square ASI (left) transitions to pinwheel ASI (right) by rotating individual magnets.
 	The theoretical transition angle $\alpha_c \approx \ang{35.3}$ for the dipole model is indicated by the vertical dotted line.
-	The dumbbell model uses a monopole-monopole distance $d = \SI{220}{\nano\metre}$.
+	The dumbbell model uses a charge-to-charge distance $d = \SI{220}{\nano\metre}$.
 	\label{fig:2:Pinwheel_angle}
 }
 
