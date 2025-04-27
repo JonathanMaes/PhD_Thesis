@@ -1,5 +1,18 @@
 \chapter{Introduction}\label{ch:Introduction}
-\glijbaantje{It is important to draw wisdom from many different places.\\If you take it from only one place, it becomes rigid and stale.}{Uncle Iroh}
+\glijbaantje{It is important to draw wisdom from many different places.\\If we take it from only one place, it becomes rigid and stale.}{Uncle Iroh}
+%\glijbaantje{If a machine is expected to be infallible then it cannot also be intelligent.}{Alan Turing}
+
+\section{Context}
+We live in a society where computers are ubiquitous. % and indispesable.
+Conventional computers --- consisting of transistors that are arranged to form logic gates --- are capable of exact mathematical operations.
+This makes them well suited for a variety of applications, like scientific simulations, graphics rendering, processing well-structured data, running the internet\dots
+However, there are also many tasks in this world that can not be captured by such simple, exact sets of predefined rules.
+The archetypical example of one such a task is driving a car: these sorts of tasks are often thought of as requiring some degree of ``intelligence'' --- whatever that word may actually mean. \par
+Nowadays, these sorts of rather complex tasks are typically tackled using neural networks, which take inspiration from the synaptic connections in a biological brain.
+Over the years, neural networks have made significant advances, from image recognition to the more recent trend in large language models, which have since taken the world by storm.
+However, while neural networks have achieved great successes, they also have several drawbacks.
+For instance, to train these systems to the point where they can perform any of these tasks at a decent level requires vast amounts of data --- with a correspondingly large energy cost. % The energy cost associated with machine learning tasks has recently been estimated to double every 3.5 months.
+This is in stark contrast to biological brains, which seem to be capable of learning patterns based on a far more limited set of data.
 
 % TODO: talk about machine learning and the advent of neuromorphic computing and the motivation for this research
 
@@ -7,12 +20,27 @@
 % Great introduction in~\cite{RC_Tensegrity}, also explains ESN and LSM mathematically later: Classical techniques for training recurrent neural networks, such as backpropagation through time [55], approximate a desired output signal by modifying the internal weights of the neural network (as well as the readout weights, if any). This is often cumbersome and difficult to implement correctly, as one needs gradient information to apply the chain rule. Furthermore, backpropagation through time is prone to local minima. Reservoir computing (RC) is a conceptually much simpler technique to train such recurrent neural networks [68]. Instead of modifying the internal weights, the original network is left as is, and only the readout weights are modified. The original network essentially becomes a computational black box. The outcome of this training procedure typically depends on a few parameters that define the regime of the neural network. RC is known under different names, depending on the type of recurrent network that is trained. Most importantly, we distinguish liquid state machines [43] and echo state networks [34, 35]. The core idea of RC, originally applied only to neural networks, has since been extended to other nonlinear dynamical systems, leading to what we call PRC. There have been demonstrations of the RC approach applied to different domains such as photonics [67] and, more abstractly, electronics [3]. All these implementations share the common idea that a system with complex dynamics is perturbed externally but left untouched otherwise, and a simple readout mechanism is trained to perform the desired computational task. While the idea of PRC originated in the context of neural networks, recent theoretical results have extended the applicability of this computational framework immensely, showing that any dynamical system of a given size, obeying easily satisfied constraints, has the same computational power [17].
 \subsection{Motivation}
 \subsection{Origin}
-\subsubsection{ANN}
-\paragraph{Feedforward NN}
-\paragraph{Recurrent NN}
-%This dynamical system can be modelled as a recurrent neural network (RNN).
-\subsubsection{LSM}
+\subsubsection{Artificial neural networks}
+An artificial neural network (ANN) is a computational model that consists of a network of non-linear summing nodes connected by weighted edges~\cite{EvaluatingRestrictedESNs}.
+This model was originally inspired by the brain, where neurons and synapses fulfil a similar role as the nodes and weights, respectively.
+By ``training'' the weights, a desired output can be obtained~\cite{EvaluatingRestrictedESNs}. \par
+
+A distinction can be made between feedforward neural networks (FNNs) and recurrent neural networks (RNNs).
+In a FNN, abstract neurons are grouped in layers, between which abstracted synaptic connections (or links) exist that enable activations to propagate through the network~\cite{lukovsevivcius2009reservoir}.
+These are mainly used for static data processing, such as image classification. \par
+
+Recurrent neural networks (RNN) are conceptually similar to FNNs, with the important distinction that their connection topology possesses cycles~\cite{lukovsevivcius2009reservoir}.
+The existence of cycles has a profound impact, as an RNN may develop self-sustained temporal activation dynamics along its recurrent connection pathways, even in the absence of input --- mathematically, this renders an RNN to be a dynamical system, while feed-forward networks are functions~\cite{lukovsevivcius2009reservoir}. % REF verbatim
+This enables an RNN to preserve a non-linear transformation of the input history in its internal state, providing dynamical memory and making RNNs suited for dynamic data processing~\cite{lukovsevivcius2009reservoir,RC_RecentAdvances}.
+However, while training methods such as backpropagation~\cite{Backpropagation} are often employed in FNNs, the recurrent connections in RNNs make training very computationally expensive and difficult~\cite{EvaluatingRestrictedESNs,Moon_2021,RC_SuperconductingElectronics}.
+
+\subsubsection{Liquid state machines and echo state networks}
+To address the shortcomings of the backpropagation method, two concepts were independently proposed: liquid state machines (LSMs)~\cite{maass_LSM} and echo state networks (ESNs)~\cite{jaeger2001echo}, which were later unified under the term ``reservoir computing'' methods~\cite{RC_unification}.
+These both start from the concept of RNNs, but instead use a randomly generated network of nodes and weights, where the recurrent connections in the network are not trained, but only the weights in the readout are trained.
+
+
 \subsubsection{ESN}
+The concepts of LSMs and ESNs were unified under the term `reservoir computing methods' in~\cite{RC_unification}.
 \subsubsection{Reservoir computing}
 Reservoir computing is a machine learning framework where a ``reservoir'' --- an unspecified non-linear dynamical system --- maps input data into a higher-dimensional space, which facilitates the separation of said data by a linear transformation~\cite{KUR-24}.
 A weighted sum of the components of the reservoir's state vector then provides the output of the system as a whole: this is called a \xlabel{single-layer perceptron}.
@@ -41,11 +69,16 @@ The optimal weights then remain fixed, and the performance of the reservoir can 
 % Training of the weights $\vc{w}$ via linear regression: \hat{y}_i = x_i^T \cdot w + \epsilon_i or in matrix form y = X w + \epsilon. The OLS algorithm adjusts the weight vector w to minimize the MSE between the estimated output and the target function.
 
 \subsubsection{Multi-reservoir techniques}
+Since physical reservoirs can often be hard to scale, multiple techniques have been devised to improve performance by combining multiple reservoirs together~\cite{EvaluatingRestrictedESNs,RotatingNeuronsRC} or by time multiplexing~\cite{appeltant2011information}.
 \paragraph{Single dynamical node}
+\cite{appeltant2011information}
 \paragraph{Rotating neurons reservoir}
+\cite{RotatingNeuronsRC}
 \subsection{Metrics} \label{sec:1:RC_metrics}
 % TODO: cite relevant papers, like \cite{NeuromorphicFewShot}: in the Methods section there is a good mathematical introduction on MG, NARMA, and MC/NL, so can use this as reference that MG is mostly memory-driven.
 \subsubsection{Kernel-quality, generalisation-capability, compute quality} \label{sec:1:RC_metrics_KQ}
+\cite{RC_ASI}
+% REF: https://arxiv.org/html/2405.06561v1 explains the kernel-quality metrics quite well with references. Concerning the generalisation-capability, for example: "Generalisation rank (GR) measures how robust the reservoir is to noise and avoiding overfitting. The intent is to produce a measure of whether the matrix can generalise over inputs that are similar. Low GR indicates good robustness to noise."
 \subsubsection{Task-agnostic metrics: nonlinearity, memory capacity, complexity (, parity check)}
 % TODO: what does PC actually measure? Explain that its calculation is similar to that of memory capacity, but that the added summation and multiplication introduces some non-linearity aspect to it.
 \subsubsection{Attractors etc.} % More test-like than metric-like. NARMA, MG, Lorentz
@@ -86,6 +119,7 @@ An extreme example of physical reservoir computing is tensegrity --- tensile str
 \paragraph{SOT}
 % For more information on symmetry breaking by in-plane field, see~\cite{SOT_Roadmap} p.29, where also 4 other methods for symmetry breaking are presented because an external field is quite impractical. \par
 \cite{SOT_FM_AFM,SOTswitchingCoPt,SOT_Roadmap,vlasov2022optimal}
+% Energy efficiency of SOT is discussed in~\cite{SpintronicsEnergyEfficientComputing}
 \paragraph{STT} % Briefly
 \subsubsection{Output}
 \paragraph{AHE} % Mentioned in text, so definitely explain
@@ -97,4 +131,3 @@ An extreme example of physical reservoir computing is tensegrity --- tensile str
 \subsubsection{Imaging} % Imaging can also be seen as an "output", though this should be considered a class of its own.
 \paragraph{MFM} % Mentioned in text, so definitely explain
 \paragraph{PEEM}
-
