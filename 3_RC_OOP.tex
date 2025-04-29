@@ -579,7 +579,7 @@ Since all signals considered here will be normalised to the unit interval $[0,1]
 To evaluate the reservoir performance, the mean squared error of two estimators will be compared: one that is trained on the reservoir output $\vc{r}(t)$ as described before, and one that is trained only on the raw 1D input signal $s(t)$ (augmented with a constant\footnote{
 	Training an OLS estimator on a 1D signal is equivalent to an optimal scaling to fit the signal to the target function.
 	The inclusion of a constant factor enables a vertical offset of the input signal for a better fit (yielding up to $10 \times$ lower baseline MSE).
-	Omitting this constant --- as done in some studies~\cite{gartside2022reconfigurable} --- therefore artificially inflates the apparent advantage of the reservoir over a raw-input baseline.
+	Some studies do not use such a constant factor~\cite{gartside2022reconfigurable}, thereby lowering the quality of the raw-input baseline and elevating the relative performance of the reservoir.
 	Including the constant offset enables a fair comparison, as high-anisotropy magnets may also provide access to a near-constant bias for the reservoir.
 	% Note that the estimator should not be able to offset the input signal in time: this would make the baseline irrelevant in cases where the target is simply a time-offset version of the input, like a Mackey-Glass prediction.
 } to improve the fit).
@@ -727,6 +727,7 @@ Contrary to the single-column readout, the performance is now equal between the 
 \vspace{-1em}
 
 \paragraph{Double-frequency transformation}
+% TODO: address JLeliaert's comment about task agnostic metrics
 With an ASI that can perform a decent sine-to-sawtooth transformation, other transformations can be targeted without changing the ASI --- provided the input is applied with an appropriate strength and frequency.
 Only the weights $\vc{w}$ of the perceptron have to be adjusted to reflect this new target.
 For example,~\cref{fig:3:Transformation_freq-magn_SINESQ} shows results for a double-frequency sine wave as target function.
@@ -747,7 +748,7 @@ It is no coincidence that this value is similar to the timescale at which $\mavg
 The same cut-off at $f_c$ is observed (though not shown in a figure) when the target function is a square wave.
 
 \subsection{Signal prediction task: chaotic Mackey-Glass oscillator} \label{sec:3:Thermal_Prediction}
-A special kind of ``transformation'' is a signal prediction, where the target function $y(t) = s(t + \Delta t)$ is the input signal offset through time.
+A special kind of ``transformation'' is a signal prediction, where the target function $y(t) = s(t + \Delta t)$ is a transformation of the input signal offset through time.
 Such a prediction task benefits from the fading memory property of a reservoir to better infer the future evolution of the signal, while it relies less on a reservoir's non-linearity~\cite{TaskAdaptivePRC}.
 The particular signal we will be attempting to predict with the thermally active OOP ASI is the chaotic Mackey-Glass oscillator $\mathrm{MG}(t)$~\cite{MackeyGlass}, as this is a popular benchmark in literature~\cite{RotatingNeuronsRC,AdaptiveProgrammableRC,TaskAdaptivePRC,Moon_2021,JaegerHaasWireless,ArchitecturalMarkovianESN}.
 It can not be written in closed form; instead, it is implicitly defined by the delay-differential equation
@@ -817,9 +818,9 @@ Abstract echo state networks do outperform our system, as they have reportedly a
 
 \subsection{Conclusion}
 By harnessing the spontaneous relaxation dynamics of thermally active OOP ASI, this type of system can be used as a reservoir thanks to its gradual response to external stimuli.
-Its performance is comparable to many other single reservoirs, on both signal transformation and prediction tasks.
-The computational capability of thermally active OOP ASI can be boosted by including a property gradient and enlarging the system.
-However, the working principle adopted here --- using thermal relaxation --- inevitably suffers from thermal noise, imposing a limit to the achievable performance.
+While this working principle inevitably suffers from thermal noise, which imposes a limit to the achievable performance, the extent of this noise can be greatly reduced by enlarging the system.
+The computational capability of this system can be further boosted by including a property gradient.
+Ultimately, the performance of thermally active OOP ASI is comparable to many other single reservoirs, on both signal transformation and prediction tasks.
 A major advantage of thermally active ASI is that it can respond to a wide range of input frequencies --- spanning two orders of magnitude or more --- owing to the logarithmic nature of its relaxation dynamics.
 Still, manufacturing thermally active ASI remains challenging, as this requires great control over the effective OOP anisotropy, which must not exceed several tens of $\kBT$.
 
