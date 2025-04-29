@@ -1,11 +1,28 @@
 \chapter*{Preface}
-% TODO END: write preface
+In the current day and age, computers are found everywhere.
+Originally, they were employed for tasks that could be solved through exact pre-programmed mathematical operations, like processing structured data, powering the internet and performing simulations.
+Since then, the advent of machine learning has expanded their usage envelope into a range of far more complex applications, with recent examples like large language models finding widespread use.
+However, a vast amount of data is required to train modern machine learning systems, such as the nowadays ubiquitous neural networks.
+Furthermore, implementing them on conventional hardware is inherently inefficient, since many layers of abstraction separate their algorithms from the underlying transistor-based hardware.
+Upcoming bottlenecks posed by transistor scaling and data transfer between memory and processing units in traditional von Neumann architectures have attracted significant interest to alternative computing concepts.
+One such concept is neuromorphic computing, which aims to address the aforementioned issues by mimicking the synaptic interconnectivity of a biological brain, where memory and processing coincide.
+A particularly interesting avenue in this regard is in-materia computing, which asks the question of which computations a physical material executes naturally.
+Hence, rather than imposing mathematical operations onto a physical object, like a circuit of transistors does, far more efficient systems can be envisioned by reducing the layers of abstraction present in current systems. \\ %intrinsic device nonlinearity and history dependence for free [arXiv]
 
-This thesis is about ... \\
+At the intersection of neuromorphic computing and in-materia computing lies the paradigm of reservoir computing (RC).
+At the core of RC lies a non-linear dynamical system with fading memory --- the ``reservoir'' --- which is treated as a black box.
+When perturbed by a temporal input signal, the reservoir produces a complex dynamic response that facilitates separation of the input data.
+It suffices to train just a single linear readout layer on this response --- without altering the reservoir's properties --- since the non-linear transformation is captured by the reservoir itself.
+Interestingly, many physical media naturally exhibit the required properties (non-linearity, fading memory and high dimensionality), allowing them to serve directly as reservoirs.
+This cuts down on both training time and energy use, as part of the computation is offloaded to the physical substrate. \par
+Many physical media have been considered in this regard, ranging from a bucket of water to superconducting electronics. % Photonic, spintronic, quantum, superconducting, memristor arrays, mechanical, FPGA, sigmoidal neurons...
+The research presented in this thesis was performed in the context of the European ``\spinengine'' project, where tunable ensembles of nanomagnets like artificial spin ice (ASI) were considered as real-world reservoirs, because these provide a highly non-linear response while dissipating very little energy during information processing.
+ASI are magnetic structures consisting of an ordered lattice of interacting bistable nanomagnets, whose magnetisation direction can switch between two states under the influence of nearby magnets or thermal fluctuations.
+This leads to emergent dynamics arising from competing local interactions, allowing them to be used as a physical reservoir.
+This thesis specifically considers perpendicularly magnetised ASI --- also referred to as out-of-plane (OOP) ASI --- since these systems are particularly attractive due to the efficient input and readout mechanisms they allow.
+All the aforementioned concepts are introduced in more detail throughout the introductory~\cref{ch:Introduction}. \\
 
-\cref{ch:Introduction} introduces several key concepts ... \\
-
-\cref{ch:Hotspice} presents the open-source \hotspice Monte Carlo simulator for artificial spin ice (ASI), developed with the intent to evaluate reservoir computing strategies and to determine optimal system parameters.
+\cref{ch:Hotspice} presents the open-source \hotspice Monte Carlo simulator for ASI, developed with the intent to evaluate reservoir computing strategies and to determine optimal system parameters.
 It uses an Ising-like model: each magnet in the ASI is represented by a point dipole that can switch between two stable states.
 Several model variants are presented, whose accuracy in simulating the behaviour of ASI is then compared and discussed.
 These variants explore three key aspects of the simulation:
@@ -14,19 +31,21 @@ These variants explore three key aspects of the simulation:
 	\item accounting for the finite size of magnets when calculating magnetostatic interactions,
 	\item estimating the effective energy barrier that separates the stable states of a nanomagnet.
 \end{itemize}
-In the second half of the chapter, implementation details are discussed, in particular the calculation of the magnetostatic interaction between all magnets, alongside other strategies to improve performance of the Monte Carlo simulation.
-The chapter ends by briefly verifying the software, through comparison of simulations against analytical solutions for several solvable systems. \\
+In the second half of the chapter, implementation details are discussed, with a particular focus on the calculation of the magnetostatic interaction between all magnets through the use of pre-calculated kernels.
+The performance of the simulator is then assessed, with a discussion on how performance can be enhanced by switching multiple magnets simultaneously during an iteration of the Metropolis-Hastings algorithm.
+The correct operation of the software is subsequently verified through comparison of simulations against analytical solutions for several solvable systems.
+The chapter concludes by comparing simulations to several experiments previously performed in literature, allowing the accuracy of the different model variants to be examined. \\
 
-In \cref{ch:Applications}, the \hotspice simulator is used to assess the reservoir computing capabilities of both thermally active and non-volatile out-of-plane (OOP) ASI.
+In~\cref{ch:Applications}, the \hotspice simulator is used to assess the reservoir computing capabilities of both thermally active and non-volatile perpendicularly magnetised ASI.
 The properties of OOP nanomagnets, and consequently the behaviour of OOP ASI, are governed by the interplay between various energy contributions like perpendicular magnetic anisotropy and shape anisotropy.
 Through a careful choice of system parameters, thermally active ASI can be obtained, which spontaneously relaxes toward the ground state over a certain timeframe.
 After analysing how this relaxation is affected by key system parameters --- such as the nearest-neighbour magnetostatic coupling and net OOP anisotropy --- those same parameters are then determined for manufactured OOP ASI by fitting simulations to the experimentally observed relaxation dynamics. \par
 Building on this foundation, the relaxation of thermally active OOP ASI is employed for reservoir computing.
 To evaluate the computational performance of this method, two benchmark tasks are performed.
 First, a signal transformation task assesses the non-linearity of the reservoir.
-Subsequently, a time series prediction of the chaotic Mackey-Glass attractor evaluates its memory capacity.
+Subsequently, a time series prediction of the chaotic Mackey-Glass oscillator evaluates its memory capacity.
 Since thermally active ASI are challenging to fabricate, the final section of this chapter turns to non-volatile ASI.
 Contrary to thermally active ASI, a global input can not be used  in non-volatile systems due to the absence of spontaneous relaxation.
-Instead, a clocking protocol is developed to enable controlled domain wall propagation, thereby leveraging domain dynamics to enhance the computational performance of the system. \\
+Instead, a clocking protocol is developed to enable controlled domain wall propagation: leveraging domain dynamics in this manner enhances the computational performance of the system. \\
 
-In \cref{ch:Conclusion} ...
+Finally, the main results are summarised in~\cref{ch:Conclusion}, which concludes this thesis.

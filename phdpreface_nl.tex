@@ -1,34 +1,56 @@
 \chapter*{Samenvatting (in Dutch)}
-% TODO END: samenvatting schrijven
+In onze huidige samenleving zijn computers alomtegenwoordig.
+Origineel werden deze gebruikt voor taken die via exacte voorgeprogrammeerde wiskundige operaties konden worden uitgevoerd, zoals het verwerken van gestructureerde data, het ondersteunen van het internet, en het uitvoeren van simulaties.
+Sindsdien heeft de opkomst van machinaal leren hun toepasbaarheid uitgebreid tot veel complexere taken, zoals grote taalmodellen die recent wijdverspreid zijn geworden.
+Er is echter een enorme hoeveelheid data nodig voor de training van deze moderne artifici\"ele systemen, zoals de momenteel veelgebruikte neurale netwerken.
+Verder is de implementatie van dergelijke modellen op conventionele hardware inherent ineffici\"ent, aangezien hun algoritmes door vele lagen van abstractie verwijderd zijn van de onderliggende transistor-gebaseerde hardware.
+Hierdoor is er recent veel interesse voor alternative rekenconcepten, mede door de gelimiteerde schaalbaarheid van transistoren en de scheiding tussen geheugen en rekenkracht in traditionele von Neumann computerarchitecturen.
+\'E\'en zulk concept is neuromorfische computing, waarbij bovenstaande problemen worden aangepakt door de synaptische interconnectiviteit van een biologisch brein, waar geheugen en rekenkracht samenvallen, na te bootsen.
+Een zeer interessant pad in deze context is in-materia computing, waarbij men de vraag stelt welke berekeningen een fysisch materiaal van nature uitvoert.
+In plaats van wiskundige berekeningen op te leggen aan een fysisch object, zoals een schakeling van transistoren doet, kunnen zo veel efficie\"entere systemen worden bedacht door de lagen van abstractie in huidige systemen te verminderen. \\
 
-Deze thesis gaat over ... \\
+Op de kruising tussen neuromorphische computing en in-materia computing bevindt zich het zogeheten reservoir computing (RC).
+Hierbij wordt een niet-lineair dynamisch systeem met vervagend geheugen (het ``reservoir'') gebruikt als zwarte doos.
+Wanneer het reservoir verstoord wordt door een inputsignaal, genereert het een complexe dynamische respons, waardoor de input data makkelijker kan worden verwerkt.
+Het volstaat daardoor om slechts een enkele lineaire transformatie toe te passen op deze respons (zonder de eigenschappen van het reservoir aan te moeten passen), aangezien de niet-lineaire transformatie door het reservoir zelf wordt voorzien. 
+Opmerkelijk is dat vele fysische media de benodigde eigenschappen (niet-lineariteit, vervagend geheugen en hoge dimensionaliteit) van nature bezitten, waardoor zij direct als reservoirs kunnen gebruikt worden.
+Dit zorgt voor een veel lagere trainingstijd en energiegebruik dan conventionele neurale netwerken, aangezien een deel van de berekening wordt uitbesteed aan het fysische substraat. \par
+Vele soorten fysische media zijn hiervoor reeds gebruikt, van een emmer water tot supergeleidende elektronica.
+Het onderzoek dat in deze thesis wordt voorgesteld maakt deel uit van het Europese ``\spinengine'' project, dat zich toespitste op het gebruik van ensembles van nanomagneten zoals artificieel spin-ijs (ASI) voor reservoir computing.
+De reden hiervoor is dat ASI een sterk niet-lineaire respons genereren, terwijl zeer weinig energie verloren gaat tijdens het verwerken van informatie.
+ASI zijn magnetische structuren die bestaan uit een geordend rooster van interagerende bistabiele nanomagneten, wiens magnetisatierichting kan wisselen tussen twee stabiele toestanden onder de invloed van nabije magneten of thermische fluctuaties.
+Dit leidt tot emergente dynamica die hun oorsprong vinden in concurrerende lokale interacties, waardoor ASI gebruikt kunnen worden als fysisch reservoir.
+Deze thesis richt zich specifiek op verticaal gemagnetiseerd ASI: dergelijke systemen zijn extra aantrekkelijk aangezien er effici\"ente input- en uitleesmethoden voor bestaan.
+Alle voorgaande concepten worden in meer detail ge\"introduceerd in hoofdstuk~\ref{ch:Introduction}. \\
+%Het doel van deze thesis is te onderzoeken hoe verticaal gemagnetiseerd ASI ingezet kan worden voor reservoir computing.
+%Aangezien een experimentele verkenning van de enorme ontwerpruimte van deze systemen tijdrovend zou zijn, is er geopteerd om een simulatie­-toolkit te ontwikkelen die deze vragen snel en flexibel kan beantwoorden. \\
 
-Hoofdstuk \ref{ch:Introduction} introduceert enkele belangrijke concepten ... \\
-
-Hoofdstuk \ref{ch:Hotspice} stelt de open-source \hotspice Monte Carlo-simulator voor, die de dynamica van artificieel spin-ijs (ASI) simuleert met als doel om reservoir computing-strategie\"en te evalueren en optimale systeemparameters te bepalen.
+Hoofdstuk~\ref{ch:Hotspice} stelt de open-source \hotspice Monte Carlo-simulator voor, die de dynamica van artificieel spin-ijs (ASI) simuleert met als doel om reservoir computing-strategie\"en te evalueren en optimale systeemparameters te bepalen.
 Er wordt een Ising-achtig model gebruikt: elke magneet in het ASI wordt voorgesteld als een punt-dipool die kan wisselen tussen twee stabiele toestanden.
-Verschillende varianten op dit model worden voorgesteld, wiens nauwkeurigheid wordt vergeleken met betrekking tot de simulatie van het dynamische gedrag van ASI.
+Verschillende varianten op dit model worden voorgesteld, wiens nauwkeurigheid vervolgens wordt vergeleken.% met betrekking tot de simulatie van het dynamische gedrag van ASI.
 Drie soorten varianten worden besproken:
 \begin{itemize}[noitemsep,nolistsep] % With enumitem package
 	\item de keuze van Monte Carlo spin-flip-algoritme voor het simuleren van systeemdynamica,
 	\item manieren om de eindige grootte van nanomagneten in rekening te brengen voor de berekening van onderlinge magnetostatische interacties,
 	\item afschattingen van de effectieve energiebarri\`ere die de twee stabiele toestanden van een nanomagneet scheidt.
 \end{itemize}
-In de tweede helft van het hoofdstuk worden implementatiedetails besproken, met name de berekening van de magnetostatische interactie tussen alle magneten, evenals andere strategie\"en om de effici\"entie van de Monte Carlo-simulatie te verbeteren.
-Het hoofdstuk eindigt met een korte verificatie van de software, door simulaties te vergelijken met analytische oplossingen voor enkele oplosbare systemen. \\
+In de tweede helft van het hoofdstuk worden implementatiedetails besproken, met een focus op de berekening van de magnetostatische interactie tussen alle magneten door middel van op voorhand berekende kernels.
+De effici\"entie van de simulator wordt dan ge\"evalueerd, waarbij aandacht wordt besteed aan een methode om de effici\"entie van de Monte Carlo-simulatie te verbeteren door de magnetisatierichting van meerdere magneten tegelijk te wisselen binnen \'e\'en simulatiestap.
+De correcte werking van de software wordt dan geverifi\"eerd, door simulaties te vergelijken met analytische oplossingen voor enkele oplosbare systemen.
+Het hoofdstuk eindigt tenslotte met een vergelijking tussen simulaties en enkele experimenten die eerder in de literatuur werden uitgevoerd, aan de hand waarvan de accuraatheid van de verschillende modelvarianten kan worden geanalyseerd. \\
 
 In hoofdstuk~\ref{ch:Applications} wordt deze \hotspice simulator ingezet om de reservoir computing-prestaties van zowel thermisch actieve als bevroren verticaal-gemagnetiseerde ASI te evalueren.
-Het gedrag van deze systemen wordt grotendeels bepaald door de wisselwerking tussen verschillende energiebijdragen, zoals de loodrechte magnetische anisotropie en vorm-anisotropie van elke nanomagneet.
-Door een zorgvuldige keuze van systeemparameters kunnen thermisch actieve ASI verkregen worden, welke spontaan richting de grondtoestand zullen evolueren over een zekere tijdspanne.
+Het gedrag van deze systemen wordt grotendeels bepaald door de wisselwerking tussen verschillende energiebijdragen, zoals de loodrechte magnetische anisotropie en de vorm-anisotropie van elke nanomagneet.
+Door een zorgvuldige keuze van systeemparameters kunnen thermisch actieve ASI verkregen worden, die spontaan richting de grondtoestand evolueren over een zekere tijdspanne.
 Enkele parameters, zoals de magnetostatische koppeling tussen naaste buren en de netto loodrechte anisotropie, hebben een sterke impact op deze evolutie naar de grondtoestand.
-Nadat het effect van deze parameters geanalyseerd is, worden zij bepaald voor een experimenteel vervaardigd ASI door simulaties te vergelijken met het experimenteel geobserveerde relaxatieproces. \par
+Na het effect van deze parameters te analyseren, worden hun waarden bepaald voor een experimenteel vervaardigd ASI door simulaties te vergelijken met het experimenteel geobserveerde relaxatieproces. \par
 Hierop voortbouwend wordt dit relaxatieproces benut voor reservoir computing.
 De prestaties van deze thermisch actieve ASI worden beoordeeld door middel van twee specifieke taken.
 Eerst wordt de niet-lineariteit van het reservoir ge\"evalueerd door het een signaaltransformatie te laten uitvoeren.
-Vervolgens wordt de geheugencapaciteit getest, door het reservoir de chaotische Mackey-Glass attractor te laten voorspellen.
+Vervolgens wordt de geheugencapaciteit getest, door het reservoir de chaotische Mackey-Glass oscillator te laten voorspellen.
 Aangezien thermisch actieve ASI moeilijk te vervaardigen zijn, richt het laatste deel van dit hoofdstuk zich op bevroren ASI.
 In tegenstelling tot thermisch actieve systemen kan bij bevroren ASI geen globale input worden toegepast, aangezien zij niet spontaan de grondtoestand kunnen bereiken.
 In plaats daarvan wordt een methode ontwikkeld waarbij elke inputcyclus uit twee aparte stappen bestaat, hetgeen gecontroleerde domeinmuurpropagatie mogelijk maakt.
 Hierdoor wordt de domeindynamica benut, wat de prestaties van het reservoir verbetert. \\
 
-In hoofdstuk \ref{ch:Conclusion} ...
+De belangrijkste resultaten van deze voorbije hoofdstukken worden tenslotte samengevat in hoofdstuk \ref{ch:Conclusion}, wat deze thesis afsluit.
