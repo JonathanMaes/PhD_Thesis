@@ -67,7 +67,7 @@ Thus, the total magnetic moment vector $\vc{\mu}_i$ of magnet $i$ can be express
 	\vc{\mu}_i = s_i \mu_i \vc{u}_i \mathrm{,}
 \end{equation}
 where $s_i = \pm 1$, and $\vc{u}_i$ is a fixed unit vector parallel to the easy axis. \par
-The switching rate between these two states is determined by the energy barrier that separates them, as well as the temperature $T$.
+The switching rate between these two states is determined by the energy barrier that separates them, as well as the temperature $T$. % A canonical ensemble is used, though each magnet can have a different effective temperature $T_i$.
 For an isolated nanomagnet, the energy barrier $\EB$ originates from its \xref{shape anisotropy} and can, for instance, be estimated from micromagnetic simulations.
 However, interactions with other magnets or \xref{external magnetic fields} modify the energy landscape, leading to an effective barrier which we will denote as $\EBeff$~\cite{leo2021chiral}.
 Each magnet can have a unique magnetic moment size $\mu_i$, temperature $T_i$ and energy barrier $E_{\mathrm{B},i}$.
@@ -381,7 +381,7 @@ These techniques go by many names --- here, we shall refer to them as the \emph{
 The former is more suitable for simulating the temporal evolution of the system, while the latter can be used to sample the equilibrium distribution of the state space.
 
 \subsection{First-switch method: temporal evolution}
-\idx{N\'eel relaxation theory}~\cite{neel1949theorie} states that, for an isolated nanomagnet, the \xlabel{switching rate} $\nu$ is given by the \xlabel{N\'eel-Arrhenius} equation
+\idx{N\'eel relaxation theory}~\cite{neel1949theorie} states that, for an isolated nanomagnet, the \xlabel{switching rate} $\nu$ is given by the \xlabel{N\'eel-Arrhenius} equation % TODO: better called the Néel-Brown-Arrhenius law?
 \begin{equation}
 	\nu = \nu_0 \exp\ab(-\frac{\EB}{\kBT}) \mathrm{,}
 	\label{eq:2:Néel}
@@ -437,7 +437,7 @@ In \hotspice, we choose to apply~\cref{eq:2:Néel_2} regardless, even though thi
 Therefore, we must interpret the elapsed time $t$ as being ``instantaneous'' if $t < 1/\nu_0$.
 The alternative --- limiting $\Delta t_i$ to be $\geq 1/\nu_0$ --- is not possible, as this would overestimate the elapsed time $t$. \par
 In the realm of rejection-free KMC, two commonly used algorithms are the very similar \idx{Bortz-Kalos-Lebowitz}~\cite{nfoldMCalgorithm} and \idx{Gillespie}~\cite{gillespie1976general} algorithms.
-Although Gillespie's paper also discusses the first-switch method, these two algorithms differ slightly from~\cref{alg:2:FirstSwitchSingle}, yet all yield identical results.
+Though Gillespie's paper also discusses the first-switch method, these two algorithms differ slightly from~\cref{alg:2:FirstSwitchSingle}, yet all yield identical results.
 Their different strategies for calculating random switching times and selecting the next switch are discussed by \textit{Gibson and Bruck}~\cite{GibsonBruck}, alongside an optimised algorithm.
 
 \subsection{Metropolis-Hastings: sampling equilibrium states} \label{sec:2:Dynamics_MH}
@@ -478,7 +478,7 @@ Therefore, the last step of~\cref{alg:2:MetropolisHastingsSingle} --- the calcul
 For a long time, the notion of a well-defined measure for the elapsed time in rejection KMC was controversial~\cite{nfoldMCalgorithm,GlauberTimescale_sadiq1984,MCSim_StatPhys}. % Refs: `nfoldMCalgorithm` mentions both GD & MH acceptance prob., but says that GD can have a timescale (their equation looks a lot like in PhysicalTimeKMC) yet Metropolis cannot (due to the max()?), which is no longer true. `GlauberTimescale_sadiq1984' uses a less rigorously defined yet similar expression as in `PhysicalTimeKMC`. Don't use this reference when referring to the lack of a timescale, because this one seems to be one of the better solutions presented in literature, yet not very rigorous. Also `Lattice Kinetic Descriptions for Bulk Reaction-Diffusion Processes: Application to Alloys under Irradiation' p.215 says that ``The relationship between the simulation time and the physical time has been widely debated [MCSim_StatPhys], and it is sometimes assumed that the two time scales are proportional.''
 Often, the number of performed \xref{Monte Carlo sweeps}\footnote{
 	A Monte Carlo \textit{step} refers to attempting to switch a single magnet.
-	By a \idx{Monte Carlo sweep} (MCS), we refer to $N$ attempted switches when the simulation contains $N$ magnets~\cite{NumericalDynamicalNiedermayer}.
+	By a \idx{Monte Carlo sweep} (MCS), we refer to $N$ attempted switches when the simulation contains $N$ magnets~\cite{NumericalDynamicalNiedermayer}. % Can also be called a "macrostep"~\cite{bit-player_MCvsGlauber}.
 	Note that no distinction between attempted switches and actual switches exists in the \xref{first-switch method}.
 } was used as a crude measure, but eventually a formal derivation for the physical time scale in rejection KMC was presented by \textit{Serebrinsky}~\cite{PhysicalTimeKMC}, who derived~\cref{eq:Metropolis_time}. \par
 Note that the \xref{effective energy barrier} $\EBeff$ only appears in the optional calculation of the elapsed time.
@@ -489,8 +489,8 @@ The Metropolis-Hastings \xref{acceptance probability} in~\cref{eq:2:MH_acceptanc
 However, it is not unique: there exist other forms of the acceptance probability which also correctly sample this equilibrium.
 This is the reason why there often exists confusion between the \link{alg:2:MetropolisHastingsSingle}{Metropolis-Hastings algorithm} and the so-called \idx{Glauber dynamics}\footnote{
 	The term ``Glauber dynamics'' is a misnomer~\cite{bit-player_MCvsGlauber}; the acceptance probability in~\cref{eq:2:GD_acceptance} was first derived by \textit{Flinn and McManus}~\cite{flinn1961TransitionProbability}, and later used by \textit{Glauber}~\cite{glauber1963time}.
-}~\cite{flinn1961TransitionProbability,glauber1963time}, both examples of \xlabel{Markov chain Monte Carlo} (MCMC) algorithms.
-These two methods differ only in their choice of acceptance probability: Glauber dynamics instead uses
+}~\cite{flinn1961TransitionProbability,glauber1963time,flinn1974MCIsing}, both examples of \xlabel{Markov chain Monte Carlo} (MCMC) algorithms. % REF: flinn1974 possibly includes the first still images of the Ising system simulated using Monte Carlo methods.
+These two methods differ only in their choice of acceptance probability~\cite{jang2004stochastic}: Glauber dynamics instead uses % According to~\cite{bit-player_MCvsGlauber}, an additional difference lies in their cell visitation strategies: MH is said to visit each cell exactly once per sweep, often in a scanline order, while GD visits cells randomly (on average missing \SI{37}{\percent} of cells each run). Other sources do not seem to corroborate this.
 \begin{equation}
 	\label{eq:2:GD_acceptance}
 	P_\mathrm{GD} = \frac{\exp(-\Delta E / \kBT)}{1 + \exp(-\Delta E / \kBT)} \mathrm{.}
@@ -505,7 +505,7 @@ For a MCMC algorithm to sample the equilibrium state space, it must satisfy two 
 	This is clearly satisfied by~\cref{alg:2:MetropolisHastingsSingle}, for both $P_\mathrm{MH}$ and $P_\mathrm{GD}$, as the acceptance probability is strictly positive at non-zero temperatures.
 \end{itemize}
 As such, \cref{alg:2:MetropolisHastingsSingle} is guaranteed to reach equilibrium eventually.
-However, the rate of convergence may vary, as noted in~\cref{sec:2:Verification_OOP_Exchange}~\cite{jang2004stochastic}: end users must take care to perform sufficient Monte Carlo steps to ensure thermalisation. % MH seems to be the most physically accurate from a theoretical point of view, though a point can be made for either of them depending on the physics of the problem~\cite{jang2004stochastic}.
+However, the rate of convergence may vary, as noted in~\cref{sec:2:Verification_OOP_Exchange}: end users must take care to perform sufficient Monte Carlo steps to ensure thermalisation. % MH seems to be the most physically accurate from a theoretical point of view, though a point can be made for either of them depending on the physics of the problem~\cite{jang2004stochastic}.
 
 \sidefig{2_Hotspice/RejectionKMC.pdf}{
 	\label{fig:2:RejectionKMC}
@@ -515,7 +515,7 @@ However, the rate of convergence may vary, as noted in~\cref{sec:2:Verification_
 
 These two common choices for the acceptance probability, $P_\mathrm{MH}$ and $P_\mathrm{GD}$, are compared in~\cref{fig:2:RejectionKMC}.
 Both $P_\mathrm{MH}$ and $P_\mathrm{GD}$ result in an algorithm that satisfies ergodicity and detailed balance, so they both yield the same statistical values for quantities like the average magnetisation.
-However, Glauber dynamics explores the state space more slowly because it is always more likely to reject a switch --- especially for small $\Delta E / \kBT$ --- since $P_\mathrm{GD}(\Delta E) < P_\mathrm{MH}(\Delta E), \forall \Delta E$.
+However, Glauber dynamics explores the state space more slowly because it is always more likely to reject a switch --- especially for small $\Delta E / \kBT$ --- since $P_\mathrm{GD}(\Delta E) < P_\mathrm{MH}(\Delta E), \forall \Delta E$~\cite{jang2004stochastic}.
 Therefore, \hotspice uses the Metropolis-Hastings acceptance probability.
 For a broader overview of Monte Carlo methods, we refer to Ref.~\cite{IntroductionMC}, which may further clarify the at times confusing naming present throughout literature.
 
@@ -1244,7 +1244,7 @@ In particular, we focused on the evaluation of several model variants extending 
 Firstly, we considered more accurate calculations for magnetostatic interactions: OOP systems were found to benefit from a second-order correction, while IP systems achieve far more accurate results with a dumbbell model.
 Secondly, accounting for asymmetric switching channels proved key to e.g., correctly reproduce coercive fields in pinwheel ASI, provided that the reduced magnetization during non-coherent reversal processes was also accounted for.
 Finally, we provided two algorithms for handling switching events.
-The N\'eel-Arrhenius approach is best suited for simulating the temporal evolution of the system, including out-of-equilibrium dynamics.
+The first-switch method is best suited for simulating the temporal evolution of the system, including out-of-equilibrium dynamics.
 The Metropolis-Hastings algorithm efficiently explores equilibrium configurations, especially when multiple magnets switch simultaneously.
 These methods were compared to experimental and theoretical results for pinwheel, kagome, and square ASI. \par
 This approach makes \hotspice{} complementary to traditional micromagnetic simulations.
