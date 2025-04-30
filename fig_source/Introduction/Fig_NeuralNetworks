@@ -122,7 +122,7 @@ def draw_recurrent_network(ax: plt.Axes,
 
     _, data = hotspice.utils.load_results(os.path.splitext(__file__)[0] + '.out')
     if data is not None:
-        edges_in_hid, edges_hid_out, edges_rec, hidden_positions = data["edges_in_hid"], data["edges_hid_out"], data["edges_rec"], data["hidden_positions"]
+        edges_in_hid, edges_hid_out, edges_rec, hidden_positions, rads = data["edges_in_hid"], data["edges_hid_out"], data["edges_rec"], data["hidden_positions"], data["rads"]
     else:
         # Hidden via Poisson-disc-like sampling
         x_min, x_max = 0.2, 0.8
@@ -210,17 +210,18 @@ def draw_recurrent_network(ax: plt.Axes,
                 dists = {hid_key: np.linalg.norm(np.array(pos) - np.array(output_positions[out_key])) for hid_key, pos in hidden_positions.items()}
                 neighbor = min(dists, key=dists.get)
                 edges_hid_out.append((neighbor, out_key))
+        rads = rng.uniform(-0.3, 0.3, size=len(edges_rec))
         hotspice.utils.save_results(timestamped=False, copy_script=False,
-                                data=dict(edges_in_hid=edges_in_hid, edges_hid_out=edges_hid_out, edges_rec=edges_rec, hidden_positions=hidden_positions))
+                                data=dict(edges_in_hid=edges_in_hid, edges_hid_out=edges_hid_out, edges_rec=edges_rec, hidden_positions=hidden_positions, rads=rads))
 
     # Draw edges
     for src, dst in edges_in_hid:
         ax.add_line(Line2D([input_positions[src][0], hidden_positions[dst][0]], [input_positions[src][1], hidden_positions[dst][1]], color=edge_color))
     for src, dst in edges_hid_out:
         ax.add_line(Line2D([hidden_positions[src][0], output_positions[dst][0]], [hidden_positions[src][1], output_positions[dst][1]], color=edge_color))
-    for src, dst in edges_rec:
+    for i, (src, dst) in enumerate(edges_rec):
         start, end = hidden_positions[src], hidden_positions[dst]
-        ax.add_patch(FancyArrowPatch(start, end, arrowstyle='-|>', mutation_scale=12, connectionstyle=f"arc3,rad={rng.uniform(-0.3,0.3)}", color=edge_color, lw=1.5))
+        ax.add_patch(FancyArrowPatch(start, end, arrowstyle='-|>', mutation_scale=12, connectionstyle=f"arc3,rad={rads[i]}", color=edge_color, lw=1.5))
  
     # Draw nodes
     for pos in input_positions.values():
@@ -391,7 +392,7 @@ def plot():
     ## ANN
     ax1 = fig.add_subplot(gs[0,0])
     draw_neural_network(ax1, [3, 5, 4, 2])
-    ax1.set_title("ANN", y=1.0, pad=0)
+    ax1.set_title("FNN", y=1.0, pad=0)
     thesis_utils.label_ax(ax1, 0, offset=(labelpad, 0), ha="left", va="bottom")
     
     ## RNN
