@@ -4,28 +4,73 @@
 
 \section{Context}
 We live in a society where computers are ubiquitous. % and indispesable.
-Conventional computers --- consisting of transistors that are arranged to form logic gates --- are capable of exact mathematical operations.
-This makes them well suited for a variety of applications, like scientific simulations, graphics rendering, processing well-structured data, running the internet\dots
-However, there are also many tasks in this world that can not be captured by such simple, exact sets of predefined rules.
-The archetypical example of one such a task is driving a car: these sorts of tasks are often thought of as requiring some degree of ``intelligence'' --- whatever that word may actually mean. \par
-Nowadays, these sorts of rather complex tasks are typically tackled using neural networks, which take inspiration from the synaptic connections in a biological brain.
-Over the years, neural networks have made significant advances, from image recognition to the more recent trend in large language models, which have since taken the world by storm.
-However, while neural networks have achieved great successes, they also have several drawbacks.
-For instance, to train these systems to the point where they can perform any of these tasks at a decent level requires vast amounts of data --- with a correspondingly large energy cost. % The energy cost associated with machine learning tasks has recently been estimated to double every 3.5 months.
-This is in stark contrast to biological brains, which seem to be capable of learning patterns based on a far more limited set of data.
+They have been used for a wide variety of applications, like scientific simulations, graphics rendering, processing well-structured data, running the internet\dots\,
+Conventional computers --- consisting of transistors arranged into logic gates --- are well suited for such tasks which require exact mathematical operations to be executed.
+However, our world provides many challenging tasks that can not be captured by such simple, exact sets of predefined rules.
+The archetypical example of this is driving a car, but this extends far into other complex tasks that are often thought of as requiring some degree of ``intelligence'' --- whatever that word may entail exactly. \par
+The field of \idx{machine learning} aims to tackle these rather complex tasks using artificial systems, the most prevalent of which nowadays are \xref{artificial neural networks} that take inspiration from the synaptic connections in a biological brain.
+Over the years, neural networks have advanced significantly, most recently evidenced by the rise of large language models which have already had a broad societal impact. % the likes of ChatGPT
+However, training these systems to the point where they can perform any of the aforementioned tasks at a decent level requires vast amounts of data to fine-tune their ever increasing number of internal parameters --- accompanied by an unsustainably rising energy cost~\cite{QuantumNeuromorphicOpportunities}.
+This stands in stark contrast to biological brains, which are capable of learning patterns based on a far more limited set of data, while consuming orders of magnitude less power than an artificial system of equivalent computational capability~\cite{NeuromorphicSpintronics}.
+Furthermore, running such neural networks on conventional hardware is encountering limits: to increase performance, the number of trainable parameters is rapidly being increased, but transistor scaling and power density limitations make it hard to keep up with these increasing requirements. % TODO REF
+Hence, while advances in training algorithms and the ever increasing wealth of available data create ever more potent machine learning systems, the underlying approach is leading to a bottleneck. \par
+Several factors that contribute to this bottleneck are often quoted in the context of neural networks or other machine learning algorithms running on conventional hardware:
+\begin{itemize}
+	\item Conventional hardware uses transistors to perform logical operations.
+	The ever increasing computational demands have driven \xlabel{Moore's law}, which states that the number of transistors on a chip doubles every couple of years.
+	However, this scaling law appears untenable as transistors approach nanometre scales.
+	Relatedly, \xlabel{Dennard scaling} initially allowed the power density of chips to remain roughly constant during this downscaling, but current leakage has inevitably led to increased power dissipation over the past two decades.
+	In an attempt to patch this, multi-core processing has become prevalent, but the high power density still limits the number of cores that can operate simultaneously without overheating. % This results in so-called areas of ``dark silicon'' that are unused at a given instant.
+	Thus, new kinds of energy-efficient hardware need to be explored.
+	\item Conventional computers are built according to the von Neumann architecture, where computation (CPU) is separated from memory (RAM).
+	However, transferring information from memory to the processing unit wastes a lot of time and energy, leading to the infamous \idx{von Neumann bottleneck}.
+	The separation between memory and processing is not fundamentally required: biological brains in the natural world exhibit no such divide as they use a vast network of interconnected neurons, yet they are nonetheless capable of learning, processing and retaining information.
+	The field of \idx{in-memory computing} concerns itself with bridging this divide in artificial systems.
+	\item Artificial neural networks, like any other machine learning system implemented on conventional hardware, are abstracted far away from the physical domain~\cite{RC_ASI}.
+	Most advancements arise from improving their algorithms, but these have to be run on a particular (e.g., von Neumann) computer architecture made up of circuits that handle information encoded by physical devices like transistors.
+	These many layers of abstraction render this approach inherently inefficient, as it does not directly exploit the physical properties of the constituent materials for computation~\cite{RC_ASI}.
+\end{itemize}
+These various drawbacks of current implementations have become more noticeable over the past decade, as portrayed in~\cref{fig:1:Ngram}.
+This has led to the advent of \idx{neuromorphic computing} --- a field of research at the intersection of biology, computer science and physics --- which takes inspiration from the brain to develop more efficient hardware for processing complex data in parallel.
+While artificial neural networks are indeed inspired by the brain, their implementation on conventional hardware is typically not considered part of neuromorphic computing, though approaches to implement neural networks on more efficient unconventional hardware are. % rather than applying algorithms on existing transistor-based hardware.
+Note that neuromorphic computing does not seek to replace conventional computing: the latter will always find applications in systems that require absolute precision. % think of physical simulations, the transmission of data, or something as common as rendering an image on a screen.
+Neuromorphic computing, on the other hand, does not seek exact solutions; in the words of Alan Turing, ``if a machine is expected to be infallible then it cannot also be intelligent.''
+%This paradigm shift opens the door to innovative approaches for tackling computational challenges, particularly in areas like real-time sensing, pattern recognition, and prediction.
+%Noise can explore a high dimensional landscape related to cost function by escaping local minima.
 
-% TODO: talk about machine learning and the advent of neuromorphic computing and the motivation for this research
+\sidefig[0.6]{1_Introduction/Ngrams.pdf}{
+	\label{fig:1:Ngram}
+	Popularity of various key concepts from the year 2000 onwards.
+	The surge in popularity of alternative brain-inspired and physical computing methods coincides with raising concerns related to the usage of conventional hardware.
+	Data provided by the \href{https://books.google.com/ngrams/graph?content=Neuromorphic computing,Reservoir computing,In-memory computing,von Neumann bottleneck,Dennard scaling,Material computation&year_start=2000&year_end=2022&corpus=en&smoothing=3&case_insensitive=false}{Google Books Ngram viewer} throughout the English corpus, smoothed over a 3-year period.
+	\newline
+}
 
-\section{Reservoir computing}\label{sec:1:RC}\indexlabel{reservoir computing}
-% Great introduction in~\cite{RC_Tensegrity}, also explains ESN and LSM mathematically later: Classical techniques for training recurrent neural networks, such as backpropagation through time [55], approximate a desired output signal by modifying the internal weights of the neural network (as well as the readout weights, if any). This is often cumbersome and difficult to implement correctly, as one needs gradient information to apply the chain rule. Furthermore, backpropagation through time is prone to local minima. Reservoir computing (RC) is a conceptually much simpler technique to train such recurrent neural networks [68]. Instead of modifying the internal weights, the original network is left as is, and only the readout weights are modified. The original network essentially becomes a computational black box. The outcome of this training procedure typically depends on a few parameters that define the regime of the neural network. RC is known under different names, depending on the type of recurrent network that is trained. Most importantly, we distinguish liquid state machines [43] and echo state networks [34, 35]. The core idea of RC, originally applied only to neural networks, has since been extended to other nonlinear dynamical systems, leading to what we call PRC. There have been demonstrations of the RC approach applied to different domains such as photonics [67] and, more abstractly, electronics [3]. All these implementations share the common idea that a system with complex dynamics is perturbed externally but left untouched otherwise, and a simple readout mechanism is trained to perform the desired computational task. While the idea of PRC originated in the context of neural networks, recent theoretical results have extended the applicability of this computational framework immensely, showing that any dynamical system of a given size, obeying easily satisfied constraints, has the same computational power [17].
-\subsection{Motivation}
+A related concept is material computation~\cite{NeglectedPillar}, which goes one step further: its goal is to find ways to exploit the inherent computing power present in physical substrates.
+Whereas classical computing uses a top-down approach where mathematics is imposed onto a physical material --- for instance to construct logic gates --- material computation works in the opposite direction by instead asking what computations a physical object performs naturally~\cite{RC_ASI}.
+By designing materials with specific behaviours, systems can be created that naturally exhibit the desired computational properties, reducing the levels of abstraction that currently exist between physics and computation. \par
+Among the various substrates being explored for material computation, magnetic and spintronic hardware stand out as particularly promising candidates~\cite{grollier2020neuromorphic,NeuromorphicSpintronicsProspect}.
+For example, ferromagnetic nanomagnets have the ability to store information without power, respond non-linearly to stimuli~\cite{NeuromorphicSpintronics} and can dissipate very little energy during information processing~\cite{ThermodynamicLimitsComputation,SpintronicsEnergyEfficientComputing}.
+Ensembles of nanomagnets, such as artificial spin ice (an ordered lattice of interacting bistable nanomagnets where all local interactions can not be satisfied simultaneously), add to these advantages since they can exhibit complex collective behaviour like phase transitions and other emergent dynamics~\cite{NeuromorphicSpintronics,RC_ASI}.
+As their fabrication has been well-established over the last decade, all these factors have made them a platform of particular interest for scalable and energy-efficient material computation~\cite{PhD_Stromberg}. \par
+This finally brings us to the topic of this thesis: ``\emph{\phdtitle}''.
+A more detailed description of artificial spin ice will follow at the end of this introduction; first, the next section will elucidate the concept of reservoir computing.
+
+% REF "NeuromorphicSpintronics" provides other REFs: spintronics compared to other neuromorphic computing approaches using quantum materials by Hoffmann et al.3
+
+\newpage
+\section{Reservoir computing}\label{sec:1:RC}
+% Introduction to RC can take inspiration from: https://arxiv.org/html/2412.13212v1
+At the intersection of neuromorphic computing and material computation lies the paradigm of \idx{reservoir computing}.
+To understand its underlying concept, we must first take a step back and have a closer look at the aforementioned artificial neural networks.
+
 \subsection{Origin}
 \subsubsection{Artificial neural networks}
-An artificial neural network (ANN) is a computational model that consists of a network of non-linear summing nodes connected by weighted edges~\cite{EvaluatingRestrictedESNs}.
+An \idx{artificial neural network} (ANN) is a computational model that consists of a network of non-linear summing nodes connected by weighted edges~\cite{EvaluatingRestrictedESNs}.
 This model was originally inspired by the brain, where neurons and synapses fulfil a similar role as the nodes and weights, respectively.
 By ``training'' the weights, a desired output can be obtained~\cite{EvaluatingRestrictedESNs}. \par
 
-A distinction can be made between feedforward neural networks (FNNs) and recurrent neural networks (RNNs).
+A distinction can be made between feed-forward neural networks (FNNs) and recurrent neural networks (RNNs).
 In a FNN, abstract neurons are grouped in layers, between which abstracted synaptic connections (or links) exist that enable activations to propagate through the network~\cite{lukovsevivcius2009reservoir}.
 These are mainly used for static data processing, such as image classification. \par
 
@@ -43,13 +88,11 @@ However, while training methods such as backpropagation~\cite{Backpropagation} a
 \subsubsection{Liquid state machines and echo state networks}
 To address the shortcomings of the backpropagation method, two concepts were independently proposed: liquid state machines (LSMs)~\cite{maass_LSM} and echo state networks (ESNs)~\cite{jaeger2001echo}, which were later unified under the term ``reservoir computing'' methods~\cite{RC_unification}.
 These both start from the concept of RNNs, but instead use a randomly generated network of nodes and weights, where the recurrent connections in the network are not trained, but only the weights in the readout are trained.
-
-
-\subsubsection{ESN}
 The concepts of LSMs and ESNs were unified under the term `reservoir computing methods' in~\cite{RC_unification}.
+
 \subsubsection{Reservoir computing}
 Reservoir computing is a machine learning framework where a ``reservoir'' --- an unspecified non-linear dynamical system --- maps input data into a higher-dimensional space, which facilitates the separation of said data by a linear transformation~\cite{KUR-24}.
-A weighted sum of the components of the reservoir's state vector then provides the output of the system as a whole: this is called a \xlabel{single-layer perceptron}.
+A weighted sum of the components of the reservoir's state vector then provides the output of the system as a whole: this is called a \idx{single-layer perceptron}. % REFs for RC, specifically training a readout layer: Dale et al., 2017; Jensen and Tufte, 2017; Sillin et al., 2013
 These weights can be changed in order to produce a desired output, which is referred to as ``training'' the reservoir.
 Crucially, \textit{the properties of the reservoir itself are not modified during training} --- only the perceptron is. \par
 Since the reservoir acts as a ``black box'', its properties can not be changed to obtain the desired response\footnote{
@@ -94,7 +137,7 @@ ICT task~\cite{farronato2022reservoir,grollier2020neuromorphic} (simple image cl
 \subsection{Applications or tasks}
 Blood glucose level monitoring~\cite{FewMoleculeReservoir}.
 \subsubsection{Digital signal processing} % Chaotic time series, speech recognition, TODO
-\subsection{Physical RC}
+\subsection{Physical RC platforms}
 \subsubsection{Why physical systems can be used for RC}
 \subsubsection{Physical platforms suitable for RC}
 \paragraph{Magnetic} % Rings and ASI
@@ -118,7 +161,11 @@ In fact, the very first example of reservoir computing employed a bucket of wate
 An extreme example of physical reservoir computing is tensegrity --- tensile structures arranged in trusses, consisting of both springs and incompressible bars --- where the body of a robot provides both computation and locomotion~\cite{RC_Tensegrity}.
 
 \section{Artificial spin ice}\label{sec:1:ASI}\indexlabel{artificial spin ice} % TODO END: decide how exactly to use these labels, which words to label like this. Perhaps a good rule of thumb is to label the list of abbreviations, for easy reference to their first occurrence in the text.
+Artificial spin ice (ASI) is a class of ferromagnetic metamaterial which consists of an ordered lattice of interacting (bistable) nanomagnets, where it is impossible to satisfy all local interactions~\cite{RC_ASI}. % REF verbatim
+The magnetisation direction of the constituent nanomagnets can switch between two states under the influence of nearby magnets or thermal fluctuations.
+
 \subsection{Nanomagnet(ism)}
+%\cite{Kittel_TheoryFMDomains} tells a lot about how \textbf{domains} like to align \textbf{in small particles}, saying things like the critical domain size etc. and also referring to Frenkel and Dorfman~\cite{FRENKEL1930} where the idea of a single-domain particle was first conceived based on energy considerations.
 \subsubsection{Physics} % See masterproef for this, IP vs. OOP also
 \subsection{I/O for RC}\label{sec:1:ASI_IO}
 \subsubsection{Input}
@@ -135,5 +182,6 @@ An extreme example of physical reservoir computing is tensegrity --- tensile str
 \paragraph{SHE} % Briefly
 \cite{SHE}
 \subsubsection{Imaging} % Imaging can also be seen as an "output", though this should be considered a class of its own.
+% Polarized neutron reflectometry \cite{DynamicEmergence_NanomagneticSystem} is another one of those imaging techniques.
 \paragraph{MFM} % Mentioned in text, so definitely explain
 \paragraph{PEEM}
