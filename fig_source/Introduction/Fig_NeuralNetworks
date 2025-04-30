@@ -1,0 +1,414 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import os
+
+from matplotlib.patches import Circle, FancyArrowPatch, FancyBboxPatch
+from matplotlib.lines import Line2D
+
+import hotspice
+import thesis_utils
+
+
+def draw_neural_network(ax: plt.Axes,
+                        layer_sizes: list[int],
+                        input_color: str = 'blue',
+                        output_color: str = 'red',
+                        hidden_color: str = 'lightblue',
+                        edge_color: str = 'gray',
+                        circle_radius: float = 0.03):
+    """
+    Draws a fully-connected neural network diagram on the given Axes.
+
+    Parameters
+    ----------
+    ax : matplotlib.axes.Axes
+        The axes on which to draw the network.
+    layer_sizes : list of int
+        Number of nodes in each layer, e.g. [3, 5, 4, 2].
+    aspect: float
+        The ratio of the width of the neural network over its height.
+    input_color : str or list of str, optional
+        Color or list of colors for input-layer nodes.
+    output_color : str or list of str, optional
+        Color or list of colors for output-layer nodes.
+    hidden_color : str, optional
+        Color for all hidden-layer nodes.
+    edge_color : str, optional
+        Color for all edges.
+    circle_radius : float, optional
+        Radius of node circles in Axes coordinates (0 to 1).
+    """
+    pos = ax.get_position()
+    s = ax.figure.get_size_inches()
+    w = s[0]*(pos.x1 - pos.x0)
+    h = s[1]*(pos.y1 - pos.y0)
+    aspect = w/h
+    ax.clear()
+    n_layers = len(layer_sizes)
+    positions = {}
+
+    # Compute positions in data coordinates (0..1)
+    for i, n_nodes in enumerate(layer_sizes):
+        x = i / float(n_layers - 1) if n_layers > 1 else 0.5
+        for j in range(n_nodes):
+            y = (j + 0.5) / n_nodes / aspect
+            positions[(i, j)] = (x, y)
+
+    # Draw edges in data coords
+    for i in range(n_layers - 1):
+        for j in range(layer_sizes[i]):
+            for k in range(layer_sizes[i+1]):
+                x_start, y_start = positions[(i, j)]
+                x_end, y_end = positions[(i+1, k)]
+                line = Line2D([x_start, x_end],
+                              [y_start, y_end],
+                              color=edge_color)
+                ax.add_line(line)
+
+    # Draw nodes in data coords
+    for (i, j), (x, y) in positions.items():
+        if i == 0:
+            col = input_color[j] if isinstance(input_color, (list, tuple)) else input_color
+        elif i == n_layers - 1:
+            col = output_color[j] if isinstance(output_color, (list, tuple)) else output_color
+        else:
+            col = hidden_color
+
+        circ = Circle((x, y),
+                      radius=circle_radius,
+                      facecolor=col,
+                      edgecolor='black',
+                      zorder=10)
+        ax.add_patch(circ)
+
+    # Set data limits to [0,1] and equal aspect to keep nodes circular
+    pad = circle_radius * 2
+    ax.set_xlim(-pad, 1 + pad)
+    ax.set_ylim(0 - pad, 1/aspect + pad)
+    ax.set_aspect('equal', adjustable='datalim')
+    ax.axis('off')
+
+
+def draw_recurrent_network(ax: plt.Axes,
+                           input_size,
+                           hidden_size,
+                           output_size,
+                           input_color='blue',
+                           hidden_color='lightgreen',
+                           output_color='red',
+                           edge_color='gray',
+                           circle_radius=0.03,
+                           connect_k=2,
+                           poisson_rad=None,
+                           neighbor_k=3):
+    """
+    Draws a recurrent neural network with guaranteed flow and no bidirectional edges:
+    - Hidden nodes placed via Poisson-disc-like sampling in [0.2,0.8]×[0.1,0.9]
+    - Directed edges ensure full connectivity from input to output
+    - Random recurrent edges between nearest neighbors with no reciprocals
+    - Ensures each hidden node has both incoming and outgoing connections
+    """
+    pos = ax.get_position()
+    s = ax.figure.get_size_inches()
+    w = s[0]*(pos.x1 - pos.x0)
+    h = s[1]*(pos.y1 - pos.y0)
+    aspect = w/h
+    ax.clear()
+    rng = np.random.default_rng()
+
+    # Define positions
+    input_positions = {('in', i): (0.0, (i + 0.5) / input_size / aspect) for i in range(input_size)}
+    output_positions = {('out', i): (1.0, (i + 0.5) / output_size / aspect) for i in range(output_size)}
+
+    _, data = hotspice.utils.load_results(os.path.splitext(__file__)[0] + '.out')
+    if data is not None:
+        edges_in_hid, edges_hid_out, edges_rec, hidden_positions = data["edges_in_hid"], data["edges_hid_out"], data["edges_rec"], data["hidden_positions"]
+    else:
+        # Hidden via Poisson-disc-like sampling
+        x_min, x_max = 0.2, 0.8
+        y_min, y_max = 0/aspect, 0.9/aspect
+        hidden_list = []
+        if poisson_rad is None:
+            area = (x_max - x_min) * (y_max - y_min)
+            poisson_rad = np.sqrt(area / hidden_size)
+        while len(hidden_list) < hidden_size:
+            hidden_list = poisson(poisson_rad, x_min, x_max, y_min, y_max, k=40)
+        hidden_arr = np.array(hidden_list)
+        # if hidden_arr.shape[0] < hidden_size:
+        #     extra = rng.uniform([x_min, y_min], [x_max, y_max], size=(hidden_size - len(hidden_arr), 2))
+        #     hidden_arr = np.vstack([hidden_arr, extra])
+        hidden_positions = {('hid', i): tuple(hidden_arr[i]) for i in range(hidden_size)}
+
+        # Build directed edges
+        edges_in_hid = []  # input->hidden
+        edges_hid_out = []  # hidden->output
+        edges_rec = []      # hidden->hidden
+
+        # Input -> Hidden (nearest connect_k)
+        for inp_key, inp in input_positions.items():
+            dists = {hid_key: np.linalg.norm(np.array(inp) - np.array(hid)) for hid_key, hid in hidden_positions.items()}
+            for hid_key in sorted(dists, key=dists.get)[:min(connect_k, hidden_size)]:
+                edges_in_hid.append((inp_key, hid_key))
+
+        # Hidden -> Output (nearest connect_k)
+        for out_key, out in output_positions.items():
+            dists = {hid_key: np.linalg.norm(np.array(out) - np.array(hid)) for hid_key, hid in hidden_positions.items()}
+            for hid_key in sorted(dists, key=dists.get)[:min(connect_k, hidden_size)]:
+                edges_hid_out.append((hid_key, out_key))
+
+        # Hidden -> Hidden recurrent (nearest neighbor_k)
+        for hid_key, hid in hidden_positions.items():
+            dists = {k: np.linalg.norm(np.array(hid) - np.array(v)) for k, v in hidden_positions.items() if k != hid_key}
+            for neighbor in sorted(dists, key=dists.get)[:min(neighbor_k, hidden_size-1)]:
+                edges_rec.append((hid_key, neighbor))
+
+        # Remove bidirectional duplicates in recurrent edges
+        unique = []
+        seen_pairs = set()
+        for src, dst in edges_rec:
+            pair = frozenset((src, dst))
+            if pair in seen_pairs:
+                continue
+            # find all edges with same undirected pair
+            bids = [(s, d) for (s, d) in edges_rec if frozenset((s, d)) == pair]
+            if len(bids) > 1:
+                # pick one direction at random
+                chosen = bids[rng.integers(len(bids))]
+                unique.append(chosen)
+            else:
+                unique.append((src, dst))
+            seen_pairs.add(pair)
+        edges_rec = unique
+
+        # Ensure connectivity and in/out degrees
+        in_deg = {k: 0 for k in hidden_positions}
+        out_deg = {k: 0 for k in hidden_positions}
+        for src, dst in edges_in_hid + edges_rec:
+            if dst[0] == 'hid': in_deg[dst] += 1
+            if src[0] == 'hid': out_deg[src] += 1
+        for src, dst in edges_hid_out:
+            if src[0] == 'hid': out_deg[src] += 1
+
+        # Fix isolated nodes
+        for hid_key in hidden_positions:
+            if in_deg[hid_key] == 0 or out_deg[hid_key] == 0:
+                # connect to nearest neighbor to satisfy both
+                dists = {k: np.linalg.norm(np.array(hidden_positions[hid_key]) - np.array(v)) for k, v in hidden_positions.items() if k != hid_key}
+                neighbor = min(dists, key=dists.get)
+                if in_deg[hid_key] == 0:
+                    edges_rec.append((neighbor, hid_key))
+                if out_deg[hid_key] == 0:
+                    edges_rec.append((hid_key, neighbor))
+
+        # Ensure outputs have incoming
+        out_in = {k: 0 for k in output_positions}
+        for src, dst in edges_hid_out:
+            out_in[dst] += 1
+        for out_key, cnt in out_in.items():
+            if cnt == 0:
+                # connect from nearest hidden
+                dists = {hid_key: np.linalg.norm(np.array(pos) - np.array(output_positions[out_key])) for hid_key, pos in hidden_positions.items()}
+                neighbor = min(dists, key=dists.get)
+                edges_hid_out.append((neighbor, out_key))
+        hotspice.utils.save_results(timestamped=False, copy_script=False,
+                                data=dict(edges_in_hid=edges_in_hid, edges_hid_out=edges_hid_out, edges_rec=edges_rec, hidden_positions=hidden_positions))
+
+    # Draw edges
+    for src, dst in edges_in_hid:
+        ax.add_line(Line2D([input_positions[src][0], hidden_positions[dst][0]], [input_positions[src][1], hidden_positions[dst][1]], color=edge_color))
+    for src, dst in edges_hid_out:
+        ax.add_line(Line2D([hidden_positions[src][0], output_positions[dst][0]], [hidden_positions[src][1], output_positions[dst][1]], color=edge_color))
+    for src, dst in edges_rec:
+        start, end = hidden_positions[src], hidden_positions[dst]
+        ax.add_patch(FancyArrowPatch(start, end, arrowstyle='-|>', mutation_scale=12, connectionstyle=f"arc3,rad={rng.uniform(-0.3,0.3)}", color=edge_color, lw=1.5))
+ 
+    # Draw nodes
+    for pos in input_positions.values():
+        ax.add_patch(Circle(pos, circle_radius, facecolor=input_color, edgecolor='black', zorder=10))
+    for pos in hidden_positions.values():
+        ax.add_patch(Circle(pos, circle_radius, facecolor=hidden_color, edgecolor='black', zorder=10))
+    for pos in output_positions.values():
+        ax.add_patch(Circle(pos, circle_radius, facecolor=output_color, edgecolor='black', zorder=10))
+
+    # Finalize
+    pad = circle_radius * 2
+    ax.set_xlim(-pad, 1 + pad)
+    ax.set_ylim(0 - pad, 1/aspect + pad)
+    ax.set_aspect('equal', adjustable='datalim')
+    ax.axis('off')
+
+
+def draw_reservoir(ax: plt.Axes,
+                   input_size: int,
+                   post_layer_size: int,
+                   output_size: int,
+                   box_color: str = 'black',
+                   text_color: str = 'white',
+                   input_color: str = 'blue',
+                   hidden_color: str = 'lightblue',
+                   output_color: str = 'red',
+                   circle_radius: float = 0.03,
+                   decorate_r: float = None, # Distance between decorative dots. Default <circle_radius>, don't decorate if False.
+    ):
+    """
+    Draws a reservoir box with input/output connections styled consistently.
+    Labels: 'RNN?' at top, 'Reservoir' center, 'ASI?' bottom.
+    Optional Poisson-dot decoration inside the box.
+
+    Parameters
+    ----------
+    ax : matplotlib.axes.Axes
+    input_size : int
+    output_size : int
+    box_color : str
+    text_color : str
+    input_color : str
+    output_color : str
+    circle_radius : float
+    decorate : bool
+    dot_density : int
+    """
+    pos = ax.get_position()
+    s = ax.figure.get_size_inches()
+    w = s[0]*(pos.x1 - pos.x0)
+    h = s[1]*(pos.y1 - pos.y0)
+    aspect = w/h
+    ax.clear()
+
+    # Box coordinates
+    x0, y0, width, height = 0.15, 0.2/aspect, 0.5, 0.6/aspect
+    boxpad = 0.05
+    
+    # Inputs
+    in_ys = np.linspace(.5/input_size/aspect, (input_size-0.5)/input_size/aspect, input_size)
+    for y in in_ys:
+        ax.add_line(Line2D([0.0, x0], [y, y0+height/2], color='gray', zorder=0))
+        ax.add_patch(Circle((0.0, y), circle_radius, facecolor=input_color,
+                            edgecolor='black', zorder=10))
+
+    # Post-layer
+    layer_x = 2*x0 + width + circle_radius
+    post_ys = np.linspace(y0, y0+height, post_layer_size)
+    # connect box to post-layer
+    for y in post_ys:
+        ax.add_line(Line2D([x0+width, layer_x], [y, y], color='gray', zorder=0))
+        ax.add_patch(Circle((layer_x, y), circle_radius, facecolor=hidden_color,
+                            edgecolor='black', zorder=10))
+
+    # Outputs
+    out_ys = np.linspace(1/(output_size+1)/aspect, output_size/(output_size+1)/aspect, output_size)
+    for y in out_ys:
+        for y_post in post_ys:
+            ax.add_line(Line2D([layer_x, 1.0], [y_post, y], color='gray', zorder=0))
+            ax.add_patch(Circle((1.0, y), circle_radius, facecolor=output_color,
+                                edgecolor='black', zorder=10))
+        
+
+    # Draw box
+    ax.add_patch(FancyBboxPatch((x0, y0), width, height, boxstyle=f'Round, pad={boxpad}, rounding_size=0.05', facecolor=box_color, edgecolor='none', zorder=1))
+    
+    # Decoration with Bridson's Poisson-disc sampling
+    if decorate_r is None:
+        decorate_r = circle_radius
+    if decorate_r:
+        samples = poisson(decorate_r, x0+decorate_r-boxpad, x0+width-decorate_r+boxpad,
+                                      y0+decorate_r-boxpad, y0+height-decorate_r+boxpad, k=4)
+        for dot in samples:
+            ax.add_patch(Circle(dot, decorate_r/2, facecolor=text_color,
+                                edgecolor='none', alpha=0.15, zorder=2))
+
+    # Text
+    ax.text(x0 + width / 2, y0 + height - 0.02, 'RNN?', color=text_color,
+            ha='center', va='top', fontsize=thesis_utils.fs_small)
+    ax.text(x0 + width / 2, y0 + height / 2, 'Reservoir', color=text_color,
+            ha='center', va='center', fontsize=plt.rcParams['axes.titlesize'], fontweight='bold')
+    ax.text(x0 + width / 2, y0 + 0.02, 'ASI?', color=text_color,
+            ha='center', va='bottom', fontsize=thesis_utils.fs_small)
+
+    # Axis formatting
+    pad = circle_radius * 2
+    ax.set_xlim(-pad, 1 + pad)
+    ax.set_ylim(0 - pad, 1/aspect + pad)
+    ax.set_aspect('equal', adjustable='datalim')
+    ax.axis('off')
+
+
+def poisson(r, x_min, x_max, y_min, y_max, k=4):
+    rng = np.random.default_rng()
+    cell_size = r / np.sqrt(2)
+    cols = int(np.ceil((x_max - x_min) / cell_size))
+    rows = int(np.ceil((y_max - y_min) / cell_size))
+    grid = -np.ones((cols, rows), dtype=int)
+    samples = []
+    active = []
+    # initial sample
+    p0 = np.array([rng.uniform(x_min, x_max), rng.uniform(y_min, y_max)])
+    samples.append(p0)
+    active.append(0)
+    gi = int((p0[0] - x_min) / cell_size)
+    gj = int((p0[1] - y_min) / cell_size)
+    grid[gi, gj] = 0
+    # Bridson loop
+    while active:
+        idx = rng.integers(len(active))
+        base = samples[active[idx]]
+        found = False
+        for _ in range(k):
+            theta = rng.random() * 2 * np.pi
+            rad = rng.uniform(r, 2*r)
+            pt = base + np.array([rad*np.cos(theta), rad*np.sin(theta)])
+            if not (x_min <= pt[0] <= x_max and y_min <= pt[1] <= y_max): continue
+            ci = int((pt[0] - x_min) / cell_size)
+            cj = int((pt[1] - y_min) / cell_size)
+            too_close = False
+            for i in range(max(ci-2, 0), min(ci+3, cols)):
+                for j in range(max(cj-2, 0), min(cj+3, rows)):
+                    s = grid[i, j]
+                    if s != -1 and np.linalg.norm(pt - samples[s]) < r:
+                        too_close = True
+                        break
+                if too_close: break
+            if not too_close:
+                samples.append(pt)
+                active.append(len(samples)-1)
+                grid[ci, cj] = len(samples)-1
+                found = True
+                break
+        if not found:
+            active.pop(idx)
+    return samples
+
+
+def plot():
+    ## Create plot
+    thesis_utils.init_style()
+    figsize = (thesis_utils.page_width, thesis_utils.page_width*0.25)
+    fig = plt.figure(figsize=figsize)
+    gs = fig.add_gridspec(1, 3, wspace=0.1, hspace=0)
+    fig.subplots_adjust(top=0.9, left=0.01, right=0.99, bottom=0.0)
+    
+    labelpad = 0.0
+    ## ANN
+    ax1 = fig.add_subplot(gs[0,0])
+    draw_neural_network(ax1, [3, 5, 4, 2])
+    ax1.set_title("ANN", y=1.0, pad=0)
+    thesis_utils.label_ax(ax1, 0, offset=(labelpad, 0), ha="left", va="bottom")
+    
+    ## RNN
+    ax2 = fig.add_subplot(gs[0,1])
+    draw_recurrent_network(ax2, input_size=3, hidden_size=10, output_size=2)
+    ax2.set_title("RNN", y=1.0, pad=0)
+    thesis_utils.label_ax(ax2, 1, offset=(labelpad, 0), ha="left", va="bottom")
+    
+    ## Reservoir
+    ax3 = fig.add_subplot(gs[0,2])
+    draw_reservoir(ax3, 3, 4, 1, decorate_r=0.03)
+    ax3.set_title("RC", y=1.0, pad=0)
+    thesis_utils.label_ax(ax3, 2, offset=(labelpad, 0), ha="left", va="bottom")
+
+    ## Finish and save
+    hotspice.utils.save_results(figures={"NeuralNetworks": fig}, timestamped=False, copy_script=False)
+
+
+if __name__ == "__main__":
+    plot()

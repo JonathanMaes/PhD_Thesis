@@ -34,6 +34,12 @@ The existence of cycles has a profound impact, as an RNN may develop self-sustai
 This enables an RNN to preserve a non-linear transformation of the input history in its internal state, providing dynamical memory and making RNNs suited for dynamic data processing~\cite{lukovsevivcius2009reservoir,RC_RecentAdvances}.
 However, while training methods such as backpropagation~\cite{Backpropagation} are often employed in FNNs, the recurrent connections in RNNs make training very computationally expensive and difficult~\cite{EvaluatingRestrictedESNs,Moon_2021,RC_SuperconductingElectronics}.
 
+\xfig{1_Introduction/NeuralNetworks.pdf}{
+	Schematic representation of \textbf{(a)} an artificial neural network (ANN), \textbf{(b)} a recurrent neural network (RNN) and \textbf{(c)} reservoir computing (RC).
+	In the latter, the reservoir is treated as a black box; it can be of mathematical origin, like a RNN, or a physical system like artificial spin ice (ASI).
+}
+
+
 \subsubsection{Liquid state machines and echo state networks}
 To address the shortcomings of the backpropagation method, two concepts were independently proposed: liquid state machines (LSMs)~\cite{maass_LSM} and echo state networks (ESNs)~\cite{jaeger2001echo}, which were later unified under the term ``reservoir computing'' methods~\cite{RC_unification}.
 These both start from the concept of RNNs, but instead use a randomly generated network of nodes and weights, where the recurrent connections in the network are not trained, but only the weights in the readout are trained.
