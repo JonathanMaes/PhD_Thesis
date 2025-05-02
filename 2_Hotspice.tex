@@ -19,7 +19,7 @@ Beyond-NN interaction models, including full magnetostatically coupled models~\c
 Our goal was to blend these approaches, resulting in \hotspice: a versatile Monte Carlo simulator meant to capture ASI physics with minimal parameters, allowing various lattice configurations to be evaluated.
 It supports both IP and OOP ASI, which may contain thousands of magnets. 
 This software approximates each single-domain nanomagnet as a single Ising spin, associating energies with the various ASI states.
-Since the importance of considering long-range \link{magnetostatic interaction}{magnetostatic (MS) interactions} --- particularly for OOP systems --- has been highlighted by Chioar~\textit{et al.}~\cite{Chioar2014}, \hotspice{} explicitly accounts for the MS interactions between all magnets.
+Since the importance of considering long-range \link{magnetostatic interaction}{magnetostatic (MS) interactions} --- particularly for OOP systems --- has been highlighted by Chioar~\etal~\cite{Chioar2014}, \hotspice{} explicitly accounts for the MS interactions between all magnets.
 Simulations can span arbitrary timescales, as determined by the switching time of magnets in the system. \\\par
 
 In this chapter, we discuss several model variants that have been implemented, and assess their accuracy in simulating the behaviour of ASI.
@@ -389,7 +389,7 @@ The former is more suitable for simulating the temporal evolution of the system,
 with $\kBT$ the thermal energy and $\nu_0$ the so-called \xref{attempt frequency}.
 For mutually interacting magnets, $\EB$ can be replaced by the \xref{effective energy barrier} $\EBeff$ in \cref{eq:2:Néel}. \par
 In the general case where the energy barriers for clockwise and anticlockwise rotation during switching differ, these two switching channels ($\circlearrowright$ and $\circlearrowleft$) will separately follow~\cref{eq:2:Néel}, so their switching frequencies must be combined.
-This yields the total switching rate as presented by \textit{Koraltan et al.}~\cite{DirectionalEnergyBarrier},
+This yields the total switching rate as presented by Koraltan~\etal~\cite{DirectionalEnergyBarrier},
 \begin{equation}
 	\nu = \nu_\circlearrowleft + \nu_\circlearrowright = \frac{\nu_0}{2} \ab[\exp\ab(-\frac{\EBeffLeft}{\kBT}) + \exp\ab(-\frac{\EBeffRight}{\kBT})] \mathrm{,}
 	\label{eq:2:Néel_2}
@@ -1190,8 +1190,8 @@ Hence, the \xref{first-switch method} must be used, with an appropriate maximum 
 Pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a-b}) can be seen as consisting of two intertwined sublattices whose magnets are perpendicular to each other.
 The ground state of this system consists of superferromagnetic domains, where all magnets within each sublattice are magnetised in the same direction~\cite{EmergentChiralityRatchet,ApparentFMpinwheel,RC_ASI}.
 This lattice exhibits hysteresis: when a strong field drives it towards a uniform state, it will remain in that state after the field is removed since this is a ground state of the system. \par
-Li \textit{et al.}~\cite{li2018pinwheel} performed an experimental study to observe the reversal of `diamond'-edge pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a}) under the influence of an external field.
-Notably, when Li~\textit{et al.} applied the field at an oblique angle (\ang{30}) to the ASI edges, the reversal occurred in two distinct steps: the sublattice which was more aligned with the field (\ang{15} to the easy axis) reversed first, followed by the second sublattice for which the field was at \ang{75}.
+Li~\etal~\cite{li2018pinwheel} performed an experimental study to observe the reversal of `diamond'-edge pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a}) under the influence of an external field.
+Notably, when Li~\etal applied the field at an oblique angle (\ang{30}) to the ASI edges, the reversal occurred in two distinct steps: the sublattice which was more aligned with the field (\ang{15} to the easy axis) reversed first, followed by the second sublattice for which the field was at \ang{75}.
 Accurate simulation of the second reversal step requires accounting for the asymmetry in the energy barrier between clockwise and counter-clockwise switching, due to the near-perpendicular field for the second sublattice. \par
 We replicated this experiment using \hotspice for a few values of $\rho=\mu_\perp/\mu_\parallel$ to clearly observe the effect of the asymmetric barrier, resulting in the hysteresis loops shown in~\cref{fig:2:Hysteresis_Pinwheel}.
 When possible, simulation parameters were derived from the experimental configuration: an ASI of $25 \times 25$ unit cells with a NN centre-to-centre distance of \qty{420}{\nano\meter} was used, at room temperature (\qty{300}{\kelvin}).
@@ -1205,7 +1205,7 @@ The simulations used the point dipole model; performing the same simulations wit
 	Hysteresis of the pinwheel ASI for an external magnetic field applied at \ang{30} with respect to the system edges.
 	The parameter $\rho = \mu_\perp/\mu_\parallel$ modulates the effect of the asymmetric barrier as described in~\cref{sec:2:E_B_asymm}.
 	\textbf{(a)} Component of the average magnetisation along the direction of the external field.
-	The experimental hysteresis by Li \textit{et al.}~\cite{li2018pinwheel} is shown in black.
+	The experimental hysteresis by Li~\etal~\cite{li2018pinwheel} is shown in black.
 	\textbf{(b)} In-plane path of the average magnetisation vector.
 	Triangles pointing up (down) correspond to the ramp-up (down) of the external field, whose direction is indicated by the double-headed arrow.
 	\textbf{(c-e)} Snapshots of the system when passing through threshold values of $M_\parallel/M_{\parallel,\mathrm{sat}}$, in chronological order through the hysteresis loop.
@@ -1216,14 +1216,14 @@ The simulations used the point dipole model; performing the same simulations wit
 In the experiment, the two reversal steps occurred gradually over a range of fields, resembling more of an S-curve rather than a sharp step.
 This is due to a random spread on the coercive field of each nanomagnet due to imperfections in lithography~\cite{fraleigh2017characterization}. % REF: 'fraleigh2017characterization' examines this spread in OOP square: they infer the coercive field distribution of the magnets in their system from the width of the hysteresis loop.
 We modelled this in the simulation by introducing a random Gaussian variation on the energy barrier, with $\sigma(E_\mathrm{B})/\langle E_\mathrm{B} \rangle=\qty{7}{\percent}$ yielding the closest agreement to the experiment.
-Note that the experimental hysteresis curve is not symmetric, in contrast to our simulations, which Li \textit{et al.} attributed to a small sample movement during their measurement which changed the applied field angle with respect to the array. \par
+Note that the experimental hysteresis curve is not symmetric, in contrast to our simulations, which Li~\etal attributed to a small sample movement during their measurement which changed the applied field angle with respect to the array. \par
 As can be noted from the figure, the resulting hysteresis, and particularly the field magnitude for the second reversal step, is highly dependent on the choice of $\rho=\mu_\perp/\mu_\parallel$.
 When the asymmetry of the energy barrier is neglected ($\rho=0$), the field magnitude required for the second step is significantly overestimated, as seen in the blue curve of~\crefSubFigRef{fig:2:Hysteresis_Pinwheel}{a} ($\approx\qty{60}{\milli\tesla}$ vs. experiment $\approx\qty{25}{\milli\tesla}$).
 Increasing $\rho$ reduces the field magnitude at which the second step occurs but has little effect on the first step.
 Notably, for $\rho \gtrapprox 0.6$, the second step disappears entirely, and the reversal instead occurs by domain nucleation at the edges of the ASI, as illustrated in \crefSubFigRef{fig:2:Hysteresis_Pinwheel}{e}. \par
 Hence, $\rho \approx 0.4$ yields the best correspondence to the experiment.
 A possible explanation for this is that the switching of magnets in the experimental ASI does not occur by uniform rotation, as assumed by the N\'eel-Arrhenius switching law (\cref{eq:2:Néel}).
-Indications of non-uniform rotation or domain wall-mediated reversal were previously noticed by Morley~\textit{et al.}~\cite{VogelFulcherTammannFreezing}
+Indications of non-uniform rotation or domain wall-mediated reversal were previously noticed by Morley~\etal~\cite{VogelFulcherTammannFreezing}
 
 \subsection{Kagome reversal}
 % TODO: This can show some interesting things about the dumbbell vs. point dipole models.
