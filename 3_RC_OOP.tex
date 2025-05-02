@@ -497,7 +497,7 @@ Here, the OOP magnetic field $B_z(t)$ that models the SOT in \hotspice was scale
 Hence, an input $0 \leq x \leq 1$ is encoded by a field of magnitude $B_z = B_0 + x (B_1 - B_0)$, such that $B_0 \leq B_z \leq B_1$.
 
 \paragraph{Readout method and property gradient}
-Reservoir computing benefits from having multiple simultaneous readout values, as this increases the available information for the single-layer perceptron to train on.
+Reservoir computing benefits from having multiple simultaneous readout values, as this increases the available information for the linear readout layer to train on.
 However, in a normal OOP square-lattice ASI, the relaxation dynamics do not differ much between various areas throughout the ASI --- only the magnets near the edge respond somewhat differently than those in the bulk of the system, as they experience a different total MS interaction.
 Without more significant spatial differences, multiple readouts will not provide a large benefit. \\\par
 %For example, when starting from the uniform state, relaxation will occur faster near the centre of the ASI.
@@ -543,7 +543,7 @@ Logically, the lower the frequency $f$ and the higher the input magnitude $B$, t
 Optimal reservoir performance can be expected when the system never saturates, yet still uses as much of the available $\mavg$-range as possible to minimise the relative impact of the stochasticity intrinsic to the relaxation process. \par
 Indeed, some of the smaller changes of input value do not incur a statistically significant change of $\mavg$ nor $\qNN$, as measured by their standard deviations.
 This is most striking for high-frequency input --- for instance, the value of $\mavg$ remains statistically unaltered during input cycles 7--9 in panels 4--6 of~\cref{fig:3:OOP_relaxation_input}, regardless of the input magnitude $B$, even though the input values applied during those cycles vary significantly between $0.54$ and $0.73$.
-Therefore, the stochastic nature of the relaxation can, in some cases, prevent the perceptron from distinguishing between closely spaced input values. \par
+Therefore, the stochastic nature of the relaxation can, in some cases, prevent the linear readout layer from distinguishing between closely spaced input values. \par
 In conclusion, the strength of this stimulus determines how hard the ASI will be pushed away from the ground state towards the uniform state, while the frequency of the input determines how much the system can relax back towards the ground state after every input cycle.
 
 \subsection{Analog signal transformation and prediction}
@@ -552,8 +552,8 @@ The transient dynamics of thermally active OOP ASI, as were illustrated in~\cref
 Since this system can respond to analog input signals $s: \mathbb{R} \rightarrow [0, 1]; t \mapsto s(t)$, an alluring test to evaluate the reservoir computing capability of this system is to have it perform a signal transformation or prediction task~\cite{gartside2022reconfigurable,AdaptiveProgrammableRC,RC_NNN,TaskAdaptivePRC}. \par % REF: AvalanchesChaosNNN also does signal transformation, but it is more of a sidenote there.
 Applying a signal $s(t)$ to the reservoir, here in the form of an external field $B_z(t)$, yields a response $\vc{r}(t) \in \mathbb{R}^p$ from the $p$ readout nodes the reservoir provides.
 The goal is to estimate a ``target'' function $y(t) \in [0,1]$ as accurately as possible based on the reservoir's response $\vc{r}(t)$.
-As explained in~\cref{sec:1:RC}, the reservoir computing paradigm includes a single-layer perceptron that converts the response $\vc{r}(t)$ into an output $\hat{y}(t) = \vc{r}^\mathrm{T}(t) \cdot \vc{w}$.
-Through a training procedure, the weights $\vc{w}$ of the perceptron can be adjusted to minimise the difference between the output $\hat{y}(t)$ and the target function $y(t)$. \par
+As explained in~\cref{sec:1:RC}, the reservoir computing paradigm includes a linear readout layer that converts the response $\vc{r}(t)$ into an output $\hat{y}(t) = \vc{r}^\mathrm{T}(t) \cdot \vc{w}$.
+Through a training procedure, the weights $\vc{w}$ of the readout layer can be adjusted to minimise the difference between the output $\hat{y}(t)$ and the target function $y(t)$. \par
 The continuous input signal $s(t)$ corresponds to a continuously varying external field $B_z(t)$, but in simulation this can not be captured at infinite resolution.
 The reason for this is that \hotspice assumes all aspects of the system remain static until the next switch occurs, as this assumption allows a mean switching time to be calculated for all magnets.
 To approximate a continuous input in simulation, the input signal must be sampled at sufficiently short time intervals --- say, 20 samples per period.
@@ -562,11 +562,11 @@ This can be done by imposing a maximum switching time $t_\mathrm{max} = 1/20f$ a
 By recording the reservoir state $\vc{r}(t_i)$ and the target output $y(t_i)$ at discrete intervals $t_i = i t_\mathrm{max}$ (with $i = 1,\dots,n$)\footnote{
 	When a magnet switches on a timescale $\Delta t < t_\mathrm{max}$, the external field $B_z(t)$ is updated immediately to more accurately represent the input signal.
 	The reservoir state, however, is only recorded at intervals of $t_\mathrm{max}$ for a consistent measure of reservoir performance that is independent of reservoir dynamics like individual switches.
-}, the perceptron can be trained on several periods of the input signal via ordinary least-squares (OLS) regression\footnote{
+}, the readout layer can be trained on several periods of the input signal via ordinary least-squares (OLS) regression\footnote{
 	Regularised OLS fitting was performed using the \python{statsmodels}~\cite{statsmodels} Python package.
 }.
 Throughout the remainder of this section, we will compare the performance of the OOP ASI reservoir as a function of several system parameters.
-For a consistent comparison, the training of the perceptron for signal transformation (prediction) is always performed on the first 12 (60) periods\footnote{
+For a consistent comparison, the training of the linear readout layer for signal transformation (prediction) is always performed on the first 12 (60) periods\footnote{
 	For signal transformation on periodic signals, as considered here, one period would normally suffice.
 	However, since the thermally active ASI reservoir is subject to thermal noise, multiple periods are used for increased robustness against such noise.
 } of the input signal.
@@ -604,7 +604,7 @@ The sine-to-sawtooth transformation using this system is illustrated in~\cref{fi
 The minimal input magnitude (corresponding to $s(t) = 0$) was chosen as $B_0 = \SI{-0.35}{\milli\tesla}$, for this value was found to be optimal (see~\cref{fig:3:Transformation_magn-magnmin}).
 The inverse error $1/\MSE$ is used to quantify performance, because this allows for easier discrimination in regions of high performance where the $\MSE$ is low.
 Panels on the left side relate to the test set, while those on the right side show the same for the training set.
-Since both sides appear very similar, we may conclude that the perceptron is not overfitting on the limited data (12 periods) it has available. \par
+Since both sides appear very similar, we may conclude that the linear readout layer is not overfitting on the limited data (12 periods) it has available. \par
 The performance map in~\cref{fig:3:Transformation_freq-magn_baseline} exhibits 3 distinct regions of both decent and poor transformation quality.
 Within each of them, one $(f, B_1)$-combination has been marked with Roman numerals: the waveforms generated by this ASI for those particular input magnitudes and frequencies are shown in the bottom half of the figure.
 At low frequency, two separate bands with relatively high $1/\MSE$ are visible: one at $B_1 \approx \SI{0.1}{\milli\tesla}$  and one at $B_1 \approx \SI{0.5}{\milli\tesla}$ \textsf{(i)}.
@@ -693,7 +693,7 @@ The reason for this is that the range of coercive fields of individual magnets i
 \paragraph{System size and readout resolution}
 Increasing the number of magnets $N$ in the ASI reduces the relative impact of thermal noise, since each readout node then averages over more magnets.
 The central limit theorem states that the standard deviation of a mean scales as $1/\sqrt{N}$, so the value of $\mavg$ during relaxation will be more consistent in larger systems.
-Hence, increasing the size of the system is expected to enhance the transformation quality as the perceptron output then also becomes less noisy. \\\par
+Hence, increasing the size of the system is expected to enhance the transformation quality as the final output then also becomes less noisy. \\\par
 When each readout node represents the average magnetisation of one column, a square $L_x \times L_y$ ASI yields $p = L_x = L_y$ nodes ($\vc{r}(t) \in \mathbb{R}$).
 However, as $p$ increases, the danger of overfitting increases as well~\cite{DeepRC_IonGating_Overfitting,lukovsevivcius2009reservoir}.
 Overfitting is a general machine learning phenomenon that occurs when a model has too many trainable weights $\vc{w}$ for the limited data it has been given.
@@ -729,7 +729,7 @@ Contrary to the single-column readout, the performance is now equal between the 
 \paragraph{Double-frequency transformation}
 % TODO: address JLeliaert's comment about task agnostic metrics
 With an ASI that can perform a decent sine-to-sawtooth transformation, other transformations can be targeted without changing the ASI --- provided the input is applied with an appropriate strength and frequency.
-Only the weights $\vc{w}$ of the perceptron have to be adjusted to reflect this new target.
+Only the weights $\vc{w}$ of the readout layer have to be adjusted to reflect this new target.
 For example,~\cref{fig:3:Transformation_freq-magn_SINESQ} shows results for a double-frequency sine wave as target function.
 For this transformation, the best fit attainable with a linear scaling of the input signal --- the red line in the bottom panel of~\cref{fig:3:Transformation_freq-magn_SINESQ} --- is simply a constant.
 

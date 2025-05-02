@@ -15,7 +15,7 @@ This stands in stark contrast to biological brains, which are capable of learnin
 Furthermore, running such neural networks on conventional hardware is encountering limits: to increase performance, the number of trainable parameters is rapidly being increased, but transistor scaling and power density limitations make it hard to keep up with these increasing requirements. % TODO REF
 Hence, while advances in training algorithms and the ever increasing wealth of available data create ever more potent machine learning systems, the underlying approach is leading to a bottleneck. \par
 Several factors that contribute to this bottleneck are often quoted in the context of neural networks or other machine learning algorithms running on conventional hardware:
-\begin{itemize}
+\begin{itemize} % TODO: more references for these bullet points
 	\item Conventional hardware uses transistors to perform logical operations.
 	The ever increasing computational demands have driven \xlabel{Moore's law}, which states that the number of transistors on a chip doubles every couple of years.
 	However, this scaling law appears untenable as transistors approach nanometre scales.
@@ -70,12 +70,12 @@ These were originally inspired by the brain: an ANN consists of a network of non
 Each node holds a numerical value: during operation, this value is determined based on the weighted sum of all nodes that feed into it.
 This allows activations to propagate through the network~\cite{lukovsevivcius2009reservoir}.
 To prevent these values from accumulating without limit, they are typically bounded to the range $[0,1]$ by applying an \xlabel{activation function} to the weighted sum --- typically a sigmoid, like the logistic map $e^x/(1+e^x)$ or hyperbolic tangent~\cite{SurveyUniversalApproximation}.
-A node that uses such an activation function is referred to as a \idx{perceptron}.
+A node that uses such an activation function is referred to as an \idx{artificial neuron}.
 The non-linearity introduced by the activation function is what enables ANNs to approximate any arbitrary function, allowing them to adequately separate, group and otherwise process input data~\cite{ApproximationFNN,SurveyUniversalApproximation,funahashi1992neural}.
 For many real-world tasks, the form of the desired function is unknown, so heuristics are used to ``train'' the weights of all edges based on a given dataset~\cite{EvaluatingRestrictedESNs}.
 How exactly this training is done, depends on the structure of the ANN.
 Typically, a major distinction is made between \xlabel{feed-forward neural network}s (FNNs) and \xlabel{recurrent neural network}s (RNNs)~\cite{ApproximationRNN}. \par
-In a FNN, the nodes are grouped in layers, with connections between all the nodes of two successive layers --- when the nodes are perceptrons, it is also called a multi-layer perceptron (MLP).
+In a FNN, the nodes are grouped in layers, with connections between all the nodes of two successive layers.
 This is schematically illustrated in~\crefSubFigRef{fig:1:NeuralNetworks}{a}: from the blue input node(s) on the left, information propagates to the right through the grey weighted connections, into the green hidden layers, finally yielding one or multiple output values at the red node(s)~\cite{zurada1992introduction}.
 FNNs are mainly used for static data processing, such as image classification\footnote{Visual tasks are typically performed using convolutional neural networks --- a particular type of FNN that extracts features from images.}~\cite{ApproximationRNN}.
 While~\crefSubFigRef{fig:1:NeuralNetworks}{a} shows a small network with 2 hidden layers containing 9 nodes in total, real-world tasks like image classification require far larger networks with millions or even billions of weights~\cite{ImageNet,BLOOM_CarbonFootprint_176Bparam,GPT-J-6B}. \par
@@ -87,6 +87,7 @@ However, whereas FNNs can be trained using methods such as \xlabel{backpropagati
 Some approaches to train RNNs take inspiration from FNN: back-propagation through time (BPTT), for instance, unfolds the recurrent connections in time to obtain an FNN on which backpropagation can be applied~\cite{jaeger2002tutorial}.
 However, this is not so straightforward, leading to issues regarding the calculation of the required gradients and a tendency to get stuck in local minima~\cite{RC_Tensegrity,DifficultyTrainingRNN,D-ESN-Improved}. % Other methods are real-time recurrent learning (RTRL) and extended Kalman filtering (EKE), both explained in jaeger2002tutorial.
 
+\vspace{-1em}
 \xfig{1_Introduction/NeuralNetworks.pdf}{
 	\label{fig:1:NeuralNetworks}
 	Schematic representation of \textbf{(a)} a feed-forward neural network (FNN), \textbf{(b)} a recurrent neural network (RNN) and \textbf{(c)} reservoir computing (RC).
@@ -94,6 +95,7 @@ However, this is not so straightforward, leading to issues regarding the calcula
 	Grey connections propagate information from left to right, unless indicated by an arrow.
 	Blue (red) nodes represent input (output), while green nodes constitute the hidden layers of the network.
 }
+\vspace{-1em}
 
 \paragraph{Echo state networks and liquid state machines}
 To address the shortcomings of conventional RNN training methods like BPTT, two alternative concepts were independently proposed in the early 2000s, laying the foundation for what would eventually be known as reservoir computing.
@@ -102,7 +104,7 @@ Jaeger~\cite{jaeger2001echo} presented echo state networks (ESNs), while Maass~\
 	In LSMs, the sparse network of spiking neurons projects inputs into a high-dimensional transient state, akin to waves in a liquid.
 	The ``echo'' of ESNs refers to the fading memory provided by the internal dynamics of a recurrent network, where loops can retain information from past inputs.
 }.
-Both are recurrent networks and operate on very similar principles: their main difference lies in their nodes, as LSMs use \xlabel{spiking neurons} while ESNs use \xref{perceptrons}.
+Both are recurrent networks and operate on very similar principles: their main difference lies in their nodes, as LSMs use \xlabel{spiking neurons} while nodes in ESNs use sigmoidal activation functions.
 The crucial property that sets them apart from other training methods is that their underlying recurrent network is randomly initialised and, crucially, remains unmodified during training~\cite{ReviewESNs,RC_Tensegrity}.
 Instead, only a single linear readout layer is trained via linear regression to obtain the desired output from this random network~\cite{D-LSM,D-ESN-Improved}.
 This decoupling of internal dynamics from learning is the core insight that underpins both LSMs and ESNs.
