@@ -137,17 +137,16 @@ High dimensionality and non-linearity cooperate, as a non-linear mapping of inpu
 In prediction tasks, the non-linearity of a reservoir can enable the extraction of non-linear dependencies from the inputs for better inference. \par
 Fading memory~\cite{boyd1985ApproximatingVolterra} originates from the echo state property of ESNs, where recurrent connections preserve information of the past while it slowly fades out as new input values are applied.
 This property ensures that the reservoir state is dependent on recent inputs, while being independent of inputs in the distant past, which is useful behaviour for most temporal processing tasks~\cite{ChaoticTimeSeries_ML,appeltant2011information}. \par % If inputs from the distant past are somehow needed, they can be incorporated using "long short-term memory" (Hochreiter and Schmidhuber).
-Finally, the separation/approximation property states that distinct signals should yield distinct responses, while similar inputs must be insensitive to noise and thus remain grouped together in the output space~\cite{RC_RecentAdvances}.
+Finally, the \xlabel{separation property} states that distinct signals should yield distinct responses, while the \xlabel{approximation property} requires similar inputs to remain grouped together in the output space, making the system is insensitive to noise~\cite{RCbenchmarksReview1}.
 The former benefits from a chaotic regime, while the latter (and fading memory) are more easily fulfilled in a stable regime~\cite{RC_RecentAdvances}.
 As such, many physical reservoirs aim to balance on this ``edge of stability'' whenever it is available in the system, to balance between these properties~\cite{appeltant2011information}.
 
 \paragraph{Mathematical description}
-% TODO: figure with right symbols
-In the reservoir computing paradigm, an input signal $u(t)$ perturbs a reservoir $\mathcal{R}$, which can be any non-linear dynamical system, be it physical or abstract.
-The state of the reservoir following this perturbation can then be represented by a response vector $\vc{r}(t)$.
-The final output $\hat{y}(t)$ of the system is then obtained as a weighted sum $\hat{y}(t) = \vc{r}^\mathrm{T}(t) \cdot \vc{w}$ of the components of this vector $\vc{r}(t)$ --- such a weighted sum is also referred to as a single-layer perceptron.
-Depending on the task performed, one or multiple perceptrons can be trained, whose interpretation then depends on the context of the specific task.
-% Here, we consider the training of just a single perceptron.
+% TODO: settle on a set of symbols that can be used, and add them in a (the?) figure
+In the reservoir computing paradigm, an input signal $s(t)$ perturbs a reservoir $\mathcal{R}$, which can be any non-linear dynamical system, be it physical or abstract.
+The state of the reservoir following this perturbation can then be represented by a $p$-dimensional response vector $\vc{r}(t) \in \mathbb{R}^p$.
+The final output $\hat{y}(t)$ of the system is then obtained by a weighted sum $\hat{y}(t) = \vc{r}^\mathrm{T}(t) \cdot \vc{w}$ of the components of the response vector $\vc{r}(t)$.
+Depending on the task performed, one or multiple such sums can be trained and interpreted in the context of that specific task~\cite{RC_RecentAdvances}. % For example, temporal pattern classification may provide multiple outputs, while prediction and generation only uses a single one
 When the desired input-output relation $s(t) \mapsto y(t)$ is known for a limited set of data --- the training set --- the weights $\vc{w}$ can be adjusted to minimise the difference between the output $\hat{y}(t)$ and the desired output $y(t)$.
 This is usually done by ordinary least-squares (OLS) regression, which requires only a single matrix inversion.
 The optimal weights then remain fixed, and the performance of the reservoir can be evaluated by feeding it the test set --- a previously unknown, yet similar data set as the training set.
@@ -155,28 +154,94 @@ The optimal weights then remain fixed, and the performance of the reservoir can 
 % TODO: should I explain the mathematics of the matrix inversion here? Can take inspiration from~\cite{RC_NNN} eq. 4--7.
 % Training of the weights $\vc{w}$ via linear regression: \hat{y}_i = x_i^T \cdot w + \epsilon_i or in matrix form y = X w + \epsilon. The OLS algorithm adjusts the weight vector w to minimize the MSE between the estimated output and the target function.
 
-\subsubsection{Multi-reservoir techniques}
-Since physical reservoirs can often be hard to scale, multiple techniques have been devised to improve performance by combining multiple reservoirs together~\cite{EvaluatingRestrictedESNs,RotatingNeuronsRC} or by time multiplexing~\cite{appeltant2011information}.
-\paragraph{Single dynamical node}
-\cite{appeltant2011information}
-\paragraph{Rotating neurons reservoir}
-\cite{RotatingNeuronsRC}
 \subsection{Metrics} \label{sec:1:RC_metrics}
+To compare different physical reservoirs, or identify optimal system parameters, metrics are needed that can consistently evaluate how suitable a given physical system is to be used as a reservoir.
+In this respect, two types of metrics are often used: those calculated based on the ranks of matrices, and those calculated through a form of linear regression, with the latter being more popular as of late.
+
+\subsubsection{Matrix rank-based metrics}\indexlabel{matrix rank-based metrics} \label{sec:1:RC_metrics_KQ}
+Legenstein and Maass~\cite{WhatMakesPowerful} proposed three metrics, based on the readout vector $\vc{r}(t)$ of the reservoir.
+By sampling this $p$-dimensional vector at $m$ set intervals, a $p \times m$ matrix can be constructed whose columns are these vectors at different moments in time.
+Depending on the choice of input sequence, the rank of this matrix gives information about certain properties of the system~\cite{RC_ASI}.
+
+\paragraph{Kernel-quality}
+The \xlabel{kernel-quality} $K$ measures the \xref{separation property}, i.e. how well the reservoir can separate distinct temporal input patterns.
+Practically, it is determined by applying $m$ random input sequences, yielding a $p \times m$ matrix --- here, we will use $m=p$ to obtain a square matrix for a more consistent measure.
+In the case of discrete-time input, each input sequence consists of a large number of input values (here: 100).
+This ensures that the input sequences are maximally distinct, while the rank of this matrix (i.e., the kernel-quality $K$) is a measure for how distinct the responses obtained from the reservoir can be~\cite{Vidamour_2022}.
+An more efficient alternative method would be to record the response $\vc{r}$ after each input value, as this would also result in maximally distinct input sequences, though this method strays further from the original definition~\cite{RC_HierarchicalNeuroevolution,RCbenchmarksReview1}.
+Hence, a high kernel-quality $K$ indicates that the reservoir exhibits the separation property.
+In the extreme case where $K=m$, any desired output can be implemented by the reservoir in combination with its linear readout layer~\cite{WhatMakesPowerful}.
+
+\paragraph{Generalisation-capability}
+The \xref{kernel-quality} is insufficient to quantify the computational performance of a reservoir~\cite{WhatMakesPowerful,RC_ASI,IL_Masterproef}.
+The \xlabel{generalisation-capability} $G$ is a similar metric, which measures the \xref{approximation property}, i.e. whether similar input sequences yield similar responses.
+Practically, it is determined in the same way as the kernel-quality $K$, except that the input sequences are now similar in one way or another.
+This can be done by adding a small amount of noise to a given input sequence, but we will follow the method outlined in~\cite{RC_ASI} instead.
+The first 60 input values will be shared among all sequences, while the remaining 40 are random for each sequence individually.
+This way, the rank of the resulting matrix (i.e., the generalisation-capability $G$) measures how distinct the responses of similar inputs are.
+A low value of $G$ is therefore desirable, as it indicates robustness to noise and overfitting, as the reservoir adheres to the approximation property~\cite{RCbenchmarksReview1}.
+
+\paragraph{Compute quality}
+To obtain a single metric for the computational capability of a reservoir, Legenstein and Maass proposed to simply subtract the normalised values of both these metrics.
+This yields the compute quality $Q = K - G$, where higher values typically indicate better performance.
+However, care should be taken with such claims, as high compute quality does not necessarily mean that the reservoir will perform well on all tasks it is given.
+
+\subsubsection{Task-agnostic metrics}
+While the matrix rank-based metrics are, strictly speaking, also task-agnostic, the metrics to be discussed now are more commonly referred to when talking about task-agnostic metrics, as the relation between them and particular tasks that the reservoir performs well on is clearer.
+A practical definition of non-linearity and memory capacity was given by Love~\etal~\citet{RC_TaskAgnosticMetrics_v2}, which will be used here.
+
+\paragraph{Non-linearity}
+The non-linearity of the reservoir can be measured by considering that its response consists of a linear and a non-linear contribution.
+The linear contribution can be extracted by training a linear estimator $\hat{\vc{r}}(t)$ on the reservoir output based on the past input $s(t - \tau)$.
+More specifically, the estimator
+\begin{equation}
+	\hat{r}_n(t) = c_n + \sum_{\tau=0}^{k} w_{n,\tau} u(t - \tau) \mathrm{,}
+\end{equation}
+is trained by adjusting the weights $w$ and $c$ based on the known discrete-time input-output relationship (on the training set).
+The cut-off time $k$ must be longer than the relaxation time of the reservoir --- we will use $k=10$.
+By measuring the quality of this estimate using the $\mathrm{R}^2$ correlation coefficient, a measure of the linearity of each separate readout node is obtained.
+This can be converted to an overall measure for non-linearity as
+\begin{equation}
+	\mathrm{NL} = 1 - \frac{\sum_{n=1}^p \mathrm{R}^2[\hat{r}_n;r_n]}{p} = 1 - \frac{\sum_{n=1}^p \frac{\mathrm{cov}^2(\hat{r}_n; r_n)}{\sigma^2(\hat{r}_n) \sigma^2(r_n)}}{p} \mathrm{.}
+\end{equation}
+
+\paragraph{Linear memory capacity}
+Calculating the linear memory capacity can also be done using linear estimators, but by working the other way around.
+Instead, an estimator for the past input $s(t - \tau)$ is trained based on the current state $\vc{r}$ of the reservoir.
+In other words, the estimator
+\begin{equation}
+	\hat{s}(t - \tau) = c_n + \sum_{i=1}^{p} w_{i,\tau} r_i(t)
+\end{equation}
+is now trained.
+The linear memory capacity is then obtained by summing the $\mathrm{R}^2$ correlation coefficient of all estimators up to a threshold $k$:
+\begin{equation}
+	\label{eq:1:MC}
+	\mathrm{MC} = \sum_{\tau = 1}^{k} \mathrm{R}^2[\hat{s}(t - \tau); s(t - \tau)]
+\end{equation}
+Note that the memory capacity can be increased arbitrarily high, by choosing a high cut-off $k$.
+However, the memory capacity typically exhibits a plateau beyond a certain value of $k$, before rising dramatically only when $k$ approaches the size of the training set.
+Hence, $k$ should be chosen at this plateau; for the systems we will consider, $k=10$ suffices. \par
+Note that this measures short-term memory; long-term memory often refers to the knowledge engrained in the weights of an ANN --- the linear readout layer in the case of RC.
+Furthermore, this only captures the linear memory capacity: the non-linear memory capacity is far more computationally expensive as it additionally requires a summation over polynomials of different degrees~\cite{RCbenchmarksReview1}.
+We therefore limit this discussion to the linear memory capacity.
+
+\paragraph{Parity check}
+Closely related to the memory capacity is the parity check metric~\cite{hon2021numerical}.
+This is particularly intended for use with binary input, as it defines the parity of a binary input sequence $s(t)$ as
+\begin{equation}
+	\pi(t-\tau) = \Bigg[\sum_{j = 0}^{\tau} s(t - j) \Bigg] \mathrm{mod}~2 \mathrm{.}
+\end{equation}
+The parity check is then defined in the same way as the memory capacity in~\cref{eq:1:MC}, except with $\pi(t - \tau)$ instead of $s(t - \tau)$.
+This introduces a form of non-linearity into it, though it mostly serves as a measure of the memory capacity in binary systems. % TODO: is this correct?
+
+
 % TODO: cite relevant papers, like \cite{NeuromorphicFewShot}: in the Methods section there is a good mathematical introduction on MG, NARMA, and MC/NL, so can use this as reference that MG is mostly memory-driven.
-\subsubsection{Kernel-quality, generalisation-capability, compute quality} \label{sec:1:RC_metrics_KQ}
-\cite{RC_ASI}
-% REF: https://arxiv.org/html/2405.06561v1 explains the kernel-quality metrics quite well with references. Concerning the generalisation-capability, for example: "Generalisation rank (GR) measures how robust the reservoir is to noise and avoiding overfitting. The intent is to produce a measure of whether the matrix can generalise over inputs that are similar. Low GR indicates good robustness to noise."
-\subsubsection{Task-agnostic metrics: nonlinearity, memory capacity, complexity (, parity check)}
-% TODO: what does PC actually measure? Explain that its calculation is similar to that of memory capacity, but that the added summation and multiplication introduces some non-linearity aspect to it.
-\subsubsection{Other} % Memorisation, frequency generation, classification, signal transformation, Mackey-Glass etc.
-ICT task~\cite{farronato2022reservoir,grollier2020neuromorphic} (simple image classification) % Tasks similar to ICT are performed in those refs
-\subsection{Applications or tasks}
-Blood glucose level monitoring~\cite{FewMoleculeReservoir}.
-\subsubsection{Digital signal processing} % Chaotic time series, speech recognition, TODO
-\subsection{Physical RC platforms}
-\subsubsection{Why physical systems can be used for RC}
-\subsubsection{Physical platforms suitable for RC}
-\paragraph{Magnetic} % Rings and ASI
+
+\subsubsection{Other} % Memorisation, frequency generation, classification
+In addition to these six metrics, reservoirs are often used to perform specific benchmark tasks in literature.
+Example of these include % TODO: signal transformation and prediction (Mackey-Glass, sunspots), NARMA, simple image recognition~\cite{farronato2022reservoir,grollier2020neuromorphic}... See https://arxiv.org/html/2405.06561v1
+Wringer~\etal~\cite{RCbenchmarksReview1} note that, while less general than metrics, benchmarks enable a more concrete comparison of reservoirs, as opposed to the more vague notion that two reservoirs are simply different based on their metrics.
+Wringer~\etal then proceed to provide a comprehensive overview of various benchmarks used throughout literature, with motivations for why they are used for particular reservoirs~\cite{RCbenchmarksReview1}.
 % TODO: consider adding references 308-314 of Pieter's PhD thesis, which concern RC using nanomagnets
 In the context of the \spinengine project, three types of magnetic systems were considered.
 These are the magnetic nanorings~\cite{DynamicEmergence_NanomagneticSystem}, focused on by the University of Sheffield, in-plane (IP) artificial spin ice (ASI)~\cite{RC_ASI}, researched by NTNU, and out-of-plane (OOP) ASI~\cite{KUR-24}, the primary interest of ETHZ.

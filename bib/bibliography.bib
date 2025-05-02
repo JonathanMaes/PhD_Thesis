@@ -1819,6 +1819,17 @@
 	abstract      = {Reservoir Computing is a computing model ideal for performing computation on varied physical substrates. However, these physical reservoirs can be difficult to scale up. We propose joining various reservoirs together as an approach to solving this problem, simulating physical reservoirs with Echo State Networks (ESNs). We investigate various methods of combining ESNs to form larger reservoirs, including a method that we dub Restricted ESNs. We provide a notation for describing Restricted ESNs, and use it to benchmark a standard ESN against restricted ones. We investigate two methods to keep the weight matrix density consistent when comparing a Restricted ESN to a standard one, which we call overall consistency and patch consistency. We benchmark restricted ESNs on NARMA10 and the sunspot prediction benchmark, and find that restricted ESNs perform similarly to standard ones. We present some application scenarios in which restricted ESNs may offer advantages over standard ESNs. We then test restricted ESNs on a version of the multi-timescale Multiple Superimposed Sines tasks, in order to establish a baseline performance that can be improved upon in further work. We conclude that we can scale up reservoir performance by linking small homogeneous subreservoirs together without significant loss in performance over a single large reservoir, justifying future work on using heterogeneous subreservoirs for greater flexibility.}
 }
 
+@mastersthesis{IL_Masterproef,
+	title         = {Modelling Artificial Spin Ice for Reservoir
+	Computing},
+	author        = {Lateur, Ian},
+	year          = 2023,
+	publisher     = {2023.},
+	abstract      = {Master of Science in Physics and Astronomy},
+	language      = {en},
+	school        = {Ghent University}
+}
+
 @article{flinn1974MCIsing,
 	title         = {{M}onte {C}arlo calculation of phase separation in a two-dimensional {I}sing system},
 	author        = {Flinn, PA},
@@ -1962,6 +1973,24 @@
 	url           = {https://www.pnas.org/doi/abs/10.1073/pnas.79.8.2554},
 	eprint        = {https://www.pnas.org/doi/pdf/10.1073/pnas.79.8.2554},
 	abstract      = {Computational properties of use of biological organisms or to the construction of computers can emerge as collective properties of systems having a large number of simple equivalent components (or neurons). The physical meaning of content-addressable memory is described by an appropriate phase space flow of the state of a system. A model of such a system is given, based on aspects of neurobiology but readily adapted to integrated circuits. The collective properties of this model produce a content-addressable memory which correctly yields an entire memory from any subpart of sufficient size. The algorithm for the time evolution of the state of the system is based on asynchronous parallel processing. Additional emergent collective properties include some capacity for generalization, familiarity recognition, categorization, error correction, and time sequence retention. The collective properties are only weakly sensitive to details of the modeling or the failure of individual devices.}
+}
+
+@inproceedings{RC_HierarchicalNeuroevolution,
+	title         = {Neuroevolution of hierarchical reservoir computers},
+	author        = {Dale, Matthew},
+	year          = {2018},
+	booktitle     = {Proceedings of the Genetic and Evolutionary Computation Conference},
+	location      = {Kyoto, Japan},
+	publisher     = {Association for Computing Machinery},
+	address       = {New York, NY, USA},
+	series        = {GECCO '18},
+	pages         = {410--417},
+	doi           = {10.1145/3205455.3205520},
+	isbn          = {9781450356183},
+	url           = {https://doi.org/10.1145/3205455.3205520},
+	abstract      = {Reservoir Computers such as Echo State Networks (ESN) represent an alternative recurrent neural network model that provides fast training and state-of-the-art performances for supervised learning problems. Classic ESNs suffer from two limitations; hyperparameter selection and learning of multiple temporal and spatial scales. To learn multiple scales, hierarchies are proposed, and to overcome manual tuning, optimisation is used. However, the autonomous design of hierarchies and optimisation of multi-reservoir systems has not yet been demonstrated. In this work, an evolvable architecture is proposed called Reservoir-of-Reservoirs (RoR) where sub-networks of neurons (ESNs) are interconnected to form the reservoir. The design of each sub-network, hyperparameters, global connectivity and its hierarchical structure are evolved using a genetic algorithm (GA) called the Microbial GA.To evaluate the RoR and microbial GA, single networks and other hierarchical ESNs are evolved. The results show the microbial GA can dramatically increase the performance of single networks compared to other optimisation techniques. The evolutionary process also leads to competitive results with RoRs and other hierarchical ESNs, despite having fewer connections than a single network. In the final section, it is revealed that the RoR architecture may learn generalised features other architectures cannot, offering improvements in network generalisation to other tasks.},
+	numpages      = {8},
+	keywords      = {echo state networks, microbial GA, neuroevolution, reservoir computing}
 }
 
 @article{NeuromorphicAFMspintronics,
@@ -2176,6 +2205,18 @@
 	volume        = 27,
 	number        = 3,
 	pages         = {1--9}
+}
+
+@article{RC_Photonic,
+	title         = {Parallel Reservoir Computing Using Optical Amplifiers},
+	author        = {Vandoorne, Kristof and Dambre, Joni and Verstraeten, David and Schrauwen, Benjamin and Bienstman, Peter},
+	year          = {2011},
+	journal       = {IEEE Transactions on Neural Networks},
+	volume        = {22},
+	number        = {9},
+	pages         = {1469--1481},
+	doi           = {10.1109/TNN.2011.2161771},
+	keywords      = {Reservoirs;Photonics;Neurons;Semiconductor optical amplifiers;Topology;Speech recognition;Network topology;Integrated optics;optical neural networks;photonic reservoir computing;semiconductor optical amplifiers;speech recognition}
 }
 
 @article{RC_PassiveFrustratedNM,
@@ -2539,6 +2580,18 @@
 	volume        = 3,
 	number        = 3,
 	pages         = {127--149}
+}
+
+@article{RCbenchmarksReview1,
+	title         = {Reservoir computing benchmarks: a tutorial review and critique},
+	author        = {Wringe, Chester and Trefzer, Martin and Stepney, Susan},
+	year          = {2025},
+	journal       = {International Journal of Parallel, Emergent and Distributed Systems},
+	publisher     = {Taylor {\&} Francis},
+	pages         = {1--39},
+	doi           = {10.1080/17445760.2025.2472211},
+	issn          = {1744-5760},
+	url           = {https://doi.org/10.1080/17445760.2025.2472211}
 }
 
 @article{RC_BeyondMemoryNonlinearity,
