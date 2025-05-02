@@ -9,8 +9,8 @@ Conventional computers --- consisting of transistors arranged into logic gates -
 However, our world provides many challenging tasks that can not be captured by such simple, exact sets of predefined rules.
 The archetypical example of this is driving a car, but this extends far into other complex tasks that are often thought of as requiring some degree of ``intelligence'' --- whatever that word may entail exactly. \par
 The field of \idx{machine learning} aims to tackle these rather complex tasks using artificial systems, the most prevalent of which nowadays are \xref{artificial neural networks} that take inspiration from the synaptic connections in a biological brain.
-Over the years, neural networks have advanced significantly, most recently evidenced by the rise of large language models which have already had a broad societal impact. % the likes of ChatGPT
-However, training these systems to the point where they can perform any of the aforementioned tasks at a decent level requires vast amounts of data to fine-tune their ever increasing number of internal parameters --- accompanied by an unsustainably rising energy cost~\cite{QuantumNeuromorphicOpportunities}.
+Over the years, neural networks have advanced significantly, most recently evidenced by the rise of large language models which have already had a broad societal impact~\cite{ImprovingLanguageGPT,GPT-4}.
+However, training these systems to the point where they can perform any of the aforementioned tasks at a decent level requires vast amounts of data to fine-tune their ever increasing number of internal parameters --- accompanied by an unsustainably rising energy cost~\cite{QuantumNeuromorphicOpportunities,BLOOM_CarbonFootprint_176Bparam}.
 This stands in stark contrast to biological brains, which are capable of learning patterns based on a far more limited set of data, while consuming orders of magnitude less power than an artificial system of equivalent computational capability~\cite{NeuromorphicSpintronics}.
 Furthermore, running such neural networks on conventional hardware is encountering limits: to increase performance, the number of trainable parameters is rapidly being increased, but transistor scaling and power density limitations make it hard to keep up with these increasing requirements. % TODO REF
 Hence, while advances in training algorithms and the ever increasing wealth of available data create ever more potent machine learning systems, the underlying approach is leading to a bottleneck. \par
@@ -23,11 +23,11 @@ Several factors that contribute to this bottleneck are often quoted in the conte
 	In an attempt to patch this, multi-core processing has become prevalent, but the high power density still limits the number of cores that can operate simultaneously without overheating. % This results in so-called areas of ``dark silicon'' that are unused at a given instant.
 	Thus, new kinds of energy-efficient hardware need to be explored.
 	\item Conventional computers are built according to the von Neumann architecture, where computation (CPU) is separated from memory (RAM).
-	However, transferring information from memory to the processing unit wastes a lot of time and energy, leading to the infamous \idx{von Neumann bottleneck}.
+	However, transferring information from memory to the processing unit wastes a lot of time and energy, leading to the infamous \idx{von Neumann bottleneck}~\cite{TaskAdaptivePRC}.
 	The separation between memory and processing is not fundamentally required: biological brains in the natural world exhibit no such divide as they use a vast network of interconnected neurons, yet they are nonetheless capable of learning, processing and retaining information.
 	The field of \idx{in-memory computing} concerns itself with bridging this divide in artificial systems.
 	\item Artificial neural networks, like any other machine learning system implemented on conventional hardware, are abstracted far away from the physical domain~\cite{RC_ASI}.
-	Most advancements arise from improving their algorithms, but these have to be run on a particular (e.g., von Neumann) computer architecture made up of circuits that handle information encoded by physical devices like transistors.
+	Most advancements arise from improving their algorithms, but these have to be run on a particular (e.g., von Neumann) computer architecture made up of circuits that handle information encoded by physical devices like transistors~\cite{RC_SuperconductingElectronics}.
 	These many layers of abstraction render this approach inherently inefficient, as it does not directly exploit the physical properties of the constituent materials for computation~\cite{RC_ASI}.
 \end{itemize}
 These various drawbacks of current implementations have become more noticeable over the past decade, as portrayed in~\cref{fig:1:Ngram}.
@@ -46,56 +46,70 @@ Neuromorphic computing, on the other hand, does not seek exact solutions; in the
 	\newline
 }
 
-A related concept is material computation~\cite{NeglectedPillar}, which goes one step further: its goal is to find ways to exploit the inherent computing power present in physical substrates.
+A related concept is \xlabel{material computation}~\cite{NeglectedPillar}, which goes one step further: its goal is to find ways to exploit the inherent computing power present in physical substrates.
 Whereas classical computing uses a top-down approach where mathematics is imposed onto a physical material --- for instance to construct logic gates --- material computation works in the opposite direction by instead asking what computations a physical object performs naturally~\cite{RC_ASI}.
 By designing materials with specific behaviours, systems can be created that naturally exhibit the desired computational properties, reducing the levels of abstraction that currently exist between physics and computation. \par
-Among the various substrates being explored for material computation, magnetic and spintronic hardware stand out as particularly promising candidates~\cite{grollier2020neuromorphic,NeuromorphicSpintronicsProspect}.
-For example, ferromagnetic nanomagnets have the ability to store information without power, respond non-linearly to stimuli~\cite{NeuromorphicSpintronics} and can dissipate very little energy during information processing~\cite{ThermodynamicLimitsComputation,SpintronicsEnergyEfficientComputing}.
-Ensembles of nanomagnets, such as artificial spin ice (an ordered lattice of interacting bistable nanomagnets where all local interactions can not be satisfied simultaneously), add to these advantages since they can exhibit complex collective behaviour like phase transitions and other emergent dynamics~\cite{NeuromorphicSpintronics,RC_ASI}.
-As their fabrication has been well-established over the last decade, all these factors have made them a platform of particular interest for scalable and energy-efficient material computation~\cite{PhD_Stromberg}. \par
+Among the various substrates being explored for material computation, magnetic and spintronic hardware are especially appealing~\cite{grollier2020neuromorphic,NeuromorphicSpintronicsProspect,QuantumNeuromorphicOpportunities}.
+Single-domain ferromagnetic nanomagnets, for example, have the ability to store information without power, respond non-linearly to stimuli~\cite{NeuromorphicSpintronics} and can dissipate very little energy during information processing~\cite{ThermodynamicLimitsComputation,SpintronicsEnergyEfficientComputing}.
+The \link{magnetostatic interaction}{magnetostatic coupling} within ensembles of nanomagnets provides further advantages, as it can give rise to rich collective behaviour like phase transitions, which the constituent magnets would not exhibit in isolation~\cite{NeuromorphicSpintronicsProspect,RC_ASI}.
+A well-established example of such an ensemble is \xref{artificial spin ice} (ASI): an ordered lattice of bistable $\approx \SI{100}{\nano\metre}$-size nanomagnets where the lattice geometry does not allow all local interactions to be simultaneously satisfied, leading to emergent dynamics~\cite{ASIpyrochlores}.
+The other aforementioned factors have made them a platform of particular interest for scalable and energy-efficient material computation~\cite{PhD_Stromberg}. \par
 This finally brings us to the topic of this thesis: ``\emph{\phdtitle}''.
-A more detailed description of artificial spin ice will follow at the end of this introduction; first, the next section will elucidate the concept of reservoir computing.
-
-% REF "NeuromorphicSpintronics" provides other REFs: spintronics compared to other neuromorphic computing approaches using quantum materials by Hoffmann et al.3
+We will return to a more detailed explanation of artificial spin ice in~\cref{sec:1:ASI}; first,~\cref{sec:1:RC} introduces the general principles of \xref{reservoir computing}.
 
 \newpage
 \section{Reservoir computing}\label{sec:1:RC}
 % Introduction to RC can take inspiration from: https://arxiv.org/html/2412.13212v1
 At the intersection of neuromorphic computing and material computation lies the paradigm of \idx{reservoir computing}.
-To understand its underlying concept, we must first take a step back and have a closer look at the aforementioned artificial neural networks.
+To explain the underlying concept, we must first take a step back and have a closer look at the aforementioned artificial neural networks.
 
 \subsection{Origin}
-\subsubsection{Artificial neural networks}
-An \idx{artificial neural network} (ANN) is a computational model that consists of a network of non-linear summing nodes connected by weighted edges~\cite{EvaluatingRestrictedESNs}.
-This model was originally inspired by the brain, where neurons and synapses fulfil a similar role as the nodes and weights, respectively.
-By ``training'' the weights, a desired output can be obtained~\cite{EvaluatingRestrictedESNs}. \par
-
-A distinction can be made between feed-forward neural networks (FNNs) and recurrent neural networks (RNNs).
-In a FNN, abstract neurons are grouped in layers, between which abstracted synaptic connections (or links) exist that enable activations to propagate through the network~\cite{lukovsevivcius2009reservoir}.
-These are mainly used for static data processing, such as image classification. \par
-
-Recurrent neural networks (RNN) are conceptually similar to FNNs, with the important distinction that their connection topology possesses cycles~\cite{lukovsevivcius2009reservoir}.
-The existence of cycles has a profound impact, as an RNN may develop self-sustained temporal activation dynamics along its recurrent connection pathways, even in the absence of input --- mathematically, this renders an RNN to be a dynamical system, while feed-forward networks are functions~\cite{lukovsevivcius2009reservoir}. % REF verbatim
-This enables an RNN to preserve a non-linear transformation of the input history in its internal state, providing dynamical memory and making RNNs suited for dynamic data processing~\cite{lukovsevivcius2009reservoir,RC_RecentAdvances}.
-However, while training methods such as backpropagation~\cite{Backpropagation} are often employed in FNNs, the recurrent connections in RNNs make training very computationally expensive and difficult~\cite{EvaluatingRestrictedESNs,Moon_2021,RC_SuperconductingElectronics}.
+\paragraph{Artificial neural networks}
+The most ubiquitous machine learning models currently in use revolve around \idx{artificial neural networks} (ANNs).
+These were originally inspired by the brain: an ANN consists of a network of non-linear summing nodes (akin to neurons) connected by directed weighted edges (akin to synapses)~\cite{EvaluatingRestrictedESNs,zurada1992introduction,AIsimulateMemoryContinuity}.
+Each node holds a numerical value: during operation, this value is determined based on the weighted sum of all nodes that feed into it.
+This allows activations to propagate through the network~\cite{lukovsevivcius2009reservoir}.
+To prevent these values from accumulating without limit, they are typically bounded to the range $[0,1]$ by applying an \xlabel{activation function} to the weighted sum --- typically a sigmoid, like the logistic map $e^x/(1+e^x)$ or hyperbolic tangent~\cite{SurveyUniversalApproximation}.
+A node that uses such an activation function is referred to as a \idx{perceptron}.
+The non-linearity introduced by the activation function is what enables ANNs to approximate any arbitrary function, allowing them to adequately separate, group and otherwise process input data~\cite{ApproximationFNN,SurveyUniversalApproximation,funahashi1992neural}.
+For many real-world tasks, the form of the desired function is unknown, so heuristics are used to ``train'' the weights of all edges based on a given dataset~\cite{EvaluatingRestrictedESNs}.
+How exactly this training is done, depends on the structure of the ANN.
+Typically, a major distinction is made between \xlabel{feed-forward neural network}s (FNNs) and \xlabel{recurrent neural network}s (RNNs)~\cite{ApproximationRNN}. \par
+In a FNN, the nodes are grouped in layers, with connections between all the nodes of two successive layers --- when the nodes are perceptrons, it is also called a multi-layer perceptron (MLP).
+This is schematically illustrated in~\crefSubFigRef{fig:1:NeuralNetworks}{a}: from the blue input node(s) on the left, information propagates to the right through the grey weighted connections, into the green hidden layers, finally yielding one or multiple output values at the red node(s)~\cite{zurada1992introduction}.
+FNNs are mainly used for static data processing, such as image classification\footnote{Visual tasks are typically performed using convolutional neural networks --- a particular type of FNN that extracts features from images.}~\cite{ApproximationRNN}.
+While~\crefSubFigRef{fig:1:NeuralNetworks}{a} shows a small network with 2 hidden layers containing 9 nodes in total, real-world tasks like image classification require far larger networks with millions or even billions of weights~\cite{ImageNet,BLOOM_CarbonFootprint_176Bparam,GPT-J-6B}. \par
+RNNs are conceptually similar to FNNs, with the important distinction that their connection topology possesses cycles, either in a structured or unstructured manner~\cite{lukovsevivcius2009reservoir,Hopfield1982}.
+The existence of cycles has a profound impact, as an RNN may develop self-sustained temporal activation dynamics along its recurrent connection pathways, even in the absence of input.
+Hence, mathematically speaking, RNNs are dynamical systems while FNNs are functions~\cite{lukovsevivcius2009reservoir}. % REF verbatim
+This enables an RNN to preserve a non-linear transformation of the input history in its internal state, providing dynamical memory and making RNNs especially well-suited for dynamic data processing~\cite{RC_RecentAdvances,ApproximationRNN}.
+However, whereas FNNs can be trained using methods such as \xlabel{backpropagation}~\cite{Backpropagation} or gradient descent, the recurrent connections in RNNs make training very computationally expensive and difficult~\cite{DifficultyTrainingRNN,EvaluatingRestrictedESNs,Moon_2021,RC_SuperconductingElectronics,funahashi1992neural}.
+Some approaches to train RNNs take inspiration from FNN: back-propagation through time (BPTT), for instance, unfolds the recurrent connections in time to obtain an FNN on which backpropagation can be applied~\cite{jaeger2002tutorial}.
+However, this is not so straightforward, leading to issues regarding the calculation of the required gradients and a tendency to get stuck in local minima~\cite{RC_Tensegrity,DifficultyTrainingRNN,D-ESN-Improved}. % Other methods are real-time recurrent learning (RTRL) and extended Kalman filtering (EKE), both explained in jaeger2002tutorial.
 
 \xfig{1_Introduction/NeuralNetworks.pdf}{
+	\label{fig:1:NeuralNetworks}
 	Schematic representation of \textbf{(a)} a feed-forward neural network (FNN), \textbf{(b)} a recurrent neural network (RNN) and \textbf{(c)} reservoir computing (RC).
 	In the latter, the reservoir is treated as a black box; it can be of mathematical origin, like a RNN, or a physical system like artificial spin ice (ASI).
+	Grey connections propagate information from left to right, unless indicated by an arrow.
+	Blue (red) nodes represent input (output), while green nodes constitute the hidden layers of the network.
 }
 
+\paragraph{Echo state networks and liquid state machines}
+To address the shortcomings of conventional RNN training methods like BPTT, two alternative concepts were independently proposed in the early 2000s, laying the foundation for what would eventually be known as reservoir computing.
+Jaeger~\cite{jaeger2001echo} presented echo state networks (ESNs), while Maass~\etal~\cite{maass_LSM} presented liquid state machines (LSMs)\footnote{
+	Their names reveal some fundamental desirable properties that the random recurrent network should provide.
+	In LSMs, the sparse network of spiking neurons projects inputs into a high-dimensional transient state, akin to waves in a liquid.
+	The ``echo'' of ESNs refers to the fading memory provided by the internal dynamics of a recurrent network, where loops can retain information from past inputs.
+}.
+Both are recurrent networks and operate on very similar principles: their main difference lies in their nodes, as LSMs use \xlabel{spiking neurons} while ESNs use \xref{perceptrons}.
+The crucial property that sets them apart from other training methods is that their underlying recurrent network is randomly initialised and, crucially, remains unmodified during training~\cite{ReviewESNs,RC_Tensegrity}.
+Instead, only a single linear readout layer is trained via linear regression to obtain the desired output from this random network~\cite{D-LSM,D-ESN-Improved}.
+This decoupling of internal dynamics from learning is the core insight that underpins both LSMs and ESNs.
+Training ESNs and LSMs is a walk in the park as compared to BPTT, as linear regression is far less computationally demanding and does not require the (sometimes problematic) calculation of gradients~\cite{D-ESN-Improved}. \par
+From these principles, it is but a small step to reservoir computing (RC), which generalises these ideas by treating the internal network as a black box~\cite{RC_unification,D-ESN-Improved,RC_Tensegrity}.
+In the next section we will explore the reservoir computing framework in more detail.
 
-\subsubsection{Liquid state machines and echo state networks}
-To address the shortcomings of the backpropagation method, two concepts were independently proposed: liquid state machines (LSMs)~\cite{maass_LSM} and echo state networks (ESNs)~\cite{jaeger2001echo}, which were later unified under the term ``reservoir computing'' methods~\cite{RC_unification}.
-These both start from the concept of RNNs, but instead use a randomly generated network of nodes and weights, where the recurrent connections in the network are not trained, but only the weights in the readout are trained.
-The concepts of LSMs and ESNs were unified under the term `reservoir computing methods' in~\cite{RC_unification}.
-
-\subsubsection{Reservoir computing}
-Reservoir computing is a machine learning framework where a ``reservoir'' --- an unspecified non-linear dynamical system --- maps input data into a higher-dimensional space, which facilitates the separation of said data by a linear transformation~\cite{KUR-24}.
-A weighted sum of the components of the reservoir's state vector then provides the output of the system as a whole: this is called a \idx{single-layer perceptron}. % REFs for RC, specifically training a readout layer: Dale et al., 2017; Jensen and Tufte, 2017; Sillin et al., 2013
-These weights can be changed in order to produce a desired output, which is referred to as ``training'' the reservoir.
-Crucially, \textit{the properties of the reservoir itself are not modified during training} --- only the perceptron is. \par
-Since the reservoir acts as a ``black box'', its properties can not be changed to obtain the desired response\footnote{
 	It is possible to adjust a physical reservoir to exhibit the desired properties for a given task~\cite{AdaptiveProgrammableRC,gartside2022reconfigurable}, but this is different from mathematically tuning the weights of the perceptron via a simple procedure like linear regression.
 }.
 Therefore, it is beneficial for the reservoir to be a system with short-term memory and high dimensionality~\cite{NeuromorphicAFMspintronics,RC_RecentAdvances}.
@@ -130,9 +144,7 @@ Since physical reservoirs can often be hard to scale, multiple techniques have b
 % REF: https://arxiv.org/html/2405.06561v1 explains the kernel-quality metrics quite well with references. Concerning the generalisation-capability, for example: "Generalisation rank (GR) measures how robust the reservoir is to noise and avoiding overfitting. The intent is to produce a measure of whether the matrix can generalise over inputs that are similar. Low GR indicates good robustness to noise."
 \subsubsection{Task-agnostic metrics: nonlinearity, memory capacity, complexity (, parity check)}
 % TODO: what does PC actually measure? Explain that its calculation is similar to that of memory capacity, but that the added summation and multiplication introduces some non-linearity aspect to it.
-\subsubsection{Attractors etc.} % More test-like than metric-like. NARMA, MG, Lorentz
-\paragraph{Mackey-Glass}
-\subsubsection{Other} % Memorisation, frequency generation, classification
+\subsubsection{Other} % Memorisation, frequency generation, classification, signal transformation, Mackey-Glass etc.
 ICT task~\cite{farronato2022reservoir,grollier2020neuromorphic} (simple image classification) % Tasks similar to ICT are performed in those refs
 \subsection{Applications or tasks}
 Blood glucose level monitoring~\cite{FewMoleculeReservoir}.
@@ -154,6 +166,7 @@ An external field is often used for input, though this is undesirable for on-chi
 Efficient read-out of IP ASI remains challenging, due to the symmetry of the system coupled with the discontinuous nature of the ASI. \par % TODO END: cite roadmap and include more info
 Finally, for the OOP ASI efficient input (SOT) and read-out (AMR) mechanisms had been demonstrated experimentally, but their potential for RC had not.
 Therefore, this thesis will fill this gap in knowledge and assess the viability of RC with OOP ASI by making use of numerical simulations.
+
 \paragraph{Electronic}
 \paragraph{Other}
 Reservoir computing is not limited to microscopic substrates of an electronic or magnetic nature.

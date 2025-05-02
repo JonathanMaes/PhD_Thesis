@@ -13,7 +13,7 @@ def draw_neural_network(ax: plt.Axes,
                         layer_sizes: list[int],
                         input_color: str = 'blue',
                         output_color: str = 'red',
-                        hidden_color: str = 'lightblue',
+                        hidden_color: str = 'lightgreen',
                         edge_color: str = 'gray',
                         circle_radius: float = 0.03):
     """
@@ -246,7 +246,7 @@ def draw_reservoir(ax: plt.Axes,
                    box_color: str = 'black',
                    text_color: str = 'white',
                    input_color: str = 'blue',
-                   hidden_color: str = 'lightblue',
+                   hidden_color: str = 'lightgreen',
                    output_color: str = 'red',
                    circle_radius: float = 0.03,
                    decorate_r: float = None, # Distance between decorative dots. Default <circle_radius>, don't decorate if False.
@@ -313,7 +313,7 @@ def draw_reservoir(ax: plt.Axes,
         decorate_r = circle_radius
     if decorate_r:
         samples = poisson(decorate_r, x0+decorate_r-boxpad, x0+width-decorate_r+boxpad,
-                                      y0+decorate_r-boxpad, y0+height-decorate_r+boxpad, k=4)
+                                      y0+decorate_r-boxpad, y0+height-decorate_r+boxpad, k=10)
         for dot in samples:
             ax.add_patch(Circle(dot, decorate_r/2, facecolor=text_color,
                                 edgecolor='none', alpha=0.15, zorder=2))
