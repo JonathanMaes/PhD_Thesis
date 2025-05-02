@@ -112,12 +112,34 @@ Training ESNs and LSMs is a walk in the park as compared to BPTT, as linear regr
 From these principles, it is but a small step to reservoir computing (RC), which generalises these ideas by treating the internal network as a black box~\cite{RC_unification,D-ESN-Improved,RC_Tensegrity}.
 In the next section we will explore the reservoir computing framework in more detail.
 
-	It is possible to adjust a physical reservoir to exhibit the desired properties for a given task~\cite{AdaptiveProgrammableRC,gartside2022reconfigurable}, but this is different from mathematically tuning the weights of the perceptron via a simple procedure like linear regression.
+\subsection{Reservoir computing}
+Reservoir computing is a machine learning framework suitable for temporal processing tasks~\cite{BookReservoirComputing}.
+The concept revolves around a ``reservoir'' --- an unspecified non-linear dynamical system --- that projects the input data into a higher-dimensional space, thereby facilitating the separation of said data by a linear transformation~\cite{appeltant2011information,KUR-24,RC_ASI}. % TODO: use figure like Fig. 2 in ~\cite{appeltant2011information}
+The principle is schematically illustrated in \crefSubFigRef{fig:1:NeuralNetworks}{c}.
+A weighted sum of the components of the reservoir's state vector (green nodes) then provides the output (red node) of the system as a whole. % REFs for RC, specifically training a readout layer: Dale et al., 2017; Jensen and Tufte, 2017; Sillin et al., 2013
+These weights can be trained with a simple learning algorithm like linear regression in order to produce a desired output~\cite{RC_RecentAdvances, RC_SuperconductingElectronics}.
+Crucially, \textit{the properties of the reservoir itself are not modified during training} --- only the final linear readout layer is~\cite{RC_ASI,DynamicEmergence_NanomagneticSystem}. \par
+Since the reservoir acts as a black box, its properties can not be changed to obtain the desired response\footnote{
+	It is possible to adjust a physical reservoir to exhibit the desired properties for a given task~\cite{AdaptiveProgrammableRC,gartside2022reconfigurable}, but this is different from mathematically tuning the weights of the readout layer via a simple procedure like linear regression.
 }.
-Therefore, it is beneficial for the reservoir to be a system with short-term memory and high dimensionality~\cite{NeuromorphicAFMspintronics,RC_RecentAdvances}.
-Conveniently, these are properties exhibited by many physical systems~\cite{RC_DipoleNanomagnets,RC_PassiveFrustratedNM,RC_ASI,RC_RecentAdvances,NeuromorphicOscillators,VowelRecognition4STO,RC_DiffusiveMemristors,RC_MemristorTemporal,gartside2022reconfigurable}.
-This allows the usage of physical systems without requiring higher mathematical abstractions --- apart from the single-layer perceptron at the end --- that are for example required for calculating the output of extensive neural networks.
-When using a physical reservoir to perform a temporal task, the physics of the system are most effectively harnessed when the timescale of system dynamics matches that of incoming data patterns~\cite{KUR-24}.
+To solve temporal tasks, it is beneficial for the reservoir to be a high-dimensional non-linear system with short-term memory~\cite{NeuromorphicAFMspintronics,RC_RecentAdvances}.
+Reservoirs are not limited to being purely mathematical concepts, as many physical systems naturally possess these properties~\cite{RC_DipoleNanomagnets,RC_PassiveFrustratedNM,RC_ASI,RC_RecentAdvances,NeuromorphicOscillators,VowelRecognition4STO,RC_DiffusiveMemristors,RC_MemristorTemporal,gartside2022reconfigurable}, ranging from a bucket of water~\cite{PatternRecognition_Bucket} to photonic systems~\cite{RC_Photonic} and superconducting electronics~\cite{RC_SuperconductingElectronics}.
+This is the concept of \idx{physical reservoir computing} (PRC), which allows the usage of physical systems without further mathematical abstractions --- apart from the linear readout layer at the end~\cite{RC_RecentAdvances}. \par
+While this avoids the many layers of abstraction present in conventional machine learning methods, physical constraints can make it difficult to optimise a physical reservoir~\cite{RC_RecentAdvances}, in contrast to RNNs which have full mathematical freedom.
+For instance, when using a physical reservoir to perform a temporal task, the physics of the system are most effectively harnessed when the timescale of system dynamics matches that of incoming data patterns~\cite{KUR-24}, but the timescales of physical phenomena are often hard to control.
+Since physical reservoirs can often be hard to scale, multiple techniques have been devised to improve performance by combining multiple reservoirs together~\cite{EvaluatingRestrictedESNs,RotatingNeuronsRC} or by time multiplexing~\cite{appeltant2011information}.
+Nonetheless, PRC combines many advantages of all the previously discussed concepts: not much data is required for training, which is computationally very cheap due to the single linear readout layer, enabling low energy usage due to the direct usage of a physical substrate for computation.
+The combination of these factors has attracted significant interest to (P)RC.
+
+\paragraph{Reservoir requirements}
+For a physical substrate to be suitable as a reservoir, several requirements need to be satisfied: high dimensionality, non-linearity, fading memory, and a separation/approximation property~\cite{appeltant2011information}.
+High dimensionality and non-linearity cooperate, as a non-linear mapping of inputs from a small-dimensional into a high-dimensional space can enable the separation of otherwise linearly inseparable inputs, making them both essential properties for classification tasks~\cite{VoltageControlled_SuperparamagneticRC,RC_ASI,appeltant2011information,RC_RecentAdvances}. % The dimensionality is related to the number of independent signals obtained from the reservoir~\cite{RC_RecentAdvances}.
+In prediction tasks, the non-linearity of a reservoir can enable the extraction of non-linear dependencies from the inputs for better inference. \par
+Fading memory~\cite{boyd1985ApproximatingVolterra} originates from the echo state property of ESNs, where recurrent connections preserve information of the past while it slowly fades out as new input values are applied.
+This property ensures that the reservoir state is dependent on recent inputs, while being independent of inputs in the distant past, which is useful behaviour for most temporal processing tasks~\cite{ChaoticTimeSeries_ML,appeltant2011information}. \par % If inputs from the distant past are somehow needed, they can be incorporated using "long short-term memory" (Hochreiter and Schmidhuber).
+Finally, the separation/approximation property states that distinct signals should yield distinct responses, while similar inputs must be insensitive to noise and thus remain grouped together in the output space~\cite{RC_RecentAdvances}.
+The former benefits from a chaotic regime, while the latter (and fading memory) are more easily fulfilled in a stable regime~\cite{RC_RecentAdvances}.
+As such, many physical reservoirs aim to balance on this ``edge of stability'' whenever it is available in the system, to balance between these properties~\cite{appeltant2011information}.
 
 \paragraph{Mathematical description}
 % TODO: figure with right symbols
