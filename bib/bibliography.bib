@@ -3195,15 +3195,17 @@
 	url           = {http://doi.org/10.1063/1.4899186}
 }
 
-@misc{MAES-24,
-	title         = {The design, verification, and applications of {H}otspice: a {M}onte {C}arlo simulator for artificial spin ice},
-	author        = {Jonathan Maes and Diego De Gusem and Ian Lateur and Jonathan Leliaert and Aleksandr Kurenkov and Bartel Van Waeyenberge},
-	year          = 2024,
-	url           = {https://arxiv.org/abs/2409.05580},
-	eprint        = {2409.05580},
-	archiveprefix = {arXiv},
-	primaryclass  = {physics.comp-ph},
-	note          = {arXiv:2409.05580}
+@article{MAES-24,
+	title         = {The design, verification, and applications of {H}otspice: A {M}onte {C}arlo simulator for artificial spin ice},
+	author        = {Jonathan Maes and Diego {De Gusem} and Ian Lateur and Jonathan Leliaert and Aleksandr Kurenkov and Bartel {Van Waeyenberge}},
+	year          = {2025},
+	journal       = {Computer Physics Communications},
+	pages         = {109643},
+	doi           = {https://doi.org/10.1016/j.cpc.2025.109643},
+	issn          = {0010-4655},
+	url           = {https://www.sciencedirect.com/science/article/pii/S0010465525001456},
+	keywords      = {Artificial spin ice, Monte Carlo simulation, Metropolis-Hastings, Néel-Arrhenius, Reservoir computing},
+	abstract      = {We present Hotspice, a Monte Carlo simulation software designed to capture the dynamics and equilibrium states of Artificial Spin Ice (ASI) systems with both in-plane (IP) and out-of-plane (OOP) geometries. An Ising-like model is used where each nanomagnet is represented as a macrospin, with switching events driven by thermal fluctuations, magnetostatic interactions, and external fields. To improve simulation accuracy, we explore the impact of several corrections to this model, concerning for example the calculation of the dipole interaction in IP and OOP ASI, as well as the impact of allowing asymmetric rather than symmetric energy barriers between stable states. We validate these enhancements by comparing simulation results with experimental data for pinwheel and kagome ASI lattices, demonstrating how these corrections enable a more accurate simulation of the behavior of these systems. We finish with a demonstration of ‘clocking’ in pinwheel and OOP square ASI as an example of reservoir computing. Program summary Program title: Hotspice CPC Library link to program files: https://doi.org/10.17632/9c3rx36jvn.1 Developer's repository link: https://github.com/bvwaeyen/Hotspice Licensing provisions: GPLv3 Programming language: Python 3 Nature of problem: To tailor the complex phenomena in Artificial Spin Ice for a specific purpose, simulations are key to rapidly assess whether a given combination of system parameters will yield a desirable result. Therefore, a simulator capable of simulating systems containing thousands of magnets is needed, ideally requiring a minimal amount of input parameters. This is particularly important for use cases such as reservoir computing, where system-scale dynamics are of primary interest. Solution method: Hotspice approximates each single-domain nanomagnet as an Ising spin, associating energies with its various states and accounting for the magnetostatic interaction between all magnets. By calculating switching rates using the Néel-Arrhenius model, or flipping magnets based on the Metropolis-Hastings algorithm, the dynamics of ASI can be calculated for large arrays and over experimentally relevant timescales. Additional comments including restrictions and unusual features: While Hotspice is well-suited for large-scale ASI simulations, it relies on higher-level approximations which do not account for the detailed internal magnetization dynamics within individual magnets. To improve simulation accuracy, several model variants have been implemented which differ in their calculation of the magnetostatic interactions, the use of symmetric versus asymmetric energy barriers, and their choice of update algorithm.}
 }
 
 @book{DeMoivreLaplaceTheorem,
