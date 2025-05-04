@@ -285,13 +285,82 @@ Therefore, they must use other types of anisotropy to favour a magnetisation dir
 \paragraph{Micromagnetic simulations}
 % TODO: basic overview of micromagnetic simulations and how they work, so we can compare this with the \hotspice approach
 
+\subsection{I/O for RC}\label{sec:1:ASI_IO}
+To use nanomagnetic systems for reservoir computing, methods are needed to feed information to them and read out their state.
+One of the main attractive factors for these systems is their ease of electrical interfacing, as many effects can manifest between currents and magnetic materials to enable both input and output.
+Electrical interfacing is greatly desirable over external magnetic fields, as it provides far more precise control over the magnetisation.
+For the out-of-plane systems that this thesis mainly considers, spin-orbit torque is an efficient method to apply input and the anomalous Hall effect can be used for readout.
+
+\subsubsection{Output}
+\paragraph{Anomalous Hall effect}
+Our method of choice to electrically obtain output from ensembles of out-of-plane nanomagnets is to make use of the \idx{anomalous Hall effect} (AHE).
+In the ordinary Hall effect, an electrical current flowing through a conductor (the Hall bar) generates a transverse voltage, since the current generates a magnetic field, which exerts a Lorentz force on the electrons.
+When the conductor is a ferromagnet, an additional contribution appears that is proportional to the magnetisation of the material.
+While its exact origin is still a matter of debate, it is thought to originate from spin-orbit coupling: spin-polarised electrons passing through the ferromagnet get scattered, leading to a charge imbalance across the width of the conductor~\cite{AHE_Culcer,AHE}. \par
+Rather than express it as a voltage, the Hall effect is more often described by the transverse resistivity (the ratio between transverse electric field and longitudinal current density) $\rho_{xy} = E_x/J_y = R_0 H_z + R_\mathrm{AHE} M_z$, with the Hall bar in the $xy$-plane~\cite{SHE,AHE}.
+The first term captures the ordinary Hall effect, the latter the AHE with $M_z$ the OOP magnetisation component and $R_\mathrm{AHE}$ the anomalous Hall coefficient~\cite{AHE}.
+Hence, the AHE is greatest when the magnetisation is perpendicular to the conductor plane and has opposite sign for opposite magnetisation directions --- good news for the OOP nanomagnets that we focus on.
+This has enabled the usage of AHE for readout in many SOT-MRAM devices, as it can directly be applied in the same heavy-metal/ferromagnet heterostructure as SOT. \par
+The readout resolution depends on various factors like $R_\mathrm{AHE}$ and the precise geometry of the Hall bar, with single-magnet resolution achievable. % Typically ~100nm
+Since the AHE synergises well with the geometry of OOP nanomagnetic ensembles, it is the method of choice to obtain readout from such reservoirs.
+
+\paragraph{Anisotropic magnetoresistance}
+Another phenomenon that can provide readout is \idx{anisotropic magnetoresistance} (AMR): when an electrical current flows through a ferromagnetic material, the resistance weakly depends on the angle $\theta$ between this current and the magnetisation~\cite{AMR}.
+More specifically, the total resistance $R(\theta) = R_\perp + (R_\parallel - R_\perp) \cos(2\theta)$.
+This makes it possible to distinguish between perpendicular and parallel magnetisation states.
+While this is a very accessible technique that only requires a measurement of the resistance, it has several limitations. \par
+First off, while permalloy exhibits a relatively strong AMR, the absolute effect remains rather small in comparison to the total resistance --- at most a few percent.
+This can make it hard to accurately determine the magnetisation state without the use of lock-in amplifiers~\cite{ArchitecturesNanoringRC,Vidamour2023}.
+Furthermore, due to the $\cos(2 \theta)$-dependence, AMR does not reveal information about the magnetisation direction, only about the local angle between the magnetisation and current.
+It also requires the system to be electrically connected: this makes it an appropriate choice for e.g. the ring system in the \spinengine project, but prevents it from directly being applied to ensembles of nanomagnets.
+In interconnected ferromagnets, it only provides a limited amount of information for RC as a lot of the system's dynamics are obscured.
+Ensembles of OOP nanomagnets, in particular, would need the current to flow vertically through each magnet, further complicating the system.
+
+\paragraph{Ferromagnetic resonance}
+Another possible method to obtain rich output from a reservoir is \idx{ferromagnetic resonance} (FMR)~\cite{AdaptiveProgrammableRC,gartside2022reconfigurable}.
+This involves applying a microwave field and measuring the absorption as a function of frequency.
+When the frequency matches a resonance of the internal magnetisation dynamics of a nanomagnet, an absorption peak appears.
+The complexity of internal magnetisation dynamics, represented in the frequency domain, can provide a rich and non-linear reservoir output~\cite{AdaptiveProgrammableRC,Gomez-Iriarte_FMR}.
+However, the peripheral equipment required to perform the technique renders it energy-inefficient and unsuitable for on-chip applications.
+Furthermore, as the wavelengths involved are on the order of centimetres, it does not provide local information --- though for RC purposes it does not need to since the output space is rich regardless.
+
+\subsubsection{Imaging}
+Aside from electrical measurements that provide information about the state of (an ensemble of) magnets, it is also possible to directly image the magnetic configuration of a system through microscopy techniques.
+While these can also be seen as ``output'', they are distinct from the aforementioned electrical measurements since they can not be integrated on-chip.
+
+\paragraph{Magnetic force microscopy}
+A relatively commonly technique is \idx{magnetic force microscopy} (MFM)~\cite{MFM}, which scans a cantilever with a very sharp tip across the sample, similar to atomic force microscopy (AFM).
+Whereas AFM uses a non-magnetic tip to measure the sample's texture at an atomic scale, MFM uses a tip coated in ferromagnetic material (e.g., \ce{Co}), giving it a vertical magnetic moment.
+This enables a measurement of the out-of-plane\footnote{
+	It is also possible to measure the in-plane magnetisation by using an in-plane magnetised tip, but this complicates interpretation as this mixes two components of the magnetisation~\cite{MFM_inplane}.
+} magnetic field by scanning the tip at a very low height ($\approx \SI{20}{\nano\metre}$) above the sample~\cite{NML_Carlton,JM_Masterproef}.
+However, this does not only measure the magnetic field, but also the atomic forces that a standard AFM tip experiences.
+Therefore, an AFM measurement is first performed to obtain the texture profile of the sample, such that a subsequent MFM measurement can keep the magnetic tip at a constant height above the sample, thereby isolating the magnetic field strength from the atomic forces. \par
+The result is a greyscale image, where the brightness indicates the vertical component $B_z$ of the magnetic field close to the sample.
+For example, an IP nanomagnet will appear as a pair of regions with bright and dark contrast, because the divergence (convergence) of the magnetic field at its north (south) pole results in opposite vertical magnetic fields on either end~\cite{NML_Carlton}.
+An MFM image of OOP magnets (\cref{sec:3:MFM}) is easier to interpret, as there is a one-to-one correspondence between $B_z$ and the the magnetisation state. \par
+MFM is relatively cheap to set up as compared to other magnetic microscopy techniques.
+It can achieve high resolution, typically on the order of $\lesssim \SI{100}{\nano\metre}$, depending on the height and size of the tip~\cite{MFM}.
+However, it is very slow; scanning across a $\SI{}{\micro\metre}$-sized sample can take multiple minutes.
+Care must also be taken that the sample is not affected by the magnetic moment of the tip, though this influence is often negligible as the tip is made very small~\cite{Probing_MagnetoOptics}.
+
+\paragraph{Other magnetic microscopy techniques}
+While MFM is the most commonly available magnetic microscopy technique, X-ray and optical methods are also often used~\cite{DynamicEmergence_NanomagneticSystem}.
+These can provide different information about nanomagnetic systems, as they are directly sensitive to the magnetisation rather than stray fields, making them easier to interpret in systems with in-plane magnetisation.
+X-ray based measurements like photo-electron emission microscopy (PEEM)~\cite{PEEM} and magnetic transmission X-ray microscopy (MTXM)~\cite{Imaging_MTXM} can make use of the X-ray magnetic circular dichroism (XMCD) effect and achieve an even higher resolution than MFM.
+However, they require circularly polarised X-rays, whose availability is typically limited to synchrotron radiation facilities.
+Another option is to use optical techniques like the magneto-optical Kerr effect (MOKE)~\cite{KerrFaraday_book}: while these do not require a synchrotron, their resolution is diffraction-limited to several hundred \SI{}{\nano\metre}.
+% See also: Polarized neutron reflectometry \cite{DynamicEmergence_NanomagneticSystem}.
+
+\subsection{Magnetic platforms for RC}\label{sec:1_RC_magnetic} % Rings and ASI
 % TODO: consider adding references 308-314 of Pieter's PhD thesis, which concern RC using nanomagnets
+\paragraph{\spinengine}
 In the context of the \spinengine project, three types of magnetic systems were considered.
 These are the magnetic nanorings~\cite{DynamicEmergence_NanomagneticSystem}, focused on by the University of Sheffield, in-plane (IP) artificial spin ice (ASI)~\cite{RC_ASI}, researched by NTNU, and out-of-plane (OOP) ASI~\cite{KUR-24}, the primary interest of ETHZ.
 Meanwhile, Ghent University provided simulation support for these magnetic systems.
 All three present their own advantages and challenges. \par
 The nanoring ensembles show promising RC performance, but did not provide straightforward on-chip input and readout methods as would be desirable for applications.
-Using anisotropic magnetoresistance (AMR) only provides a single readout value --- thereby obscuring a lot of the system's dynamics --- and requires the use of lock-in amplifiers~\cite{ArchitecturesNanoringRC,Vidamour2023}.
+Using anisotropic magnetoresistance (AMR) only provides a single readout value --- thereby obscuring a lot of the system's dynamics --- and requires the use of lock-in amplifiers.
 Readout using ferromagnetic resonance (FMR) can provide a higher-dimensional readout in the form of spin-wave spectra~\cite{swindells2024fingerprinting}, but requires bulky waveguides. \par
 The potential for RC in IP ASI has been demonstrated numerically~\cite{RC_ASI}, but the experimental application of input and state readout is not straightforward.
 An external field is often used for input, though this is undesirable for on-chip applications; instead, it appears possible to use SOT~\cite{SOT_switching_IP}.
@@ -299,34 +368,9 @@ Efficient read-out of IP ASI remains challenging, due to the symmetry of the sys
 Finally, for the OOP ASI efficient input (SOT) and read-out (AMR) mechanisms had been demonstrated experimentally, but their potential for RC had not.
 Therefore, this thesis will fill this gap in knowledge and assess the viability of RC with OOP ASI by making use of numerical simulations.
 
-\paragraph{Electronic}
-\paragraph{Other}
-Reservoir computing is not limited to microscopic substrates of an electronic or magnetic nature.
-In fact, the very first example of reservoir computing employed a bucket of water to perform speech recognition: actuators provided input, generating wave patterns that could be used for computation~\cite{PatternRecognition_Bucket}.
-An extreme example of physical reservoir computing is tensegrity --- tensile structures arranged in trusses, consisting of both springs and incompressible bars --- where the body of a robot provides both computation and locomotion~\cite{RC_Tensegrity}.
-
+\newpage
 \section{Artificial spin ice}\label{sec:1:ASI}\indexlabel{artificial spin ice} % TODO END: decide how exactly to use these labels, which words to label like this. Perhaps a good rule of thumb is to label the list of abbreviations, for easy reference to their first occurrence in the text.
 Artificial spin ice (ASI) is a class of ferromagnetic metamaterial which consists of an ordered lattice of interacting (bistable) nanomagnets, where it is impossible to satisfy all local interactions~\cite{RC_ASI}. % REF verbatim
 The magnetisation direction of the constituent nanomagnets can switch between two states under the influence of nearby magnets or thermal fluctuations.
 
-\subsection{Nanomagnet(ism)}
-%\cite{Kittel_TheoryFMDomains} tells a lot about how \textbf{domains} like to align \textbf{in small particles}, saying things like the critical domain size etc. and also referring to Frenkel and Dorfman~\cite{FRENKEL1930} where the idea of a single-domain particle was first conceived based on energy considerations.
-\subsubsection{Physics} % See masterproef for this, IP vs. OOP also
-\subsection{I/O for RC}\label{sec:1:ASI_IO}
-\subsubsection{Input}
-\paragraph{SOT}
-% For more information on symmetry breaking by in-plane field, see~\cite{SOT_Roadmap} p.29, where also 4 other methods for symmetry breaking are presented because an external field is quite impractical. \par
-\cite{SOT_FM_AFM,SOTswitchingCoPt,SOT_Roadmap,vlasov2022optimal}
-% Energy efficiency of SOT is discussed in~\cite{SpintronicsEnergyEfficientComputing}
-\paragraph{STT} % Briefly
-\subsubsection{Output}
-\paragraph{AHE} % Mentioned in text, so definitely explain
-\cite{AHE,AHE_Culcer}
-\paragraph{AMR} % Briefly
-\paragraph{FMR} % Briefly
-\paragraph{SHE} % Briefly
-\cite{SHE}
-\subsubsection{Imaging} % Imaging can also be seen as an "output", though this should be considered a class of its own.
-% Polarized neutron reflectometry \cite{DynamicEmergence_NanomagneticSystem} is another one of those imaging techniques.
-\paragraph{MFM} % Mentioned in text, so definitely explain
-\paragraph{PEEM}
+
