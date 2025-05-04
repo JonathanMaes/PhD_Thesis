@@ -35,7 +35,7 @@ Then, the chapter is divided into two main parts, first discussing thermally act
 \label{sec:3:OOP_nanomagnet_PMA}
 Where in-plane (IP) magnets mostly rely on shape anisotropy to create an easy axis, out-of-plane (OOP) magnets can be realised using interfacial anisotropy between the ferromagnetic material and the substrate.
 One example of this is found at the interface between \ce{Co} and \ce{Pt}, as was used in the experimental OOP ASI fabricated within the context of the \spinengine project.
-This \idx{perpendicular magnetic anisotropy} (PMA) acts in the immediate vicinity of the interface, where the magnetisation then prefers to align perpendicular to said interface. \par
+This \idx[nolabel]{perpendicular magnetic anisotropy} (PMA) acts in the immediate vicinity of the interface, where the magnetisation then prefers to align perpendicular to said interface. \par
 Typically, a number of \ce{Co}-\ce{Pt} interfaces are stacked vertically, with the number and thickness of the ferromagnetic \ce{Co} layers then controlling the OOP anisotropy.
 The ferromagnetic layers in such stacks are typically made to be very thin for two main reasons.
 Firstly, since the PMA only acts at the interface, it does not increase for thicker layers.
@@ -62,11 +62,11 @@ Therefore, OOP lattices in which every closed NN loop contains an even number of
 \subsection{Input and readout: experiment to simulation} \label{sec:3:IO_exp_to_sim}
 While it is possible to use an external field to switch both IP and OOP nanomagnets, this is undesirable in a real device due to stray fields and the need for bulky magnets.
 The main allure of OOP ASI for RC stems from the existence of efficient input and readout mechanisms for such OOP magnets.
-Input can be applied via spin-orbit torque (SOT)~\cite{SOT_FM_AFM,SOTswitchingCoPt}, while the system can be read out using the anomalous Hall effect (AHE)~\cite{AHE}.
+Input can be applied via \xref{spin--orbit torque} (SOT)~\cite{SOT_FM_AFM,SOTswitchingCoPt}, while the system can be read out using the anomalous Hall effect (AHE)~\cite{AHE}.
 Both of these only require a current to be passed through an underlayer that is electrically connected to the sample, and were explained earlier in the introduction (\cref{sec:1:ASI_IO}).
 % Nonetheless, external fields are often used for input anyway in the lab during the first stages of development, because they are easier to handle than the more complicated methods that would be used in a real device. By the end of the project, Alex had used SOT in his actual devices.
 
-\paragraph{Input by spin-orbit torque}
+\paragraph{Input by spin--orbit torque}
 In the experimental system, the intent was to apply input data by using SOT~\cite{SOTswitchingCoPt} to switch the OOP magnets.
 Compared to an \xref{external magnetic field}, this allows far greater control over the stimulus applied for each input bit, and can more easily be integrated on-chip without generating significant stray fields. \par
 Since the model used by \hotspice does not use torques, but is rather based on switching energies, SOT can not directly be modelled as a torque in our simulations.
@@ -491,7 +491,7 @@ This allows the usage of analog input, i.e. a continuous range of input values, 
 The relaxation towards the ground state, on the other hand, is governed by parameters intrinsic to the ASI itself, like the OOP anisotropy $\EEA$ and MS coupling $\EMC$.
 
 \paragraph{Input}
-Practically, such an input method can be realised through spin-orbit torque in the presence of a symmetry-breaking in-plane field, as discussed earlier in~\cref{sec:3:IO_exp_to_sim}.
+Practically, such an input method can be realised through \xref{spin--orbit torque} in the presence of a symmetry-breaking in-plane field, as discussed earlier in~\cref{sec:3:IO_exp_to_sim}.
 Applying the SOT current then pushes the ASI closer to a uniform state, while removing the current lets it gradually relax to the AFM ground state.
 Here, the OOP magnetic field $B_z(t)$ that models the SOT in \hotspice was scaled between $B_0$ (minimum) and $B_1$ (maximum).
 Hence, an input $0 \leq x \leq 1$ is encoded by a field of magnitude $B_z = B_0 + x (B_1 - B_0)$, such that $B_0 \leq B_z \leq B_1$.
