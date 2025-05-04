@@ -242,6 +242,49 @@ In addition to these six metrics, reservoirs are often used to perform specific 
 Example of these include % TODO: signal transformation and prediction (Mackey-Glass, sunspots), NARMA, simple image recognition~\cite{farronato2022reservoir,grollier2020neuromorphic}... See https://arxiv.org/html/2405.06561v1
 Wringer~\etal~\cite{RCbenchmarksReview1} note that, while less general than metrics, benchmarks enable a more concrete comparison of reservoirs, as opposed to the more vague notion that two reservoirs are simply different based on their metrics.
 Wringer~\etal then proceed to provide a comprehensive overview of various benchmarks used throughout literature, with motivations for why they are used for particular reservoirs~\cite{RCbenchmarksReview1}.
+
+\newpage
+\section{Nanomagnetism}
+This thesis focuses on the usage of magnetic systems as reservoirs.
+Generally speaking, magnetism and magnetic fields originate from the movement or acceleration of electric charges.
+An object is said to have a \idx{magnetic moment} $\vc{\mu}$ if it experiences a torque $\vc{\tau} = \vc{\mu} \times \vc{B}$ when placed in a magnetic field $\vc{B}$~\cite{IntroMagneticMaterials}.
+Conversely, a magnetic moment also generates its own magnetic field, through which it in turn influences other magnetic moments.
+This leads to the \xref{magnetostatic interaction} that will later be described by~\cref{eq:2:E_MS}. % TODO: this last sentence is weird. Either explain it here already with equations or just don't mention it. I feel like I should somehow mention that moments like to align in the same direction, unless something prevents them from moving.
+% Since the torque implies that magnets prefer to align in the direction of the magnetic field, the form of the magnetostatic interaction implies that magnetic moments prefer parallel alignment when they are in-line, while they prefer anti-parallel alignment when they are placed side-by-side. \par % TODO: describe the field here already?
+
+\paragraph{Ferromagnetism}
+Some materials, like a bar magnet, exhibit a spontaneous magnetisation --- they generate a magnetic field seemingly without an electrical current.
+This magnetisation originates at the atomic level, from two distinct sources: the angular momentum of electrons around the nucleus, and the intrinsic spin of the elementary particles comprising an atom~\cite{coey2010magnetism}.
+The latter is often dominant, and while the magnetic moments of pairs of electrons often cancel out, atoms with unpaired electrons can exhibit a net magnetic moment~\cite{PhD_Leliaert}. % See slide 35 of https://magnetism.eu/esm/2019/slides/simonet-slides1(magnetism_of_atoms).pdf
+However, this does not yet mean that a material composed of such atoms will exhibit a macroscopic magnetic moment like a bar magnet, as the moments of nearby atoms are not necessarily aligned.
+A non-vanishing net magnetic moment is the privilege of \textit{ferromagnetic}\indexlabel{ferromagnetism} materials, like \ce{Fe}, \ce{Ni} and \ce{Co} (at room temperature).
+It is only in these materials that nearby atomic magnetic moments have a strong tendency to align due to the Heisenberg-Dirac exchange interaction~\cite{heisenberg1928theorie}, leading to a non-zero macroscopic \idx{magnetisation} within the material. \par
+However, the keyword here is ``nearby'': over longer distances, the magnetisation direction can begin to change throughout the material under the influence of other interactions, most importantly the magnetostatic interaction.
+Therefore, the magnetisation can be described as a vector field $\vc{M}(\vc{r})$ with a resolution of $\lesssim \SI{5}{\nano\metre}$ --- integrating this field over the volume of a material yields its net magnetic moment $\vc{\mu}$.
+This forms the basis of micromagnetic theory~\cite{mumax3}: over such small distances, the local magnetisation can always be considered to have the same magnitude; $|\vc{M}(\vc{r})| \approx M_\mathrm{sat}, \forall \vc{r}$.
+This is called the \idx{saturation magnetisation}, as it equals the magnetisation of the material if it were to be saturated into one direction by a strong external field.
+
+\paragraph{Single-domain nanomagnets}
+Since the magnetisation direction can vary over longer distances, an object made of magnetic material does not necessarily exhibit a spontaneous total magnetic moment; if the magnetisation rotates within the material, a net zero magnetisation may result.
+Indeed, in a large piece of ferromagnetic material, it is more energetically favourable for the magnetisation to arrange into \idx{ferromagnetic domains} whose moments cancel each other out. % TODO: cite Weiss?
+However, in sufficiently small ferromagnetic particles ($\lesssim \SIrange{100}{500}{\nano\metre}$), the exchange interaction is too strong for the magnetisation to differ so drastically throughout the particle to form separate domains~\cite{Kittel_TheoryFMDomains}.
+This results in a \idx{single-domain nanomagnet} with a nearly uniform magnetisation $\vc{M}(\vc{r}) \approx \vc{\mu}/V$, whose magnitude is roughly equal to the saturation magnetisation $M_\mathrm{sat}$~\cite{FRENKEL1930}. % Frenkel and Dorfman first conceived the idea of a single-domain particle based on energy considerations.
+When this particle exhibits some form of anisotropy, a preferential magnetisation axis will emerge, referred to as the \idx{easy axis}.
+This can enable nanomagnets to be used for computation, as the two magnetisation directions along the easy axis can be related to bits `0' and `1'~\cite{MQCA_RoomTemp,NML_Carlton,JM_Masterproef}.
+Under the influence of nearby nanomagnets, external magnetic fields, thermal fluctuations, electrical currents or other phenomena, the magnetisation direction can switch between these two stable states~\cite{SwitchingForced_EnergyEfficient,BrownThermalFluctuations,neel1949theorie}.
+One common type of anisotropy is \idx{shape anisotropy}, which originates from the tendency of magnetic moments to align in the same direction, resulting in the magnetisation generally aligning along the longest axis of the particle~\cite{MagneticCharge}.
+Anisotropy can also originate from the crystal structure, but can be circumvented by an appropriate choice of material; for example, permalloy (\ce{Fe20Ni80}) is an alloy specifically designed to exhibit minimal crystal anisotropy.
+
+\paragraph{In-plane and out-of-plane nanomagnets}
+Two types of nanomagnets are typically distinguished: in-plane (IP) and out-of-plane (OOP) nanomagnets.
+In-plane nanomagnets can readily be obtained by tailoring the geometry of the particle, as making it flat and giving it an elongated shape results in two favourable in-plane magnetisation states.
+Out-of-plane magnets are harder to manufacture, as it is often infeasible to create tall structures on wafers.
+Therefore, they must use other types of anisotropy to favour a magnetisation direction perpendicular to the substrate.
+% TODO: move discussion from chapter 3 to here?
+
+\paragraph{Micromagnetic simulations}
+% TODO: basic overview of micromagnetic simulations and how they work, so we can compare this with the \hotspice approach
+
 % TODO: consider adding references 308-314 of Pieter's PhD thesis, which concern RC using nanomagnets
 In the context of the \spinengine project, three types of magnetic systems were considered.
 These are the magnetic nanorings~\cite{DynamicEmergence_NanomagneticSystem}, focused on by the University of Sheffield, in-plane (IP) artificial spin ice (ASI)~\cite{RC_ASI}, researched by NTNU, and out-of-plane (OOP) ASI~\cite{KUR-24}, the primary interest of ETHZ.
