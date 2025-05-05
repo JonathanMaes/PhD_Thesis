@@ -305,12 +305,24 @@ The magnetisation can switch between these two stable states under the influence
 One common origin of anisotropy is the geometry of a nanomagnet: this \idx[nolabel]{shape anisotropy} is caused by the tendency of magnetic moments to align in the same direction, resulting in a low-energy state when the magnetisation aligns with the longest axis of the geometry~\cite{MagneticCharge}.
 Anisotropy can also originate from the crystal structure, but this can be suppressed by an appropriate choice of material; for example, permalloy (\ce{Fe20Ni80}) is an alloy specifically designed to exhibit minimal \xlabel{magnetocrystalline anisotropy}.
 
-\paragraph{In-plane and out-of-plane nanomagnets}
+\paragraph{In-plane and out-of-plane nanomagnets} % Q: is this OK? What to do with the chapter 3 intro? Just remove 3.1.1?
 Two types of nanomagnets are typically distinguished: in-plane (IP) and out-of-plane (OOP) nanomagnets.
 IP nanomagnets can readily be obtained by tailoring the geometry of the ferromagnetic particle: a flat geometry guarantees an in-plane magnetisation direction through the \xref{shape anisotropy}.
 This easy plane can be reduced to an \xref{easy axis} by using an elongated two-dimensional shape, like an ellipse or rectangle.
 OOP magnets are harder to manufacture, as it is often infeasible to create tall structures on wafers.
 Therefore, where IP magnets mostly rely on shape anisotropy to create an easy axis, OOP magnets must use other types of anisotropy to favour a magnetisation direction perpendicular to the substrate.
+This can be realised using interfacial anisotropy between the ferromagnetic material and the substrate.
+One example of this is found at the interface between \ce{Co} and \ce{Pt}, as was used in the experimental OOP ASI fabricated within the context of the \spinengine project.
+This \idx{perpendicular magnetic anisotropy} (PMA) acts in the immediate vicinity of the interface, where the magnetisation then prefers to align perpendicular to said interface. \par
+Typically, a number of \ce{Co}-\ce{Pt} interfaces are stacked vertically, with the number and thickness of the ferromagnetic \ce{Co} layers then controlling the OOP anisotropy.
+The ferromagnetic layers in such stacks are typically made to be very thin for two main reasons.
+Firstly, since the PMA only acts at the interface, it does not increase for thicker layers.
+Secondly, the energy associated with \xref{shape anisotropy} increases with volume, so a maximal number of layers for a given amount of ferromagnetic material is preferable for PMA to counteract the in-plane shape anisotropy.
+We will elaborate on the interplay between these energy contributions later in~\cref{sec:3:E_contributions}. \par
+Other factors contribute to the anisotropy as well, e.g. a non-linear dependence on the \ce{Pt} layer thickness due to the RKKY interaction~\cite{RKKY_RK,RKKY_K,RKKY_Y}.
+However, this coupling is likely not dominant in a \ce{Co}-\ce{Pt} stack, as \ce{Pt} nearly satisfies the Stoner criterion~\cite{PtMagneticOrder}.
+Since the \ce{Pt} is combined with a ferromagnetic material (\ce{Co}), it is thought that this induces a ferromagnetic coupling between \ce{Co} layers in spite of the RKKY interaction, at least for reasonable \ce{Pt} thicknesses up to a few \SI{}{\nano\metre}~\cite{PerpendicularMagnetizationASI}.
+% TODO END: a lot of this was copy-pasted from the Chapter 3 introduction, so have to revisit that. Must keep a brief explanation in Chapter 3 though, saying that OOP magnets use PMA and are constructed in stacks to counteract the shape anisotropy, and refer to this section and PMA using cref and xref.
 
 \subsection{Input and readout for reservoir computing}\label{sec:1:ASI_IO}
 To use nanomagnetic systems for RC, methods are required to inject information and read out their resulting magnetic states.
