@@ -80,7 +80,7 @@ Typically, a major distinction is made between \xlabel{feed-forward neural netwo
 In a FNN, the nodes are grouped in layers, with connections between all the nodes of two successive layers.
 This is schematically illustrated in~\crefSubFigRef{fig:1:NeuralNetworks}{a}: from the blue input node(s) on the left, information propagates to the right through the grey weighted connections, into the green hidden layers, finally yielding one or multiple output values at the red node(s)~\cite{zurada1992introduction}.
 FNNs are mainly used for static data processing, such as image classification\footnote{Visual tasks are typically performed using convolutional neural networks --- a particular type of FNN that extracts features from images.}~\cite{ApproximationRNN}.
-While~\crefSubFigRef{fig:1:NeuralNetworks}{a} shows a small network with 2 hidden layers containing 9 nodes in total, real-world tasks like image classification require far larger networks with millions or even billions of weights~\cite{ImageNet,BLOOM_CarbonFootprint_176Bparam,GPT-J-6B}. \par
+While~\crefSubFigRef{fig:1:NeuralNetworks}{a} shows a small network of 9 nodes inside 2 hidden layers, many real-world tasks require far larger networks with millions or even billions of weights~\cite{ImageNet,BLOOM_CarbonFootprint_176Bparam,GPT-J-6B}. \par
 RNNs are conceptually similar to FNNs, with the important distinction that their connection topology possesses cycles, either in a structured or unstructured manner~\cite{lukovsevivcius2009reservoir,Hopfield1982}.
 The existence of cycles has a profound impact, as an RNN may develop self-sustained temporal activation dynamics along its recurrent connection pathways, even in the absence of input.
 Hence, mathematically speaking, RNNs are dynamical systems while FNNs are functions~\cite{lukovsevivcius2009reservoir}. % REF verbatim
@@ -107,7 +107,7 @@ Jaeger~\cite{jaeger2001echo} presented echo state networks (ESNs), while Maass~\
 	The ``echo'' of ESNs refers to the fading memory provided by the internal dynamics of a recurrent network, where loops can retain information from past inputs.
 }.
 Both are recurrent networks and operate on very similar principles: their main difference lies in their nodes, as LSMs use \xlabel{spiking neurons} while nodes in ESNs use sigmoidal activation functions.
-The crucial property that sets them apart from other training methods is that their underlying recurrent network is randomly initialised and, crucially, remains unmodified during training~\cite{ReviewESNs,RC_Tensegrity}.
+The crucial property that sets them apart from other training methods is that their underlying recurrent network is randomly initialised and remains unmodified during training~\cite{ReviewESNs,RC_Tensegrity}.
 Instead, only a single linear readout layer is trained via linear regression to obtain the desired output from this random network~\cite{D-LSM,D-ESN-Improved}.
 This decoupling of internal dynamics from learning is the core insight that underpins both LSMs and ESNs.
 Training ESNs and LSMs is a walk in the park as compared to BPTT, as linear regression is far less computationally demanding and does not require the (sometimes problematic) calculation of gradients~\cite{D-ESN-Improved}. \par
@@ -124,8 +124,8 @@ Crucially, \textit{the properties of the reservoir itself are not modified durin
 Since the reservoir acts as a black box, its properties can not be changed to obtain the desired response\footnote{
 	It is possible to adjust a physical reservoir to exhibit the desired properties for a given task~\cite{AdaptiveProgrammableRC,gartside2022reconfigurable}, but this is different from mathematically tuning the weights of the readout layer via a simple procedure like linear regression.
 }.
-To solve temporal tasks, it is beneficial for the reservoir to be a high-dimensional non-linear system with short-term memory~\cite{NeuromorphicAFMspintronics,RC_RecentAdvances}.
-Reservoirs are not limited to being purely mathematical concepts, as many physical systems naturally possess these properties~\cite{RC_DipoleNanomagnets,RC_PassiveFrustratedNM,RC_ASI,RC_RecentAdvances,NeuromorphicOscillators,VowelRecognition4STO,RC_DiffusiveMemristors,RC_MemristorTemporal,gartside2022reconfigurable}, ranging from a bucket of water~\cite{PatternRecognition_Bucket} to photonic systems~\cite{RC_Photonic} and superconducting electronics~\cite{RC_SuperconductingElectronics}.
+To solve temporal tasks, a reservoir should be a high-dimensional non-linear system with short-term memory~\cite{NeuromorphicAFMspintronics,RC_RecentAdvances}.
+Reservoirs are therefore not limited to being purely mathematical concepts, as many physical systems naturally possess these properties~\cite{RC_DipoleNanomagnets,RC_PassiveFrustratedNM,RC_ASI,RC_RecentAdvances,NeuromorphicOscillators,VowelRecognition4STO,RC_DiffusiveMemristors,RC_MemristorTemporal,gartside2022reconfigurable}, ranging from a bucket of water~\cite{PatternRecognition_Bucket} to photonic systems~\cite{RC_Photonic} and superconducting electronics~\cite{RC_SuperconductingElectronics}.
 This is the concept of \idx{physical reservoir computing} (PRC), which allows the usage of physical systems without further mathematical abstractions --- apart from the linear readout layer at the end~\cite{RC_RecentAdvances}. \par
 While this avoids the many layers of abstraction present in conventional machine learning methods, physical constraints can make it difficult to optimise a physical reservoir~\cite{RC_RecentAdvances}, in contrast to RNNs which have full mathematical freedom.
 For instance, when using a physical reservoir to perform a temporal task, the physics of the system are most effectively harnessed when the timescale of system dynamics matches that of incoming data patterns~\cite{KUR-24}, but the timescales of physical phenomena are often hard to control.
@@ -162,7 +162,7 @@ In this respect, two types of metrics are often used: those calculated based on 
 
 \subsubsection{Matrix rank-based metrics}\indexlabel{matrix rank-based metrics} \label{sec:1:RC_metrics_KQ}
 Legenstein and Maass~\cite{WhatMakesPowerful} proposed three metrics, based on the readout vector $\vc{r}(t)$ of the reservoir.
-By sampling this $p$-dimensional vector at $m$ set intervals, a $p \times m$ matrix can be constructed whose columns are these vectors at different moments in time.
+By periodically sampling this $p$-dimensional vector at $m$ moments in time, a $p \times m$ matrix can be constructed whose columns are these vectors at different moments in time.
 Depending on the choice of input sequence, the rank of this matrix gives information about certain properties of the system~\cite{RC_ASI}.
 
 \paragraph{Kernel-quality}
@@ -208,7 +208,7 @@ This can be converted to an overall measure for non-linearity as
 \end{equation}
 
 \paragraph{Linear memory capacity}
-Calculating the linear memory capacity can also be done using linear estimators, but by working the other way around.
+Calculating the linear memory capacity can also be done using linear estimators, but by working the other way around~\cite{tsunegi2019STOforcedsyncRC,NeuromorphicFewShot}.
 Instead, an estimator for the past input $s(t - \tau)$ is trained based on the current state $\vc{r}$ of the reservoir.
 In other words, the estimator
 \begin{equation}
@@ -228,7 +228,7 @@ Furthermore, this only captures the linear memory capacity: the non-linear memor
 We therefore limit this discussion to the linear memory capacity.
 
 \paragraph{Parity check}
-Closely related to the memory capacity is the parity check metric~\cite{hon2021numerical}.
+Closely related to the memory capacity is the parity check metric~\cite{hon2021numerical,tsunegi2019STOforcedsyncRC}.
 This is particularly intended for use with binary input, as it defines the parity of a binary input sequence $s(t)$ as
 \begin{equation}
 	\pi(t-\tau) = \Bigg[\sum_{j = 0}^{\tau} s(t - j) \Bigg] \mathrm{mod}~2 \mathrm{.}
@@ -236,14 +236,35 @@ This is particularly intended for use with binary input, as it defines the parit
 The parity check is then defined in the same way as the memory capacity in~\cref{eq:1:MC}, except with $\pi(t - \tau)$ instead of $s(t - \tau)$.
 This introduces a form of non-linearity into it, though it mostly serves as a measure of the memory capacity in binary systems. % TODO: is this correct?
 
-
-% TODO: cite relevant papers, like \cite{NeuromorphicFewShot}: in the Methods section there is a good mathematical introduction on MG, NARMA, and MC/NL, so can use this as reference that MG is mostly memory-driven.
-
-\subsubsection{Other} % Memorisation, frequency generation, classification
+\subsubsection{Benchmarks} % Memorisation, frequency generation, classification
 In addition to these six metrics, reservoirs are often used to perform specific benchmark tasks in literature.
-Example of these include % TODO: signal transformation and prediction (Mackey-Glass, sunspots), NARMA, simple image recognition~\cite{farronato2022reservoir,grollier2020neuromorphic}... See https://arxiv.org/html/2405.06561v1
-Wringer~\etal~\cite{RCbenchmarksReview1} note that, while less general than metrics, benchmarks enable a more concrete comparison of reservoirs, as opposed to the more vague notion that two reservoirs are simply different based on their metrics.
-Wringer~\etal then proceed to provide a comprehensive overview of various benchmarks used throughout literature, with motivations for why they are used for particular reservoirs~\cite{RCbenchmarksReview1}.
+Example of these include signal transformation and prediction~\cite{AdaptiveProgrammableRC,jaeger2001echo,JaegerHaasWireless,RC_MemristorTemporal,Sunspots_Shougat,gartside2022reconfigurable,appeltant2011information,Vidamour2023}, or speech and image recognition~\cite{farronato2022reservoir,grollier2020neuromorphic,DynamicEmergence_NanomagneticSystem,Vidamour2023}. % See https://arxiv.org/html/2405.06561v
+Wringer~\etal~\cite{RCbenchmarksReview1} provide a comprehensive overview of various benchmarks used throughout literature.
+They note that --- while less general than metrics --- benchmarks enable a more concrete comparison of reservoirs, as opposed to the more vague notion that two reservoirs are simply different based on their metrics.
+
+\subsection{Physical reservoir platforms}\label{sec:1:PhysicalRCplatforms}
+The first true example of physical reservoir computing came in the form of a bucket of water: this proof-of-concept provided input through actuators, and the resulting wave patterns were successfully used for speech recognition~\cite{PatternRecognition_Bucket}.
+Similarly, gas bubbles in water have served as an effective reservoir~\cite{RC_GasBubbles}.
+While these examples highlight the universal nature of reservoir computing, such macroscopic systems are not very practical.
+To allow on-chip integration and achieve low energy consumption, a wide variety of microscopic systems have been exploited as reservoirs~\cite{RC_RecentAdvances}. \par
+Traditional machine learning algorithms, like FNN and RNN, are often implemented on traditional transistor-based hardware.
+However, for RC specifically, simpler electronic devices exist that can potentially save energy and enable faster computation~\cite{RC_RecentAdvances}.
+Memristors are one well-established example: they can store information in their resistance by changing their internal ion distribution, allowing them to act analogously to biological neurons~\cite{MemristorArtificialNeuron,MemristiveNN,RC_DiffusiveMemristors,RC_MemristorTemporal}.
+Networks of nanowires are also interesting, as they can self-assemble into a complex recurrent network with memristive junctions forming at intersections~\cite{RC_NNN}.
+However, memristors are rather slow.
+A faster reservoir can be made of field-programmable gate arrays (FPGAs), which are especially suitable for integer-valued tasks due to their digital nature~\cite{RC_RapidTimeSeries,BookReservoirComputing}. % Autonomous Boolean logic
+For instance, FPGAs can efficiently implement cellular automata reservoirs, like elementary rule 90 that exhibits chaotic behaviour and can be implemented solely using XOR gates~\cite{RC_CA}.
+Superconducting materials offer low dissipation and extremely fast operation ($\gg \SI{}{\giga\hertz}$), with a number of possible architectures, like for instance a Josephson transmission line~\cite{RC_SuperconductingElectronics}. \par % See also: analogue electronic circuits [TaskAdaptivePRC, Ref. 10], ferroelectrics [TaskAdaptivePRC, Ref. 13], VLSI
+Photonic principles have also been exploited to construct reservoirs with very fast operation and low power consumption~\cite{RC_RecentAdvances}.
+They make use of on-chip structures like optical waveguides, amplifiers and delay lines~\cite{RC_RecentAdvances}.
+One option is to use a single non-linear node, and use delay lines to perform time-multiplexing~\cite{appeltant2011information,RC_AllOptical}.
+Another option is to use arrays with non-linear components and delay lines to introduce phase shifts between interconnections, enabling computation through the interference of light~\cite{RC_Photonic,RC_PhotonicSi}. \par
+Mechanical systems can also be used as reservoirs, but are not as fast or efficient as the aforementioned systems.
+However, mechanical systems provide an extreme example of physical reservoir computing, as it has been shown that the body of a tensegrity robot (tensile structures arranged in trusses, consisting of both springs and incompressible bars) can be used for both locomotion and computation~\cite{RC_Tensegrity}.
+Back to the microscopic scale, vibrational modes in micro-electronic mechanical systems (MEMS) can provide the required non-linearity that a reservoir needs.
+It is also possible to use chemical processes for computation, for example using processes inspired by those in living cells~\cite{NanoscaleRC,ElectrochemicalPRC,RC_Chemical}. \par
+Finally, a wide variety of magnetic and spintronic systems have been proposed for use as physical reservoirs.
+Since this thesis focuses on nanomagnetic systems, it is warranted to first explain the physical principles of nanomagnetism before continuing this discussion in~\cref{sec:1_RC_magnetic}.
 
 \newpage
 \section{Nanomagnetism}
@@ -279,7 +300,7 @@ Applying an external field then causes some domains to grow and others to shrink
 However, in sufficiently small ferromagnetic particles ($\lesssim \SIrange{100}{500}{\nano\metre}$), the exchange interaction is too strong for separate domains to form~\cite{Kittel_TheoryFMDomains}.
 This results in a \idx{single-domain nanomagnet} with a nearly uniform magnetisation $\vc{M}(\vc{r}) \approx \vc{\mu}/V$, whose magnitude is roughly equal to the saturation magnetisation $M_\mathrm{sat}$~\cite{FRENKEL1930}. \par % Frenkel and Dorfman first conceived the idea of a single-domain particle based on energy considerations.
 When such a nanomagnet exhibits some form of anisotropy, a preferential magnetisation axis will emerge, referred to as the \idx[nolabel]{easy axis}.
-This has led to nanomagnets being used for computation, as the two magnetisation directions along the easy axis can be related to bits `0' and `1'~\cite{MQCA_RoomTemp,NML_Carlton,JM_Masterproef}.
+This has led to nanomagnets being used for computation, as the two magnetisation directions along the easy axis can be related to bits `0' and `1'~\cite{MQCA_RoomTemp,NML_Carlton,Gypens_Balanced,Gypens_SelfOrganizing,JM_Masterproef}.
 The magnetisation can switch between these two stable states under the influence of nearby nanomagnets, external magnetic fields, thermal fluctuations, electrical currents and a variety of other phenomena~\cite{SwitchingForced_EnergyEfficient,BrownThermalFluctuations,neel1949theorie}.
 One common origin of anisotropy is the geometry of a nanomagnet: this \idx[nolabel]{shape anisotropy} is caused by the tendency of magnetic moments to align in the same direction, resulting in a low-energy state when the magnetisation aligns with the longest axis of the geometry~\cite{MagneticCharge}.
 Anisotropy can also originate from the crystal structure, but this can be suppressed by an appropriate choice of material; for example, permalloy (\ce{Fe20Ni80}) is an alloy specifically designed to exhibit minimal \xlabel{magnetocrystalline anisotropy}.
@@ -294,7 +315,7 @@ Therefore, where IP magnets mostly rely on shape anisotropy to create an easy ax
 \subsection{Input and readout for reservoir computing}\label{sec:1:ASI_IO}
 To use nanomagnetic systems for RC, methods are required to inject information and read out their resulting magnetic states.
 One of the main factors that makes magnetic systems attractive candidates for RC is their ease of electrical interfacing, as many effects can manifest between currents and magnetic materials, enabling efficient input and output.
-Electrical control is strongly preferred over external magnetic fields, as it provides far more precise control over the magnetisation.
+Electrical control is strongly preferred over external magnetic fields, as it provides greater precision.
 In particular, for OOP systems --- the main focus of this thesis --- \xref{spin--orbit torque} provides an efficient input method that synergises well with readout via the \xref{anomalous Hall effect}.
 
 \subsubsection{Input}
@@ -359,7 +380,7 @@ Furthermore, as the wavelengths involved are on the order of centimetres, it doe
 
 \subsubsection{Imaging}
 Aside from electrical measurements that provide information about the state of (an ensemble of) magnets, it is also possible to directly image the magnetic configuration of a system through microscopy techniques.
-While these can also be seen as ``output'', they are distinct from the aforementioned electrical measurements since they can not be integrated on-chip.
+While these can also be seen as ``output'', they are distinct from the aforementioned electrical measurements as they can not be integrated on-chip.
 
 \paragraph{Magnetic force microscopy}
 A relatively commonly technique is \idx{magnetic force microscopy} (MFM)~\cite{MFM}, which scans a cantilever with a very sharp tip across the sample, similar to atomic force microscopy (AFM).
