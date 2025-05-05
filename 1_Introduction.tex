@@ -422,7 +422,41 @@ Another option is to use optical techniques like the magneto-optical Kerr effect
 Besides the physical platforms previously outlined in~\cref{sec:1:PhysicalRCplatforms}, magnetic materials and spintronic phenomena also provide a number of options to construct reservoirs.
 They are alluring due to their non-linearity and non-volatility (i.e., memory), as well as low-power electrical interfacing through the various methods outlined in the preceding section.
 
-% TODO: consider adding references 308-314 of Pieter's PhD thesis, which concern RC using nanomagnets
+\subsubsection{Overview of spintronic reservoirs}
+Spin-torque nano-oscillators (STOs) are possibly the most abundant devices considered for spintronic reservoirs, owing to their small size and high frequency operation~\cite{tsunegi2019STOforcedsyncRC}.
+They are, in essence, a magnetic tunnel junction (MTJ): a stack of two ferromagnetic layers, one fixed and one free, separated by an insulator.
+When a current tunnels through the stack, the magnetisation of the free layer will rotate due to STT, at a microwave frequency that depends non-linearly on the input current.
+This way, STOs have successfully been used to perform speech recognition~\cite{STO_RC_Riou2021,NeuromorphicOscillators}.
+Arrays of STOs are also more broadly used in neuromorphic computing to implement traditional neural networks in hardware~\cite{VowelRecognition4STO}. \par
+The magnetisation within ferromagnetic thin films can also exhibit a variety of phenomena, like domain walls, spin waves and skyrmions.
+Domain walls~\cite{Venkat_2024} can get stochastically (de)pinned at defects and can mutually interact, which can result in a dynamic equilibrium that is suitable for RC~\cite{DynamicEmergence_NanomagneticSystem}.
+They can even exhibit inertia, and the position of a single domain wall can already encode sufficient information for RC~\cite{RC_DW}.
+Spin waves excited in ferromagnets with low damping (e.g., YIG) may provide complex interference patterns that can also be used in RC~\cite{RC_SpinWaveInterference}, and can also interact with domain walls.
+Skyrmions are non-trivial topological bubble-like features that typically exist at cryogenic temperatures.
+Their position and structure can be affected by currents and spin waves, which the skyrmions can in turn affect back, giving rise to a plethora of options to obtain the required non-linearity and fading memory~\cite{RC_TaskAgnosticMetrics_v2,RC_SkyrmionCrystalSW}. \par
+This thesis concerns itself with ensembles of magnetostatically coupled nanomagnets.
+Due to competing magnetostatic interactions, these ensembles often exhibit collective dynamics like phase transitions and long-range order, which can be exploited for reservoir computing.
+A disordered arrangement of out-of-plane nanomagnets has, for example, been used to predict boolean functions like those produced by cellular automata~\cite{RC_PassiveFrustratedNM,RC_DipoleNanomagnets}.
+A class of ensemble of particular interest is artificial spin ice~\cite{RC_ASI}.
+
+\subsubsection{Artificial spin ice}\label{sec:1:ASI}\indexlabel{artificial spin ice}
+\textit{Artificial spin ice}\indexlabel{artificial spin ice} (ASI) is a type of metamaterial where magnetostatically coupled single-domain (bistable) nanomagnets are arranged on an ordered lattice in such a way that it is impossible for all local interactions to be satisfied~\cite{RC_ASI,flatspin}.
+The magnetisation direction of the constituent nanomagnets can switch between two states under the influence of nearby magnets, externally applied magnetic fields, thermal fluctuations, or any of the electronic input methods previously discussed~\cite{CoerciveFieldReversal,BrownThermalFluctuations,SOT_FM_AFM,brataas2012current}. \par
+ASI systems were originally inspired --- and named after --- natural spin ices found in certain crystal structures.
+A spin ice is characterised by magnetic frustration, i.e. the presence of competing interactions which cannot simultaneously all be satisfied.
+Spin ices, in turn, got their name from water ice, which is the prototypical system exhibiting geometrical frustration~\cite{nisoli2013colloquium,ZeroPointEntropy,heyderman2013artificial,MagnetizationDynamicsASI}.
+Frustration can lead to correlations and collective behavior that the individual elements would not exhibit by themselves, resulting in non-trivial dynamics and complex magnetic orderings~\cite{AdvancesASI,ASI_computation,ApparentFMpinwheel}. \par
+ASI is very attractive in comparison to its natural spin ice counterpart.
+Modern nano-fabrication methods such as electron beam lithography allow any arbitrary geometry to be realised and many other aspects of the system to be engineered, offering enormous freedom to the designer~\cite{AdvancesASI,ASI_computation}.
+Furthermore, the mesoscopic size of ASI (a few hundred nanometers) enables direct observation of their magnetic degrees of freedom through a variety of microscopy techniques and electrical readout methods, in contrast to natural spin ices where imaging individual spins is not feasible~\cite{nisoli2013colloquium,freeman2001advances}.
+The aforementioned electrical input methods also enable precise control over these systems.
+Hence, the controlled, tunable and easily measurable environment offered by ASI has enabled the study of complex phenomena such as phase transitions with ordered domains~\cite{ApparentFMpinwheel,sklenar2019field,MeltingASI,ImagingBridgedKagome,sendetskyi2019continuous,lou2023competing,branford2012emerging} or glass-like behaviour~\cite{wang2006artificial,ZeroPointEntropy}, vertex-based frustration~\cite{morrison2013unhappy} leading to emergent topological structures such as monopoles and Dirac strings~\cite{ObservationMonopoleASI,mengotti2011kagome}, chiral dynamics~\cite{branford2012emerging,EmergentChiralityRatchet}...
+ASI also holds significant potential for computational applications~\cite{heyderman2022spin}, both in conventional logic~\cite{ComputationalLogic_2018,Gypens_Balanced,EngineeringRelaxationComputation} and neuromorphic computing~\cite{ASI_computation,RC_RecentAdvances}. \par
+% Q: remove the following paragraph or keep it?
+The study of ASI has since broadened well beyond the scope of frustrated systems, and now the term is used more broadly for ensembles of nanomagnets exhibiting a wide range of physical phenomena~\cite{ASIPathsForward}.
+A vast wealth of both periodic and aperiodic arrangements of nanomagnets has been explored throughout the literature, whose behaviour can vary wildly~\cite{nisoli2013colloquium,heyderman2013artificial,AdvancesASI,ASI_Evolutionary_ALife}.
+For example, a superferromagnetic alignment is most favourable in pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a,b}), while square-lattice ASI (\crefSubFigRef{fig:2:ASIs}{c,d,i}) prefers an antiferromagnetic (AFM) alignment~\cite{ApparentFMpinwheel}.
+
 \subsubsection{\spinengine}
 The research presented in this thesis was performed in the context of the \spinengine project, where three types of magnetic systems were considered.
 These are the magnetic nanorings~\cite{DynamicEmergence_NanomagneticSystem}, focused on by the University of Sheffield, in-plane (IP) artificial spin ice (ASI)~\cite{RC_ASI}, researched by NTNU, and out-of-plane (OOP) ASI~\cite{KUR-24}, the primary interest of ETHZ.
@@ -438,8 +472,10 @@ Finally, for the OOP ASI efficient input (SOT) and read-out (AMR) mechanisms had
 Therefore, this thesis will fill this gap in knowledge and assess the viability of RC with OOP ASI by making use of numerical simulations.
 
 \newpage
-\section{Artificial spin ice}\label{sec:1:ASI}\indexlabel{artificial spin ice} % TODO END: decide how exactly to use these labels, which words to label like this. Perhaps a good rule of thumb is to label the list of abbreviations, for easy reference to their first occurrence in the text.
-Artificial spin ice (ASI) is a class of ferromagnetic metamaterial which consists of an ordered lattice of interacting (bistable) nanomagnets, where it is impossible to satisfy all local interactions~\cite{RC_ASI}. % REF verbatim
-The magnetisation direction of the constituent nanomagnets can switch between two states under the influence of nearby magnets or thermal fluctuations.
+\section{Modelling}
+\subsection{Micromagnetic simulations}
+% TODO: basic overview of micromagnetic simulations and how they work, so we can compare this with the \hotspice approach
 
+\subsection{Ising-like approximation}
+% FROM HOTSPICE PAPER
 
