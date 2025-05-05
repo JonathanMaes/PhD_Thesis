@@ -51,7 +51,7 @@ Neuromorphic computing, on the other hand, does not seek exact solutions; in the
 A related concept is \xlabel{material computation}~\cite{NeglectedPillar}, which goes one step further: its goal is to find ways to exploit the inherent computing power present in physical substrates.
 Whereas classical computing uses a top-down approach where mathematics is imposed onto a physical material --- for instance to construct logic gates --- material computation works in the opposite direction by instead asking what computations a physical object performs naturally~\cite{RC_ASI}.
 By designing materials with specific behaviours, systems can be created that naturally exhibit the desired computational properties, reducing the levels of abstraction that currently exist between physics and computation. \par
-Among the various substrates being explored for material computation, magnetic and spintronic hardware are especially appealing~\cite{grollier2020neuromorphic,NeuromorphicSpintronicsProspect,QuantumNeuromorphicOpportunities}.
+Among the various substrates being explored for material computation, magnetic and spintronic (spin transport electronic~\cite{Spintronics}) hardware are especially appealing~\cite{grollier2020neuromorphic,NeuromorphicSpintronicsProspect,QuantumNeuromorphicOpportunities}.
 Single-domain ferromagnetic nanomagnets, for example, have the ability to store information without power, respond non-linearly to stimuli~\cite{NeuromorphicSpintronics} and can dissipate very little energy during information processing~\cite{ThermodynamicLimitsComputation,SpintronicsEnergyEfficientComputing}.
 The \link{magnetostatic interaction}{magnetostatic coupling} within ensembles of nanomagnets provides further advantages, as it can give rise to rich collective behaviour like phase transitions, which the constituent magnets would not exhibit in isolation~\cite{NeuromorphicSpintronicsProspect,RC_ASI}.
 A well-established example of such an ensemble is \xref{artificial spin ice} (ASI): an ordered lattice of bistable $\approx \SI{100}{\nano\metre}$-size nanomagnets where the lattice geometry does not allow all local interactions to be simultaneously satisfied, leading to emergent dynamics~\cite{ASIpyrochlores}.
@@ -125,8 +125,8 @@ Since the reservoir acts as a black box, its properties can not be changed to ob
 	It is possible to adjust a physical reservoir to exhibit the desired properties for a given task~\cite{AdaptiveProgrammableRC,gartside2022reconfigurable}, but this is different from mathematically tuning the weights of the readout layer via a simple procedure like linear regression.
 }.
 To solve temporal tasks, a reservoir should be a high-dimensional non-linear system with short-term memory~\cite{NeuromorphicAFMspintronics,RC_RecentAdvances}.
-Reservoirs are therefore not limited to being purely mathematical concepts, as many physical systems naturally possess these properties~\cite{RC_DipoleNanomagnets,RC_PassiveFrustratedNM,RC_ASI,RC_RecentAdvances,NeuromorphicOscillators,VowelRecognition4STO,RC_DiffusiveMemristors,RC_MemristorTemporal,gartside2022reconfigurable}, ranging from a bucket of water~\cite{PatternRecognition_Bucket} to photonic systems~\cite{RC_Photonic} and superconducting electronics~\cite{RC_SuperconductingElectronics}.
-This is the concept of \idx{physical reservoir computing} (PRC), which allows the usage of physical systems without further mathematical abstractions --- apart from the linear readout layer at the end~\cite{RC_RecentAdvances}. \par
+Reservoirs are therefore not limited to being purely mathematical concepts, as many physical systems naturally possess these properties~\cite{RC_DipoleNanomagnets,RC_PassiveFrustratedNM,RC_ASI,RC_RecentAdvances,NeuromorphicOscillators,VowelRecognition4STO,RC_DiffusiveMemristors,RC_MemristorTemporal,gartside2022reconfigurable}, ranging from a bucket of water~\cite{PatternRecognition_Bucket} to photonic systems~\cite{RC_Photonic} and superconducting electronics~\cite{RC_SuperconductingElectronics} --- see~\cref{sec:1:PhysicalRCplatforms}.
+This is the concept of \idx{physical reservoir computing} (PRC)~\cite{PRC}, which allows the usage of physical systems without further mathematical abstractions --- apart from the linear readout layer at the end~\cite{RC_RecentAdvances}. \par
 While this avoids the many layers of abstraction present in conventional machine learning methods, physical constraints can make it difficult to optimise a physical reservoir~\cite{RC_RecentAdvances}, in contrast to RNNs which have full mathematical freedom.
 For instance, when using a physical reservoir to perform a temporal task, the physics of the system are most effectively harnessed when the timescale of system dynamics matches that of incoming data patterns~\cite{KUR-24}, but the timescales of physical phenomena are often hard to control.
 Since physical reservoirs can often be hard to scale, multiple techniques have been devised to improve performance by combining multiple reservoirs together~\cite{EvaluatingRestrictedESNs,RotatingNeuronsRC} or by time multiplexing~\cite{appeltant2011information}.
@@ -297,9 +297,9 @@ Integrating $\vc{M}(\vc{r})$ over the volume of a material yields its net magnet
 In fact, an object made of magnetic material often does not exhibit a spontaneous total magnetic moment at all, as the magnetostatic interaction typically causes the magnetisation to loop back on itself to minimise stray fields.
 Indeed, in a large piece of ferromagnetic material, it is energetically favourable for \SI{}{\micro\metre}-sized \idx{ferromagnetic domains} to form, whose magnetic moments all cancel each other out when no external field is present~\cite{coey2010magnetism}.
 Applying an external field then causes some domains to grow and others to shrink, rather than smoothly canting the magnetisation towards the field.
-However, in sufficiently small ferromagnetic particles ($\lesssim \SIrange{100}{500}{\nano\metre}$), the exchange interaction is too strong for separate domains to form~\cite{Kittel_TheoryFMDomains}.
-This results in a \idx{single-domain nanomagnet} with a nearly uniform magnetisation $\vc{M}(\vc{r}) \approx \vc{\mu}/V$, whose magnitude is roughly equal to the saturation magnetisation $M_\mathrm{sat}$~\cite{FRENKEL1930}. \par % Frenkel and Dorfman first conceived the idea of a single-domain particle based on energy considerations.
-When such a nanomagnet exhibits some form of anisotropy, a preferential magnetisation axis will emerge, referred to as the \idx[nolabel]{easy axis}.
+However, in sufficiently small ferromagnetic particles ($\lesssim \SIrange{100}{500}{\nano\metre}$), the exchange interaction is too strong for separate domains to form~\cite{Kittel_TheoryFMDomains,BrownThermalFluctuations}.
+This results in a \idx{single-domain nanomagnet} with a nearly uniform magnetisation $\vc{M}(\vc{r}) \approx \vc{\mu}/V$, whose magnitude is roughly equal to the saturation magnetisation $M_\mathrm{sat}$~\cite{FRENKEL1930,neel1949theorie}. \par % Frenkel and Dorfman first conceived the idea of a single-domain particle based on energy considerations.
+When such a nanomagnet exhibits some form of anisotropy, a preferential magnetisation axis will emerge, referred to as the \idx[nolabel]{easy axis}~\cite{nisoli2013colloquium}.
 This has led to nanomagnets being used for computation, as the two magnetisation directions along the easy axis can be related to bits `0' and `1'~\cite{MQCA_RoomTemp,NML_Carlton,Gypens_Balanced,Gypens_SelfOrganizing,JM_Masterproef}.
 The magnetisation can switch between these two stable states under the influence of nearby nanomagnets, external magnetic fields, thermal fluctuations, electrical currents and a variety of other phenomena~\cite{SwitchingForced_EnergyEfficient,BrownThermalFluctuations,neel1949theorie}.
 One common origin of anisotropy is the geometry of a nanomagnet: this \idx[nolabel]{shape anisotropy} is caused by the tendency of magnetic moments to align in the same direction, resulting in a low-energy state when the magnetisation aligns with the longest axis of the geometry~\cite{MagneticCharge}.
@@ -320,7 +320,7 @@ In particular, for OOP systems --- the main focus of this thesis --- \xref{spin-
 
 \subsubsection{Input}
 \paragraph{Spin-transfer torque}
-A well-established method for switching nanomagnets is \idx{spin-transfer torque} (STT)~\cite{SlonczewskiSTT}, as has been widely used in e.g., magnetic random-access memory (STT-MRAM).
+A well-established method for switching nanomagnets is \idx{spin-transfer torque} (STT)~\cite{SlonczewskiSTT}, as has been widely used in e.g., magnetic random-access memory (STT-MRAM)~\cite{brataas2012current}.
 When an electrical current with a spin polarisation $\vc{\sigma}$ enters a ferromagnetic material, the injected spins will exert a torque $\vc{\tau}_\mathrm{STT} \propto \vc{\mu} \times (\vc{\mu} \times \vc{\sigma})$ on the local magnetisation $\vc{\mu}$, causing it to align with the injected spin polarisation.
 This polarisation is typically generated by first passing the current through another ferromagnetic layer, whose magnetisation is known or controlled by other means~\cite{SOT_FM_AFM,mumax3tutorial}.
 Hence, if both layers are sufficiently close by for the spin polarisation to survive until the second layer, a sufficiently strong STT will cause the magnetisation of the second layer to align with that of the first layer the current passes through.
@@ -379,14 +379,14 @@ However, the peripheral equipment required to perform the technique renders it e
 Furthermore, as the wavelengths involved are on the order of centimetres, it does not provide local information --- though for RC purposes it does not need to since the output space is rich regardless.
 
 \subsubsection{Imaging}
-Aside from electrical measurements that provide information about the state of (an ensemble of) magnets, it is also possible to directly image the magnetic configuration of a system through microscopy techniques.
+Aside from electrical measurements that provide information about the state of (an ensemble of) magnets, it is also possible to directly image the magnetic configuration of a system through microscopy techniques~\cite{freeman2001advances}.
 While these can also be seen as ``output'', they are distinct from the aforementioned electrical measurements as they can not be integrated on-chip.
 
 \paragraph{Magnetic force microscopy}
-A relatively commonly technique is \idx{magnetic force microscopy} (MFM)~\cite{MFM}, which scans a cantilever with a very sharp tip across the sample, similar to atomic force microscopy (AFM).
+A relatively common technique is \idx{magnetic force microscopy} (MFM)~\cite{MFM}, which scans a cantilever with a very sharp tip across the sample, similar to atomic force microscopy (AFM).
 Whereas AFM uses a non-magnetic tip to measure the sample's texture at an atomic scale, MFM uses a tip coated in ferromagnetic material (e.g., \ce{Co}), giving it a vertical magnetic moment.
 This enables a measurement of the out-of-plane\footnote{
-	It is also possible to measure the in-plane magnetisation by using an in-plane magnetised tip, but this complicates interpretation as this mixes two components of the magnetisation~\cite{MFM_inplane}.
+	It is also possible to measure the in-plane magnetisation by using an in-plane magnetised tip, but this complicates the interpretation as this mixes two components of the magnetisation~\cite{MFM_inplane}.
 } magnetic field by scanning the tip at a very low height ($\approx \SI{20}{\nano\metre}$) above the sample~\cite{NML_Carlton,JM_Masterproef}.
 However, this does not only measure the magnetic field, but also the atomic forces that a standard AFM tip experiences.
 Therefore, an AFM measurement is first performed to obtain the texture profile of the sample, such that a subsequent MFM measurement can keep the magnetic tip at a constant height above the sample, thereby isolating the magnetic field strength from the atomic forces. \par
@@ -406,10 +406,13 @@ However, they require circularly polarised X-rays, whose availability is typical
 Another option is to use optical techniques like the magneto-optical Kerr effect (MOKE)~\cite{KerrFaraday_book}: while these do not require a synchrotron, their resolution is diffraction-limited to several hundred \SI{}{\nano\metre}.
 % See also: Polarized neutron reflectometry \cite{DynamicEmergence_NanomagneticSystem}.
 
-\subsection{Magnetic platforms for reservoir computing}\label{sec:1_RC_magnetic} % Rings and ASI
+\subsection{Magnetic platforms for reservoir computing}\label{sec:1_RC_magnetic}
+Besides the physical platforms previously outlined in~\cref{sec:1:PhysicalRCplatforms}, magnetic materials and spintronic phenomena also provide a number of options to construct reservoirs.
+They are alluring due to their non-linearity and non-volatility (i.e., memory), as well as low-power electrical interfacing through the various methods outlined in the preceding section.
+
 % TODO: consider adding references 308-314 of Pieter's PhD thesis, which concern RC using nanomagnets
 \subsubsection{\spinengine}
-In the context of the \spinengine project, three types of magnetic systems were considered.
+The research presented in this thesis was performed in the context of the \spinengine project, where three types of magnetic systems were considered.
 These are the magnetic nanorings~\cite{DynamicEmergence_NanomagneticSystem}, focused on by the University of Sheffield, in-plane (IP) artificial spin ice (ASI)~\cite{RC_ASI}, researched by NTNU, and out-of-plane (OOP) ASI~\cite{KUR-24}, the primary interest of ETHZ.
 Meanwhile, Ghent University provided simulation support for these magnetic systems.
 All three present their own advantages and challenges. \par
