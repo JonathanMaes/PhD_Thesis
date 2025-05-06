@@ -354,9 +354,9 @@ However, since OOP magnets are not ellipsoidal as assumed by the transcendental 
 \newpage % For better alignment
 \section{Dynamics}\label{sec:2:Dynamics}
 A Monte Carlo simulator would not be complete without an algorithm to change the state of the system.
-Since any magnet in the ASI may spontaneously switch to the opposite magnetisation state due to thermal fluctuations, \hotspice evaluates the time evolution of the ASI in a stepwise manner using an \idx{update algorithm} that determines which magnet should switch next. \par
+Since the magnetisation of any magnet in the ASI may spontaneously switch due to thermal fluctuations, \hotspice evaluates the time evolution of the ASI in a stepwise manner using an \idx{update algorithm} that determines which magnet should switch next. \par
 In particular, \hotspice uses \idx{kinetic Monte Carlo} (KMC) algorithms\footnote{Sometimes also referred to as dynamic Monte Carlo.}.
-Generally speaking, KMC algorithms can be divided into two distinct classes: rejection-free and rejection KMC.
+Generally speaking, these can be divided into two distinct classes: rejection-free and rejection KMC.
 \hotspice implements algorithms of both types.
 These techniques go by many names --- here, we shall refer to them as the \emph{\link{first-switch method}{``first-switch'' method}} and \emph{\xref{Metropolis-Hastings sampling}}, respectively~\cite{gillespie1976general,PhysicalTimeKMC}.
 The former is more suitable for simulating the temporal evolution of the system, while the latter can be used to sample the equilibrium distribution of the state space.
@@ -385,10 +385,10 @@ As $\EB \rightarrow 0$, \cref{eq:2:Néel} implies that $\nu \rightarrow \nu_0$, 
 If necessary, a more precise value for $\nu_0$ can be obtained from experiments.
 However, an order-of-magnitude estimate often suffices because any small (i.e., $\sim \kBT$) change of $\EB$ will translate to an exponential change of the switching rate.
 As discussed in~\cref{sec:2:E_B_eff}, our approximations of $\EBeff$ are imperfect, thus rendering an accurate value of $\nu_0$ irrelevant.
-Furthermore, $\nu_0$ only affects the absolute value of the elapsed time, not the switching order, so its overall importance to the simulation is limited. \par
-The values for $\nu_0$ on the order of \SI{e10}{\hertz} are valid for reversal by \xref{coherent rotation}, as was already assumed in \hotspice during the calculation of the \link{effective energy barrier}{effective barriers}.
-For other reversal processes, e.g. domain wall-mediated reversal, the attempt frequency could be many orders of magnitude faster because its interpretation as a rotation frequency then no longer holds~\cite{ArrheniusPrefactor}. % Another ref: 45 in leo2021chiral
-It must also be noted that the attempt frequency can significantly depend on other system parameters like temperature~\cite{AttemptFreqTemperature}. % Ref says: ``When this energy barrier is the result of a collective statistical behavior of many constituents, it may contain an intrinsic temperature dependence which has to be carefully taken into account, in particular when the prefactor is interpreted in terms of an attempt frequency.''
+Furthermore, $\nu_0$ only affects the absolute value of the elapsed time, not the switching order, so its overall importance to the simulation is limited.
+It must also be noted that the attempt frequency can significantly depend on other system parameters like temperature~\cite{AttemptFreqTemperature}. \par % Ref says: ``When this energy barrier is the result of a collective statistical behavior of many constituents, it may contain an intrinsic temperature dependence which has to be carefully taken into account, in particular when the prefactor is interpreted in terms of an attempt frequency.''
+The values for $\nu_0$ on the order of \SI{e10}{\hertz} are valid for reversal by \xref{coherent rotation}, as was already assumed during the calculation of the \link{effective energy barrier}{effective barriers}.
+For other reversal processes (e.g., domain wall-mediated reversal), the attempt frequency could be many orders of magnitude faster because its interpretation as a rotation frequency then no longer holds~\cite{ArrheniusPrefactor}. % Another ref: 45 in leo2021chiral
 
 \paragraph{Algorithm}
 Knowledge of the \xref{switching rate} $\nu$ can be used to construct a rejection-free kinetic Monte Carlo method, first presented by \textit{Gillespie}~\cite{gillespie1976general}, referred to as the ``first-switch'' method.
@@ -418,7 +418,7 @@ In \hotspice, we choose to apply~\cref{eq:2:Néel_2} regardless, even though thi
 Therefore, we must interpret the elapsed time $t$ as being ``instantaneous'' if $t < 1/\nu_0$.
 The alternative --- limiting $\Delta t_i$ to be $\geq 1/\nu_0$ --- is not possible, as this would overestimate the elapsed time $t$. \par
 In the realm of rejection-free KMC, two commonly used algorithms are the very similar \idx{Bortz-Kalos-Lebowitz}~\cite{nfoldMCalgorithm} and \idx{Gillespie}~\cite{gillespie1976general} algorithms.
-Though Gillespie's paper also discusses the first-switch method, these two algorithms differ slightly from~\cref{alg:2:FirstSwitchSingle}, yet all yield identical results.
+Though Gillespie also discusses the first-switch method, these two algorithms differ slightly from~\cref{alg:2:FirstSwitchSingle}, yet all yield identical results.
 Their different strategies for calculating random switching times and selecting the next switch are discussed by \textit{Gibson and Bruck}~\cite{GibsonBruck}, alongside an optimised algorithm.
 
 \subsection{Metropolis-Hastings: sampling equilibrium states} \label{sec:2:Dynamics_MH}
@@ -432,7 +432,9 @@ In particular, the Metropolis-Hastings algorithm repeats the steps outlined in~\
 \begin{algorithm}[Single iteration of Metropolis-Hastings sampling]
 	\label{alg:2:MetropolisHastingsSingle}
 	\begin{enumerate}
-		\item Select a magnet $i$ at random (with all magnets equally likely to be chosen).
+		\item Select a magnet\footnote{
+			For enhanced performance, multiple sufficiently distant magnets can be selected simultaneously, as will be explored in~\cref{sec:2:MultiSwitch}.
+		} $i$ at random (with all magnets equally likely to be chosen).
 		\item Calculate the energy change $\Delta E_i$ if this magnet were to switch.
 		\item Switch the magnet with an \idx{acceptance probability}
 		\begin{equation}
@@ -451,7 +453,6 @@ In particular, the Metropolis-Hastings algorithm repeats the steps outlined in~\
 		with $N$ the number of magnets in the system and $\chi$ a uniformly distributed random variable in the half-open interval $(0,1]$~\cite{PhysicalTimeKMC}. % Q: which \EBeff to use in the asymmetric barrier case? Hotspice uses the smallest barrier. Can also use an exponentially weighted average like in the first-switch method (\exp(x) = \frac{1}{\exp(-a) + exp(-b)}).
 	\end{enumerate}
 \end{algorithm}
-For enhanced performance, multiple sufficiently distant magnets can be selected simultaneously, as will be explored in~\cref{sec:2:MultiSwitch}.
 
 \paragraph{Elapsed time in rejection KMC}
 While the \xref{first-switch method} relies on an explicit calculation of the elapsed time, Metropolis-Hastings sampling does not strictly require this knowledge.
@@ -717,7 +718,7 @@ Since this algorithm is designed primarily for sampling equilibrium states rathe
 This allows for better usage of the parallel processing capabilities of the GPU, as the \link{magnetostatic interaction}{magnetostatic energy} can then be updated using a convolution. \\\par
 Previously, when only a single magnet switched at any instant, the magnetostatic energy was updated by \cref{eq:2:Kernel_update}, which appropriately cut out a piece of the kernel for pointwise multiplication.
 This process is no longer usable if we intend to use multi-switching as a method to efficiently parallelise Metropolis-Hastings iterations: not much performance can be gained if every switching magnet requires a different cut-out.
-Instead, a far more efficient method to calculate the change in magnetostatic energy whenever multiple magnets switch is to perform a convolution of the kernel with an $L_x \times L_y$ array whose only non-zero elements are the values $s_i$ at the positions of the switching magnets. \\\par
+Instead, a far more efficient method to calculate the change in magnetostatic energy whenever multiple magnets switch is to perform a convolution of the kernel with an $L_x \times L_y$ array whose only non-zero elements are the values $s_i$ at the positions of the switching magnets. \par
 For a single switch, convolution with a truncated kernel is far slower than the original \link{Hadamard product}{pointwise multiplication} of \eqref{eq:2:Kernel_update}.
 In fact, with the hardware used for this thesis, only for $\gtrsim 20$ \link{multi-switching}{simultaneous switches} does a convolution of \xref{truncated kernels} become more performant than a sequential sum of offset non-truncated kernels.
 Therefore, \hotspice allows the user to fine-tune both the size of the truncated kernel as well as this threshold between sum and convolution to optimise performance on a particular system.
@@ -1016,15 +1017,18 @@ As an example that is neither too simple nor complex, we consider a regular hexa
 The energy of all magnets should equal the following analytical solution, which is the sum of the magnetostatic interaction energy between nearest neighbours $\circled{1}$, next-nearest neighbours $\circled{2}$ and magnets on opposite sides of the hexagon $\circled{3}$:
 \begin{align*}
 	E_{\mathrm{MS},i} =&\, \circled{1} + 2 \times \circled{2} + 2 \times \circled{3} \\
-	=&\, -\frac{\mu_0 m^2}{4\pi a^3} -2\frac{\mu_0 m^2}{4\pi \frac{3 \sqrt{3} a^3}{8}} \Big[3\cos^2(\pi/3) - \cos(2\pi/3)\Big] -2\frac{\mu_0 m^2}{4\pi \frac{a^3}{8}} \Big[3\cos^2(\pi/6) - \cos(\pi/3)\Big] \\
-	=&\, -\frac{\mu_0 m^2}{4\pi a^3} \bigg[29+\frac{20}{3\sqrt{3}}\bigg] \mathrm{.} \numberthis
+	=&\, -\frac{\mu_0 \mu^2}{4\pi a^3} -2\frac{\mu_0 \mu^2}{4\pi \frac{3 \sqrt{3} a^3}{8}} \Big[3\cos^2(\pi/3) - \cos(2\pi/3)\Big] -2\frac{\mu_0 \mu^2}{4\pi \frac{a^3}{8}} \Big[3\cos^2(\pi/6) - \cos(\pi/3)\Big] \\
+	=&\, -\frac{\mu_0 \mu^2}{4\pi a^3} \bigg[29+\frac{20}{3\sqrt{3}}\bigg] \mathrm{.} \numberthis
 \end{align*}
 Indeed, \hotspice gives the expected total magnetostatic energy $E_{\mathrm{MS},i}$ for all 6 magnets $i$ in the system, as can be verified by running the \python{tests/test_hexagon.py} script provided alongside the source code.
 
 \subsection{Non-interacting spin ensemble}
-When an \xref{external magnetic field} of magnitude $B$ is applied to a non-interacting ensemble of Ising spins, it follows directly from the partition function that the average magnetisation of such a paramagnetic system at thermal equilibrium follows the relation
+When an \xref{external magnetic field} of magnitude $B$ is applied to a non-interacting paramagnetic ensemble of Ising spins, the two stable states of each magnet are no longer degenerate.
+Spins pointing toward the field will have an energy $E_1 = -\mu B$, while the opposite state has an energy $E_2 = \mu B$.
+The probabilities $P_1$ and $P_2$ that a magnet occupies either state then follow directly from the canonical partition function $Z = \exp(\frac{\mu B}{\kBT}) + \exp(\frac{-\mu B}{\kBT})$ as $P_i = \frac{1}{Z} \exp(-\frac{E_i}{\kBT})$.
+Hence, at thermal equilibrium, the average magnetisation of such a paramagnetic system (in the direction of the magnetic field) follows the relation
 \begin{equation}
-	\frac{\langle M \rangle}{M_0} = \tanh\ab(\frac{\mu B}{\kBT}) \mathrm{,}
+	\frac{\langle M \rangle}{M_0} = P_1 - P_2 = \tanh\ab(\frac{\mu B}{\kBT}) \mathrm{,}
 \end{equation}
 with $M = \sum_i \mu_i s_i$ the total magnetic moment of the system and $M_0 = \sum_i \mu_i$.
 \cref{fig:2:Noninteracting} demonstrates that \hotspice{} correctly reproduces the expected result.
