@@ -453,23 +453,21 @@ The aforementioned electrical input methods also enable precise control over the
 Hence, the controlled, tunable and easily measurable environment offered by ASI has enabled the study of complex phenomena such as phase transitions with ordered domains~\cite{ApparentFMpinwheel,sklenar2019field,MeltingASI,ImagingBridgedKagome,sendetskyi2019continuous,lou2023competing,branford2012emerging} or glass-like behaviour~\cite{wang2006artificial,ZeroPointEntropy}, vertex-based frustration~\cite{morrison2013unhappy} leading to emergent topological structures such as monopoles and Dirac strings~\cite{ObservationMonopoleASI,mengotti2011kagome}, chiral dynamics~\cite{branford2012emerging,EmergentChiralityRatchet}...
 ASI also holds significant potential for computational applications~\cite{heyderman2022spin}, both in conventional logic~\cite{ComputationalLogic_2018,Gypens_Balanced,EngineeringRelaxationComputation} and neuromorphic computing~\cite{ASI_computation,RC_RecentAdvances}. \par
 % Q: remove the following paragraph or keep it?
-The study of ASI has since broadened well beyond the scope of frustrated systems, and now the term is used more broadly for ensembles of nanomagnets exhibiting a wide range of physical phenomena~\cite{ASIPathsForward}.
-A vast wealth of both periodic and aperiodic arrangements of nanomagnets has been explored throughout the literature, whose behaviour can vary wildly~\cite{nisoli2013colloquium,heyderman2013artificial,AdvancesASI,ASI_Evolutionary_ALife}.
-For example, a superferromagnetic alignment is most favourable in pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a,b}), while square-lattice ASI (\crefSubFigRef{fig:2:ASIs}{c,d,i}) prefers an antiferromagnetic (AFM) alignment~\cite{ApparentFMpinwheel}.
+%The study of ASI has since broadened well beyond the scope of frustrated systems, and now the term is used more broadly for ensembles of nanomagnets exhibiting a wide range of physical phenomena~\cite{ASIPathsForward}.
+%A vast wealth of both periodic and aperiodic arrangements of nanomagnets has been explored throughout the literature, whose behaviour can vary wildly~\cite{nisoli2013colloquium,heyderman2013artificial,AdvancesASI,ASI_Evolutionary_ALife}.
+%For example, a superferromagnetic alignment is most favourable in pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a,b}), while square-lattice ASI (\crefSubFigRef{fig:2:ASIs}{c,d,i}) prefers an antiferromagnetic (AFM) alignment~\cite{ApparentFMpinwheel}.
 
-\subsubsection{\spinengine}
-The research presented in this thesis was performed in the context of the \spinengine project, where three types of magnetic systems were considered.
-These are the magnetic nanorings~\cite{DynamicEmergence_NanomagneticSystem}, focused on by the University of Sheffield, in-plane (IP) artificial spin ice (ASI)~\cite{RC_ASI}, researched by NTNU, and out-of-plane (OOP) ASI~\cite{KUR-24}, the primary interest of ETHZ.
-Meanwhile, Ghent University provided simulation support for these magnetic systems.
+\subsubsection{\spinengine} % Q: should this be mentioned at all?
+The research presented in this thesis was performed in the context of the European \spinengine project, where three types of magnetic systems were considered: magnetic nanorings~\cite{DynamicEmergence_NanomagneticSystem}, IP ASI~\cite{RC_ASI}, and OOP ASI~\cite{KUR-24}.
 All three present their own advantages and challenges. \par
-The nanoring ensembles show promising RC performance, but did not provide straightforward on-chip input and readout methods as would be desirable for applications.
-Using anisotropic magnetoresistance (AMR) only provides a single readout value --- thereby obscuring a lot of the system's dynamics --- and requires the use of lock-in amplifiers.
-Readout using ferromagnetic resonance (FMR) can provide a higher-dimensional readout in the form of spin-wave spectra~\cite{swindells2024fingerprinting}, but requires bulky waveguides. \par
-The potential for RC in IP ASI has been demonstrated numerically~\cite{RC_ASI}, but the experimental application of input and state readout is not straightforward.
-An external field is often used for input, though this is undesirable for on-chip applications; instead, it appears possible to use SOT~\cite{SOT_switching_IP}.
-Efficient read-out of IP ASI remains challenging, due to the symmetry of the system coupled with the discontinuous nature of the ASI. \par % TODO END: cite roadmap and include more info
-Finally, for the OOP ASI efficient input (SOT) and read-out (AMR) mechanisms had been demonstrated experimentally, but their potential for RC had not.
-Therefore, this thesis will fill this gap in knowledge and assess the viability of RC with OOP ASI by making use of numerical simulations.
+Nanoring ensembles show very promising RC performance, but do not provide straightforward on-chip input and readout methods.
+For input, rotating external fields were typically used.
+AMR readout obscures a lot of the system's dynamics and requires the use of lock-in amplifiers, while FMR can provide a higher-dimensional readout in the form of spin-wave spectra~\cite{swindells2024fingerprinting} but requires bulky waveguides. \par % Only provides a single readout value, pretty much
+The RC potential of IP ASI has been demonstrated numerically~\cite{RC_ASI}, but the experimental application of input and state readout is not straightforward.
+Often, an external field was used to provide input, but it would be more convenient to use SOT~\cite{SOT_switching_IP}.
+Efficient read-out of IP ASI remains challenging, due to the symmetry of the system and its discontinuous nature. \par % TODO END: cite roadmap and include more info
+For OOP ASI, efficient input (SOT) and readout (AMR) mechanisms had been demonstrated experimentally, but their RC potential had not.
+Therefore, this thesis will fill this gap in knowledge and assess the viability of RC with OOP ASI through numerical simulations.
 
 \newpage
 \section{Modelling}\label{sec:1:Modelling}
