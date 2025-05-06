@@ -2,9 +2,12 @@
 \glijbaantje{It is important to draw wisdom from many different places.\\If we take it from only one place, it becomes rigid and stale.}{Uncle Iroh}
 %\glijbaantje{If a machine is expected to be infallible then it cannot also be intelligent.}{Alan Turing}
 
-% TODO END: outline of this introduction (what sections will be discussed)
+This introduction opens with the broader context and motivation for the research presented in this thesis.
+We then introduce the physical reservoir computing paradigm and the key metrics used to quantify performance.
+Since we focus on magnetic reservoirs,~\cref{sec:1:Nanomagnetism} describes the fundamentals of nanomagnetism and the physical phenomena that enable efficient input and readout.
+Next, we turn to magnetic reservoirs, in particular artificial spin ice, before concluding with a brief description of simulation techniques suitable for these systems.
 
-\section{Context}
+\section{Context}\label{sec:1:Context}
 We live in a society where computers are ubiquitous. % and indispesable.
 They have been used for a wide variety of applications, like scientific simulations, graphics rendering, processing well-structured data, running the internet\dots\,
 Conventional computers --- consisting of transistors arranged into logic gates --- are well suited for such tasks which require exact mathematical operations to be executed.
@@ -14,7 +17,7 @@ The field of \idx{machine learning} aims to tackle these rather complex tasks us
 Over the years, neural networks have advanced significantly, most recently evidenced by the rise of large language models which have already had a broad societal impact~\cite{ImprovingLanguageGPT,GPT-4}.
 However, training these systems to the point where they can perform any of the aforementioned tasks at a decent level requires vast amounts of data to fine-tune their ever increasing number of internal parameters --- accompanied by an unsustainably rising energy cost~\cite{QuantumNeuromorphicOpportunities,BLOOM_CarbonFootprint_176Bparam}.
 This stands in stark contrast to biological brains, which are capable of learning patterns based on a far more limited set of data, while consuming orders of magnitude less power than an artificial system of equivalent computational capability~\cite{NeuromorphicSpintronics}.
-Furthermore, running such neural networks on conventional hardware is encountering limits: to increase performance, the number of trainable parameters is rapidly being increased, but transistor scaling and power density limitations make it hard to keep up with these increasing requirements. % TODO REF
+Furthermore, running such neural networks on conventional hardware is encountering limits: to increase performance, the number of trainable parameters is rapidly being increased, but transistor scaling and power density limitations make it hard for hardware to keep up. % TODO REF
 Hence, while advances in training algorithms and the ever increasing wealth of available data create ever more potent machine learning systems, the underlying approach is leading to a bottleneck. \par
 Several factors that contribute to this bottleneck are often quoted in the context of neural networks or other machine learning algorithms running on conventional hardware:
 \begin{itemize} % TODO: more references for these bullet points
@@ -40,6 +43,7 @@ Neuromorphic computing, on the other hand, does not seek exact solutions; in the
 %This paradigm shift opens the door to innovative approaches for tackling computational challenges, particularly in areas like real-time sensing, pattern recognition, and prediction.
 %Noise can explore a high dimensional landscape related to cost function by escaping local minima.
 
+\vspace{-1.5em}
 \sidefig[0.6]{1_Introduction/Ngrams.pdf}{
 	\label{fig:1:Ngram}
 	Popularity of various key concepts from the year 2000 onwards.
@@ -47,6 +51,7 @@ Neuromorphic computing, on the other hand, does not seek exact solutions; in the
 	Data provided by the \href{https://books.google.com/ngrams/graph?content=Neuromorphic computing,Reservoir computing,In-memory computing,von Neumann bottleneck,Dennard scaling,Material computation&year_start=2000&year_end=2022&corpus=en&smoothing=3&case_insensitive=false}{Google Books Ngram viewer} throughout the English corpus, smoothed over a 3-year period.
 	\newline
 }
+\vspace{-1em}
 
 A related concept is \xlabel{material computation}~\cite{NeglectedPillar}, which goes one step further: its goal is to find ways to exploit the inherent computing power present in physical substrates.
 Whereas classical computing uses a top-down approach where mathematics is imposed onto a physical material --- for instance to construct logic gates --- material computation works in the opposite direction by instead asking what computations a physical object performs naturally~\cite{RC_ASI}.
@@ -57,7 +62,7 @@ The \link{magnetostatic interaction}{magnetostatic (MS) coupling} within ensembl
 A well-established example of such an ensemble is \xref{artificial spin ice} (ASI): an ordered lattice of bistable $\approx \SI{100}{\nano\metre}$-size nanomagnets where the lattice geometry does not allow all local interactions to be simultaneously satisfied, leading to emergent dynamics~\cite{ASIpyrochlores}.
 The other aforementioned factors have made them a platform of particular interest for scalable and energy-efficient material computation~\cite{PhD_Stromberg}. \par
 This finally brings us to the topic of this thesis: ``\emph{\phdtitle}''.
-We will return to a more detailed explanation of artificial spin ice in~\cref{sec:1:ASI}; first,~\cref{sec:1:RC} introduces the general principles of \xref{reservoir computing}.
+A more detailed description of ASI follows in~\cref{sec:1:ASI}; first,~\cref{sec:1:RC} introduces the general principles of \xref{reservoir computing}.
 
 \newpage
 \section{Reservoir computing}\label{sec:1:RC}
@@ -272,7 +277,7 @@ Finally, a wide variety of magnetic and spintronic systems have been proposed fo
 Since this thesis focuses on nanomagnetic systems, it is warranted to first explain the physical principles of nanomagnetism before continuing this discussion in~\cref{sec:1_RC_magnetic}.
 
 \newpage
-\section{Nanomagnetism}
+\section{Nanomagnetism} \label{sec:1:Nanomagnetism}
 \subsection{Physics of nanomagnets}
 This thesis focuses on the usage of magnetic systems as reservoirs.
 Generally, magnetism and magnetic fields originate from the movement or acceleration of electric charges.
@@ -316,18 +321,9 @@ IP nanomagnets can readily be obtained by tailoring the geometry of the ferromag
 This easy plane can be reduced to an \xref{easy axis} by using an elongated two-dimensional shape, like an ellipse or rectangle.
 OOP magnets are harder to manufacture, as it is often infeasible to create tall structures on wafers.
 Therefore, where IP magnets mostly rely on shape anisotropy to create an easy axis, OOP magnets must use other types of anisotropy to favour a magnetisation direction perpendicular to the substrate.
-This can be realised using interfacial anisotropy between the ferromagnetic material and the substrate.
-One example of this is the interface between \ce{Co} and \ce{Pt}, as was used in the experimental OOP ASI fabricated within the context of the \spinengine project.
-This \idx{perpendicular magnetic anisotropy} (PMA) acts in the immediate vicinity of the interface, where the magnetisation then prefers to align perpendicular to said interface. \par
-Typically, a number of \ce{Co}-\ce{Pt} interfaces are stacked vertically, with the number and thickness of the ferromagnetic \ce{Co} layers then controlling the OOP anisotropy.
-The ferromagnetic layers in such stacks are typically made to be very thin for two main reasons.
-Firstly, since the PMA only acts at the interface, it does not increase for thicker layers.
-Secondly, the energy associated with \xref{shape anisotropy} increases with volume, so a maximal number of layers for a given amount of ferromagnetic material is preferable for PMA to counteract the in-plane shape anisotropy.
-We will elaborate on the interplay between these energy contributions later in~\cref{sec:3:E_contributions}. \par
-Other factors contribute to the anisotropy as well, e.g. a non-linear dependence on the \ce{Pt} layer thickness due to the RKKY interaction~\cite{RKKY_RK,RKKY_K,RKKY_Y}.
-However, this coupling is likely not dominant in a \ce{Co}-\ce{Pt} stack, as \ce{Pt} nearly satisfies the Stoner criterion~\cite{PtMagneticOrder}.
-Since the \ce{Pt} is combined with a ferromagnetic material (\ce{Co}), it is thought that this induces a ferromagnetic coupling between \ce{Co} layers in spite of the RKKY interaction, at least for reasonable \ce{Pt} thicknesses up to a few \SI{}{\nano\metre}~\cite{PerpendicularMagnetizationASI}.
-% TODO END: a lot of this was copy-pasted from the Chapter 3 introduction, so have to revisit that. Must keep a brief explanation in Chapter 3 though, saying that OOP magnets use PMA and are constructed in stacks to counteract the shape anisotropy, and refer to this section and PMA using cref and xref.
+This can be realised using interfacial anisotropy between the ferromagnetic material and the substrate, as for example occurs at the interface between \ce{Co} and \ce{Pt}.
+This \idx{perpendicular magnetic anisotropy} (PMA) acts in the immediate vicinity of the interface, where the magnetisation then prefers to align perpendicular to said interface.
+The structure of OOP nanomagnets will be discussed in more detail in~\cref{sec:3:OOP_nanomagnet_PMA}~and~\ref{sec:3:E_contributions}.
 
 \subsection{Input and readout for reservoir computing}\label{sec:1:ASI_IO}
 To use nanomagnetic systems for RC, methods are required to inject information and read out their resulting magnetic states.
@@ -349,9 +345,9 @@ More recently, switching through \idx{spin--orbit torque} (SOT) has attracted at
 Instead, it only requires a heavy-metal layer with strong spin--orbit coupling (e.g., \ce{Pt}, \ce{Ta}, \ce{W} \dots) to be adjacent to the ferromagnet~\cite{SOT_Roadmap}.
 Typically, a heterostructure is used where a ferromagnet is patterned on top of a heavy-metal underlayer --- for instance, the OOP magnets considered in~\cref{ch:Applications} are \ce{Co}-\ce{Pt} multilayers~\cite{KUR-24}. % exactly the type of structure that supports SOT.
 When an in-plane electrical current passes through the underlayer, a spin polarisation will accumulate at the interface with the ferromagnet as a result of the bulk spin Hall effect~\cite{SHE} and/or interfacial Rashba-Edelstein effect~\cite{SOT_Rashba}. % RE effect due to symmetry being broken at an interface. The bulk spin Hall effect often provides the dominant damping-like torque, while any interfacial Rashba effect contributes mainly to the field-like term. % SOT does not originate from a single underlying phenomenon, but is an umbrella term for various effects that all relate to spin--orbit coupling and end up generating a torque in a magnetic material.
-These spins, which are polarised in-plane and perpendicular to the electrical current, can then diffuse into the ferromagnet and exert a torque on its magnetisation~\cite{mumax3tutorial}.
+These spins, polarised in-plane and perpendicular to the electrical current, can then diffuse into the ferromagnet and exert a torque on its magnetisation~\cite{mumax3tutorial}.
 Note that this is indeed distinctly different from STT, where the spin polarisation originates from another magnet and flows straight through the structure~\cite{SOT_Roadmap}. \par
-This torques is often decomposed into two orthogonal components: a damping-like and a field-like torque.
+This torque is often decomposed into two orthogonal components.
 The field-like torque $\vc{\tau}_\mathrm{FL} \propto \vc{\mu} \times \vc{\sigma}$ causes a precession of the magnetic moment $\vc{\mu}$ around the spin polarisation $\vc{\sigma}$.
 On the other hand, the damping-like component $\vc{\tau}_\mathrm{DL} \propto \vc{\mu} \times (\vc{\mu} \times \vc{\sigma})$ aligns the magnetic moment with the spin polarisation~\cite{SOT_Roadmap,SOT_FM_AFM}.
 The latter is functionally similar to STT, earning it the name Slonczewski-like SOT.
@@ -364,8 +360,8 @@ Hence, when it is known which current direction corresponds to a preferential `u
 
 \subsubsection{Output}
 \paragraph{Anomalous Hall effect}
-Our method of choice to electrically obtain output from ensembles of out-of-plane nanomagnets is to make use of the \idx{anomalous Hall effect} (AHE).
-In the ordinary Hall effect, an electrical current flowing through a conductor (the Hall bar) generates a transverse voltage, since the current generates a magnetic field, which exerts a Lorentz force on the electrons.
+Our method of choice to obtain electrical output from ensembles of out-of-plane nanomagnets is to make use of the \idx{anomalous Hall effect} (AHE).
+In the ordinary Hall effect, an electrical current flowing through a conductor (the Hall bar) generates a transverse voltage, since the current generates a magnetic field which exerts a Lorentz force on the electrons.
 When the conductor is a ferromagnet, an additional contribution appears that is proportional to the magnetisation of the material.
 While its exact origin is still a matter of debate, it is thought to originate from spin--orbit coupling: spin-polarised electrons passing through the ferromagnet get scattered, leading to a charge imbalance across the width of the conductor~\cite{AHE_Culcer,AHE}. \par
 Rather than express it as a voltage, the Hall effect is more often described by the transverse resistivity (the ratio between transverse electric field and longitudinal current density) $\rho_{xy} = E_x/J_y = R_0 H_z + R_\mathrm{AHE} M_z$, with the Hall bar in the $xy$-plane~\cite{SHE,AHE}.
@@ -441,7 +437,7 @@ Skyrmions are non-trivial topological bubble-like features that typically exist 
 Their position and structure can be affected by currents and spin waves, which the skyrmions can in turn affect back, giving rise to a plethora of options to obtain the required non-linearity and fading memory~\cite{RC_TaskAgnosticMetrics_v2,RC_SkyrmionCrystalSW}. \par
 This thesis concerns itself with ensembles of magnetostatically coupled nanomagnets.
 Due to competing magnetostatic interactions, these ensembles often exhibit collective dynamics like phase transitions and long-range order, which can be exploited for reservoir computing.
-A disordered arrangement of out-of-plane nanomagnets has, for example, been used to predict boolean functions like those produced by cellular automata~\cite{RC_PassiveFrustratedNM,RC_DipoleNanomagnets}.
+A disordered arrangement of nanomagnets has, for example, been used to predict boolean functions like those produced by cellular automata~\cite{RC_PassiveFrustratedNM,RC_DipoleNanomagnets}. % OOP
 A class of ensemble of particular interest is artificial spin ice~\cite{RC_ASI}.
 
 \subsubsection{Artificial spin ice}\label{sec:1:ASI}\indexlabel{artificial spin ice}
@@ -461,17 +457,13 @@ ASI also holds significant potential for computational applications~\cite{heyder
 %The study of ASI has since broadened well beyond the scope of frustrated systems, and now the term is used more broadly for ensembles of nanomagnets exhibiting a wide range of physical phenomena~\cite{ASIPathsForward}.
 %A vast wealth of both periodic and aperiodic arrangements of nanomagnets has been explored throughout the literature, whose behaviour can vary wildly~\cite{nisoli2013colloquium,heyderman2013artificial,AdvancesASI,ASI_Evolutionary_ALife}.
 %For example, a superferromagnetic alignment is most favourable in pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a,b}), while square-lattice ASI (\crefSubFigRef{fig:2:ASIs}{c,d,i}) prefers an antiferromagnetic (AFM) alignment~\cite{ApparentFMpinwheel}.
-
-\subsubsection{\spinengine} % TODO: dont give a paragraph of attention to this
-The research presented in this thesis was performed in the context of the European \spinengine project, where three types of magnetic systems were considered: magnetic nanorings~\cite{DynamicEmergence_NanomagneticSystem}, IP ASI~\cite{RC_ASI}, and OOP ASI~\cite{KUR-24}.
-All three present their own advantages and challenges. \par
-Nanoring ensembles show very promising RC performance, but do not provide straightforward on-chip input and readout methods.
-For input, rotating external fields were typically used.
-AMR readout obscures a lot of the system's dynamics and requires the use of lock-in amplifiers, while FMR can provide a higher-dimensional readout in the form of spin-wave spectra~\cite{swindells2024fingerprinting} but requires bulky waveguides. \par % Only provides a single readout value, pretty much
-The RC potential of IP ASI has been demonstrated numerically~\cite{RC_ASI}, but the experimental application of input and state readout is not straightforward.
-Often, an external field was used to provide input, but it would be more convenient to use SOT~\cite{SOT_switching_IP}.
-Efficient read-out of IP ASI remains challenging, due to the symmetry of the system and its discontinuous nature. \par % TODO END: cite roadmap and include more info
-For OOP ASI, efficient input (SOT) and readout (AMR) mechanisms had been demonstrated experimentally, but their RC potential had not.
+%The research presented in this thesis was performed in the context of the European \spinengine project, where three types of magnetic systems were considered: magnetic nanorings~\cite{DynamicEmergence_NanomagneticSystem}, IP ASI~\cite{RC_ASI}, and OOP ASI~\cite{KUR-24}.
+%All three present their own advantages and challenges. \par
+%Nanoring ensembles show very promising RC performance, but do not provide straightforward on-chip input and readout methods.
+%For input, rotating external fields were typically used.
+%AMR readout obscures a lot of the system's dynamics and requires the use of lock-in amplifiers, while FMR can provide a higher-dimensional readout in the form of spin-wave spectra~\cite{swindells2024fingerprinting} but requires bulky waveguides. \par % Only provides a single readout value, pretty much
+The reservoir computing potential of IP ASI has been demonstrated numerically~\cite{RC_ASI}, but the experimental application of input and state readout is not straightforward.
+For OOP ASI, efficient input (SOT) and readout (AMR) mechanisms are available, but their RC potential has not yet been demonstrated.
 Therefore, this thesis will fill this gap in knowledge and assess the viability of RC with OOP ASI through numerical simulations.
 
 \newpage
@@ -501,7 +493,7 @@ When a nanomagnet has a single easy axis --- as is typically the case in ASI ---
 Using such higher-level approximations greatly reduces the computational cost of simulations.
 This enables the study of collective behaviour in much larger systems and over far longer timescales, as these simulations are limited by the number of switches rather than the elapsed time.
 However, this approach comes at the cost that the internal magnetisation structure of individual nanomagnets is no longer simulated in detail. \par
-One example using such a macrospin approximation is the high-performance flatspin simulator~\cite{flatspin}, which implements deterministic spin flipping via a generalised Stoner-Wohlfarth model~\cite{StonerWohlfarth2008}.
+One example using such a macrospin approximation is the high-performance flatspin simulator~\cite{flatspin}, which implements deterministic spin flipping via a generalised \xlabel{Stoner-Wohlfarth model}~\cite{StonerWohlfarth2008}.
 This model revolves around the effective field experienced by each nanomagnet, whose switching is determined by an angle-dependent coercive field --- it is easier to switch a nanomagnet by applying a field at an oblique angle w.r.t. the easy axis, rather than parallel or perpendicular to it.
 These fields are calculated based on a point dipole approximation.
 This results in deterministic dynamics, unless temperature effects are included through a random effective thermal field. \par
