@@ -53,7 +53,7 @@ Whereas classical computing uses a top-down approach where mathematics is impose
 By designing materials with specific behaviours, systems can be created that naturally exhibit the desired computational properties, reducing the levels of abstraction that currently exist between physics and computation. \par
 Among the various substrates being explored for material computation, magnetic and spintronic (spin transport electronic~\cite{Spintronics}) hardware are especially appealing~\cite{grollier2020neuromorphic,NeuromorphicSpintronicsProspect,QuantumNeuromorphicOpportunities}.
 Single-domain ferromagnetic nanomagnets, for example, have the ability to store information without power, respond non-linearly to stimuli~\cite{NeuromorphicSpintronics} and can dissipate very little energy during information processing~\cite{ThermodynamicLimitsComputation,SpintronicsEnergyEfficientComputing}.
-The \link{magnetostatic interaction}{magnetostatic coupling} within ensembles of nanomagnets provides further advantages, as it can give rise to rich collective behaviour like phase transitions, which the constituent magnets would not exhibit in isolation~\cite{NeuromorphicSpintronicsProspect,RC_ASI}.
+The \link{magnetostatic interaction}{magnetostatic (MS) coupling} within ensembles of nanomagnets provides further advantages, as it can give rise to rich collective behaviour like phase transitions, which the constituent magnets would not exhibit in isolation~\cite{NeuromorphicSpintronicsProspect,RC_ASI}.
 A well-established example of such an ensemble is \xref{artificial spin ice} (ASI): an ordered lattice of bistable $\approx \SI{100}{\nano\metre}$-size nanomagnets where the lattice geometry does not allow all local interactions to be simultaneously satisfied, leading to emergent dynamics~\cite{ASIpyrochlores}.
 The other aforementioned factors have made them a platform of particular interest for scalable and energy-efficient material computation~\cite{PhD_Stromberg}. \par
 This finally brings us to the topic of this thesis: ``\emph{\phdtitle}''.
@@ -289,7 +289,7 @@ It is only in these materials that the \idx{Heisenberg-Dirac exchange interactio
 This alignment is only possible below a material's \idx{Curie temperature}: at room temperature, \ce{Fe}, \ce{Ni} and \ce{Co} are the only pure elements to be ferromagnetic, though many compounds like \ce{Nd2Fe14B} and \ce{SmCo5} are as well. \par
 However, the keyword regarding the exchange interaction is ``nearby'': over longer distances, the magnetisation direction can vary throughout the material as other interactions are also at play --- most importantly, the magnetostatic interaction.
 Hence, the magnetisation can be described as a vector field $\vc{M}(\vc{r})$ with a resolution of $\lesssim \SI{5}{\nano\metre}$, as the exchange interaction dominates over shorter length scales.
-This forms the basis of micromagnetic theory~\cite{mumax3}: over such small distances, the local magnetisation always has approximately the same magnitude; $|\vc{M}(\vc{r})| \approx M_\mathrm{sat}$, the \idx{saturation magnetisation}.
+This forms the basis of micromagnetic theory~\cite{mumax3}: over such small distances, the local magnetisation always has approximately the same magnitude; $\norm{\vc{M}(\vc{r})} \approx M_\mathrm{sat}$, the \idx{saturation magnetisation}.
 Applying a magnetic field makes the magnetisation tilt towards the field, but does not increase $M_\mathrm{sat}$: it is an intrinsic property that determines the strongest magnetic moment per volume that a given material can provide.
 
 \paragraph{Single-domain nanomagnets}
@@ -413,8 +413,8 @@ Care must also be taken that the sample is not affected by the magnetic moment o
 \paragraph{Other magnetic microscopy techniques}
 While MFM is the most commonly available magnetic microscopy technique, X-ray and optical methods are also often used~\cite{DynamicEmergence_NanomagneticSystem}.
 These can provide different information about nanomagnetic systems, as they are directly sensitive to the magnetisation rather than stray fields, making them easier to interpret in systems with in-plane magnetisation.
-X-ray based measurements like photo-electron emission microscopy (PEEM)~\cite{PEEM} and magnetic transmission X-ray microscopy (MTXM)~\cite{Imaging_MTXM} can make use of the X-ray magnetic circular dichroism (XMCD) effect and achieve an even higher resolution than MFM.
-However, they require circularly polarised X-rays, whose availability is typically limited to synchrotron radiation facilities.
+X-ray based measurements like photo-electron emission microscopy (PEEM)~\cite{PEEM} and magnetic transmission X-ray microscopy (MTXM)~\cite{Imaging_MTXM} can make use of the X-ray magnetic circular dichroism (XMCD) effect to achieve even higher resolution than MFM.
+However, they require circularly polarised X-rays, which are typically only available at synchrotron radiation facilities.
 Another option is to use optical techniques like the magneto-optical Kerr effect (MOKE)~\cite{KerrFaraday_book}: while these do not require a synchrotron, their resolution is diffraction-limited to several hundred \SI{}{\nano\metre}.
 % See also: Polarized neutron reflectometry \cite{DynamicEmergence_NanomagneticSystem}.
 
@@ -472,10 +472,46 @@ Finally, for the OOP ASI efficient input (SOT) and read-out (AMR) mechanisms had
 Therefore, this thesis will fill this gap in knowledge and assess the viability of RC with OOP ASI by making use of numerical simulations.
 
 \newpage
-\section{Modelling}
+\section{Modelling}\label{sec:1:Modelling}
+To determine whether an ASI possesses desirable properties for it to be used as a reservoir, the impact of various system parameters and input methods on reservoir performance must be determined.
+Since an experimental exploration of this vast design space would take prohibitively long, a suitable simulation framework is needed.
+
 \subsection{Micromagnetic simulations}
-% TODO: basic overview of micromagnetic simulations and how they work, so we can compare this with the \hotspice approach
+The internal magnetisation dynamics of ferromagnetic structures are the result of the interactions between millions of atomic magnetic moments.
+This results in an N-body problem that often has no analytical solution, apart from a select few cases~\cite{PhD_Abert}.
+Hence, virtually all practical situations can only be solved in a numerical manner. \par
+One particularly useful approximation for the simulation of nanomagnets is \idx{micromagnetic theory}.
+It starts from the previously noted observation that the magnetisation within ferromagnets is approximately continuous at length scales below the \xlabel{exchange length} $\lambda \sim \SI{5}{\nano\metre}$, such that it can be represented by a continuous vector field $\vc{M}(\vc{r}) = M_\mathrm{sat} \vc{m}$ with constant norm ($\norm{\vc{m}} = 1$).
+Such a continuum approximation is valuable as it enables the simulation of $\SI{}{\micro\metre}$-size systems in a reasonable amount of time through a finite-difference or finite-element discretisation with cells of size $\leq \lambda$.
+Examples of finite-difference micromagnetic codes include OOMMF~\cite{OOMMF} and the GPU-accelerated \mumax~\cite{mumax3} and \mumaxplus~\cite{MOR-24}.
+Finite-element codes are also available, like Nmag~\cite{Nmag} and magnum.fe~\cite{magnumFE}. \par % Other codes: MagnumNP~\cite{magnumNP} (FD), Boris (FD), tetmag (FE), FeeLLGood (FE)
+The main complication in micromagnetic simulations is the infinite range of the magnetostatic interaction, which must therefore be calculated between all cells in the simulation.
+This can pose an issue, since the high spatial resolution needed ($\leq \lambda$) can lead to simulations that contain millions of cells.
+Furthermore, the time step must be tiny, as magnetisation dynamics can occur over fractions of picoseconds~\cite{PhD_Leliaert}.
+Therefore, since ASI may contain hundreds of magnets whose switching rate is often orders of magnitude slower, micromagnetic simulations quickly become infeasible~\cite{leo2021chiral}.
+Furthermore, to determine statistically valid RC metrics, many input cycles must be applied --- on the order of 100 for the task-agnostic metrics --- during which many switches occur~\cite{RC_TaskAgnosticMetrics_v2}.
+To address these limitations, specialised ASI simulation tools have been developed.
 
-\subsection{Ising-like approximation}
-% FROM HOTSPICE PAPER
-
+\subsection{Macrospin approximation}\label{sec:1:Modelling_macrospin}
+Since the magnetisation of single-domain nanomagnets is often nearly uniform throughout, a \idx{macrospin approximation} can be used where the magnet is represented as a point dipole.
+When a nanomagnet has a single easy axis --- as is typically the case in ASI --- it can be approximated as a single Ising spin.
+Using such higher-level approximations greatly reduces the computational cost of simulations.
+This enables the study of collective behaviour in much larger systems and over far longer timescales, as these simulations are limited by the number of switches rather than the elapsed time.
+However, this approach comes at the cost that the internal magnetisation structure of individual nanomagnets is no longer simulated in detail. \par
+One example using such a macrospin approximation is the high-performance flatspin simulator~\cite{flatspin}, which implements deterministic spin flipping via a generalised Stoner-Wohlfarth model~\cite{StonerWohlfarth2008}.
+This model revolves around the effective field experienced by each nanomagnet, whose switching is determined by an angle-dependent coercive field --- it is easier to switch a nanomagnet by applying a field at an oblique angle w.r.t. the easy axis, rather than parallel or perpendicular to it.
+These fields are calculated based on a point dipole approximation.
+This results in deterministic dynamics, unless temperature effects are included through a random effective thermal field. \par
+Besides deterministic simulations, Monte Carlo methods are also often used to simulate both IP~\cite{Qi2008,Cugliandolo2017,LocalizedFrustratedKagome,Brunn2021,Farhan2013,ApparentFMpinwheel} and OOP~\cite{Chioar2014,PerpendicularMagnetizationASI} ASI. % Qi: kagome NN model, Cugliandolo: square vertex-based model, LocalizedFrustratedKagome: kagome NN model, Brunn: IP square 10NN model, ApparnetFMpinwheel: full MS model, Chioar: square magnetostatic, PerpendicularMagnetizationASI: model G and Z.
+However, these are typically specialized to a select few lattice geometries.
+Early works often accounted only for nearest-neighbour (NN) interactions, whose strength was either arbitrarily set or calculated separately using micromagnetic codes~\cite{Qi2008,PerpendicularMagnetizationASI}. % REFS: 'moller2006artificial': bit broader using dipolar interaction, though seemingly still only for nearest neighbors. 'lou2023competing': dipole model for half-occupation IP Ising. 'sendetskyi2019continuous': dipole model for square ASI. 'EngineeringRelaxationComputation': KMC on dipole model, seemingly for square arrays.
+More recently, the importance of long-range magnetostatic interactions has been emphasized to improve correspondence to experiments~\cite{Chioar2014,Rougemaille2011,Brunn2021}.
+As such, vertex~\cite{gilbert2014emergent,Saglam2022Tetris,Goryca2021Plasma,MeltingASI} or hybrid NN/vertex charge~\cite{Canals2016,zhang2013crystallites} models have become more prevalent, especially for square-lattice ASI. % 'MeltingASI': 16-vertex ice model, 'gilbert2014emergent': MC sims based on a vertex model and interacting magnetic charges. 'zhang2013crystallites': uses monopoles and NN couplings to model kagome ASI with Metropolis and loop update. 
+Beyond-NN interaction models, including full magnetostatically coupled models~\cite{ApparentFMpinwheel,mengotti2011kagome}, are also used for e.g. square-~\cite{Brunn2021,Farhan2013,sklenar2019field} and triangular-based~\cite{Chioar2014,Rougemaille2011,Hofhuis2020} lattices. \par % 'sklenar2019field': 3NN interactions calculated by mumax on quadrupole lattice. 'mengotti2011kagome' use a full dipole model with Ewald summation for PBC.
+Here, we opt to develop our own simulation toolkit: \hotspice~\cite{MAES-24}.
+This was driven by a desire to blend the approach of flatspin~\cite{flatspin} --- a general-purpose GPU-accelerated IP ASI simulator --- with the rather purpose-built Monte Carlo toolkits listed above, to obtain efficient simulation of RC in OOP ASI.
+The result is a versatile Monte Carlo simulator that aims to capture IP and OOP ASI physics with a minimal set of physically motivated parameters (most importantly, the magnets' anisotropy, magnetic moment and temperature) for a variety of lattice configurations.
+System dynamics are determined by the switching probability of each magnet, which is calculated based on the energy barrier separating its two stable states.
+Given the importance of considering long-range \xref{magnetostatic interactions} --- particularly for OOP systems --- as highlighted by Chioar~\etal~\cite{Chioar2014}, \hotspice{} explicitly accounts for the magnetostatic interactions between all magnets.
+Various optional model variants have also been implemented to enable a closer match to experiments.
+The details of the \hotspice simulator will be extensively discussed in~\cref{ch:Hotspice}, after which it is used in~\cref{ch:Applications} to explore reservoir computing in OOP ASI.

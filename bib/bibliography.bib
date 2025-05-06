@@ -1013,6 +1013,15 @@
 	numpages      = {5}
 }
 
+@phdthesis{PhD_Abert,
+	title         = {Discrete Mathematical Concepts in Micromagnetic Computations},
+	author        = {Abert, C.W. and Hinze, M.},
+	year          = {2013},
+	school        = {University of Hamburg},
+	adsurl        = {https://ediss.sub.uni-hamburg.de/handle/ediss/5161},
+	adsnote       = {Staats- und Universit{\"a}tsbibliothek Hamburg}
+}
+
 @article{DisorderGroundStateASI,
 	title         = {Diversity Enabling Equilibration: Disorder and the Ground State in Artificial Spin Ice},
 	author        = {Budrikis, Zoe and Politi, Paolo and Stamps, R. L.},
@@ -2106,6 +2115,36 @@
 	issn          = {1476-4660},
 	url           = {https://doi.org/10.1038/nmat4566},
 	abstract      = {Spin--orbit torque (SOT)-induced magnetization switching shows promise for realizing ultrafast and reliable spintronics devices. Bipolar switching of the perpendicular magnetization by the SOT is achieved under an in-plane magnetic field collinear with an applied current. Typical structures studied so far comprise a nonmagnet/ferromagnet (NM/FM) bilayer, where the spin Hall effect in the NM is responsible for the switching. Here we show that an antiferromagnet/ferromagnet (AFM/FM) bilayer system also exhibits a SOT large enough to switch the magnetization of the FM. In this material system, thanks to the exchange bias of the AFM, we observe the switching in the absence of an applied field by using an antiferromagnetic PtMn and ferromagnetic Co/Ni multilayer with a perpendicular easy axis. Furthermore, tailoring the stack achieves a memristor-like behaviour where a portion of the reversed magnetization can be controlled in an analogue manner. The AFM/FM system is thus a promising building block for SOT devices as well as providing an attractive pathway towards neuromorphic computing.}
+}
+
+@article{magnumFE,
+	title         = {magnum.fe: A micromagnetic finite-element simulation code based on {FEniCS}},
+	author        = {Claas Abert and Lukas Exl and Florian Bruckner and André Drews and Dieter Suess},
+	year          = {2013},
+	journal       = {Journal of Magnetism and Magnetic Materials},
+	volume        = {345},
+	pages         = {29--35},
+	doi           = {https://doi.org/10.1016/j.jmmm.2013.05.051},
+	issn          = {0304-8853},
+	url           = {https://www.sciencedirect.com/science/article/pii/S0304885313004022},
+	keywords      = {Micromagnetics, Finite-element method, Landau–Lifshitz–Gilbert equation},
+	abstract      = {We have developed a finite-element micromagnetic simulation code based on the FEniCS package called magnum.fe. Here we describe the numerical methods that are applied as well as their implementation with FEniCS. We apply a transformation method for the solution of the demagnetization-field problem. A semi-implicit weak formulation is used for the integration of the Landau–Lifshitz–Gilbert equation. Numerical experiments show the validity of simulation results. magnum.fe is open source and well documented. The broad feature range of the FEniCS package makes magnum.fe a good choice for the implementation of novel micromagnetic finite-element algorithms.}
+}
+
+@article{magnumNP,
+	title         = {magnum.np: a {PyTorch} based {GPU} enhanced finite difference micromagnetic simulation framework for high level development and inverse design},
+	author        = {Bruckner, Florian and Koraltan, Sabri and Abert, Claas and Suess, Dieter},
+	year          = {2023},
+	month         = {Jul},
+	day           = {25},
+	journal       = {Scientific Reports},
+	volume        = {13},
+	number        = {1},
+	pages         = {12054},
+	doi           = {10.1038/s41598-023-39192-5},
+	issn          = {2045-2322},
+	url           = {https://doi.org/10.1038/s41598-023-39192-5},
+	abstract      = {magnum.np is a micromagnetic finite-difference library completely based on the tensor library PyTorch. The use of such a high level library leads to a highly maintainable and extensible code base which is the ideal candidate for the investigation of novel algorithms and modeling approaches. On the other hand magnum.np benefits from the device abstraction and optimizations of PyTorch enabling the efficient execution of micromagnetic simulations on a number of computational platforms including graphics processing units and potentially Tensor processing unit systems. We demonstrate a competitive performance to state-of-the-art micromagnetic codes such as mumax3 and show how our code enables the rapid implementation of new functionality. Furthermore, handling inverse problems becomes possible by using PyTorch's autograd feature.}
 }
 
 @misc{PoissonRoberts,

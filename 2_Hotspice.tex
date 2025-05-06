@@ -2,26 +2,7 @@
 \glijbaantje{Truth is much too complicated to allow anything but approximations.}{John von Neumann}
 
 To assess the potential of \link{reservoir computing}{Reservoir Computing} in (perpendicular-anisotropy) \link{artificial spin ice}{Artificial Spin Ice}, as is the main topic of this thesis, a simulation framework is needed to efficiently explore the impact of various system parameters and input methods on reservoir performance. \par
-Nanomagnetic systems are often simulated using \indexlabel{micromagnetic simulations}micromagnetic codes, such as the finite-difference-based \mumax~\cite{mumax3} and \oommf~\cite{OOMMF} or the finite-element-based \nmag~\cite{Nmag}, which capture the magnetisation dynamics of individual nanomagnets in great detail.
-However, the time between successive switches of a nanomagnet is not necessarily similar to the timescale of micromagnetics.
-Furthermore, determining RC metrics requires applying many input cycles --- on the order of 100 for the task-agnostic metrics --- to get a statistically valid result~\cite{RC_TaskAgnosticMetrics_v2}.
-In this timeframe, many switches occur.
-When the simulated time extends beyond several microseconds, as is typically the case, simulating even a modest number of magnets --- on the order of several dozen --- becomes computationally unfeasible~\cite{leo2021chiral}. \\\par
-
-To address these limitations, specialised ASI simulation tools have been developed.
-An example of this is the flatspin simulator~\cite{flatspin}, which implements deterministic spin flipping via a \xlabel{Stoner-Wohlfarth} model~\cite{StonerWohlfarth2008}.
-Using such higher-level approximations enables the study of collective behaviour in much larger systems and over far longer timescales than is feasible with micromagnetic simulations, though at the cost that the internal magnetisation structure of individual nanomagnets is no longer simulated in detail.
-Additionally, Monte Carlo methods are often used to simulate spin ices, including in-plane (IP)~\cite{Qi2008,Cugliandolo2017,LocalizedFrustratedKagome,Brunn2021,Farhan2013,ApparentFMpinwheel} and out-of-plane (OOP)~\cite{Chioar2014,PerpendicularMagnetizationASI} ASI. % REFS: 'Qi2008': kagome NN model. 'Cugliandolo2017': square vertex-based model. 'LocalizedFrustratedKagome': kagome NN model. 'Brunn2021': IP square 10NN model. 'ApparentFMpinwheel': full MS model. 'Chioar2014': square MS model.
-Many early works accounted only for nearest-neighbour (NN) interactions, whose strength was set manually or calculated separately using micromagnetic codes~\cite{Qi2008,PerpendicularMagnetizationASI}. % REFS: 'moller2006artificial': bit broader using dipolar interaction, though seemingly still only for nearest neighbors.  'lou2023competing': dipole model for half-occupation IP Ising. 'sendetskyi2019continuous': dipole model for square ASI. 'EngineeringRelaxationComputation': KMC on dipole model, seemingly for square arrays.
-More recently, the importance of long-range magnetostatic interactions has been emphasised to improve correspondence to experiments~\cite{Chioar2014,Rougemaille2011,Brunn2021}.
-As such, vertex~\cite{gilbert2014emergent,Saglam2022Tetris,Goryca2021Plasma,MeltingASI} or hybrid NN/vertex-charge~\cite{Canals2016,zhang2013crystallites} models have become more prevalent, especially for square-lattice ASI. % REFS: 'MeltingASI': 16-vertex ice model. 'gilbert2014emergent': MC sims based on a vertex model and interacting magnetic charges. 'zhang2013crystallites': uses monopoles and NN couplings to model kagome ASI with Metropolis and loop update.
-Beyond-NN interaction models, including full magnetostatically coupled models~\cite{ApparentFMpinwheel,mengotti2011kagome}, are also used for e.g. square-~\cite{Brunn2021,Farhan2013,sklenar2019field} and triangle-based~\cite{Chioar2014,Rougemaille2011,Hofhuis2020} lattices. \par % 'sklenar2019field': 3NN interactions calculated by mumax on quadrupole lattice. 'mengotti2011kagome' use a full dipole model with Ewald summation for PBC.
-Our goal was to blend these approaches, resulting in \hotspice: a versatile Monte Carlo simulator meant to capture ASI physics with minimal parameters, allowing various lattice configurations to be evaluated.
-It supports both IP and OOP ASI, which may contain thousands of magnets. 
-This software approximates each single-domain nanomagnet as a single Ising spin, associating energies with the various ASI states.
-Since the importance of considering long-range \link{magnetostatic interaction}{magnetostatic (MS) interactions} --- particularly for OOP systems --- has been highlighted by Chioar~\etal~\cite{Chioar2014}, \hotspice{} explicitly accounts for the MS interactions between all magnets.
-Simulations can span arbitrary timescales, as determined by the switching time of magnets in the system. \\\par
-
+To this end, the \hotspice simulator was developed, as introduced in~\cref{sec:1:Modelling_macrospin}.
 In this chapter, we discuss several model variants that have been implemented, and assess their accuracy in simulating the behaviour of ASI.
 These variants differ in their choice of Monte Carlo spin-flip algorithm and their calculation of the magnetostatic interactions and energy barriers.
 
