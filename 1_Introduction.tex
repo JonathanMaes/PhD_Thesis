@@ -118,7 +118,7 @@ In the next section we will explore the reservoir computing framework in more de
 Reservoir computing is a machine learning framework suitable for temporal processing tasks~\cite{BookReservoirComputing}.
 The concept revolves around a ``reservoir'' --- an unspecified non-linear dynamical system --- that projects the input data into a higher-dimensional space, thereby facilitating the separation of said data by a linear transformation~\cite{appeltant2011information,KUR-24,RC_ASI}. % TODO: use figure like Fig. 2 in ~\cite{appeltant2011information}
 The principle is schematically illustrated in \crefSubFigRef{fig:1:NeuralNetworks}{c}.
-A weighted sum of the components of the reservoir's state vector (green nodes) then provides the output (red node) of the system as a whole. % REFs for RC, specifically training a readout layer: Dale et al., 2017; Jensen and Tufte, 2017; Sillin et al., 2013
+A weighted sum of the components of (a lower-dimensional representation of) the reservoir's state vector (green nodes), then provides the output (red node) of the system as a whole. % REFs for RC, specifically training a readout layer: Dale et al., 2017; Jensen and Tufte, 2017; Sillin et al., 2013
 These weights can be trained with a simple learning algorithm like linear regression in order to produce a desired output~\cite{RC_RecentAdvances, RC_SuperconductingElectronics}.
 Crucially, \textit{the properties of the reservoir itself are not modified during training} --- only the final linear readout layer is~\cite{RC_ASI,DynamicEmergence_NanomagneticSystem}. \par
 Since the reservoir acts as a black box, its properties can not be changed to obtain the desired response\footnote{
@@ -144,87 +144,92 @@ The former benefits from a chaotic regime, while the latter (and fading memory) 
 As such, many physical reservoirs aim to balance on this ``edge of stability'' whenever it is available in the system, to balance between these properties~\cite{appeltant2011information}.
 
 \paragraph{Mathematical description}
-% TODO: settle on a set of symbols that can be used, and add them in a (the?) figure
-In the reservoir computing paradigm, an input signal $s(t)$ perturbs a reservoir $\mathcal{R}$, which can be any non-linear dynamical system, be it physical or abstract.
-The state of the reservoir following this perturbation can then be represented by a $p$-dimensional response vector $\vc{r}(t) \in \mathbb{R}^p$.
-The final output $\hat{y}(t)$ of the system is then obtained by a weighted sum $\hat{y}(t) = \vc{r}^\mathrm{T}(t) \cdot \vc{w}$ of the components of the response vector $\vc{r}(t)$.
-Depending on the task performed, one or multiple such sums can be trained and interpreted in the context of that specific task~\cite{RC_RecentAdvances}. % For example, temporal pattern classification may provide multiple outputs, while prediction and generation only uses a single one
+% TODO: add symbols to the figure
+In the reservoir computing paradigm, an input signal $s(t)$ perturbs a reservoir $\mathcal{R}$ --- which can be any physical or abstract non-linear dynamical system --- eliciting a response $\mathcal{R}[s](t)$.
+The full internal state of the reservoir following this perturbation is often unknown, so a $p$-dimensional readout $\vc{r}(t) \in \mathbb{R}^p$ is assumed (i.e., the green nodes in~\cref{fig:1:NeuralNetworks}).
+The final output value\footnote{
+	A one-dimensional output is assumed here, but this is not a fundamental restriction: multiple sets of weights can be trained independently if multiple outputs are desired.
+} $\hat{y}(t)$ of the system is then obtained by a weighted sum $\hat{y}(t) = \vc{r}^\mathrm{T}(t) \cdot \vc{w}$ of the components of the response vector $\vc{r}(t)$.
+Depending on the task performed, one or multiple such sums can be trained and interpreted in the context of that specific task~\cite{RC_RecentAdvances}. \par % For example, temporal pattern classification may provide multiple outputs, while prediction and generation only uses a single one
 When the desired input-output relation $s(t) \mapsto y(t)$ is known for a limited set of data --- the training set --- the weights $\vc{w}$ can be adjusted to minimise the difference between the output $\hat{y}(t)$ and the desired output $y(t)$.
 This is usually done by ordinary least-squares (OLS) regression, which requires only a single matrix inversion.
-The optimal weights then remain fixed, and the performance of the reservoir can be evaluated by feeding it the test set --- a previously unknown, yet similar data set as the training set.
-
-% TODO: should I explain the mathematics of the matrix inversion here? Can take inspiration from~\cite{RC_NNN} eq. 4--7.
-% Training of the weights $\vc{w}$ via linear regression: \hat{y}_i = x_i^T \cdot w + \epsilon_i or in matrix form y = X w + \epsilon. The OLS algorithm adjusts the weight vector w to minimize the MSE between the estimated output and the target function.
+By sampling the readout and desired output at $n$ moments in time, $n$ vectors $\vc{r}_i$ and $\vc{y}_i$, $i = 1, \dots, n$ are obtained.
+These can be arranged into an $n \times p$ readout matrix $\vc{R}$ (whose row $i$ is $\vc{r}_i^T$) and the $n$-dimensional desired output vector $\vc{y}$.
+The optimal weights can then directly be calculated as
+\begin{equation}
+	\vc{w} = (\vc{R}^T \vc{R})^{-1} \vc{R}^T \vc{y} \mathrm{,}
+\end{equation}
+which minimises $\norm{\vc{y} - \hat{\vc{y}}}^2 = \norm{\vc{y} - \vc{R}\vc{w}}^2$~\cite{RC_NNN}.
+These optimal weights then remain fixed, and the performance of the reservoir can be evaluated by feeding it the test set --- a previously unknown, yet similar data set as the training set.
 
 \subsection{Metrics} \label{sec:1:RC_metrics}
-To compare different physical reservoirs, or identify optimal system parameters, metrics are needed that can consistently evaluate how suitable a given physical system is to be used as a reservoir.
-In this respect, two types of metrics are often used: those calculated based on the ranks of matrices, and those calculated through a form of linear regression, with the latter being more popular as of late.
+To compare different physical reservoirs or identify optimal system parameters, metrics are needed that can provide a consistent evaluation of how suitable a given physical system is to be used as a reservoir.
+In this respect, two types of metrics are often used: those calculated based on the ranks of matrices, and those calculated through a form of linear regression.
+The latter are also referred to as task-agnostic metrics. % Q: find a better name for them?
 
 \subsubsection{Matrix rank-based metrics}\indexlabel{matrix rank-based metrics} \label{sec:1:RC_metrics_KQ}
 Legenstein and Maass~\cite{WhatMakesPowerful} proposed three metrics, based on the readout vector $\vc{r}(t)$ of the reservoir.
-By periodically sampling this $p$-dimensional vector at $m$ moments in time, a $p \times m$ matrix can be constructed whose columns are these vectors at different moments in time.
+By periodically sampling this $p$-dimensional vector at $n$ moments in time, an $n \times p$ matrix $\vc{R}$ can be constructed whose rows are these vectors at different moments in time.
 Depending on the choice of input sequence, the rank of this matrix gives information about certain properties of the system~\cite{RC_ASI}.
 
 \paragraph{Kernel-quality}
-The \xlabel{kernel-quality} $K$ measures the \xref{separation property}, i.e. how well the reservoir can separate distinct temporal input patterns.
-Practically, it is determined by applying $m$ random input sequences, yielding a $p \times m$ matrix --- here, we will use $m=p$ to obtain a square matrix for a more consistent measure.
-In the case of discrete-time input, each input sequence consists of a large number of input values (here: 100).
-This ensures that the input sequences are maximally distinct, while the rank of this matrix (i.e., the kernel-quality $K$) is a measure for how distinct the responses obtained from the reservoir can be~\cite{Vidamour_2022}.
-An more efficient alternative method would be to record the response $\vc{r}$ after each input value, as this would also result in maximally distinct input sequences, though this method strays further from the original definition~\cite{RC_HierarchicalNeuroevolution,RCbenchmarksReview1}.
+The \idx{kernel-quality} $K$ measures the \xref{separation property}, i.e. how well the reservoir can separate distinct temporal input patterns.
+Practically, it is determined by applying $n$ random input sequences and recording the readout after every sequence, each of which consists of a large number of discrete input values (here: 100).
+Here, we will use $n=p$ to obtain a square matrix for a more consistent measure.
+Using random sequences ensures that they are maximally distinct, such that the rank of this matrix (i.e., the kernel-quality $K$) is a measure for how distinct the responses obtained from the reservoir can be~\cite{Vidamour_2022}.
+A more efficient alternative method would be to record the response $\vc{r}$ after each input value, as this would also result in maximally distinct input sequences, though this method strays further from the original definition~\cite{RC_HierarchicalNeuroevolution,RCbenchmarksReview1}.
 Hence, a high kernel-quality $K$ indicates that the reservoir exhibits the separation property.
-In the extreme case where $K=m$, any desired output can be implemented by the reservoir in combination with its linear readout layer~\cite{WhatMakesPowerful}.
+In the extreme case where $K=n$, any desired output can be implemented by the reservoir in combination with its linear readout layer~\cite{WhatMakesPowerful}.
 
 \paragraph{Generalisation-capability}
 The \xref{kernel-quality} is insufficient to quantify the computational performance of a reservoir~\cite{WhatMakesPowerful,RC_ASI,IL_Masterproef}.
-The \xlabel{generalisation-capability} $G$ is a similar metric, which measures the \xref{approximation property}, i.e. whether similar input sequences yield similar responses.
+The \idx{generalisation-capability} $G$ is a similar metric, which measures the \xref{approximation property} i.e., whether similar input sequences yield similar responses.
 Practically, it is determined in the same way as the kernel-quality $K$, except that the input sequences are now similar in one way or another.
-This can be done by adding a small amount of noise to a given input sequence, but we will follow the method outlined in~\cite{RC_ASI} instead.
-The first 60 input values will be shared among all sequences, while the remaining 40 are random for each sequence individually.
+This can be done by adding a small amount of noise to a given input sequence, but we will follow the method outlined in~\cite{RC_ASI} instead: the first 60 input values will be shared among all sequences, while the remaining 40 are random for each sequence individually.
 This way, the rank of the resulting matrix (i.e., the generalisation-capability $G$) measures how distinct the responses of similar inputs are.
 A low value of $G$ is therefore desirable, as it indicates robustness to noise and overfitting, as the reservoir adheres to the approximation property~\cite{RCbenchmarksReview1}.
 
 \paragraph{Compute quality}
 To obtain a single metric for the computational capability of a reservoir, Legenstein and Maass proposed to simply subtract the normalised values of both these metrics.
-This yields the compute quality $Q = K - G$, where higher values typically indicate better performance.
+This yields the \idx{compute quality} $Q = K - G$, where higher values typically indicate better performance.
 However, care should be taken with such claims, as high compute quality does not necessarily mean that the reservoir will perform well on all tasks it is given.
 
 \subsubsection{Task-agnostic metrics}
-While the matrix rank-based metrics are, strictly speaking, also task-agnostic, the metrics to be discussed now are more commonly referred to when talking about task-agnostic metrics, as the relation between them and particular tasks that the reservoir performs well on is clearer.
-A practical definition of non-linearity and memory capacity was given by Love~\etal~\citet{RC_TaskAgnosticMetrics_v2}, which will be used here.
+While the matrix rank-based metrics are, strictly speaking, also task-agnostic, the metrics to be discussed now are more commonly referred to when talking about task-agnostic metrics, since there is a clearer relation between them and the types of tasks that the reservoir will perform well on.
+A practical definition of non-linearity and memory capacity was given by Love~\etal~\cite{RC_TaskAgnosticMetrics_v2}, which will also be used here.
 
 \paragraph{Non-linearity}
 The non-linearity of the reservoir can be measured by considering that its response consists of a linear and a non-linear contribution.
 The linear contribution can be extracted by training a linear estimator $\hat{\vc{r}}(t)$ on the reservoir output based on the past input $s(t - \tau)$.
 More specifically, the estimator
 \begin{equation}
-	\hat{r}_n(t) = c_n + \sum_{\tau=0}^{k} w_{n,\tau} u(t - \tau) \mathrm{,}
+	\hat{r}_i(t) = c_i + \sum_{\tau=0}^{k} w_{i,\tau} s(t - \tau) \mathrm{,}
 \end{equation}
-is trained by adjusting the weights $w$ and $c$ based on the known discrete-time input-output relationship (on the training set).
+is trained by adjusting the weights $w_{i,\tau}$ and $c_i$ based on the known discrete-time input-output relationship (on the training set).
 The cut-off time $k$ must be longer than the relaxation time of the reservoir --- we will use $k=10$.
 By measuring the quality of this estimate using the $\mathrm{R}^2$ correlation coefficient, a measure of the linearity of each separate readout node is obtained.
 This can be converted to an overall measure for non-linearity as
 \begin{equation}
-	\mathrm{NL} = 1 - \frac{\sum_{n=1}^p \mathrm{R}^2[\hat{r}_n;r_n]}{p} = 1 - \frac{\sum_{n=1}^p \frac{\mathrm{cov}^2(\hat{r}_n; r_n)}{\sigma^2(\hat{r}_n) \sigma^2(r_n)}}{p} \mathrm{.}
+	\mathrm{NL} = 1 - \frac{1}{p} \sum_{i=1}^p \mathrm{R}^2[\hat{r}_i;r_i] = 1 - \frac{1}{p} \sum_{i=1}^p \frac{\mathrm{cov}^2(\hat{r}_i; r_i)}{\sigma^2(\hat{r}_i) \sigma^2(r_i)} \mathrm{.}
 \end{equation}
 
 \paragraph{Linear memory capacity}
-Calculating the linear memory capacity can also be done using linear estimators, but by working the other way around~\cite{tsunegi2019STOforcedsyncRC,NeuromorphicFewShot}.
-Instead, an estimator for the past input $s(t - \tau)$ is trained based on the current state $\vc{r}$ of the reservoir.
+The linear memory capacity can also be calculated through by means of linear estimators, but by working the other way around: an estimator for the past input $s(t - \tau)$ is now trained based on the current state $\vc{r}$ of the reservoir~\cite{tsunegi2019STOforcedsyncRC,NeuromorphicFewShot}.
 In other words, the estimator
 \begin{equation}
-	\hat{s}(t - \tau) = c_n + \sum_{i=1}^{p} w_{i,\tau} r_i(t)
+	\hat{s}(t - \tau) = c_\tau + \sum_{i=1}^{p} w_{i,\tau} r_i(t)
 \end{equation}
 is now trained.
 The linear memory capacity is then obtained by summing the $\mathrm{R}^2$ correlation coefficient of all estimators up to a threshold $k$:
 \begin{equation}
 	\label{eq:1:MC}
-	\mathrm{MC} = \sum_{\tau = 1}^{k} \mathrm{R}^2[\hat{s}(t - \tau); s(t - \tau)]
+	\mathrm{MC} = \sum_{\tau = 1}^{k} \mathrm{R}^2[\hat{s}(t - \tau); s(t - \tau)] = \sum_{\tau = 1}^{k} \frac{\mathrm{cov}^2(\hat{r}_i; r_i)}{\sigma^2(\hat{r}_i) \sigma^2(r_i)}
 \end{equation}
 Note that the memory capacity can be increased arbitrarily high, by choosing a high cut-off $k$.
 However, the memory capacity typically exhibits a plateau beyond a certain value of $k$, before rising dramatically only when $k$ approaches the size of the training set.
 Hence, $k$ should be chosen at this plateau; for the systems we will consider, $k=10$ suffices. \par
-Note that this measures short-term memory; long-term memory often refers to the knowledge engrained in the weights of an ANN --- the linear readout layer in the case of RC.
-Furthermore, this only captures the linear memory capacity: the non-linear memory capacity is far more computationally expensive as it additionally requires a summation over polynomials of different degrees~\cite{RCbenchmarksReview1}.
+Note that this measures short-term memory; long-term memory often refers to the knowledge engrained in the weights of an ANN i.e., the linear readout layer in the case of RC.
+Furthermore, this only captures the linear memory capacity: the non-linear memory capacity is far more computationally expensive as it requires a summation over polynomials of different degrees~\cite{RCbenchmarksReview1}.
 We therefore limit this discussion to the linear memory capacity.
 
 \paragraph{Parity check}
@@ -234,7 +239,7 @@ This is particularly intended for use with binary input, as it defines the parit
 	\pi(t-\tau) = \Bigg[\sum_{j = 0}^{\tau} s(t - j) \Bigg] \mathrm{mod}~2 \mathrm{.}
 \end{equation}
 The parity check is then defined in the same way as the memory capacity in~\cref{eq:1:MC}, except with $\pi(t - \tau)$ instead of $s(t - \tau)$.
-This introduces a form of non-linearity into it, though it mostly serves as a measure of the memory capacity in binary systems. % TODO: is this correct?
+This introduces a form of non-linearity into it, though it still mostly serves as a measure of the memory capacity in binary systems.
 
 \subsubsection{Benchmarks} % Memorisation, frequency generation, classification
 In addition to these six metrics, reservoirs are often used to perform specific benchmark tasks in literature.
@@ -312,7 +317,7 @@ This easy plane can be reduced to an \xref{easy axis} by using an elongated two-
 OOP magnets are harder to manufacture, as it is often infeasible to create tall structures on wafers.
 Therefore, where IP magnets mostly rely on shape anisotropy to create an easy axis, OOP magnets must use other types of anisotropy to favour a magnetisation direction perpendicular to the substrate.
 This can be realised using interfacial anisotropy between the ferromagnetic material and the substrate.
-One example of this is found at the interface between \ce{Co} and \ce{Pt}, as was used in the experimental OOP ASI fabricated within the context of the \spinengine project.
+One example of this is the interface between \ce{Co} and \ce{Pt}, as was used in the experimental OOP ASI fabricated within the context of the \spinengine project.
 This \idx{perpendicular magnetic anisotropy} (PMA) acts in the immediate vicinity of the interface, where the magnetisation then prefers to align perpendicular to said interface. \par
 Typically, a number of \ce{Co}-\ce{Pt} interfaces are stacked vertically, with the number and thickness of the ferromagnetic \ce{Co} layers then controlling the OOP anisotropy.
 The ferromagnetic layers in such stacks are typically made to be very thin for two main reasons.
@@ -450,14 +455,14 @@ ASI is very attractive in comparison to its natural spin ice counterpart.
 Modern nano-fabrication methods such as electron beam lithography allow any arbitrary geometry to be realised and many other aspects of the system to be engineered, offering enormous freedom to the designer~\cite{AdvancesASI,ASI_computation}.
 Furthermore, the mesoscopic size of ASI (a few hundred nanometers) enables direct observation of their magnetic degrees of freedom through a variety of microscopy techniques and electrical readout methods, in contrast to natural spin ices where imaging individual spins is not feasible~\cite{nisoli2013colloquium,freeman2001advances}.
 The aforementioned electrical input methods also enable precise control over these systems.
-Hence, the controlled, tunable and easily measurable environment offered by ASI has enabled the study of complex phenomena such as phase transitions with ordered domains~\cite{ApparentFMpinwheel,sklenar2019field,MeltingASI,ImagingBridgedKagome,sendetskyi2019continuous,lou2023competing,branford2012emerging} or glass-like behaviour~\cite{wang2006artificial,ZeroPointEntropy}, vertex-based frustration~\cite{morrison2013unhappy} leading to emergent topological structures such as monopoles and Dirac strings~\cite{ObservationMonopoleASI,mengotti2011kagome}, chiral dynamics~\cite{branford2012emerging,EmergentChiralityRatchet}...
+Hence, the controlled, tunable and easily measurable environment offered by ASI has enabled the study of complex phenomena such as phase transitions with ordered domains~\cite{ApparentFMpinwheel,sklenar2019field,MeltingASI,ImagingBridgedKagome,sendetskyi2019continuous,lou2023competing,branford2012emerging} or glass-like behaviour~\cite{wang2006artificial,ZeroPointEntropy}, vertex-based frustration~\cite{morrison2013unhappy,nisoli2018topologytetris} leading to emergent topological structures such as monopoles and Dirac strings~\cite{ObservationMonopoleASI,mengotti2011kagome}, chiral dynamics~\cite{branford2012emerging,EmergentChiralityRatchet}...
 ASI also holds significant potential for computational applications~\cite{heyderman2022spin}, both in conventional logic~\cite{ComputationalLogic_2018,Gypens_Balanced,EngineeringRelaxationComputation} and neuromorphic computing~\cite{ASI_computation,RC_RecentAdvances}. \par
 % Q: remove the following paragraph or keep it?
 %The study of ASI has since broadened well beyond the scope of frustrated systems, and now the term is used more broadly for ensembles of nanomagnets exhibiting a wide range of physical phenomena~\cite{ASIPathsForward}.
 %A vast wealth of both periodic and aperiodic arrangements of nanomagnets has been explored throughout the literature, whose behaviour can vary wildly~\cite{nisoli2013colloquium,heyderman2013artificial,AdvancesASI,ASI_Evolutionary_ALife}.
 %For example, a superferromagnetic alignment is most favourable in pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a,b}), while square-lattice ASI (\crefSubFigRef{fig:2:ASIs}{c,d,i}) prefers an antiferromagnetic (AFM) alignment~\cite{ApparentFMpinwheel}.
 
-\subsubsection{\spinengine} % Q: should this be mentioned at all?
+\subsubsection{\spinengine} % TODO: dont give a paragraph of attention to this
 The research presented in this thesis was performed in the context of the European \spinengine project, where three types of magnetic systems were considered: magnetic nanorings~\cite{DynamicEmergence_NanomagneticSystem}, IP ASI~\cite{RC_ASI}, and OOP ASI~\cite{KUR-24}.
 All three present their own advantages and challenges. \par
 Nanoring ensembles show very promising RC performance, but do not provide straightforward on-chip input and readout methods.
