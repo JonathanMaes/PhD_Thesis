@@ -54,7 +54,7 @@ However, interactions with other magnets or \xref{external magnetic fields} modi
 Each magnet can have a unique magnetic moment size $\mu_i$, temperature $T_i$ and energy barrier $E_{\mathrm{B},i}$.
 This enables, for instance, modelling some of the disorder due to lithographic variations by assigning a different shape anisotropy to each magnet, typically sampled from a Gaussian distribution with mean $\EB$ and standard deviation $\sigma(\EB)$~\cite{DisorderGroundStateASI}. \\\par
 
-Due to the periodic nature of many ASI, \hotspice chooses to perform the simulation on a rectilinear grid as this allows efficient matrix and array manipulations, as well as straightforward implementation of both open and periodic boundary conditions (PBC).
+Due to the periodic nature of many ASI, \hotspice chooses to perform the simulation on a rectilinear grid as this allows efficient matrix and array manipulations, as well as straightforward implementation of both open and \xref{periodic boundary conditions} (PBC).
 Each grid point may or may not contain a magnet, and the magnets must either all be of the IP type, or all OOP.
 The benefits and details of this approach will be elaborated on in~\cref{sec:2:Implementation}.
 Even though this implementation does not allow complete freedom in the placement of magnets, many popular ASI lattices can be constructed in this manner.
@@ -107,7 +107,7 @@ Three \idx{energy contributions} have been implemented\footnote{
 	This energy contribution provides a means for the outside world to interact with the system, and is therefore indispensable when we will be investigating reservoir computing later on.
 	Even if input is provided through other means than an external field, this energy contribution can often still be used by considering an effective field instead.
 	
-	\item The \textit{\xlabel{exchange coupling} energy} between nearest neighbours (NN) $i$ and $j$
+	\item The \textit{\xlabel{exchange coupling} energy} between nearest neighbours (NNs) $i$ and $j$
 	\begin{equation}
 		\label{eq:2:E_exch}
 		E_{\mathrm{exch},i,j} = J \frac{\vc{\mu}_i \bcdot \vc{\mu}_j}{\mu_i \mu_j} \mathrm{,}
@@ -165,9 +165,9 @@ These $\mathcal{I}$ are calculated similar to a moment of inertia:
 \end{equation}
 with $\Omega_i$ the geometry of magnet $i$.
 We assume all magnets have the same shape, such that $\mathcal{I}_{ij} = \mathcal{I}_i = \mathcal{I}_j$.
-For elliptic cylinders, these moments of inertia reduce to the simple expression $\mathcal{I}_{ij} = \frac{1}{4}(a^2 + b^2)$.
-Therefore, \hotspice assumes the magnets in an ASI to be round (OOP ASI, e.g.~\cite{PerpendicularMagnetizationASI}) or elliptical (IP ASI), and allows the user to set the semi-major axis $a$ and semi-minor axis $b$ of the magnets comprising an ASI.
-Although IP magnets are typically more stadium-shaped~\cite{EmergentChiralityRatchet,clocking-protocol}, the moment of inertia for an ellipse does not differ by much --- if necessary, an appropriate value of $a$ and $b$ can account for this.
+For elliptic cylinders, these moments of inertia reduce to the simple expression $\mathcal{I}_{ij} = \frac{1}{16}(l^2 + w^2)$.
+Therefore, \hotspice assumes the magnets in an ASI to be round (OOP ASI, e.g.~\cite{PerpendicularMagnetizationASI}) or elliptical (IP ASI), and allows the user to set the length $l$ and width $w$ of the magnets comprising an ASI.
+Although IP magnets are typically more stadium-shaped~\cite{EmergentChiralityRatchet,clocking-protocol}, the moment of inertia for an ellipse does not differ by much --- if necessary, an appropriate value of $l$ and $w$ can account for this.
 %While this correction can be applied to both IP and OOP magnetic dipoles, it is most effective for OOP systems, as can be seen in~\cref{fig:2:MS_distance}.
 
 \subsubsection{Dumbbell model}\label{sec:2:Dumbbell}
@@ -370,7 +370,7 @@ The former is more suitable for simulating the temporal evolution of the system,
 \end{equation}
 with $\kBT$ the thermal energy and $\nu_0$ the so-called \xref{attempt frequency}.
 For mutually interacting magnets, $\EB$ can be replaced by the \xref{effective energy barrier} $\EBeff$ in \cref{eq:2:Néel}. \par
-In the general case where the energy barriers for clockwise and anticlockwise rotation during switching differ, these two switching channels ($\circlearrowright$ and $\circlearrowleft$) will separately follow~\cref{eq:2:Néel}, so their switching frequencies must be combined.
+In the general case where the energy barriers for clockwise and counter-clockwise rotation during switching differ, these two switching channels ($\circlearrowright$ and $\circlearrowleft$) will separately follow~\cref{eq:2:Néel}, so their switching frequencies must be combined.
 This yields the total switching rate as presented by Koraltan~\etal~\cite{DirectionalEnergyBarrier},
 \begin{equation}
 	\nu = \nu_\circlearrowleft + \nu_\circlearrowright = \frac{\nu_0}{2} \ab[\exp\ab(-\frac{\EBeffLeft}{\kBT}) + \exp\ab(-\frac{\EBeffRight}{\kBT})] \mathrm{,}
@@ -423,7 +423,7 @@ Though Gillespie also discusses the first-switch method, these two algorithms di
 Their different strategies for calculating random switching times and selecting the next switch are discussed by \textit{Gibson and Bruck}~\cite{GibsonBruck}, alongside an optimised algorithm.
 
 \subsection{Metropolis-Hastings: sampling equilibrium states} \label{sec:2:Dynamics_MH}
-\idx{Metropolis-Hastings sampling} is a rejection-based KMC method designed to sample the state space at thermal equilibrium, where the probability of each state appearing is proportional to their \xlabel{Boltzmann factor} $e^{-E/\kBT}$~\cite{IntroductionMC,kyimba2006comparisonIsingAlgorithms}.
+\idx{Metropolis-Hastings sampling} is a rejection-based KMC method designed to sample the state space at thermal equilibrium, where the probability of each state appearing is proportional to their \xlabel{Boltzmann factor} $\exp(-E/\kBT)$~\cite{IntroductionMC,kyimba2006comparisonIsingAlgorithms}.
 Hence, in contrast to the \xref{first-switch method}, Metropolis-Hastings sampling is not intended to accurately model the system's transient dynamics.
 Instead, it is more suitable for examining equilibrium statistical properties of ASI, e.g. the average magnetisation, heat capacity, correlations...~\cite{ApparentFMpinwheel} \par
 
@@ -509,7 +509,7 @@ The introductory \cref{sec:2:Implementation:Grid} provides a brief motivation fo
 One of its main benefits is the existence of unit cells, which enables efficient \textit{kernels} for computing the \xref{magnetostatic interaction}. \par
 These kernels are discussed in detail in~\cref{sec:2:Kernels}, which consists of four subsections.
 First, \cref{sec:2:Kernels:Structure} explains their internal structure and how exactly they are used to calculate and update the magnetostatic interaction.
-\cref{sec:2:Kernels:PBC} then explains how these kernels facilitate the implementation of periodic boundary conditions.
+\cref{sec:2:Kernels:PBC} then explains how these kernels facilitate the implementation of \xref{periodic boundary conditions}.
 Next, \cref{sec:2:Kernels:Perp} briefly notes how similar kernels can be used for the calculation of $\left. E_{\mathrm{MS}} \right|_{\perp}$, as used for the \xref{asymmetric energy barrier}.
 Finally, \cref{sec:2:Kernels:Error} evaluates the effect of truncating the magnetostatic interaction beyond a certain distance, to reduce the computational load. \par
 After this, \cref{sec:2:MultiSwitch} explores one particular performance-enhancing feature: the simultaneous sampling of multiple magnets during \xref{Metropolis-Hastings sampling}, facilitated by the grid-based kernel implementation.
@@ -534,8 +534,8 @@ This construction is illustrated in~\cref{fig:2:Unitcells} for a small in-plane 
 
 This choice was made based on the trade-off between calculation efficiency and the freedom to place magnets anywhere.
 We opted to prioritise efficiency and accept the geometrical restriction, as most ASI research focuses on periodic lattices.
-All quantities are therefore stored in 2D matrices of size $L_x \times L_y$, upon which operations can be performed efficiently.
-We will denote these matrices with large bold upright symbols: e.g., $\vc{S}$ contains the states $s_i$, $\vc{E_\mathrm{MS}}$ the magnetostatic energies $E_{\mathrm{MS},i}$, $\vc{\bigmu}$ the magnitudes $\mu_i$ of magnetic moments... \par % Q: other suggestions? I can not capitalise the magnitudes of magnetic moments, because that would just be capital M which is too reminiscent of the magnetisation (in H = B/mu0 - M). So I just put it upright. Is that sufficient?
+All quantities are therefore stored in 2D matrices of size $N_x \times N_y$, upon which operations can be performed efficiently.
+We will denote these matrices with large bold upright symbols: e.g., $\vc{S}$ contains the states $s_i$, $\vc{E_\mathrm{MS}}$ the magnetostatic energies $E_{\mathrm{MS},i}$, $\vc{\bigmu}$ the magnitudes $\mu_i$ of magnetic moments... \par
 Despite the seemingly restrictive nature of the rectilinear grid,~\cref{fig:2:ASIs} illustrates its versatility in forming various periodic lattices, with only the Cairo lattices requiring grid non-uniformity.
 As a bonus, \link{graphical user interface}{real-time visualisation} is simple and efficient using this approach, as the underlying matrix can directly be cast to a pixel image. \\\par
 By leveraging the unit cell concept in periodic lattices and the efficient indexation of a rectilinear grid in computer memory, several aspects of the calculation can be performed more efficiently than for free-form ASI.
@@ -554,7 +554,7 @@ By calculating these values beforehand, when the ASI is created, the magnetostat
 	E_{\mathrm{MS},i,j}= s_i s_j \vc{k}^{(i)}_j \mathrm{,}
 \end{equation}
 which can only change sign, since the states $s_i = \pm 1$ and $s_j = \pm 1$ are the only variables in the system. \par
-Due to the fact that magnets are placed on a \xref{rectilinear grid}, the kernel corresponding to a magnet $i$ can also be written as an $L_x \times L_y$ matrix $\vc{K}^{(i)}_{ab}$ where $ab$ denotes a position on the ASI grid.
+Due to the fact that magnets are placed on a \xref{rectilinear grid}, the kernel corresponding to a magnet $i$ can also be written as an $N_x \times N_y$ matrix $\vc{K}^{(i)}_{ab}$ where $ab$ denotes a position on the ASI grid.
 For example, $\vc{K}^{(i)}_{2,3}$ stores the magnetostatic interaction strength between magnet $i$ and the magnet at index\footnote{
 	The indexation used throughout this section starts counting at 1, as is typical for matrix notation.
 	This is not to be confused with indexation in source code, which starts at 0.
@@ -563,7 +563,7 @@ If no magnet was placed at index $(a,b)$ on the grid, then $\vc{K}^{(i)}_{ab} = 
 
 However, storing such a kernel for all magnets $i$ would require storing $\order{N^2}$ values in memory. % Furthermmore, many values would be zero, though the same (but less extreme) can be said of the unit cell kernel. Note: small \vc{k} has no zeros if a lookup table is used to assign an index to each magnet.
 By leveraging \link{unit cell}{unit cells}, this storage requirement can be reduced to $\order{N}$.
-Each occupied grid point in the unit cell is assigned a unique index $q = 1,\dots,\widetilde{N}$, with $\widetilde{N}$ the number of magnets in a single unit cell.
+Each occupied grid point in the unit cell is assigned a unique index $q = 1,\dots,\widetilde{N}$, with $\widetilde{N}$ the number of magnets in a single unit cell. % TODO: maybe use \kappa instead of q? But it appears a lot in the following text.
 Hence, each magnet in the ASI is associated with a specific value of $q$. \par
 This way, all magnets with the same value of $q$ share the same layout of surrounding magnets\footnote{
 	In some ASI, it is possible that different sites inside a single unit cell also experience the same surrounding layout.
@@ -575,15 +575,15 @@ Therefore, if two magnets occupy equivalent positions $q$ in the unit cell --- s
 	\label{eq:2:Kernel_equivalence}
 	\vc{K}^{(i)}_{ab} = \vc{K}^{(j)}_{a+\Delta x,b+\Delta y} \quad \mathrm{,} \quad \forall a,b:
 	\begin{cases}
-		-\Delta x < a \leq L_x - \Delta x \\
-		-\Delta y < b \leq L_y - \Delta y \\
+		-\Delta x < a \leq N_x - \Delta x \\
+		-\Delta y < b \leq N_y - \Delta y \\
 		% Or more rigorously, but even more overcomplicated:
-		% \max(-\Delta x, 0) \leq a < L_x - \min(\Delta x, 0) \\
-		% \max(-\Delta y, 0) \leq b < L_y - \min(\Delta y, 0) \\
+		% \max(-\Delta x, 0) \leq a < N_x - \min(\Delta x, 0) \\
+		% \max(-\Delta y, 0) \leq b < N_y - \min(\Delta y, 0) \\
 	\end{cases} \quad\mathrm{.}
 \end{equation}
 In other words, their kernels are identical apart from an offset by $(\Delta x, \Delta y)$, at least in the area that remains inside the kernel after this offset.
-Due to this equivalence, and the fact that $- L_x < \Delta x < L_x$ and $- L_y < \Delta y < L_y$, all possible interactions that a magnet at site $q$ can experience can be stored in a single $(2L_x-1) \times (2L_y-1)$ matrix $\vc{\mathcal{K}}^{(q)}_{ab}$, a \idx{unit cell kernel}.
+Due to this equivalence, and the fact that $- N_x < \Delta x < N_x$ and $- N_y < \Delta y < N_y$, all possible interactions that a magnet at site $q$ can experience can be stored in a single $(2N_x-1) \times (2N_y-1)$ matrix $\vc{\mathcal{K}}^{(q)}_{ab}$, a \idx{unit cell kernel}.
 
 \xfig[1.0]{2_Hotspice/Kernel_IP_Pinwheel.pdf}{
 	\label{fig:2:Kernel_IP_Pinwheel}
@@ -613,7 +613,7 @@ When a magnet at unit cell index $q$ switches, the change of magnetostatic energ
 Denoting the grid index of the switching $q$-site magnet as $(x,y)$ and using the states $\vc{S}$ after the switch, this yields a new matrix
 \begin{equation}
 	\label{eq:2:Kernel_update}
-	\Delta \vc{E_\mathrm{MS}} = 2\mu_{xy} s_{xy}\vc{\bigmu} \odot \vc{S} \odot \ab(\vc{\mathcal{K}}^{(q)}_{ab})_{\substack{L_x < a + x \leq 2L_x \\ L_y < a + y \leq 2L_y}} \quad\mathrm{,}
+	\Delta \vc{E_\mathrm{MS}} = 2\mu_{xy} s_{xy}\vc{\bigmu} \odot \vc{S} \odot \ab(\vc{\mathcal{K}}^{(q)}_{ab})_{\substack{N_x < a + x \leq 2N_x \\ N_y < a + y \leq 2N_y}} \quad\mathrm{,}
 \end{equation}
 containing the change in magnetostatic energy $\Delta E_\mathrm{MS}$ for each grid point, which can then simply be added to the current values of $E_\mathrm{MS}$. \par
 The kernel is also used to initialise the magnetostatic energy $\left. E_\mathrm{MS} \right|_{t=0}$ of each magnet at the start of the simulation.
@@ -622,8 +622,8 @@ This is done by performing a convolution ($*$) rather than a pointwise multiplic
 	\label{eq:2:Kernel_init}
 	\left. \vc{E_\mathrm{MS}} \right|_{t=0} = \sum_q \vc{Q_q} \odot \vc{\bigmu} \odot \vc{S} \odot \ab((\vc{\bigmu} \odot \vc{S}) * \vc{\mathcal{K}}^{(q)}) \mathrm{,}
 \end{equation}
-where only the central $L_x \times L_y$ area of the convolution is calculated and the matrix $\vc{Q_q}$ contains 1 at sites with unit cell index $q$, otherwise 0.
-Such a convolution can be calculated very efficiently by using the \xlabel{fast Fourier transform} (FFT). \\\par
+where only the central $N_x \times N_y$ area of the convolution is calculated and the matrix $\vc{Q_q}$ contains 1 at sites with unit cell index $q$, otherwise 0.
+Such a convolution can be calculated very efficiently using the \xlabel{fast Fourier transform}. \\\par
 
 The exact values stored in the kernel depend on whether any \link{sec:2:finite}{finite-size corrections} to the magnetostatic interaction were used and whether the ASI is of the IP or OOP type.
 For example, an IP kernel using the \link{point dipole model}{point dipole approximation} contains elements
@@ -639,7 +639,7 @@ with $\Delta x$ and $\Delta y$ the x- and y-distance between the central magnet 
 With this form for the kernel, the \xref{magnetostatic interaction} between a magnet $i$ at grid-index $(v,w)$ and another magnet $j$ at index $(v+x, w+y)$ can be calculated as
 \begin{equation}
 	\label{eq:2:Kernel_unitcell}
-	E_{\mathrm{MS},i,j} = (s_i \mu_i) (s_j \mu_j) \vc{\mathcal{K}}^{(q_i)}_{L_x+x, L_y+y} = (s_i \mu_i) (s_j \mu_j) \vc{\mathcal{K}}^{(q_j)}_{L_x-x, L_y-y} \quad \mathrm{,}
+	E_{\mathrm{MS},i,j} = (s_i \mu_i) (s_j \mu_j) \vc{\mathcal{K}}^{(q_i)}_{N_x+x, N_y+y} = (s_i \mu_i) (s_j \mu_j) \vc{\mathcal{K}}^{(q_j)}_{N_x-x, N_y-y} \quad \mathrm{,}
 \end{equation}
 if the indexation of $\vc{\mathcal{K}}^{(q)}$ starts at $(1,1)$.
 Note that $\mu_i$ and $\mu_j$ were not included in the \xref{unit cell kernel} to allow magnets in different unit cells but with the same unit cell index $q$ to have a different magnetic moment $\mu$.
@@ -648,10 +648,10 @@ This versatility comes at the cost of two additional element-wise multiplication
 \subsubsection{Periodic boundary conditions}\label{sec:2:Kernels:PBC}
 The \xref{rectilinear grid} enables the straightforward implementation of first-order \idx{periodic boundary conditions} (PBC), which account for the eight nearest replicas of the ASI --- two horizontally, two vertically and four diagonally.
 An open-boundary kernel $\vc{\mathcal{K}}^{(q)}$ can be transformed into a PBC kernel by just adding eight offset copies of the kernel to itself.
-Specifically, four copies are shifted along the axes by $\pm L_x$ or $\pm L_y$, while the remaining four are shifted diagonally by $(\pm L_x, \pm L_y)$.
+Specifically, four copies are shifted along the axes by $\pm N_x$ or $\pm N_y$, while the remaining four are shifted diagonally by $(\pm N_x, \pm N_y)$.
 This is illustrated in~\cref{fig:2:Kernel_PBC} for an example of pinwheel ASI. \par
 This construction works because elements near the edge of a kernel represent interactions between distant magnets on opposite sides of the ASI, which are the interactions most affected by PBC.
-Since the middle region of the open-boundary \link{unit cell kernel}{kernel} already stores the interaction between nearby magnets, PBC can be applied by re-using these central values and moving the kernel by $\pm L_x$ and/or $\pm L_y$. \\\par
+Since the middle region of the open-boundary \link{unit cell kernel}{kernel} already stores the interaction between nearby magnets, PBC can be applied by re-using these central values and moving the kernel by $\pm N_x$ and/or $\pm N_y$. \\\par
 
 This approach has the advantage that PBC do not impact performance, as they are baked into the kernel, contrary to the alternative of using a circular convolution.
 However, this method is limited to ASI consisting of an integer number of \xref{unit cells} as systems with truncated unit cells along an edge can not properly be tiled.
@@ -684,7 +684,7 @@ It is used in the same way as the kernel $\vc{\mathcal{K}}^{(q)}$ in \cref{eq:2:
 
 \subsubsection{Numerical error with truncated kernel}\label{sec:2:Kernels:Error}
 Since the kernel is nearly 4 times larger than the simulation domain, a straightforward performance improvement presents itself: \indexlabel{truncated kernel}{truncating} the \xref{magnetostatic interaction} at a certain distance.
-Due to the underlying grid, the most natural way of achieving this is to reduce the size of the kernel from $2L-1 \times 2L-1$ to a smaller $2K-1 \times 2K-1$ central region, $1 < K < L$.
+Due to the underlying grid, the most natural way of achieving this is to reduce the size of the kernel from $(2N_x-1) \times (2N_y-1)$ to a smaller $(2R-1) \times (2R-1)$ central region, with $1 < R < \min(N_x,N_y)$.
 Note that the kernel size has to remain odd for the convolution to still place the switching magnet in the centre. \par
 However, such truncation will result in inaccurate calculation of the interaction energies: whenever a magnet switches, $E_\mathrm{MS}$ of distant magnets will not be updated.
 As an increasing number of magnets switch, this error will accumulate, as shown in \cref{fig:2:Kernel_cutoff} for the particular case of a pinwheel ASI where the original $199 \times 199$ kernel was truncated to a size of $41 \times 41$.
@@ -710,7 +710,7 @@ For some magnets, though, the relative error exceeds \SI{15}{\percent} (red curv
 Note that PBC require extra attention when the magnetostatic kernel is truncated, as this procedure cuts off the eight offset kernel images.
 Previously, \cref{eq:2:Kernel_update} was applied when a magnet switches, where the kernel was cut-out appropriately to the size of the ASI to allow a \link{Hadamard product}{pointwise multiplication}.
 With open boundaries, the truncated kernel presents no issue, but with PBC the cut-out should be applied with care, such that it properly wraps around the edges.
-This wrapping can instead also be achieved by performing a \xlabel{circular convolution} of the truncated kernel with an $L_x \times L_y$ array whose only non-zero element is at the position of the switching magnet.
+This wrapping can instead also be achieved by performing a \xlabel{circular convolution} of the truncated kernel with an $N_x \times N_y$ array whose only non-zero element is at the position of the switching magnet.
 
 \subsection{Multi-switching in Metropolis-Hastings} \label{sec:2:MultiSwitch}
 \indexlabel{multi-switching}
@@ -719,7 +719,7 @@ Since this algorithm is designed primarily for sampling equilibrium states rathe
 This allows for better usage of the parallel processing capabilities of the GPU, as the \link{magnetostatic interaction}{magnetostatic energy} can then be updated using a convolution. \\\par
 Previously, when only a single magnet switched at any instant, the magnetostatic energy was updated by \cref{eq:2:Kernel_update}, which appropriately cut out a piece of the kernel for pointwise multiplication.
 This process is no longer usable if we intend to use multi-switching as a method to efficiently parallelise Metropolis-Hastings iterations: not much performance can be gained if every switching magnet requires a different cut-out.
-Instead, a far more efficient method to calculate the change in magnetostatic energy whenever multiple magnets switch is to perform a convolution of the kernel with an $L_x \times L_y$ array whose only non-zero elements are the values $s_i$ at the positions of the switching magnets. \par
+Instead, a far more efficient method to calculate the change in magnetostatic energy whenever multiple magnets switch is to perform a convolution of the kernel with an $N_x \times N_y$ array whose only non-zero elements are the values $s_i$ at the positions of the switching magnets. \par
 For a single switch, convolution with a truncated kernel is far slower than the original \link{Hadamard product}{pointwise multiplication} of \eqref{eq:2:Kernel_update}.
 In fact, with the hardware used for this thesis, only for $\gtrsim 20$ \link{multi-switching}{simultaneous switches} does a convolution of \xref{truncated kernels} become more performant than a sequential sum of offset non-truncated kernels.
 Therefore, \hotspice allows the user to fine-tune both the size of the truncated kernel as well as this threshold between sum and convolution to optimise performance on a particular system.
@@ -892,7 +892,7 @@ CPU and GPU performance is compared at the start and end of the tables. \\\par
 The first two rows \textit{``Pairwise kernel''} in the tables use the na\"ive kernels $\vc{k}^{(i)}$ (or, equivalently, $\vc{K}^{(i)}$) that were described at the start of \cref{sec:2:Kernels} and used in \cref{eq:2:Kernel_k}.
 These store the interactions between each magnet $i$ and all other magnets, resulting in many duplicated values.
 All these kernels --- one for each magnet $i$ --- are arranged into a big $N \times N$ matrix $\vc{D}$ storing the \xref{magnetostatic interaction} between each pair of magnets.
-This allows easy calculation of $E_\mathrm{MC}$ for each magnet by a single matrix product $\vc{D}\vc{s}$ with the column vector $\vc{s}=\{s_i\}$.
+This allows easy calculation of $E_\mathrm{MS}$ for each magnet by a single matrix product $\vc{D}\vc{s}$ with the column vector $\vc{s}=\{s_i\}$.
 However, this is very inefficient: the initialisation time on CPU (first row in~\cref{tab:2:perf_init}) bears witness to the size of this matrix as $t_\mathrm{init} \propto L^4 = N^2$, making it impractical to simulate systems larger than $50 \times 50$ magnets.
 On GPU, parallelisation of the calculation of this matrix $\vc{D}$ approximately reduces this to $\propto L^2 = N$. \par
 However, the limiting factor remains the excessive memory consumption of the unoptimised kernel, which unnecessarily stores $\order{N^2}$ elements. % For periodic lattices, the matrix will contain many identical values, wasting a lot of memory.
@@ -912,7 +912,7 @@ First, a \xref{unit cell kernel} as described earlier in~\cref{sec:2:Kernels} ha
 This is used in the fourth row \textit{``Unit cell kernel''}, but does not yield a significant improvement on its own aside from enabling simulations of systems larger than $1000 \times 1000$ magnets. \par
 Secondly, however, this new kernel enables the usage of a convolution to initialise the magnetostatic interaction energy $E_\mathrm{MS}$, rather than the sequential sum used before.
 This is what the final two rows \textit{``Optimised implementation''} use, where we once again compare CPU and GPU as this is the most performant version overall.
-Another minor optimisation was to use 2D indexation (rather than a flat index $i = L_x y + x$ which did not synergise well with the convolution), yielding another \SI{15}{\percent} performance increase. \\\par
+Another minor optimisation was to use 2D indexation (rather than a flat index $i = N_x y + x$ which did not synergise well with the convolution), yielding another \SI{15}{\percent} performance increase. \\\par
 
 In the end, the upper limit for feasible calculation time is $L \approx 1000$ on GPU and $L \approx 400$ on CPU, beyond which the calculation time rises sharply.
 This is a vast improvement over the pairwise kernel, which could barely reach $L \gtrsim 100$.
@@ -1026,10 +1026,10 @@ Indeed, \hotspice gives the expected total magnetostatic energy $E_{\mathrm{MS},
 \subsection{Non-interacting spin ensemble}
 When an \xref{external magnetic field} of magnitude $B$ is applied to a non-interacting paramagnetic ensemble of Ising spins, the two stable states of each magnet are no longer degenerate.
 Spins pointing toward the field will have an energy $E_1 = -\mu B$, while the opposite state has an energy $E_2 = \mu B$.
-The probabilities $P_1$ and $P_2$ that a magnet occupies either state then follow directly from the canonical partition function $Z = \exp(\frac{\mu B}{\kBT}) + \exp(\frac{-\mu B}{\kBT})$ as $P_i = \frac{1}{Z} \exp(-\frac{E_i}{\kBT})$.
+The probabilities $\pi_1$ and $\pi_2$ that a magnet occupies either state then follow directly from the canonical partition function $Z = \exp\ab(\frac{\mu B}{\kBT}) + \exp\ab(\frac{-\mu B}{\kBT})$ as $\pi_i = \frac{1}{Z} \exp\ab(\frac{-E_i}{\kBT})$.
 Hence, at thermal equilibrium, the average magnetisation of such a paramagnetic system (in the direction of the magnetic field) follows the relation
 \begin{equation}
-	\frac{\langle M \rangle}{M_0} = P_1 - P_2 = \tanh\ab(\frac{\mu B}{\kBT}) \mathrm{,}
+	\frac{\langle M \rangle}{M_0} = \pi_1 - \pi_2 = \tanh\ab(\frac{\mu B}{\kBT}) \mathrm{,}
 \end{equation}
 with $M = \sum_i \mu_i s_i$ the total magnetic moment of the system and $M_0 = \sum_i \mu_i$.
 \cref{fig:2:Noninteracting} demonstrates that \hotspice{} correctly reproduces the expected result.
@@ -1058,11 +1058,11 @@ Furthermore, an analytical solution is available for the nearest-neighbour corre
 	\label{eq:2:Verification_exchange_corr}
 	\langle s_i s_{i+1} \rangle = 
 	\begin{cases}
-		\sqrt{1+k} \ab[\frac{1-k}{\pi}K(k) + \frac{1}{2} \ab] &\text{for } T < T_\mathrm{c} \mathrm{,} \\ 
-		\sqrt{1+k} \ab[\frac{1-k}{\pi k}K(1/k) + \frac{1}{2} \ab] &\text{for } T > T_\mathrm{c} \mathrm{.} \\ 
+		\sqrt{1+\zeta} \ab[\frac{1-\zeta}{\pi}\mathrm{K}(\zeta) + \frac{1}{2} \ab] &\text{for } T < T_\mathrm{c} \mathrm{,} \\ 
+		\sqrt{1+\zeta} \ab[\frac{1-\zeta}{\pi \zeta}\mathrm{K}(1/\zeta) + \frac{1}{2} \ab] &\text{for } T > T_\mathrm{c} \mathrm{.} \\ 
 	\end{cases}
 \end{equation}
-with $K$ the complete elliptic integral of the first kind and $k=\sinh^{-2}(2J/\kBT)$~\cite{Correlations2DIsing}. \\\par
+with $\mathrm{K}$ the complete elliptic integral of the first kind and $\zeta=\sinh^{-2}(2J/\kBT)$~\cite{Correlations2DIsing}. \\\par
 
 The result of a \hotspice simulation of this Ising system is shown in \cref{fig:2:Verification_exchange}, as calculated for an $800 \times 800$ lattice at various temperatures $T$.
 Maximal \xref{multi-switching} ($Q=+\infty$) during \xref{Metropolis-Hastings sampling} was used to verify that --- at least for systems with such short-range coupling --- this sort of extreme multi-switching still converges to the correct solution.
@@ -1159,7 +1159,7 @@ This variance between experiments may be due to differences in defects or quench
 % While these transitions were often experimentally observed to be gradual from \ang{35} to nearly \ang{45}, some of these experiments likely could not reach an equilibrium state due to finite correlation times, all of which freeze domain walls in the system.
 
 \newpage
-\section{Applications}
+\section{Applications} % TODO: add any symbols and abbreviations here to those lists
 % TODO: add the applications from the paper here, except the clocking in OOP ASI
 Whereas the previous section verified that \hotspice works as intended, this section will investigate the impact of the different model variants proposed in~\cref{sec:2:Energy}.
 Firstly, accounting for the \link{asymmetric energy barrier}{asymmetry} between the clockwise and counter-clockwise effective energy barriers is most noticeable in pinwheel ASI, where each magnet points perpendicularly into the side of its nearest neighbours.
@@ -1235,6 +1235,6 @@ The Metropolis-Hastings algorithm efficiently explores equilibrium configuration
 These methods were compared to experimental and theoretical results for pinwheel, kagome, and square ASI. \par
 This approach makes \hotspice{} complementary to traditional micromagnetic simulations.
 By sacrificing the detailed simulation of the internal magnetization structure of individual nanomagnets, the higher-level approximations employed by \hotspice{} enable the study of complex ASI dynamics in much larger systems and over significantly longer timescales.
-This opens new opportunities to use ASI for applied machine learning tasks like reservoir computing (RC).
+This opens new opportunities to use ASI for applied machine learning tasks like \xref{reservoir computing} (RC).
 The ability of \hotspice{} to quickly sweep parameters and evaluate RC metrics facilitates the optimization of ASI configurations and the identification of suitable input protocols, as demonstrated by our simulation of clocking protocols in pinwheel and OOP square ASI. \par
 In conclusion, \hotspice{}'s combination of speed, flexibility, and accuracy makes it a powerful tool to explore the rich physics of ASI systems and advance their use in innovative applications like reservoir computing.

@@ -2,7 +2,7 @@
 % TODO END: go through this chapter (and the others, probably) at the end and see if any comments with additional information can be put or merged anywhere.
 \glijbaantje{If you find that you're spending almost all your time on theory,\\ start turning some attention to practical things; it will improve your theories.\\ If you find that you're spending almost all your time on practice,\\ start turning some attention to theoretical things; it will improve your practice.}{Donald Knuth}
 
-The main factor that attracted attention towards OOP ASI for RC was that they allow very efficient and relatively simple input and read-out methods to be used.
+The main factor that attracted attention towards OOP ASI for \xref{reservoir computing} (RC) was that they allow very efficient and relatively simple input and read-out methods to be used.
 Early on in the \spinengine project, methods to read the state of OOP ASI had already been demonstrated experimentally on a small scale by ETHZ/PSI.
 However, their potential for RC had not yet been investigated.
 As \hotspice is well-suited for the simulation of OOP ASI, this presented an appropriate use-case for the software developed in~\cref{ch:Hotspice}. \par % Furthermore, the other simulator developed by the consortium (flatspin) only supports in-plane magnetisation. Furthermore, \hotspice is more accurate for OOP ASI than IP ASI due to the high degree of symmetry in the former.
@@ -35,7 +35,7 @@ Then, the chapter is divided into two main parts, first discussing thermally act
 \label{sec:3:OOP_nanomagnet_PMA}
 Where in-plane (IP) magnets mostly rely on shape anisotropy to create an easy axis, out-of-plane (OOP) magnets can be realised using interfacial anisotropy between the ferromagnetic material and the substrate.
 One example of this is found at the interface between \ce{Co} and \ce{Pt}, as was used in the experimental OOP ASI fabricated within the context of the \spinengine project.
-This \idx[nolabel]{perpendicular magnetic anisotropy} (PMA) acts in the immediate vicinity of the interface, where the magnetisation then prefers to align perpendicular to said interface. \par
+This \idx{perpendicular magnetic anisotropy} (PMA) acts in the immediate vicinity of the interface, where the magnetisation then prefers to align perpendicular to said interface. \par
 Typically, a number of \ce{Co}-\ce{Pt} interfaces are stacked vertically, with the number and thickness of the ferromagnetic \ce{Co} layers then controlling the OOP anisotropy.
 The ferromagnetic layers in such stacks are typically made to be very thin for two main reasons.
 Firstly, since the PMA only acts at the interface, it does not increase for thicker layers.
@@ -55,14 +55,14 @@ Conversely, if frustration is present, then not all local interactions can be sa
 For the OOP square-lattice ASI (\crefSubFigRef{fig:2:ASIs}{i}) in particular, which we focus on in this chapter, the ground state adopts an AFM checkerboard pattern of `up' ($\uparrow$) and `down' ($\downarrow$) magnetisation.
 We focus on the square-lattice system because it is the simplest example of a non-frustrated OOP ASI.
 The results obtained for this system are expected to generalise to most other non-frustrated OOP ASI lattices, as they all exhibit a twofold degenerate AFM ground state.
-The reason for this is that lattices with the same NN spacing can only differ in their magnetostatic interaction between next-nearest neighbours and beyond, which decays rapidly with distance.
+The reason for this is that lattices with the same nearest-neighbour (NN) spacing can only differ in their magnetostatic interaction between next-nearest neighbours and beyond, which decays rapidly with distance.
 As a result, the ground state is largely determined by NN interactions, which prefer anti-parallel alignment.
 Therefore, OOP lattices in which every closed NN loop contains an even number of magnets --- such as the square and honeycomb lattices --- are unlikely to exhibit geometric frustration.
 
 \subsection{Input and readout: experiment to simulation} \label{sec:3:IO_exp_to_sim}
 While it is possible to use an external field to switch both IP and OOP nanomagnets, this is undesirable in a real device due to stray fields and the need for bulky magnets.
 The main allure of OOP ASI for RC stems from the existence of efficient input and readout mechanisms for such OOP magnets.
-Input can be applied via \xref{spin--orbit torque} (SOT)~\cite{SOT_FM_AFM,SOTswitchingCoPt}, while the system can be read out using the anomalous Hall effect (AHE)~\cite{AHE}.
+Input can be applied via \xref{spin--orbit torque} (SOT)~\cite{SOT_FM_AFM,SOTswitchingCoPt}, while the system can be read out using the \xref{anomalous Hall effect} (AHE)~\cite{AHE}.
 Both of these only require a current to be passed through an underlayer that is electrically connected to the sample, and were explained earlier in the introduction (\cref{sec:1:ASI_IO}).
 % Nonetheless, external fields are often used for input anyway in the lab during the first stages of development, because they are easier to handle than the more complicated methods that would be used in a real device. By the end of the project, Alex had used SOT in his actual devices.
 
@@ -99,7 +99,7 @@ To appreciate this difficulty, let us first take a closer look at the various en
 	It is of a similar order of magnitude as the PMA, but of opposite sign, favouring an IP magnetisation rather than OOP.
 	This contribution was also discussed earlier, see~\cref{sec:2:shape_anisotropy}~and~\ref{sec:3:OOP_nanomagnet_PMA}. % Demag E: \approx\SI{-1.6e-16}{\joule}
 	\item \textbf{Inter-layer magnetostatic interaction}.
-	The separate FM layers within a single stack also interact, as they can all be considered as separate vertically stacked magnets.
+	The separate ferromagnetic layers within a single stack also interact, as they can all be considered as separate vertically stacked magnets.
 	This vertical stacking provides an additional contribution to the OOP anisotropy because, in general, the magnetisation of separate magnets prefers to point along the axis connecting those magnets.
 	One can think of this effect as being similar to the shape anisotropy, but on the scale of separate layers rather than individual atomic magnetic moments.
 	This contribution aids the PMA in stabilising the OOP anisotropy, counteracting the \xref{demagnetising field}, but is smaller in magnitude. % Cross MS E: \approx\SI{0.5e-16}{\joule}
@@ -116,7 +116,7 @@ As we will see in~\cref{sec:3:relaxation}, achieving spontaneous thermal orderin
 % The geometry of nanomagnets in an OOP ASI is shown schematically in~\cref{fig:3:OOP_geometry}.
 % TODO: make own figure of nanomagnets?
 
-The magnets considered here are round with a diameter $D_\mathrm{NM}$ and consist of $N_{\ce{Co}}$ layers of \ce{Co} with a thickness $t_{\ce{Co}}$, separated and surrounded by \ce{Pt} layers of thickness $t_{\ce{Pt}}$.
+The magnets considered here are round with a diameter $D_\mathrm{NM}$ and consist of $n_{\ce{Co}}$ layers of \ce{Co} with a thickness $t_{\ce{Co}}$, separated and surrounded by \ce{Pt} layers of thickness $t_{\ce{Pt}}$.
 They are placed in an ASI where the lateral spacing between magnets is $S_\mathrm{ASI}$ --- resulting in a lattice parameter $a=D_\mathrm{NM}+S_\mathrm{ASI}$ in a square lattice. \par
 These five geometrical parameters have a profound effect on the balance between the aforementioned energy contributions, as summarised in~\cref{tab:3:interactions_geometry}.
 The polynomial dependence of some of these relations makes the system quite hard to control: a slight manufacturing difference can yield a vastly different net OOP anisotropy, possibly inhibiting the spontaneous formation of a checkerboard ground state.
@@ -148,7 +148,7 @@ Note that the magnetostatic interactions depend on the square of the ferromagnet
 These five geometrical parameters are bounded by several physical and practical constraints.
 Note that the numerical values of the limits given below are only indicative and may depend on the exact values of the other geometrical parameters.
 \begin{itemize}
-	\item \textbf{FM layer thickness} $\boldsymbol{t_{\ce{Co}}} \lesssim \SI{1.45}{\nano\metre}$. \newline
+	\item \textbf{Ferromagnetic layer thickness} $\boldsymbol{t_{\ce{Co}}} \lesssim \SI{1.45}{\nano\metre}$. \newline
 	This upper bound was experimentally determined~\cite{KUR-24} and is imposed by shape anisotropy.
 	Layers must be sufficiently thin to maintain OOP anisotropy, as \xref{shape anisotropy} is proportional to volume (and hence $\propto t_{\ce{Co}}$) while the PMA is mostly independent of $t_{\ce{Co}}$. \par % t_{\ce{Co}} controls the demag compensation of $K_u$.
 	The closer the thickness is to this upper bound, the lower the effective OOP anisotropy will be.
@@ -171,7 +171,7 @@ Note that the numerical values of the limits given below are only indicative and
 	\item \textbf{Spacer layer thickness} $\boldsymbol{t_{\ce{Pt}}} \gtrsim \SI{0.4}{\nano\metre}$. \newline
 	Thinner layers may become discontinuous, which is detrimental to the PMA.
 	On the other hand, a thin spacer layer maximises the net OOP anisotropy due to the $\approx t_{\ce{Pt}}^{-3}$ inter-layer MS coupling dependence.
-	Note that $t_{\ce{Pt}}$ must still be chosen appropriately to promote FM coupling between layers while maintaining the interfacial anisotropy. % Accounting for various effects such as RKKY coupling
+	Note that $t_{\ce{Pt}}$ must still be chosen appropriately to promote ferromagnetic coupling between layers while maintaining the interfacial anisotropy, accounting for effects like RKKY coupling.
 \end{itemize}
 
 In the particular case of the thermally active OOP ASI fabricated within the \spinengine project, the nanomagnets consist of $n_{\ce{Co}}=7$ ferromagnetic layers of $D_\mathrm{NM}=\SI{170}{\nano\metre}$ diameter and $t_{\ce{Co}} \approx \SI{1.45}{\nano\metre}$ thickness, with $t_{\ce{Pt}} \approx \SI{0.8}{\nano\metre}$ spacing layers in between.
@@ -258,7 +258,7 @@ The effects of $\EMC$ and $\EEA$ can be quantified by fitting a logarithmic curv
 
 \subsubsection{Two-stage relaxation}
 While $\mavg$ follows a near-perfect logarithmic relaxation, $\mavg \approx 0$ is reached earlier than the perfect checkerboard ordering $\qNN = 1$ --- most strikingly in panels 6 and 9 of~\cref{fig:3:OOP_relaxation}.
-This is accompanied by a decreased ordering rate $\frac{\partial \qNN}{\partial \log(t)}$, marking the transition between stage~$\circled{1}$ and~$\circled{2}$ of relaxation.
+This is accompanied by a decreased ordering rate $\frac{\partial \qNN}{\partial \log_{10}(t)}$, marking the transition between stage~$\circled{1}$ and~$\circled{2}$ of relaxation.
 The latter is indicated by the green shaded area in the figure. \par
 This can be understood by considering the microstate of the ASI: to this end, the final state of each panel in~\cref{fig:3:OOP_relaxation} is shown as an inset.
 Panels 1 and 2 show the system during the logarithmic relaxation of both $\mavg$ and $\qNN$ in stage~$\circled{1}$.
@@ -533,9 +533,9 @@ Therefore, all subsequent simulations of reservoir computing in thermally active
 The main factors influencing the dynamics, beyond those intrinsic to the ASI, are the input frequency $f$ and the magnitude $B$ of the excitation.
 Their effect is illustrated in~\cref{fig:3:OOP_relaxation_input}, where a random scalar input sequence is applied to the ASI.
 More specifically, the upwards-pointing OOP external field that provides the input can take any random magnitude between 0 and $B$, with each value being maintained for a period determined by the input frequency $f$. \par % \\\par
-Larger input values $x$ drive the system further from its ground state, while smaller values applied for a sufficiently long time allow a gradual relaxation back towards $\mavg \approx 0$.
-The equilibrium magnetisation depends only on the input field magnitude $xB$, resembling the behaviour of a leaky integrator~\cite{jaeger2001echo}.
-When $xB$ is sufficiently small, the equilibrium magnetisation $\mavg$ approaches zero, in which case the system always reaches roughly the same state after one input period, with this state depending on the frequency $f$.
+Larger input values $v$ drive the system further from its ground state, while smaller values applied for a sufficiently long time allow a gradual relaxation back towards $\mavg \approx 0$.
+The equilibrium magnetisation depends only on the input field magnitude $vB$, resembling the behaviour of a leaky integrator~\cite{jaeger2001echo}.
+When $vB$ is sufficiently small, the equilibrium magnetisation $\mavg$ approaches zero, in which case the system always reaches roughly the same state after one input period, with this state depending on the frequency $f$.
 This can, for instance, be observed during cycles 12 and 14 in~\cref{fig:3:OOP_relaxation_input}, where the input is very weak: for $f=\SI{1}{\kilo\hertz}$ (panels 1--3), $\mavg$ always returns to $\approx 0.2$, whereas for $f=\SI{100}{\kilo\hertz}$ it drops to a different value ($\mavg \approx 0.55$).
 The sole exception is panel 4, where the input with $(f,B)=(\SI{100}{\kilo\hertz}, \SI{200}{\micro\tesla})$ is not sufficiently impactful to bring the system far from its ground state. \par
 In contrast to these minima of $\mavg$, the maxima do depend on the input magnitude.
@@ -547,19 +547,19 @@ Therefore, the stochastic nature of the relaxation can, in some cases, prevent t
 In conclusion, the strength of this stimulus determines how hard the ASI will be pushed away from the ground state towards the uniform state, while the frequency of the input determines how much the system can relax back towards the ground state after every input cycle.
 
 \subsection{Analog signal transformation and prediction}
-% TODO END: check references in this intro
+% TODO END: check if this is not partly redundant, given the introduction
 The transient dynamics of thermally active OOP ASI, as were illustrated in~\cref{fig:3:OOP_relaxation_input}, can be harnessed to perform reservoir computing.
 Since this system can respond to analog input signals $s: \mathbb{R} \rightarrow [0, 1]; t \mapsto s(t)$, an alluring test to evaluate the reservoir computing capability of this system is to have it perform a signal transformation or prediction task~\cite{gartside2022reconfigurable,AdaptiveProgrammableRC,RC_NNN,TaskAdaptivePRC}. \par % REF: AvalanchesChaosNNN also does signal transformation, but it is more of a sidenote there.
-Applying a signal $s(t)$ to the reservoir, here in the form of an external field $B_z(t)$, yields a response $\vc{r}(t) \in \mathbb{R}^p$ from the $p$ readout nodes the reservoir provides.
-The goal is to estimate a ``target'' function $y(t) \in [0,1]$ as accurately as possible based on the reservoir's response $\vc{r}(t)$.
-As explained in~\cref{sec:1:RC}, the reservoir computing paradigm includes a linear readout layer that converts the response $\vc{r}(t)$ into an output $\hat{y}(t) = \vc{r}^\mathrm{T}(t) \cdot \vc{w}$.
+Applying a signal $s(t)$ to the reservoir, here in the form of an external field $B_z(t)$, yields a response $\vc{x}(t) \in \mathbb{R}^p$ from the $p$ readout nodes the reservoir provides.
+The goal is to estimate a ``target'' function $y(t) \in [0,1]$ as accurately as possible based on the reservoir's response $\vc{x}(t)$.
+As explained in~\cref{sec:1:RC}, the reservoir computing paradigm includes a linear readout layer that converts the response $\vc{x}(t)$ into an output $\hat{y}(t) = \vc{x}^\mathrm{T}(t) \cdot \vc{w}$.
 Through a training procedure, the weights $\vc{w}$ of the readout layer can be adjusted to minimise the difference between the output $\hat{y}(t)$ and the target function $y(t)$. \par
 The continuous input signal $s(t)$ corresponds to a continuously varying external field $B_z(t)$, but in simulation this can not be captured at infinite resolution.
 The reason for this is that \hotspice assumes all aspects of the system remain static until the next switch occurs, as this assumption allows a mean switching time to be calculated for all magnets.
 To approximate a continuous input in simulation, the input signal must be sampled at sufficiently short time intervals --- say, 20 samples per period.
 This can be done by imposing a maximum switching time $t_\mathrm{max} = 1/20f$ and updating the external field $\vc{B}_\mathrm{ext}$ after each iteration of the first-switch method (\cref{alg:2:FirstSwitchSingle}) --- regardless of whether a magnet has switched within the short interval $t_\mathrm{max}$ --- resulting in adequate sampling of the true input signal. \\\par
 
-By recording the reservoir state $\vc{r}(t_i)$ and the target output $y(t_i)$ at discrete intervals $t_i = i t_\mathrm{max}$ (with $i = 1,\dots,n$)\footnote{
+By recording the reservoir state $\vc{x}(t_i)$ and the target output $y(t_i)$ at discrete intervals $t_i = i t_\mathrm{max}$ (with $i = 1,\dots,n$)\footnote{
 	When a magnet switches on a timescale $\Delta t < t_\mathrm{max}$, the external field $B_z(t)$ is updated immediately to more accurately represent the input signal.
 	The reservoir state, however, is only recorded at intervals of $t_\mathrm{max}$ for a consistent measure of reservoir performance that is independent of reservoir dynamics like individual switches.
 }, the readout layer can be trained on several periods of the input signal via ordinary least-squares (OLS) regression\footnote{
@@ -570,13 +570,13 @@ For a consistent comparison, the training of the linear readout layer for signal
 	For signal transformation on periodic signals, as considered here, one period would normally suffice.
 	However, since the thermally active ASI reservoir is subject to thermal noise, multiple periods are used for increased robustness against such noise.
 } of the input signal.
-After training, the performance of a reservoir will be evaluated based on 8 (40) more periods of the input signal, as quantified by the mean squared error of the ASI prediction $\hat{y}(t)$ with respect to the target function $y(t)$ at the sampled times $t_i$:
+After training, the performance of a reservoir will be evaluated based on 8 (40) more periods of the input signal, as quantified by the mean squared error (MSE{\tiny }) of the ASI prediction $\hat{y}(t)$ with respect to the target function $y(t)$ at the sampled times $t_i$:
 \begin{equation}
 	\label{eq:3:MSE}
 	\MSE = \frac{1}{n} \sum_{i=1}^n \big(\hat{y}(t_i) - y(t_i)\big)^2 \mathrm{.}
 \end{equation}
 Since all signals considered here will be normalised to the unit interval $[0,1]$, no additional normalisation is necessary. \par
-To evaluate the reservoir performance, the mean squared error of two estimators will be compared: one that is trained on the reservoir output $\vc{r}(t)$ as described before, and one that is trained only on the raw 1D input signal $s(t)$ (augmented with a constant\footnote{
+To evaluate the reservoir performance, the mean squared error of two estimators will be compared: one that is trained on the reservoir output $\vc{x}(t)$ as described before, and one that is trained only on the raw 1D input signal $s(t)$ (augmented with a constant\footnote{
 	Training an OLS estimator on a 1D signal is equivalent to an optimal scaling to fit the signal to the target function.
 	The inclusion of a constant factor enables a vertical offset of the input signal for a better fit (yielding up to $10 \times$ lower baseline MSE).
 	Some studies do not use such a constant factor~\cite{gartside2022reconfigurable}, thereby lowering the quality of the raw-input baseline and elevating the relative performance of the reservoir.
@@ -694,20 +694,20 @@ The reason for this is that the range of coercive fields of individual magnets i
 Increasing the number of magnets $N$ in the ASI reduces the relative impact of thermal noise, since each readout node then averages over more magnets.
 The central limit theorem states that the standard deviation of a mean scales as $1/\sqrt{N}$, so the value of $\mavg$ during relaxation will be more consistent in larger systems.
 Hence, increasing the size of the system is expected to enhance the transformation quality as the final output then also becomes less noisy. \\\par
-When each readout node represents the average magnetisation of one column, a square $L_x \times L_y$ ASI yields $p = L_x = L_y$ nodes ($\vc{r}(t) \in \mathbb{R}$).
+When each readout node represents the average magnetisation of one column, a square $N_x \times N_y$ ASI yields $p = N_x = N_y$ nodes ($\vc{x}(t) \in \mathbb{R}$).
 However, as $p$ increases, the danger of overfitting increases as well~\cite{DeepRC_IonGating_Overfitting,lukovsevivcius2009reservoir}.
 Overfitting is a general machine learning phenomenon that occurs when a model has too many trainable weights $\vc{w}$ for the limited data it has been given.
 This causes the model to train on noise present in the data --- rather than on the general trend underlying that noisy data --- resulting in worse performance on the test set.
 Since our thermally active OOP ASI reservoir is inherently noisy due to thermal fluctuations, overfitting is a possible concern.
 Overfitting is one reason for why data is typically split into a training and test set, as the $\MSE$ on the training set may be too optimistic a measure for the reservoir performance. \\\par
 
-The transformation performance with such single-column readouts is shown in~\crefSubFigRef{fig:3:Transformation_size-magn}{a}, as measured by $1/\MSE$ on both the training and test sets as a function of the number of readout nodes $p=L_x=L_y$.
+The transformation performance with such single-column readouts is shown in~\crefSubFigRef{fig:3:Transformation_size-magn}{a}, as measured by $1/\MSE$ on both the training and test sets as a function of the number of readout nodes $p=N_x=N_y$.
 At small $p$, performance is similar on both the training and test sets.
 However, as $p$ increases, the training performance improves more rapidly than the test performance --- at $p=100$, for instance, $1/\MSE \approx 120$ on the training set, whereas it barely surpasses 75 on the test set.
 This is a clear indication of overfitting. \par
 Overfitting can be avoided by limiting the amount of readout nodes: in this system, for example, multiple columns can be averaged together.
-The performance with a total of $p=11$ such readout nodes is presented in~\crefSubFigRef{fig:3:Transformation_size-magn}{b} as a function of system size $L_x = L_y$ and the input magnitude $B_1$.
-Contrary to the single-column readout, the performance is now equal between the training and test sets, reaching a maximum of $1/\MSE \approx 60$ for $L_x=L_y=30$, beyond which enlarging the system no longer significantly affects the performance.
+The performance with a total of $p=11$ such readout nodes is presented in~\crefSubFigRef{fig:3:Transformation_size-magn}{b} as a function of system size $N_x = N_y$ and the input magnitude $B_1$.
+Contrary to the single-column readout, the performance is now equal between the training and test sets, reaching a maximum of $1/\MSE \approx 60$ for $N_x=N_y=30$, beyond which enlarging the system no longer significantly affects the performance.
 
 \vspace{-1em}
 \makeshiftfig{
@@ -769,7 +769,7 @@ Therefore, the specific transformation attempted here is written as
 where $f$ fulfils the role of a ``frequency'' to synchronise the Mackey-Glass oscillator with the reservoir's relaxation dynamics despite the non-periodic nature of the signal.
 This also provides the definition of the ``offset'' $h$, a dimensionless measure for how far ahead the reservoir must predict. \\\par
 
-The previous discussion regarding the signal transformation task demonstrated that many system parameters affect the transformation quality --- including the input frequency $f$, the input magnitudes $B_0$ and $B_1$, the size $L_x \times L_y$ of the ASI, the \xref{property gradient} $\Gamma$, the number of readout nodes $p$ \dots\,
+The previous discussion regarding the signal transformation task demonstrated that many system parameters affect the transformation quality --- including the input frequency $f$, the input magnitudes $B_0$ and $B_1$, the size $N_x \times N_y$ of the ASI, the \xref{property gradient} $\Gamma$, the number of readout nodes $p$ \dots\,
 Since the absolute values of $f$, $B_0$ and $B_1$ provide limited additional insight and are unrelated to the ASI itself, we will henceforth use Bayesian optimisation~\cite{BayesOpt_Mockus1975} over the $f \times B_0 \times B_1$-space to identify the optimal input characteristics for a given set of ASI parameters. \par % This was not done for the figures relating to the signal transformation task, as it would be prohibitively expensive to compute the optimal system parameters for each pixel in those figures.
 This allows us to concentrate on the most critical variable for a prediction task: the offset $h$, whose impact is illustrated in~\crefSubFigRef{fig:3:Prediction_MG}{a} for three particular systems with a different size and \xref{property gradient}.
 For the systems with a gradient, $\Gamma$ was also optimised during the Bayesian optimisation procedure, which typically yields $\Gamma \approx \SIrange{25}{30}{\percent}$, though less severe gradients also perform decently. \par
@@ -859,7 +859,7 @@ Rather than pulling the system away from equilibrium and expecting it to evolve 
 
 \subsection{Two-step input protocol: clocking}
 To achieve control over the domains, we can take inspiration from the ``clocking'' protocol proposed by Jensen~\etal~\cite{clocking-protocol}, which can move domain wall boundaries in IP pinwheel ASI in discrete steps.
-While our square-lattice OOP ASI is very different from the pinwheel lattice, both exhibit domains, though these are superferromagnetic in pinwheel ASI rather than anti-ferromagnetic.
+While our square-lattice OOP ASI is very different from the pinwheel lattice, both exhibit domains, though these are superferromagnetic in pinwheel ASI rather than antiferromagnetic.
 As such, some key concepts can be carried over, but the specific realisation of input and readout will have to be altered significantly to make such a clocking protocol work well for OOP ASI. \par
 To achieve clocking, Jensen~\etal~\cite{clocking-protocol} applied an external magnetic field in a well-chosen direction to selectively affect one of the two pinwheel sublattices at a time, and then changed the field direction to affect the other sublattice.
 By carefully tuning the field magnitude, only the magnets at the boundary of a domain --- or at the edge of the ASI --- will switch.
@@ -1111,27 +1111,27 @@ This makes it harder to predict which input strength $B$ will result in the best
 Therefore, while the optimal field magnitude is predictable to some extent, it is also varied to ensure hitting the ``sweet spot'' for all metrics.
 
 \paragraph{Matrix rank-based metrics}
-Three matrix rank-based metrics can be calculated: the kernel-quality $K$, generalisation-capability $G$ and computing capacity $Q=K-G$.
-The latter is the primary metric of interest, as it provides an indication of how suitable a particular system is for reservoir computing.
+Three matrix rank-based metrics can be calculated (\cref{sec:1:RC_metrics_KQ}): the kernel-quality $K$, generalisation-capability $G$ and computing capacity $C=K-G$.
+The latter provides a general indication of how suitable a particular system is for reservoir computing.
 \cref{fig:3:Clocking_Sweeps_binary_KQ} shows these metrics for the baseline system over a range of lattice spacings $a$ and field magnitudes $B$.
-Recall that the maximum value of $K$, $G$ and $Q$ is the number of readout nodes; here, a $20 \times 20$ ASI with $10 \times 10$ readout nodes --- each representing the average domain type of a $2 \times 2$ magnet cluster --- yields a maximum value of 100 for all three metrics.
+Recall that the maximum value of $K$, $G$ and $C$ is the number of readout nodes; here, a $20 \times 20$ ASI with $10 \times 10$ readout nodes --- each representing the average domain type of a $2 \times 2$ magnet cluster --- yields a maximum value of 100 for all three metrics.
 
 \xfig{3_RC_OOP/Nonvolatile/Sweeps/Sweep20230208082817.pdf}{
 	\label{fig:3:Clocking_Sweeps_binary_KQ}
-	Kernel-quality $K$, generalisation-capability $G$ and computing capacity $Q$ of a $20 \times 20$ OOP square-lattice ASI with $\EEA = \SI{110}{\electronvolt} \pm \SI{5}{\percent}$.
+	Kernel-quality $K$, generalisation-capability $G$ and computing capacity $C$ of a $20 \times 20$ OOP square-lattice ASI with $\EEA = \SI{110}{\electronvolt} \pm \SI{5}{\percent}$.
 	Beyond the displayed range of lattice constants $a$ and input field magnitudes $B$, the metrics decrease.
 	The corresponding magnetostatic coupling $\EMC$ ranges from $146\kBT$ (at $a=\SI{220}{\nano\metre}$) to $88\kBT$ (at $a=\SI{260}{\nano\metre}$), as the magnetic moment of each magnet is $\mu = \SI{2.5e-16}{\ampere\metre\squared}$.
 	As readout, the average domain type of each $2 \times 2$ set of magnets is used, totalling 100 readout values.
-	Hence, the highest possible value of $K$, $G$ and $Q$ is 100.
+	Hence, the highest possible value of $K$, $G$ and $C$ is 100.
 }
 
 Some noise is visible in the figure due to the random distribution of $\EEA$; for each set of parameters, a new randomly sampled value of $\EEA$ was assigned to each magnet.
 The local noise level therefore reflects how impactful a $\sigma(\EEA) = \SI{5}{\percent}$ disorder is on the clocking dynamics and, by extension, on RC performance.
-For example, near the maximum of the metric map in~\cref{fig:3:Clocking_Sweeps_binary_KQ}, the computing capacity $Q$ may vary between approximately 50 and 80.
+For example, near the maximum of the metric map in~\cref{fig:3:Clocking_Sweeps_binary_KQ}, the computing capacity $C$ may vary between approximately 50 and 80.
 This suggests that, unless such defects can be reproducibly incorporated into the system, performance can vary significantly between various manufactured ASI samples. \par
 The generalisation-capability $G$ is very low for any combination of $a$ and $B$, apart from a few outliers where the randomly sampled defect distribution results in uncharacteristically high values of $G$.
-Because $Q=K-G$ provides an indication of RC performance, a low $G$ is advantageous: it indicates that recent inputs have a far greater impact on the current state of the system than older input cycles.
-In this baseline system, this low generalisation-capability allows the computing capacity $Q$ to reach values as high as 80 out of 100. \par
+Because $C=K-G$ provides an indication of RC performance, a low $G$ is advantageous: it indicates that recent inputs have a far greater impact on the current state of the system than older input cycles.
+In this baseline system, this low generalisation-capability allows the computing capacity $C$ to reach values as high as 80 out of 100. \par
 Additionally, though not shown in the figure, it is worth noting that accounting for the finite size of magnets has no noticeable impact on RC performance, apart from shifting the entire metric map by roughly $\Delta a = \SIrange{20}{30}{\nano\metre}$ toward larger lattice constants as compared to a point dipole model. % If we want to show this as figures, compare Sweep20250325131714 vs. Sweep20250325105313.
 
 \paragraph{Task-agnostic metrics}
@@ -1139,7 +1139,7 @@ Although the matrix rank-based metrics provide insight into how the system respo
 In comparison, task-agnostic metrics such as non-linearity and memory capacity can be determined using only several hundred random input values, making them considerably more efficient to compute.
 Furthermore, while matrix rank-based metrics can serve as useful initial indicators of whether a system can exhibit promising dynamics for RC, they do not guarantee that a system is actually suitable for RC.
 Task-agnostic metrics are more straightforward to interpret and provide a more accurate indication of a system's suitability for RC.
-For example, the input method with a uniform field --- which was previously dismissed for non-volatile ASI --- achieves a moderate $Q \approx 40$, but yields very low values for all task-agnostic metrics like non-linearity and memory capacity. % Matrix rank-based metrics should rather be seen as indicators of which systems do NOT give decent RC performance.
+For example, the input method with a uniform field --- which was previously dismissed for non-volatile ASI --- achieves a moderate $C \approx 40$, but yields very low values for all task-agnostic metrics like non-linearity and memory capacity. % Matrix rank-based metrics should rather be seen as indicators of which systems do NOT give decent RC performance.
 Therefore, to complement the findings from the previous paragraph, task-agnostic metrics were also determined for the baseline system over the same parameter range, as shown\footnote{
 	The stability metric is also among the task-agnostic metrics proposed in~\cite{RC_TaskAgnosticMetrics_v2}, but is not shown here as it is not relevant to non-volatile ASI which do not spontaneously reach a ground state in the absence of input.
 } in~\cref{fig:3:Clocking_Sweeps_binary_TA}. \par

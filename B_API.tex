@@ -17,7 +17,7 @@ The \textbf{\python{hotspice.Magnets}} class implements all the core functionali
 It controls the various technical aspects of the topics discussed earlier, like the \xref{multi-switching} methods, choice of \link{update algorithm}{KMC algorithm} and the calculation of the \xref{effective energy barrier} $\EBeff$, as well as more technical parameters such as the size of the \xref{truncated kernel}. \par
 To create an ASI, several attributes of the \python{Magnets} class have to be set appropriately.
 To this end, the \textbf{\python{hotspice.ASI}} module provides two abstract classes, \python{IP_ASI} and \python{OOP_ASI}, which can be used to define a particular ASI lattice through inheritance, as is done for the built-in lattices shown in~\cref{fig:2:ASIs}.
-Two parameters suffice to make a rudimentary ASI: the lattice parameter $a$ (the red indicator in~\cref{fig:2:ASIs}) and the size of the underlying grid $L_x \times L_y$. \par
+Two parameters suffice to make a rudimentary ASI: the lattice parameter $a$ (the red indicator in~\cref{fig:2:ASIs}) and the size of the underlying grid $N_x \times N_y$. \par
 The three \xref{energy contributions} in \eqref{eq:2:E} are provided in the \textbf{\python{hotspice.energies}} module and can be accessed from the main \python{hotspice} namespace.
 Choosing between the \link{finite dipole model}{dipole} and \link{dumbbell model}{monopole} representations for the \link{magnetostatic interaction}{magnetostatic energy} is currently done by respectivley using either the \python{DipolarEnergy} or \python{DiMonopolarEnergy} classes.
 By default, an ASI object uses only a \python{DipolarEnergy}.

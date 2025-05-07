@@ -2,41 +2,45 @@
 \section*{List of constants}
 \begin{longtable}[l]{p{60pt} p{140pt} p{200pt}}
 	$e$ & Electron charge & \SI{1.6022e-19}{\coulomb} \\
-	% $\gamma$&gyromagnetic ratio&$1.76086\times 10^{11}$\,rad/Ts\\
-	% $\gamma_0$&$\mu_0\gamma$&$2.21\times\,10^5$\,m/As\\
 	$k_\mathrm{B}$ & Boltzmann constant & \SI{1.3087e-23}{\joule\per\kelvin} \\
 	$\mu_0$ & Vacuum permeability & $4 \pi \times \SI{e-7}{\tesla\metre\per\ampere}$ \\
-	% $\mu_\mathrm{B}$&Bohr magneton&$9.274\times 10^{-24}$\,Am$^2$\\
+	%$\pi$ & \multicolumn{2}{l}{Ratio between circumference and diameter of a circle} \\
 \end{longtable}
 
 \section*{List of symbols}
-\subsection*{Mathematical operators}
+\subsection*{Operators}
 \begin{longtable}[l]{p{60pt} p{350pt}}
 	$\langle \cdot \rangle$ & Ensemble average of a quantity \\
 	$\langle \cdot \cdot \rangle$ & Correlation over the ASI \\
 	$\llangle \cdot \rrangle$ & Spatial average over the ASI \\
 	$\odot$ & Hadamard product (element-wise matrix multiplication) \\
 	$*$ & Convolution \\
-	% $\overline{a}$& time average\\
-	%$\av{a b}$& correlation\\
-	%$\sav{a}$&spatial average over computational domain\\
-	%$\dot{a}$&time derivative\\
-	$K()$ & Complete elliptic integral of the first kind \\
+	$\mathrm{K}()$ & Complete elliptic integral of the first kind \\
+	$\mathrm{MG}()$ & Mackey-Glass oscillator \\
+	$\mathcal{O}()$ & Computational complexity (big O notation) \\
+	$\mathrm{R}^2[\cdot;\cdot]$ & R-squared correlation coefficient between two quantities \\
 	$\sigma( \cdot )$ & Standard deviation of randomly distributed quantity \\
+	$\mathrm{cov}(\cdot;\cdot)$ & Covariance of two quantities \\
 	$\norm{ \cdot }$ & Euclidean vector norm\\
 	&\\
 \end{longtable}
 
 \subsection*{Roman symbols}
 \begin{longtable}[l]{p{60pt} p{350pt}}
-	$a$ & Semi-major axis of elliptical magnet ($l/2$) \\ % TODO: conflicts with the lattice parameter
+	$a$ & Lattice spacing in a regular grid \\
 	&\\
 
-	$b$ & Semi-minor axis of elliptical magnet ($w/2$) \\
+	$B_0$ & Magnetic field magnitude corresponding to lowest input value \\
+	$B_1$ & Magnetic field magnitude corresponding to highest input value \\
+	$\vc{B}_\mathrm{eff}$ & Effective magnetic field experienced by a magnet \\
 	$\vc{B}_\mathrm{ext}$ & External magnetic field \\
+	&\\
+	
+	$C$ & Computing capacity \\
 	&\\
 
 	$d$ & Effective distance between north and south poles of a magnet in the dumbbell approximation \\
+	$D_\mathrm{NM}$ & Diameter of OOP nanomagnets \\
 	$\vc{D}$ & $N \times N$ matrix storing the magnetostatic interaction between each pair of magnets $(i,j)$ when $s_i=s_j=1$ \\
 	&\\
 
@@ -44,7 +48,10 @@
 	$E$ & Total interaction energy \\
 	$\EB$ & Energy barrier due to shape anisotropy \\ % TODO: what to do with E_B^c? Make a new global rule that (something)^c is critical? Should change T_c then
 	$\EBeff$ & Effective energy barrier \\
-	$\EEA$ & Net energy barrier of OOP nanomagnet \\
+	$\EBeffLeft$ & Effective energy barrier for clockwise coherent reversal \\
+	$\EBeffRight$ & Effective energy barrier for counter-clockwise coherent reversal \\
+	$\EEA$ & Net energy barrier of OOP nanomagnet (effective anisotropy) \\
+	$E_\mathrm{err}$ & Error to the MS interaction due to the use of a truncated kernel \\
 	$E_\mathrm{Exch}$ & Exchange energy\\
 	$\EMC$ & Nearest-neighbour magnetostatic coupling energy \\
 	$E_\mathrm{MS}$ & Magnetostatic interaction energy \\
@@ -52,6 +59,12 @@
 	$E_\perp$ & Energy of a magnet if its magnetisation were to be rotated by \ang{90} counter-clockwise from its current state \\
 	$\Delta E$ & Switching energy \\
 	&\\
+	
+	$f$ & Frequency of a (quasi-)periodic signal \\
+	&\\
+
+	$G$ & Generalisation-capability \\
+	& \\
 
 	$h$ & Time offset for Mackey-Glass prediction task \\
 	&\\
@@ -62,16 +75,18 @@
 	$J$ & Exchange coupling constant \\
 	&\\
 
+	$k$ & Cut-off time for calculation of task-agnostic metrics \\
+	$K$ & Kernel-quality \\ % Conflicts with elliptic integral but doesn't matter
 	$\vc{K}_i$ & Demagnetisation kernel for a magnet $i$ \\
 	$\vc{\mathcal{K}}^{(q)}$ & Demagnetisation kernel for a magnet at site $q$ in the unit cell \\
 	$K_u$ & Uniaxial shape anisotropy \\
 	&\\
 
 	$l$ & Length of elliptical magnet ($2a$) \\
-	$L_x$ & Number of cells in the simulation along the x-direction \\
-	$L_y$ & Number of cells in the simulation along the y-direction \\
+	$L$ & Number of cells along each dimension in a square simulation \\
 	&\\
 
+	$\mavg$ & Normalised average magnetisation of OOP ASI \\
 	$M$ & Total magnetic moment of ASI \\
 	$M_0$ & Total magnetic moment of ASI in uniform state \\
 	$M_\parallel$ & Average magnetisation of ASI along the direction of the external field $\vc{B}_\mathrm{ext}$ \\
@@ -79,34 +94,51 @@
 	$M_\mathrm{sat}$ & Saturation magnetisation \\
 	&\\
 
-	$N$ & Number of magnets in the ASI \\ % TODO: add N_x and N_y?
+	$n$ & Number of samples for training the weights $\vc{w}$ \\
+	$n_{\ce{Co}}$ & Number of cobalt layers in OOP nanomagnets \\
+	$N$ & Number of magnets in the ASI \\
+	$N_x$ & Number of cells in the simulation along the x-direction \\
+	$N_y$ & Number of cells in the simulation along the y-direction \\
 	$\mathcal{N}_i$ & Nearest neighbours of magnet $i$ \\
+	$\Delta \mathcal{N}$ & Difference between demagnetising factors along the in-plane easy and hard axes of a magnet \\
 	&\\
 
 	$p$ & Number of readout nodes in a reservoir \\
+	$P_\mathrm{MH}$ or $P$ & Metropolis-Hastings acceptance probability \\
+	$P_\mathrm{GD}$ & Glauber dynamics acceptance probability \\
 	&\\
 
 	$q$ & Magnetic charge \\
-	$\qNN$ & Local antiferromagnetic parameter in OOP square ASI \\
+	$\qNN$ etc. & Local antiferromagnetic parameters in OOP square ASI \\
 	$Q$ & Maximum allowed change in switching probability for two simultaneously sampled magnets \\
 	&\\
 
+	$\vc{r}$ & Spatial coordinate vector \\
 	$\vc{r}_i$ & Position of magnet $i$ \\
 	$r_{ij}$ & Distance between magnets $i$ and $j$ \\
 	$\vc{r}_{ij}$ & Distance vector between magnets $i$ and $j$ \\
 	$\rmin$ & Minimal allowed distance between simultaneously sampled magnets \\
 	$\vc{r_N}_i$ & Position of north monopole of magnet $i$ in the dumbbell model \\
 	$\vc{r_S}_i$ & Position of south monopole of magnet $i$ in the dumbbell model \\
+	$R_\mathrm{AHE}$ & Anomalous Hall coefficient \\
 	$R_x$ & Number of cells along the $x$-axis in a jittered grid subregion \\
 	$R_y$ & Number of cells along the $y$-axis in a jittered grid subregion \\
+	$\widetilde{R}$ & Radius (number of grid cells) of truncated MS kernel \\
+	$\mathcal{R}$ & Reservoir \\
 	&\\
 
+	$s(t)$ & Input signal applied to reservoir at time $t$ \\
 	$s_i$ & State of a magnet ($\pm 1$) along the easy axis $\vc{u}_i$ \\
 	$\vc{s}$ & Column vector containing all $s_i$ \\
+	$S_\mathrm{ASI}$ & Spacing between magnets in OOP ASI \\
+	$\vc{S}$ & $N_x \times N_y$ matrix containing all $s_i$ \\
 	$\langle s_i s_{i+1} \rangle$ & Nearest-neighbour correlation \\
 	&\\
 
 	$t$ & Time \\
+	$t_{\ce{Co}}$ & Thickness of cobalt layers in OOP nanomagnets \\
+	$t_{\ce{Pt}}$ & Thickness of platinum layers in OOP nanomagnets \\
+	$t_\mathrm{max}$ & Maximum time step with the first-switch method \\
 	$\Delta t$ & Random switching time interval of a single magnet \\
 	$T$ & Temperature \\
 	$T_c$ & Critical temperature (Ising model) \\
@@ -119,6 +151,16 @@
 	&\\
 
 	$w$ & Width of elliptical magnet ($2b$) \\
+	$\vc{w}$ & Adjustable weights of a reservoir's linear readout layer \\
+	&\\
+	
+	$\vc{x}(t)$ & $p$-dimensional readout vector of reservoir at time $t$ \\
+	$\vc{X}$ & Readout matrix of sampled reservoir readout vectors \\
+	&\\
+	
+	$y(t)$ & Target output of reservoir at time $t$ \\
+	$\hat{y}(t)$ & Output of reservoir at time $t$ (i.e., estimate of $y(t)$) \\
+	$\vc{y}$ & Vector of sampled target output values \\
 	&\\
 	
 	$z$ & Dynamical critical exponent \\
@@ -129,11 +171,14 @@
 \begin{longtable}[l]{p{60pt} p{350pt}}
 	$\alpha$ & Magnet rotation angle between square and pinwheel ASI \\
 	&\\
+	
+	$\Gamma$ & Property gradient in thermally active OOP ASI \\
+	&\\
 
 	$\delta$ & Relative magnetostatic/exchange coupling \\
 	&\\
-
-	$\Gamma$ & Property gradient in thermally active OOP ASI \\
+	
+	$\zeta$ & $=\sinh^{-2}(2J/\kBT)$ \\
 	&\\
 	
 	$\eta$ & Fit quality for Bayesian optimisation \\
@@ -148,25 +193,35 @@
 
 	$\mu_i$ & Size of magnetic moment of magnet $i$ \\
 	$\vc{\mu}_i$ & Total magnetic moment vector of magnet $i$ \\
+	$\vc{\bigmu}$ & $N_x \times N_y$ matrix containing all $\mu_i$ \\
 	&\\
 	
 	$\nu$ & Switching rate \\
 	$\nu_0$ & Attempt frequency \\
 	&\\
 	
-	$\pi$ & Ratio between circumference and diameter of a circle \\
-	&\\
-	
 	$\xi$ & Correlation length \\
 	&\\
 
+	$\pi_i$ & Equilibrium probability of state $i$ \\
+	$\pi_\tau(t)$ & Parity of binary input sequence between $t-\tau$ and $t$ \\
+	&\\
+
 	$\rho$ & Perpendicular magnetisation factor \\
+	$\rho_{xy}$ & Transverse resistivity \\
+	&\\
+	
+	$\vc{\sigma}$ & Spin polarisation \\
 	&\\
 
 	$\tau$ & Mackey-Glass delay parameter \\
+	$\vc{\tau}$ & Torque acting on a magnetic moment $\vc{\mu}$ \\
+	$\vc{\tau}_\mathrm{STT}$ & Spin-transfer torque \\
+	$\vc{\tau}_\mathrm{FL}$ & Field-like spin--orbit torque \\
+	$\vc{\tau}_\mathrm{DL}$ & Damping-like spin--orbit torque \\
 	&\\
 
-	$\phi$ & Angle of the effective field w.r.t. easy axis $\vc{u}$ \\
+	$\phi$ & Angle of the effective field $\vc{B}_\mathrm{eff}$ w.r.t. easy axis $\vc{u}$ \\
 	&\\
 
 	$\chi$ & Random variable with uniform distribution in $(0, 1]$ \\

@@ -36,7 +36,7 @@ class Sweep_SignalTf_ThermalOOPSquare(hotspice.experiments.Sweep):
             } | kwargs # Dict with all parameter values as tuples of length 1 or greater
         names = {
             'DD_ratio': "NN DD interaction", 'E_B_ratio': "Energy barrier", 'E_B_std': "Energy barrier standard deviation", 'gradient': r"Property gradient $\Gamma$",
-            'size': "# magnets along each axis $L_x = L_y$", 'DD_exponent': "Exponent of DD interaction", 'T_factor': "Temperature",
+            'size': "# magnets along each axis $N_x = N_y$", 'DD_exponent': "Exponent of DD interaction", 'T_factor': "Temperature",
             'signal': "Input signal", 'target': "Target signal", 'offset': "Input offset w.r.t. target",
             'frequency': "Input frequency $f$", 'magnitude': "Input 1 field magnitude $B_1$", 'magnitude_min_frac': "Input 0/1 field magnitude fraction", 'magnitude_min': "Input 0 field magnitude $B_0$",
             'res_x': "# readout nodes along x-axis", 'res_y': "# readout nodes along y-axis", 'use_constant': "Constant included in OLS"
@@ -582,7 +582,7 @@ if __name__ == "__main__":
         all_sweeps.append({
             "directory": "size-magn/resx==size",
             "plot_kwargs": {
-                "param_x": "size", "name_x": "# readout nodes $p=L_x=L_y$",
+                "param_x": "size", "name_x": "# readout nodes $p=N_x=N_y$",
                 "param_y": "magnitude", "unit_y": "mT", "transform_y": lambda y: y*1e3,
                 "label_axes": [0, None]
             },

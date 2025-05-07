@@ -1,6 +1,7 @@
 \chapter{Introduction}\label{ch:Introduction}
 \glijbaantje{It is important to draw wisdom from many different places.\\If we take it from only one place, it becomes rigid and stale.}{Uncle Iroh}
 %\glijbaantje{If a machine is expected to be infallible then it cannot also be intelligent.}{Alan Turing}
+% TODO: write CMOS instead of or alongside "transistor"
 
 This introduction opens with the broader context and motivation for the research presented in this thesis.
 We then introduce the physical reservoir computing paradigm and the key metrics used to quantify performance.
@@ -151,20 +152,20 @@ As such, many physical reservoirs aim to balance on this ``edge of stability'' w
 \paragraph{Mathematical description}
 % TODO: add symbols to the figure
 In the reservoir computing paradigm, an input signal $s(t)$ perturbs a reservoir $\mathcal{R}$ --- which can be any physical or abstract non-linear dynamical system --- eliciting a response $\mathcal{R}[s](t)$.
-The full internal state of the reservoir following this perturbation is often unknown, so a $p$-dimensional readout $\vc{r}(t) \in \mathbb{R}^p$ is assumed (i.e., the green nodes in~\cref{fig:1:NeuralNetworks}).
+The full internal state of the reservoir following this perturbation is often unknown, so a $p$-dimensional readout $\vc{x}(t) \in \mathbb{R}^p$ is assumed (i.e., the green nodes in~\cref{fig:1:NeuralNetworks}).
 The final output value\footnote{
 	A one-dimensional output is assumed here, but this is not a fundamental restriction: multiple sets of weights can be trained independently if multiple outputs are desired.
-} $\hat{y}(t)$ of the system is then obtained by a weighted sum $\hat{y}(t) = \vc{r}^\mathrm{T}(t) \cdot \vc{w}$ of the components of the response vector $\vc{r}(t)$.
+} $\hat{y}(t)$ of the system is then obtained by a weighted sum $\hat{y}(t) = \vc{x}^\mathrm{T}(t) \cdot \vc{w}$ of the components of the readout vector $\vc{x}(t)$.
 Depending on the task performed, one or multiple such sums can be trained and interpreted in the context of that specific task~\cite{RC_RecentAdvances}. \par % For example, temporal pattern classification may provide multiple outputs, while prediction and generation only uses a single one
 When the desired input-output relation $s(t) \mapsto y(t)$ is known for a limited set of data --- the training set --- the weights $\vc{w}$ can be adjusted to minimise the difference between the output $\hat{y}(t)$ and the desired output $y(t)$.
 This is usually done by ordinary least-squares (OLS) regression, which requires only a single matrix inversion.
-By sampling the readout and desired output at $n$ moments in time, $n$ vectors $\vc{r}_i$ and $\vc{y}_i$, $i = 1, \dots, n$ are obtained.
-These can be arranged into an $n \times p$ readout matrix $\vc{R}$ (whose row $i$ is $\vc{r}_i^T$) and the $n$-dimensional desired output vector $\vc{y}$.
+By sampling the readout and desired output at $n$ moments in time, $n$ vectors $\vc{x}_i$ and $\vc{y}_i$, $i = 1, \dots, n$ are obtained.
+These can be arranged into an $n \times p$ readout matrix $\vc{X}$ (whose row $i$ is $\vc{x}_i^T$) and the $n$-dimensional desired output vector $\vc{y}$.
 The optimal weights can then directly be calculated as
 \begin{equation}
-	\vc{w} = (\vc{R}^T \vc{R})^{-1} \vc{R}^T \vc{y} \mathrm{,}
+	\vc{w} = (\vc{X}^T \vc{X})^{-1} \vc{X}^T \vc{y} \mathrm{,}
 \end{equation}
-which minimises $\norm{\vc{y} - \hat{\vc{y}}}^2 = \norm{\vc{y} - \vc{R}\vc{w}}^2$~\cite{RC_NNN}.
+which minimises $\norm{\vc{y} - \hat{\vc{y}}}^2 = \norm{\vc{y} - \vc{X}\vc{w}}^2$~\cite{RC_NNN}.
 These optimal weights then remain fixed, and the performance of the reservoir can be evaluated by feeding it the test set --- a previously unknown, yet similar data set as the training set.
 
 \subsection{Metrics} \label{sec:1:RC_metrics}
@@ -173,8 +174,8 @@ In this respect, two types of metrics are often used: those calculated based on 
 The latter are also referred to as task-agnostic metrics. % Q: find a better name for them?
 
 \subsubsection{Matrix rank-based metrics}\indexlabel{matrix rank-based metrics} \label{sec:1:RC_metrics_KQ}
-Legenstein and Maass~\cite{WhatMakesPowerful} proposed three metrics, based on the readout vector $\vc{r}(t)$ of the reservoir.
-By periodically sampling this $p$-dimensional vector at $n$ moments in time, an $n \times p$ matrix $\vc{R}$ can be constructed whose rows are these vectors at different moments in time.
+Legenstein and Maass~\cite{WhatMakesPowerful} proposed three metrics, based on the readout vector $\vc{x}(t)$ of the reservoir.
+By periodically sampling this $p$-dimensional vector at $n$ moments in time, an $n \times p$ matrix $\vc{X}$ can be constructed whose rows are these vectors at different moments in time.
 Depending on the choice of input sequence, the rank of this matrix gives information about certain properties of the system~\cite{RC_ASI}.
 
 \paragraph{Kernel-quality}
@@ -182,7 +183,7 @@ The \idx{kernel-quality} $K$ measures the \xref{separation property}, i.e. how w
 Practically, it is determined by applying $n$ random input sequences and recording the readout after every sequence, each of which consists of a large number of discrete input values (here: 100).
 Here, we will use $n=p$ to obtain a square matrix for a more consistent measure.
 Using random sequences ensures that they are maximally distinct, such that the rank of this matrix (i.e., the kernel-quality $K$) is a measure for how distinct the responses obtained from the reservoir can be~\cite{Vidamour_2022}.
-A more efficient alternative method would be to record the response $\vc{r}$ after each input value, as this would also result in maximally distinct input sequences, though this method strays further from the original definition~\cite{RC_HierarchicalNeuroevolution,RCbenchmarksReview1}.
+A more efficient alternative method would be to record the response $\vc{x}$ after each input value, as this would also result in maximally distinct input sequences, though this method strays further from the original definition~\cite{RC_HierarchicalNeuroevolution,RCbenchmarksReview1}.
 Hence, a high kernel-quality $K$ indicates that the reservoir exhibits the separation property.
 In the extreme case where $K=n$, any desired output can be implemented by the reservoir in combination with its linear readout layer~\cite{WhatMakesPowerful}.
 
@@ -194,10 +195,10 @@ This can be done by adding a small amount of noise to a given input sequence, bu
 This way, the rank of the resulting matrix (i.e., the generalisation-capability $G$) measures how distinct the responses of similar inputs are.
 A low value of $G$ is therefore desirable, as it indicates robustness to noise and overfitting, as the reservoir adheres to the approximation property~\cite{RCbenchmarksReview1}.
 
-\paragraph{Compute quality}
+\paragraph{Computing capacity}
 To obtain a single metric for the computational capability of a reservoir, Legenstein and Maass proposed to simply subtract the normalised values of both these metrics.
-This yields the \idx{compute quality} $Q = K - G$, where higher values typically indicate better performance.
-However, care should be taken with such claims, as high compute quality does not necessarily mean that the reservoir will perform well on all tasks it is given.
+This yields the \idx{computing capacity} $C = K - G$, where higher values typically indicate better performance.
+However, care should be taken with such claims, as high computing capacity does not necessarily mean that the reservoir will perform well on all tasks it is given.
 
 \subsubsection{Task-agnostic metrics}
 While the matrix rank-based metrics are, strictly speaking, also task-agnostic, the metrics to be discussed now are more commonly referred to when talking about task-agnostic metrics, since there is a clearer relation between them and the types of tasks that the reservoir will perform well on.
@@ -205,32 +206,32 @@ A practical definition of non-linearity and memory capacity was given by Love~\e
 
 \paragraph{Non-linearity}
 The non-linearity of the reservoir can be measured by considering that its response consists of a linear and a non-linear contribution.
-The linear contribution can be extracted by training a linear estimator $\hat{\vc{r}}(t)$ on the reservoir output based on the past input $s(t - \tau)$.
-More specifically, the estimator
+The linear contribution can be extracted by training a linear estimator $\hat{\vc{x}}(t)$ for the current reservoir readout based on the past input $s(t - \tau)$.
+More specifically, the estimators
 \begin{equation}
-	\hat{r}_i(t) = c_i + \sum_{\tau=0}^{k} w_{i,\tau} s(t - \tau) \mathrm{,}
+	\hat{x}_i(t) = c_i + \sum_{\tau=0}^{k} w_{i,\tau} s(t - \tau) \mathrm{,}
 \end{equation}
-is trained by adjusting the weights $w_{i,\tau}$ and $c_i$ based on the known discrete-time input-output relationship (on the training set).
+are trained by adjusting the weights $w_{i,\tau}$ and $c_i$ based on the known discrete-time input-output relationship (on the training set).
 The cut-off time $k$ must be longer than the relaxation time of the reservoir --- we will use $k=10$.
 By measuring the quality of this estimate using the $\mathrm{R}^2$ correlation coefficient, a measure of the linearity of each separate readout node is obtained.
 This can be converted to an overall measure for non-linearity as
 \begin{equation}
-	\mathrm{NL} = 1 - \frac{1}{p} \sum_{i=1}^p \mathrm{R}^2[\hat{r}_i;r_i] = 1 - \frac{1}{p} \sum_{i=1}^p \frac{\mathrm{cov}^2(\hat{r}_i; r_i)}{\sigma^2(\hat{r}_i) \sigma^2(r_i)} \mathrm{.}
+	\mathrm{NL} = 1 - \frac{1}{p} \sum_{i=1}^p \mathrm{R}^2[\hat{x}_i;x_i] = 1 - \frac{1}{p} \sum_{i=1}^p \frac{\mathrm{cov}^2(\hat{x}_i; x_i)}{\sigma^2(\hat{x}_i) \sigma^2(x_i)} \mathrm{.}
 \end{equation}
 
 \paragraph{Linear memory capacity}
-The linear memory capacity can also be calculated through by means of linear estimators, but by working the other way around: an estimator for the past input $s(t - \tau)$ is now trained based on the current state $\vc{r}$ of the reservoir~\cite{tsunegi2019STOforcedsyncRC,NeuromorphicFewShot}.
+The linear memory capacity can also be calculated through by means of linear estimators, but by working the other way around: an estimator for the past input $s(t - \tau)$ is now trained based on the current readout $\vc{x}(t)$ of the reservoir~\cite{tsunegi2019STOforcedsyncRC,NeuromorphicFewShot}.
 In other words, the estimator
 \begin{equation}
-	\hat{s}(t - \tau) = c_\tau + \sum_{i=1}^{p} w_{i,\tau} r_i(t)
+	\hat{s}(t - \tau) = c_\tau + \sum_{i=1}^{p} w_{i,\tau} x_i(t)
 \end{equation}
 is now trained.
-The linear memory capacity is then obtained by summing the $\mathrm{R}^2$ correlation coefficient of all estimators up to a threshold $k$:
+The linear memory capacity is then obtained by summing the $\mathrm{R}^2$ correlation coefficient of all estimators up to a cut-off time $k$:
 \begin{equation}
 	\label{eq:1:MC}
-	\mathrm{MC} = \sum_{\tau = 1}^{k} \mathrm{R}^2[\hat{s}(t - \tau); s(t - \tau)] = \sum_{\tau = 1}^{k} \frac{\mathrm{cov}^2(\hat{r}_i; r_i)}{\sigma^2(\hat{r}_i) \sigma^2(r_i)}
+	\mathrm{LMC} = \sum_{\tau = 1}^{k} \mathrm{R}^2[\hat{s}(t - \tau); s(t - \tau)] = \sum_{\tau = 1}^{k} \frac{\mathrm{cov}^2(\hat{s}_i; r_i)}{\sigma^2(\hat{s}_i) \sigma^2(s_i)}
 \end{equation}
-Note that the memory capacity can be increased arbitrarily high, by choosing a high cut-off $k$.
+Note that the memory capacity can be increased arbitrarily high, by choosing a high cut-off time $k$.
 However, the memory capacity typically exhibits a plateau beyond a certain value of $k$, before rising dramatically only when $k$ approaches the size of the training set.
 Hence, $k$ should be chosen at this plateau; for the systems we will consider, $k=10$ suffices. \par
 Note that this measures short-term memory; long-term memory often refers to the knowledge engrained in the weights of an ANN i.e., the linear readout layer in the case of RC.
@@ -241,9 +242,9 @@ We therefore limit this discussion to the linear memory capacity.
 Closely related to the memory capacity is the parity check metric~\cite{hon2021numerical,tsunegi2019STOforcedsyncRC}.
 This is particularly intended for use with binary input, as it defines the parity of a binary input sequence $s(t)$ as
 \begin{equation}
-	\pi(t-\tau) = \Bigg[\sum_{j = 0}^{\tau} s(t - j) \Bigg] \mathrm{mod}~2 \mathrm{.}
+	\pi_\tau(t) = \Bigg[\sum_{j = 0}^{\tau} s(t - j) \Bigg] \mathrm{mod}~2 \mathrm{.}
 \end{equation}
-The parity check is then defined in the same way as the memory capacity in~\cref{eq:1:MC}, except with $\pi(t - \tau)$ instead of $s(t - \tau)$.
+The parity check (PC) is then defined in the same way as the memory capacity in~\cref{eq:1:MC}, except with $\pi_\tau(t)$ instead of $s(t - \tau)$.
 This introduces a form of non-linearity into it, though it still mostly serves as a measure of the memory capacity in binary systems.
 
 \subsubsection{Benchmarks} % Memorisation, frequency generation, classification
@@ -322,7 +323,7 @@ This easy plane can be reduced to an \xref{easy axis} by using an elongated two-
 OOP magnets are harder to manufacture, as it is often infeasible to create tall structures on wafers.
 Therefore, where IP magnets mostly rely on shape anisotropy to create an easy axis, OOP magnets must use other types of anisotropy to favour a magnetisation direction perpendicular to the substrate.
 This can be realised using interfacial anisotropy between the ferromagnetic material and the substrate, as for example occurs at the interface between \ce{Co} and \ce{Pt}.
-This \idx{perpendicular magnetic anisotropy} (PMA) acts in the immediate vicinity of the interface, where the magnetisation then prefers to align perpendicular to said interface.
+This \idx[nolabel]{perpendicular magnetic anisotropy} (PMA) acts in the immediate vicinity of the interface, where the magnetisation then prefers to align perpendicular to said interface.
 The structure of OOP nanomagnets will be discussed in more detail in~\cref{sec:3:OOP_nanomagnet_PMA}~and~\ref{sec:3:E_contributions}.
 
 \subsection{Input and readout for reservoir computing}\label{sec:1:ASI_IO}
@@ -364,7 +365,7 @@ Our method of choice to obtain electrical output from ensembles of out-of-plane 
 In the ordinary Hall effect, an electrical current flowing through a conductor (the Hall bar) generates a transverse voltage, since the current generates a magnetic field which exerts a Lorentz force on the electrons.
 When the conductor is a ferromagnet, an additional contribution appears that is proportional to the magnetisation of the material.
 While its exact origin is still a matter of debate, it is thought to originate from spin--orbit coupling: spin-polarised electrons passing through the ferromagnet get scattered, leading to a charge imbalance across the width of the conductor~\cite{AHE_Culcer,AHE}. \par
-Rather than express it as a voltage, the Hall effect is more often described by the transverse resistivity (the ratio between transverse electric field and longitudinal current density) $\rho_{xy} = E_x/J_y = R_0 H_z + R_\mathrm{AHE} M_z$, with the Hall bar in the $xy$-plane~\cite{SHE,AHE}.
+Rather than express it as a voltage, the Hall effect is more often described by the transverse resistivity (i.e., the ratio between transverse electric field $E_x$ and longitudinal current density $J_y$) $\rho_{xy} = E_x/J_y = R_0 H_z + R_\mathrm{AHE} M_z$, with the Hall bar in the $xy$-plane~\cite{SHE,AHE}. % TODO: should these symbols be in the symbols list? Especially H vs. B
 The first term captures the ordinary Hall effect, the latter the AHE with $M_z$ the OOP magnetisation component and $R_\mathrm{AHE}$ the anomalous Hall coefficient~\cite{AHE}.
 Hence, the AHE is greatest when the magnetisation is perpendicular to the conductor plane and has opposite sign for opposite magnetisation directions --- good news for the OOP nanomagnets that we focus on.
 This has enabled the usage of AHE for readout in many SOT-MRAM devices, as it can directly be applied in the same heavy-metal/ferromagnet heterostructure as SOT. \par
@@ -373,7 +374,7 @@ Since the AHE synergises well with the geometry of OOP nanomagnetic ensembles, i
 
 \paragraph{Anisotropic magnetoresistance}
 Another phenomenon that can provide readout is \idx{anisotropic magnetoresistance} (AMR): when an electrical current flows through a ferromagnetic material, the resistance weakly depends on the angle $\theta$ between this current and the magnetisation~\cite{AMR}.
-More specifically, the total resistance $R(\theta) = R_\perp + (R_\parallel - R_\perp) \cos(2\theta)$.
+More specifically, the total resistance $R(\theta) = R_\perp + (R_\parallel - R_\perp) \cos(2\theta)$. % TODO: same here, should these symbols be in the symbols list? I don't think so.
 This makes it possible to distinguish between perpendicular and parallel magnetisation states.
 While this is a very accessible technique that only requires a measurement of the resistance, it has several limitations. \par
 First off, while permalloy exhibits a relatively strong AMR, the absolute effect remains rather small in comparison to the total resistance --- at most a few percent.
@@ -389,20 +390,20 @@ This involves applying a microwave field and measuring the absorption as a funct
 When the frequency matches a resonance of the internal magnetisation dynamics of a nanomagnet, an absorption peak appears.
 The complexity of internal magnetisation dynamics, represented in the frequency domain, can provide a rich and non-linear reservoir output~\cite{AdaptiveProgrammableRC,Gomez-Iriarte_FMR}.
 However, the peripheral equipment required to perform the technique renders it energy-inefficient and unsuitable for on-chip applications.
-Furthermore, as the wavelengths involved are on the order of centimetres, it does not provide local information --- though for RC purposes it does not need to since the output space is rich regardless.
+Furthermore, as the wavelengths involved in FMR are on the order of centimetres, it does not provide local information --- though for RC purposes it does not need to, since the output space is rich regardless.
 
 \subsubsection{Imaging}
 Aside from electrical measurements that provide information about the state of (an ensemble of) magnets, it is also possible to directly image the magnetic configuration of a system through microscopy techniques~\cite{freeman2001advances}.
 While these can also be seen as ``output'', they are distinct from the aforementioned electrical measurements as they can not be integrated on-chip.
 
 \paragraph{Magnetic force microscopy}
-A relatively common technique is \idx{magnetic force microscopy} (MFM)~\cite{MFM}, which scans a cantilever with a very sharp tip across the sample, similar to atomic force microscopy (AFM).
-Whereas AFM uses a non-magnetic tip to measure the sample's texture at an atomic scale, MFM uses a tip coated in ferromagnetic material (e.g., \ce{Co}), giving it a vertical magnetic moment.
+A relatively common technique is \idx{magnetic force microscopy} (MFM)~\cite{MFM}, which scans a cantilever with a very sharp tip across the sample, similar to atomic force microscopy.
+Whereas the latter uses a non-magnetic tip to measure the sample's texture at an atomic scale, MFM uses a tip coated in ferromagnetic material (e.g., \ce{Co}), giving it a vertical magnetic moment.
 This enables a measurement of the out-of-plane\footnote{
 	It is also possible to measure the in-plane magnetisation by using an in-plane magnetised tip, but this complicates the interpretation as this mixes two components of the magnetisation~\cite{MFM_inplane}.
 } magnetic field by scanning the tip at a very low height ($\approx \SI{20}{\nano\metre}$) above the sample~\cite{NML_Carlton,JM_Masterproef}.
-However, this does not only measure the magnetic field, but also the atomic forces that a standard AFM tip experiences.
-Therefore, an AFM measurement is first performed to obtain the texture profile of the sample, such that a subsequent MFM measurement can keep the magnetic tip at a constant height above the sample, thereby isolating the magnetic field strength from the atomic forces. \par
+However, this does not only measure the magnetic field, but also the atomic forces that a non-magnetised tip would experience.
+Therefore, a standard atomic force microscopy scan is first performed to obtain the texture profile of the sample, such that a subsequent MFM measurement can keep the magnetic tip at a constant height above the sample, thereby isolating the magnetic field strength from the atomic forces. \par
 The result is a greyscale image, where the brightness indicates the vertical component $B_z$ of the magnetic field close to the sample.
 For example, an IP nanomagnet will appear as a pair of regions with bright and dark contrast, because the divergence (convergence) of the magnetic field at its north (south) pole results in opposite vertical magnetic fields on either end~\cite{NML_Carlton}.
 An MFM image of OOP magnets (\cref{sec:3:MFM}) is easier to interpret, as there is a one-to-one correspondence between $B_z$ and the the magnetisation state. \par
