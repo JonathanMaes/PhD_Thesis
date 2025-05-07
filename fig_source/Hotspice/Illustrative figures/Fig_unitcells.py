@@ -26,7 +26,7 @@ def main_plot():
     
     w = 0.9
     nx, ny = 21, 7
-    plot_ASI(ax, x_max/2, y_max/2, w, nx=nx, ny=ny, magnet_enlargement=2, ASI_type=hotspice.ASI.IP_Kagome, lw=1, colors=["C0", "C1", "C2", "C0", "C1", "C2"])
+    plot_ASI(ax, x_max/2, y_max/2, w, nx=nx, ny=ny, magnet_enlargement=2, ASI_type=hotspice.ASI.IP_Kagome, lw=1, colors=["C0", "C1", "C2", "C1", "C0", "C2"])
         
     ## Save the result
     hotspice.utils.save_results(figures={f"Unitcells": fig}, timestamped=False)
