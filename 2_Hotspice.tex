@@ -1209,19 +1209,45 @@ Increasing $\rho$ reduces the field magnitude at which the second step occurs bu
 Notably, for $\rho \gtrapprox 0.6$, the second step disappears entirely, and the reversal instead occurs by domain nucleation at the edges of the ASI, as illustrated in \crefSubFigRef{fig:2:Hysteresis_Pinwheel}{e}. \par
 Hence, $\rho \approx 0.4$ yields the best correspondence to the experiment.
 A possible explanation for this is that the switching of magnets in the experimental ASI does not occur by uniform rotation, as assumed by the N\'eel-Arrhenius switching law (\cref{eq:2:Néel}).
-Indications of non-uniform rotation or domain wall-mediated reversal were previously noticed by Morley~\etal~\cite{VogelFulcherTammannFreezing}
+Indications of non-uniform rotation or domain wall-mediated reversal were previously noticed by Morley~\etal~\cite{VogelFulcherTammannFreezing}.
 
-\subsection{Kagome reversal}
-% TODO: This can show some interesting things about the dumbbell vs. point dipole models.
+\subsection{Kagome reversal} % TODO: This can show some interesting things about the dumbbell vs. point dipole models. Make sure this fits with the rest of the story now that this is in the thesis.
+The in-plane kagome ASI (\crefSubFigRef{fig:2:ASIs}{g}) is a typical example of a \xref{frustrated} system: every vertex is formed by three magnets that must obey the two-in/one-out or two-out/one-in ice rule.
+Each magnet has four NN located near its endpoints, making this lattice an interesting testing ground for the \xref{dumbbell model}.
+Both the \xref{point dipole model}~\cite{Chern2011} and dumbbell model~\cite{Moller2009} have been used in previous studies of kagome ASI.
+The point dipole model tends to significantly underestimate the NN interaction, while the dumbbell model increases the \xref{magnetostatic interaction} energy between closely spaced magnets, potentially affecting the dynamics of the system.
+We therefore expect the dumbbell model to provide a more accurate simulation of the kagome lattice than the point dipole model~\cite{flatspin,mengotti2011kagome}. \par
+% At each vertex on the ASI, three magnets come together. This results in $2^3$ different vertex configurations. However, some configurations are equivalent, so only two classes are distinguished: those with 2 magnets pointing inwards or outwards, and those with 3.
+%The saturated state of the ASI has all magnetic moments pointing in the positive y-direction, and hence has an average magnetic moment of $(1 + cos(\ang{60}) + cos(\ang{60})) m/3 = 2m/3$. This state can be achieved by applying a strong magnetic field in the positive y-direction.
+% \cite{heyderman2013artificial,nisoli2013colloquium} also mention the experiment that Diego reproduced.
+To illustrate this, we used \hotspice to reproduce the reversal process of kagome ASI as observed by Mengotti~\etal~\cite{mengotti2011kagome}
+They studied the hysteresis loop using XMCD to image the evolution of the system's microstate during a gradual increase of the external field near the \xref{coercive field}.
+We simulated a kagome ASI consisting of 173 magnets whose \link{shape anisotropy}{energy barrier} $\EB = \SI{120}{\electronvolt}$ with a standard deviation $\sigma(\EB)/\langle \EB \rangle=\SI{5}{\percent}$.
+An increasing magnetic field $\vc{B}_\mathrm{ext}$ was applied at an angle of \ang{-93.6} relative to the horizontal axis.
+This corresponds to a reverse field in the negative y-direction with a slight \ang{-3.6} offset to break symmetry between sloped magnets, resulting in the creation of \xlabel{Dirac strings} of flipped magnets. \par
+As the field strength increases, the \xref{Zeeman energy} of the magnets rises, but this increase is faster for the vertical magnets than for the sloped ones.
+However, the \link{magnetostatic interaction}{magnetostatic energy} is lowest for the vertical magnets in the initial state.
+The balance between these contributions results in a \xlabel{critical energy barrier} $E_\mathrm{B}^\mathrm{c}$: when the energy barrier $E_\mathrm{B}$ is lower (higher) than this value, a sloped (vertical) magnet will flip first, as shown in~\crefSubFigRef{fig:2:kagome_reversal}{b}.
+Therefore, the dynamics may depend on the simulation method, as the dumbbell model increases the magnetostatic interaction energy between nearest neighbours.
 
+\xfig{2_Hotspice/Hysteresis_Kagome.pdf}{ % TODO: split in two
+	\label{fig:2:kagome_reversal}
+	Reversal of a kagome ASI under an \xref{external magnetic field} applied at \ang{-93.6} relative to the horizontal axis.
+	\textbf{(a)} Comparison between the \link{dumbbell model}{dumbbell} and \link{point dipole model}{point dipole} models at different external field magnitudes $B$.
+	Note that the critical field $B_C$ differs between the models:  $B_C = \SI{26.7}{\milli\tesla}$ for the dumbbell model and $B_C = \SI{23.9}{\milli\tesla}$ for the point dipole model.
+	The NN centre-to-centre distance is \SI{500}{\nano\meter}, with a length $d=\SI{470}{\nano\meter}$ for the dumbbell model.
+	The magnets have a \xref{magnetic moment} $\mu=\SI{1.1}{\femto\ampere\meter^2}$, and their \link{shape anisotropy}{energy barrier} is normally distributed with a mean of \SI{120}{\electronvolt} and \SI{5}{\percent} standard deviation.
+	Arrows represent the magnetic moment of the magnets, and the blue and red points ({\color{blue}{$\bullet$}} and {\color{red}{$\bullet$}}) represent the net change in charge of a vertex.
+	\textbf{(b)} The effect of an externally applied magnetic field on a vertical and sloped magnet for different values of the energy barrier.
+	$E_\mathrm{MS}$ is the same for each $E_\mathrm{B}$, however it is higher for the sloped magnets compared to the vertical ones.
+	When $E_\mathrm{B}<E_\mathrm{B}^c$ ($E_\mathrm{B}>E_\mathrm{B}^c$), the sloped (vertical) magnet will flip first since the Zeeman energy $E_\mathrm{Z}$ increases faster for the vertical magnets.
+}
 
-
-%\begin{figure*}[!ht]
-%	\centering
-%	\includegraphics[width=\textwidth]{Figures/kagome_reversal.pdf}
-%	\caption{Reversal of a kagome ASI under an external field applied at \ang{-93.6} relative to the horizontal axis. (a) Comparison between the dumbbell and dipole models at different external field magnitudes $B$. Note that the critical field $B_C$ differs between the models:  $B_C = \qty{26.7}{\milli\tesla}$ for the dumbbell model and $B_C = \qty{23.9}{\milli\tesla}$ for the dipole model. The NN center-to-center distance is \qty{500}{\nano\meter}, with a length $d=\qty{470}{\nano\meter}$ used in the dumbbell model. The magnets have a magnetic moment $\mu=\qty{1.1}{\femto\ampere\meter^2}$, and their energy barrier is normally distributed with a mean of \qty{120}{\electronvolt} and \qty{5}{\percent} standard deviation. Arrows represent the magnetic moment of the magnets, and the blue and red points ({\color{blue}\textbullet} and {\color{red}\textbullet}) represent the net change in charge of a vertex. (b) The effect of an externally applied magnetic field on a vertical and sloped magnet for different values of the energy barrier. $E_\mathrm{MS}$ is the same for each $E_\mathrm{B}$, however it is higher for the sloped magnets compared to the vertical ones. When $E_\mathrm{B}<E_\mathrm{B}^c$ ($E_\mathrm{B}>E_\mathrm{B}^c$), the sloped (vertical) magnet will flip first since the Zeeman energy $E_\mathrm{Z}$ increases faster for the vertical magnets.}
-%	\label{fig:kagome_reversal}
-%\end{figure*}
+The results, shown in~\crefSubFigRef{fig:2:kagome_reversal}{a}, reveal a qualitative difference between the dumbbell and dipole models.
+In the dumbbell model, sloped magnets on the boundaries of the ASI flip first, while for the dipole method vertical magnets in the bulk flip first~\cite{DDG_Masterproef}.
+In the experiment of Mengotti~\etal~\cite{mengotti2011kagome}, Dirac strings were observed to originate from sloped magnets, which is in agreement with the dumbbell simulation. % But they saw them in the bulk, which is not in agreement with the dumbbells.
+% However, the exact energy barriers in the experiment were unclear, as they varied between magnets, with some barriers being lowered and others raised.
+Additionally, researchers using the `flatspin' ASI simulator, which employs a dipole-based model, observed Dirac strings to originate from vertical magnets, similar to our results with a point dipole model, highlighting the merit of the dumbbell model in capturing distinct dynamics~\cite{flatspin}.
 
 \section{Conclusion}
 % TODO: check if this conclusion is sufficiently concluding for a thesis, i.e. not just a summary but also discussing the lessons learnt.
