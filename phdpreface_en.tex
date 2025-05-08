@@ -18,7 +18,7 @@ Interestingly, many physical media naturally exhibit the required properties (no
 This cuts down on both training time and energy use, as part of the computation is offloaded to the physical substrate. \par
 Many physical media have been considered in this regard, ranging from a bucket of water to superconducting electronics. % Photonic, spintronic, quantum, superconducting, memristor arrays, mechanical, FPGA, sigmoidal neurons...
 The research presented in this thesis was performed in the context of the European ``\spinengine'' project, where tunable ensembles of nanomagnets like artificial spin ice (ASI) were considered as real-world reservoirs, because these provide a highly non-linear response while dissipating very little energy during information processing.
-ASI are magnetic structures consisting of an ordered lattice of interacting bistable nanomagnets, whose magnetisation direction can switch between two states under the influence of nearby magnets or thermal fluctuations.
+ASI is a class of magnetic structures consisting of an ordered lattice of interacting bistable nanomagnets, whose magnetisation direction can switch between two states under the influence of nearby magnets or thermal fluctuations.
 This leads to emergent dynamics arising from competing local interactions, allowing them to be used as a physical reservoir.
 This thesis specifically considers perpendicularly magnetised ASI --- also referred to as out-of-plane (OOP) ASI --- since these systems are particularly attractive due to the efficient input and readout mechanisms they allow.
 All the aforementioned concepts are introduced in more detail throughout the introductory~\cref{ch:Introduction}. \\
@@ -26,18 +26,18 @@ All the aforementioned concepts are introduced in more detail throughout the int
 \cref{ch:Hotspice} presents the open-source \hotspice Monte Carlo simulator for ASI, developed with the intent to evaluate reservoir computing strategies and to determine optimal system parameters.
 It uses an Ising-like model: each magnet in the ASI is represented by a point dipole that can switch between two stable states.
 Several model variants are presented, whose accuracy in simulating the behaviour of ASI is then compared and discussed.
-These variants explore three key aspects of the simulation:
+These focus on three key aspects of the simulation:
 \begin{itemize}[noitemsep,nolistsep] % With enumitem package
-	\item the choice of Monte Carlo spin-flip algorithm for simulating system dynamics,
-	\item accounting for the finite size of magnets when calculating magnetostatic interactions,
-	\item estimating the effective energy barrier that separates the stable states of a nanomagnet.
+	\item how the finite size of magnets is accounted for when computing magnetostatic interactions,
+	\item how the effective energy barrier between the stable states of a nanomagnet is estimated,
+	\item which Monte Carlo spin-flip algorithm is used to simulate system dynamics.
 \end{itemize}
 In the second half of the chapter, implementation details are discussed, with a particular focus on the calculation of the magnetostatic interaction between all magnets through the use of pre-calculated kernels.
 The performance of the simulator is then assessed, with a discussion on how performance can be enhanced by switching multiple magnets simultaneously during an iteration of the Metropolis-Hastings algorithm.
-The correct operation of the software is subsequently verified through comparison of simulations against analytical solutions for several solvable systems.
-The chapter concludes by comparing simulations to several experiments previously performed in literature, allowing the accuracy of the different model variants to be examined. \\
+The correct operation of the software is subsequently verified using several analytically solvable systems.
+The chapter concludes by comparing simulations against previously published experiments, allowing for the accuracy of the different model variants to be examined. \\
 
-In~\cref{ch:Applications}, the \hotspice simulator is used to assess the reservoir computing capabilities of both thermally active and non-volatile perpendicularly magnetised ASI.
+In~\cref{ch:Applications}, the \hotspice simulator is used to assess the reservoir computing capability of both thermally active and non-volatile perpendicularly magnetised ASI.
 The properties of OOP nanomagnets, and consequently the behaviour of OOP ASI, are governed by the interplay between various energy contributions like perpendicular magnetic anisotropy and shape anisotropy.
 Through a careful choice of system parameters, thermally active ASI can be obtained, which spontaneously relaxes toward the ground state over a certain timeframe.
 After analysing how this relaxation is affected by key system parameters --- such as the nearest-neighbour magnetostatic coupling and net OOP anisotropy --- those same parameters are then determined for manufactured OOP ASI by fitting simulations to the experimentally observed relaxation dynamics. \par
@@ -45,8 +45,8 @@ Building on this foundation, the relaxation of thermally active OOP ASI is emplo
 To evaluate the computational performance of this method, two benchmark tasks are performed.
 First, a signal transformation task assesses the non-linearity of the reservoir.
 Subsequently, a time series prediction of the chaotic Mackey-Glass oscillator evaluates its memory capacity.
-Since thermally active ASI are challenging to fabricate, the final section of this chapter turns to non-volatile ASI.
-Contrary to thermally active ASI, a global input can not be used  in non-volatile systems due to the absence of spontaneous relaxation.
+Since thermally active ASI is challenging to fabricate, the final section of this chapter turns to non-volatile ASI.
+Contrary to thermally active ASI, a global input can not be used in non-volatile systems due to the absence of spontaneous relaxation.
 Instead, a clocking protocol is developed to enable controlled domain wall propagation: leveraging domain dynamics in this manner enhances the computational performance of the system. \\
 
-Finally, the main results are summarised in~\cref{ch:Conclusion}, which concludes this thesis.
+Finally, the main results are summarised in~\cref{ch:Conclusion}, after which this thesis concludes with a general assessment of the obtained results and an outlook to future research. % TODO END: is this accurate?
