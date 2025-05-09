@@ -3,13 +3,13 @@
 %\glijbaantje{If a machine is expected to be infallible then it cannot also be intelligent.}{Alan Turing}
 % TODO: write CMOS instead of or alongside "transistor"
 
-This introduction opens with the broader context and motivation for the research presented in this thesis.
-We then introduce the physical reservoir computing paradigm and the key metrics used to quantify performance.
-Since we focus on magnetic reservoirs,~\cref{sec:1:Nanomagnetism} describes the fundamentals of nanomagnetism and the physical phenomena that enable efficient input and readout.
-Next, we turn to magnetic reservoirs, in particular artificial spin ice, before concluding with a brief description of simulation techniques suitable for these systems.
+%This introduction opens with the discussion of and motivation for the research presented in this thesis.
+%We then introduce the physical reservoir computing paradigm and the key metrics used to quantify performance.
+%Since we focus on magnetic reservoirs,~\cref{sec:1:Nanomagnetism} describes the fundamentals of nanomagnetism and the physical phenomena that enable efficient input and readout.
+%Next, we turn to magnetic reservoirs, in particular artificial spin ice, before concluding with a brief description of simulation techniques suitable for these systems.
 
-\section{Context}\label{sec:1:Context}
-We live in a society where computers are ubiquitous. % and indispesable.
+%\section{Context}\label{sec:1:Context}
+We live in a society where computers are ubiquitous.
 They have been used for a wide variety of applications, like scientific simulations, graphics rendering, processing well-structured data, running the internet\dots\,
 Conventional computers --- consisting of transistors arranged into logic gates --- are well suited for such tasks which require exact mathematical operations to be executed.
 However, our world provides many challenging tasks that can not be captured by such simple, exact sets of predefined rules.
@@ -62,7 +62,8 @@ Single-domain ferromagnetic nanomagnets, for example, have the ability to store 
 The \link{magnetostatic interaction}{magnetostatic (MS) coupling} within ensembles of nanomagnets provides further advantages, as it can give rise to rich collective behaviour like phase transitions, which the constituent magnets would not exhibit in isolation~\cite{NeuromorphicSpintronicsProspect,RC_ASI}.
 A well-established example of such an ensemble is \xref{artificial spin ice} (ASI): an ordered lattice of bistable $\approx \SI{100}{\nano\metre}$-size nanomagnets where the lattice geometry does not allow all local interactions to be simultaneously satisfied, leading to emergent dynamics~\cite{ASIpyrochlores}.
 The other aforementioned factors have made them a platform of particular interest for scalable and energy-efficient material computation~\cite{PhD_Stromberg}. \par
-This finally brings us to the topic of this thesis: ``\emph{\phdtitle}''.
+This finally brings us to the topic of this thesis: ``\!\emph{\phdtitle}''.
+This research was performed in the context of the European \spinengine project, where three types of magnetic reservoirs were considered: magnetic nanorings~\cite{DynamicEmergence_NanomagneticSystem}, in-plane ASI~\cite{RC_ASI}, and perpendicular-anisotropy ASI~\cite{KUR-24}.
 A more detailed description of ASI follows in~\cref{sec:1:ASI}; first,~\cref{sec:1:RC} introduces the general principles of \xref{reservoir computing}.
 
 \newpage
@@ -171,7 +172,7 @@ These optimal weights then remain fixed, and the performance of the reservoir ca
 \subsection{Metrics} \label{sec:1:RC_metrics}
 To compare different physical reservoirs or identify optimal system parameters, metrics are needed that can provide a consistent evaluation of how suitable a given physical system is to be used as a reservoir.
 In this respect, two types of metrics are often used: those calculated based on the ranks of matrices, and those calculated through a form of linear regression.
-The latter are also referred to as task-agnostic metrics. % Q: find a better name for them?
+The latter are also referred to as task-agnostic metrics~\cite{RC_TaskAgnosticMetrics}. % Q: find a better name for them?
 
 \subsubsection{Matrix rank-based metrics}\indexlabel{matrix rank-based metrics} \label{sec:1:RC_metrics_KQ}
 Legenstein and Maass~\cite{WhatMakesPowerful} proposed three metrics, based on the readout vector $\vc{x}(t)$ of the reservoir.
@@ -180,7 +181,7 @@ Depending on the choice of input sequence, the rank of this matrix gives informa
 
 \paragraph{Kernel-quality}
 The \idx{kernel-quality} $K$ measures the \xref{separation property}, i.e. how well the reservoir can separate distinct temporal input patterns.
-Practically, it is determined by applying $n$ random input sequences and recording the readout after every sequence, each of which consists of a large number of discrete input values (here: 100).
+Practically, it is determined by applying $n$ random input sequences and recording the readout after every sequence, each of which consists of a large number of discrete input values.
 Here, we will use $n=p$ to obtain a square matrix for a more consistent measure.
 Using random sequences ensures that they are maximally distinct, such that the rank of this matrix (i.e., the kernel-quality $K$) is a measure for how distinct the responses obtained from the reservoir can be~\cite{Vidamour_2022}.
 A more efficient alternative method would be to record the response $\vc{x}$ after each input value, as this would also result in maximally distinct input sequences, though this method strays further from the original definition~\cite{RC_HierarchicalNeuroevolution,RCbenchmarksReview1}.
@@ -212,7 +213,7 @@ More specifically, the estimators
 	\hat{x}_i(t) = c_i + \sum_{\tau=0}^{k} w_{i,\tau} s(t - \tau) \mathrm{,}
 \end{equation}
 are trained by adjusting the weights $w_{i,\tau}$ and $c_i$ based on the known discrete-time input-output relationship (on the training set).
-The cut-off time $k$ must be longer than the relaxation time of the reservoir --- we will use $k=10$.
+The cut-off time $k$ must be longer than the relaxation time of the reservoir.
 By measuring the quality of this estimate using the $\mathrm{R}^2$ correlation coefficient, a measure of the linearity of each separate readout node is obtained.
 This can be converted to an overall measure for non-linearity as
 \begin{equation}
@@ -233,7 +234,7 @@ The linear memory capacity is then obtained by summing the $\mathrm{R}^2$ correl
 \end{equation}
 Note that the memory capacity can be increased arbitrarily high, by choosing a high cut-off time $k$.
 However, the memory capacity typically exhibits a plateau beyond a certain value of $k$, before rising dramatically only when $k$ approaches the size of the training set.
-Hence, $k$ should be chosen at this plateau; for the systems we will consider, $k=10$ suffices. \par
+Hence, $k$ should be chosen at this plateau; for the systems we will consider. \par
 Note that this measures short-term memory; long-term memory often refers to the knowledge engrained in the weights of an ANN i.e., the linear readout layer in the case of RC.
 Furthermore, this only captures the linear memory capacity: the non-linear memory capacity is far more computationally expensive as it requires a summation over polynomials of different degrees~\cite{RCbenchmarksReview1}.
 We therefore limit this discussion to the linear memory capacity.
@@ -263,8 +264,8 @@ However, for RC specifically, simpler electronic devices exist that can potentia
 Memristors are one well-established example: they can store information in their resistance by changing their internal ion distribution, allowing them to act analogously to biological neurons~\cite{MemristorArtificialNeuron,MemristiveNN,RC_DiffusiveMemristors,RC_MemristorTemporal}.
 Networks of nanowires are also interesting, as they can self-assemble into a complex recurrent network with memristive junctions forming at intersections~\cite{RC_NNN}.
 However, memristors are rather slow.
-A faster reservoir can be made of field-programmable gate arrays (FPGAs), which are especially suitable for integer-valued tasks due to their digital nature~\cite{RC_RapidTimeSeries,BookReservoirComputing}. % Autonomous Boolean logic
-For instance, FPGAs can efficiently implement cellular automata reservoirs, like elementary rule 90 that exhibits chaotic behaviour and can be implemented solely using XOR gates~\cite{RC_CA}.
+%A faster reservoir can be made of field-programmable gate arrays (FPGAs), which are especially suitable for integer-valued tasks due to their digital nature~\cite{RC_RapidTimeSeries,BookReservoirComputing}. % Autonomous Boolean logic
+%For instance, FPGAs can efficiently implement cellular automata reservoirs, like elementary rule 90 that exhibits chaotic behaviour and can be implemented solely using XOR gates~\cite{RC_CA}.
 Superconducting materials offer low dissipation and extremely fast operation ($\gg \SI{}{\giga\hertz}$), with a number of possible architectures, like for instance a Josephson transmission line~\cite{RC_SuperconductingElectronics}. \par % See also: analogue electronic circuits [TaskAdaptivePRC, Ref. 10], ferroelectrics [TaskAdaptivePRC, Ref. 13], VLSI
 Photonic principles have also been exploited to construct reservoirs with very fast operation and low power consumption~\cite{RC_RecentAdvances}.
 They make use of on-chip structures like optical waveguides, amplifiers and delay lines~\cite{RC_RecentAdvances}.
@@ -281,9 +282,10 @@ Since this thesis focuses on nanomagnetic systems, it is warranted to first expl
 \section{Nanomagnetism} \label{sec:1:Nanomagnetism}
 \subsection{Physics of nanomagnets}
 This thesis focuses on the usage of magnetic systems as reservoirs.
-Generally, magnetism and magnetic fields originate from the movement or acceleration of electric charges.
-An object is said to have a \idx{magnetic moment} $\vc{\mu}$ if it experiences a torque $\vc{\tau} = \vc{\mu} \times \vc{B}$ when placed in a magnetic field $\vc{B}$~\cite{IntroMagneticMaterials}.
-Conversely, a magnetic moment also generates its own magnetic field
+Generally, magnetism and magnetic fields originate from the movement of electric charges.
+A current flowing in a loop --- be it a conducting wire or the orbital motion of electrons in an atom --- will experience a torque $\vc{\tau} = \vc{\mu} \times \vc{B}$ when placed in a magnetic field $\vc{B}$~\cite{IntroMagneticMaterials}.
+This defines the so-called \idx{magnetic moment} $\vc{\mu}$ associated with this circulating current.
+Conversely, an object with a magnetic moment also generates its own magnetic field
 \begin{equation}
 	\vc{B}(\vc{r}) = \frac{\mu_0}{4 \pi} \ab[\frac{3 \vc{r} (\vc{\mu} \cdot \vc{r})}{r^5} - \frac{\vc{\mu}}{r^3}] \mathrm{,}
 \end{equation}
@@ -291,48 +293,54 @@ giving rise to the \xref{magnetostatic interaction} through which magnetic momen
 Freely rotatable magnetic moments will therefore prefer a parallel alignment along their connecting axis.
 
 \paragraph{Ferromagnetism}
-Some materials, like a bar magnet, exhibit a spontaneous \idx{magnetisation} --- they generate a magnetic field seemingly without any electrical current.
-This magnetisation arises at the atomic level, from two distinct sources: the angular momentum of electrons around the nucleus, and the intrinsic spin of the elementary particles comprising an atom~\cite{coey2010magnetism}.
+Some materials, like a bar magnet, exhibit a spontaneous \idx{magnetisation}: they generate a magnetic field seemingly without any electrical current.
+This magnetisation $\vc{M}$ --- the magnetic moment per unit volume --- arises at the atomic level from two distinct sources: the angular momentum of electrons around the nucleus, and the intrinsic spin of the elementary particles comprising an atom~\cite{coey2010magnetism}.
 The latter is often dominant, and while the magnetic moments of pairs of electrons often cancel out, atoms with unpaired electrons can exhibit a net magnetic moment~\cite{PhD_Leliaert}. % See slide 35 of https://magnetism.eu/esm/2019/slides/simonet-slides1(magnetism_of_atoms).pdf
 However, this does not yet mean that a material composed of such atoms will exhibit a macroscopic magnetic moment like a bar magnet, as the moments of nearby atoms are not necessarily aligned. \par
 A non-vanishing net magnetic moment is the privilege of \textit{ferromagnetic}\indexlabel{ferromagnetism} materials.
 It is only in these materials that the \idx{Heisenberg-Dirac exchange interaction}~\cite{heisenberg1928theorie} provides a strong tendency for nearby atomic magnetic moments to align, leading to a non-zero macroscopic magnetisation within the material.
-This alignment is only possible below a material's \idx{Curie temperature}: at room temperature, \ce{Fe}, \ce{Ni} and \ce{Co} are the only pure elements to be ferromagnetic, though many compounds like \ce{Nd2Fe14B} and \ce{SmCo5} are as well. \par
-However, the keyword regarding the exchange interaction is ``nearby'': over longer distances, the magnetisation direction can vary throughout the material as other interactions are also at play --- most importantly, the magnetostatic interaction.
-Hence, the magnetisation can be described as a vector field $\vc{M}(\vc{r})$ with a resolution of $\lesssim \SI{5}{\nano\metre}$, as the exchange interaction dominates over shorter length scales.
+This alignment is only possible below a material's \idx{Curie temperature}: at room temperature, \ce{Fe}, \ce{Ni} and \ce{Co} are the only pure elements to be ferromagnetic, though many compounds like \ce{Nd2Fe14B} and \ce{SmCo5} are as well.
+
+\paragraph{Ferromagnetic domains}
+The keyword regarding the exchange interaction is ``nearby'': over longer distances, the magnetisation direction can vary throughout the material as other interactions are also at play.
+Most importantly, the magnetostatic interaction makes it energetically favourable for the magnetisation to curl back on itself. % Minimising stray fields
+This competition between the exchange and magnetostatic interaction gives rise to $\SI{}{\micro\metre}$-sized \idx{ferromagnetic domains} with near-uniform magnetisation, separated by domain walls.
+These are the reason why a macroscopic piece of ferromagnetic material often does not exhibit a spontaneous net magnetic moment, as all these domains cancel out when no external field is present~\cite{coey2010magnetism}. \par
+The magnetisation can thus be described as a vector field $\vc{M}(\vc{r})$ with a resolution of $\lesssim \SI{5}{\nano\metre}$, as the exchange interaction dominates over shorter length scales.
 This forms the basis of micromagnetic theory~\cite{mumax3}: over such small distances, the local magnetisation always has approximately the same magnitude; $\norm{\vc{M}(\vc{r})} \approx M_\mathrm{sat}$, the \idx{saturation magnetisation}.
-Applying a magnetic field makes the magnetisation tilt towards the field, but does not increase $M_\mathrm{sat}$: it is an intrinsic property that determines the strongest magnetic moment per volume that a given material can provide.
+An applied magnetic field does not affect $M_\mathrm{sat}$, as it is an intrinsic property that determines the strongest magnetic moment per volume that a given material can provide.
+Instead, a field only affects the magnetisation direction, causing some domains to grow or shrink.
 
 \paragraph{Single-domain nanomagnets}
-Integrating $\vc{M}(\vc{r})$ over the volume of a material yields its net magnetic moment $\vc{\mu}$, but this is almost never equal to $M_\mathrm{sat}V$ since the magnetisation can vary significantly over longer distances.
-In fact, an object made of magnetic material often does not exhibit a spontaneous total magnetic moment at all, as the magnetostatic interaction typically causes the magnetisation to loop back on itself to minimise stray fields.
-Indeed, in a large piece of ferromagnetic material, it is energetically favourable for \SI{}{\micro\metre}-sized \idx{ferromagnetic domains} to form, whose magnetic moments all cancel each other out when no external field is present~\cite{coey2010magnetism}.
-Applying an external field then causes some domains to grow and others to shrink, rather than smoothly canting the magnetisation towards the field.
-However, in sufficiently small ferromagnetic particles ($\lesssim \SIrange{100}{500}{\nano\metre}$), the exchange interaction is too strong for separate domains to form~\cite{Kittel_TheoryFMDomains,BrownThermalFluctuations}.
-This results in a \idx{single-domain nanomagnet} with a nearly uniform magnetisation $\vc{M}(\vc{r}) \approx \vc{\mu}/V$, whose magnitude is roughly equal to the saturation magnetisation $M_\mathrm{sat}$~\cite{FRENKEL1930,neel1949theorie}. \par % Frenkel and Dorfman first conceived the idea of a single-domain particle based on energy considerations.
+In sufficiently small ferromagnetic particles ($\lesssim \SIrange{100}{500}{\nano\metre}$), the magnetostatic interaction is too weak for separate domains to form~\cite{Kittel_TheoryFMDomains,BrownThermalFluctuations}.
+This results in a \idx{single-domain nanomagnet} with a nearly uniform magnetisation, giving it a magnetic moment $\vc{\mu}$ close to the upper limit of $M_\mathrm{sat}V$~\cite{FRENKEL1930,neel1949theorie}. % Frenkel and Dorfman first conceived the idea of a single-domain particle based on energy considerations.
 When such a nanomagnet exhibits some form of anisotropy, a preferential magnetisation axis will emerge, referred to as the \idx[nolabel]{easy axis}~\cite{nisoli2013colloquium}.
 This has led to nanomagnets being used for computation, as the two magnetisation directions along the easy axis can be related to bits `0' and `1'~\cite{MQCA_RoomTemp,NML_Carlton,Gypens_Balanced,Gypens_SelfOrganizing,JM_Masterproef}.
-The magnetisation can switch between these two stable states under the influence of nearby nanomagnets, external magnetic fields, thermal fluctuations, electrical currents and a variety of other phenomena~\cite{SwitchingForced_EnergyEfficient,BrownThermalFluctuations,neel1949theorie}.
-One common origin of anisotropy is the geometry of a nanomagnet: this \idx[nolabel]{shape anisotropy} is caused by the tendency of magnetic moments to align in the same direction, resulting in a low-energy state when the magnetisation aligns with the longest axis of the geometry~\cite{MagneticCharge}.
+The magnetisation can switch between these two stable states under the influence of nearby nanomagnets, external magnetic fields, thermal fluctuations, electrical currents and a variety of other phenomena~\cite{SwitchingForced_EnergyEfficient,BrownThermalFluctuations,neel1949theorie}. \par
+One common source of anisotropy is the geometry of a nanomagnet: this \idx[nolabel]{shape anisotropy} arises from the interaction of the magnetisation with its own demagnetising field, resulting in a low-energy state when the magnetisation aligns with the longest axis of the geometry~\cite{MagneticCharge}.
 Anisotropy can also originate from the crystal structure, but this can be suppressed by an appropriate choice of material; for example, permalloy (\ce{Fe20Ni80}) is an alloy specifically designed to exhibit minimal \xlabel{magnetocrystalline anisotropy}.
 
 \paragraph{In-plane and out-of-plane nanomagnets} % Q: is this OK? What to do with the chapter 3 intro? Just remove 3.1.1?
 Two types of nanomagnets are typically distinguished: in-plane (IP) and out-of-plane (OOP) nanomagnets.
 IP nanomagnets can readily be obtained by tailoring the geometry of the ferromagnetic particle: a flat geometry guarantees an in-plane magnetisation direction through the \xref{shape anisotropy}.
 This easy plane can be reduced to an \xref{easy axis} by using an elongated two-dimensional shape, like an ellipse or rectangle.
-OOP magnets are harder to manufacture, as it is often infeasible to create tall structures on wafers.
-Therefore, where IP magnets mostly rely on shape anisotropy to create an easy axis, OOP magnets must use other types of anisotropy to favour a magnetisation direction perpendicular to the substrate.
-This can be realised using interfacial anisotropy between the ferromagnetic material and the substrate, as for example occurs at the interface between \ce{Co} and \ce{Pt}.
+OOP magnets are harder to realise using only shape anisotropy, as it is often infeasible to create tall structures on wafers.
+This requires them to use other types of anisotropy to favour a magnetisation direction perpendicular to the substrate.
+A common solution is to use interfacial anisotropy between the ferromagnetic material and the substrate, as for example occurs at the interface between \ce{Co} and \ce{Pt}~\cite{PMA_PdCo_PtCo}.
 This \idx[nolabel]{perpendicular magnetic anisotropy} (PMA) acts in the immediate vicinity of the interface, where the magnetisation then prefers to align perpendicular to said interface.
 The structure of OOP nanomagnets will be discussed in more detail in~\cref{sec:3:OOP_nanomagnet_PMA}~and~\ref{sec:3:E_contributions}.
 
 \subsection{Input and readout for reservoir computing}\label{sec:1:ASI_IO}
 To use nanomagnetic systems for RC, methods are required to inject information and read out their resulting magnetic states.
 One of the main factors that makes magnetic systems attractive candidates for RC is their ease of electrical interfacing, as many effects can manifest between currents and magnetic materials, enabling efficient input and output.
-Electrical control is strongly preferred over external magnetic fields, as it provides greater precision.
 In particular, for OOP systems --- the main focus of this thesis --- \xref{spin--orbit torque} provides an efficient input method that synergises well with readout via the \xref{anomalous Hall effect}.
 
 \subsubsection{Input}
+In an experimental setting, input is often provided through external fields, but their inductance limits the attainable frequency.
+For on-chip applications, faster and more efficient all-electrical methods exist that skip the magnetic field step: these exert a torque on the magnetisation by directly injecting spins into the magnet.
+This avoids the generation of strong fields that may have unintended effects elsewhere in the system.
+%While it is possible to miniaturise these fields by patterning striplines on-chip, allowing for local control, all-electrical control is more desirable.
+
 \paragraph{Spin-transfer torque}
 A well-established method for switching nanomagnets is \idx{spin-transfer torque} (STT)~\cite{SlonczewskiSTT}, as has been widely used in e.g., magnetic random-access memory (STT-MRAM)~\cite{brataas2012current}.
 When an electrical current with a spin polarisation $\vc{\sigma}$ enters a ferromagnetic material, the injected spins will exert a torque $\vc{\tau}_\mathrm{STT} \propto \vc{\mu} \times (\vc{\mu} \times \vc{\sigma})$ on the local magnetisation $\vc{\mu}$, causing it to align with the injected spin polarisation.
@@ -404,7 +412,7 @@ This enables a measurement of the out-of-plane\footnote{
 } magnetic field by scanning the tip at a very low height ($\approx \SI{20}{\nano\metre}$) above the sample~\cite{NML_Carlton,JM_Masterproef}.
 However, this does not only measure the magnetic field, but also the atomic forces that a non-magnetised tip would experience.
 Therefore, a standard atomic force microscopy scan is first performed to obtain the texture profile of the sample, such that a subsequent MFM measurement can keep the magnetic tip at a constant height above the sample, thereby isolating the magnetic field strength from the atomic forces. \par
-The result is a greyscale image, where the brightness indicates the vertical component $B_z$ of the magnetic field close to the sample.
+The result is a greyscale image, where the brightness indicates the vertical component $\partial B_z/ \partial z$ of the magnetic field gradient close to the sample.
 For example, an IP nanomagnet will appear as a pair of regions with bright and dark contrast, because the divergence (convergence) of the magnetic field at its north (south) pole results in opposite vertical magnetic fields on either end~\cite{NML_Carlton}.
 An MFM image of OOP magnets (\cref{sec:3:MFM}) is easier to interpret, as there is a one-to-one correspondence between $B_z$ and the the magnetisation state. \par
 MFM is relatively cheap to set up as compared to other magnetic microscopy techniques.
@@ -458,7 +466,6 @@ ASI also holds significant potential for computational applications~\cite{heyder
 %The study of ASI has since broadened well beyond the scope of frustrated systems, and now the term is used more broadly for ensembles of nanomagnets exhibiting a wide range of physical phenomena~\cite{ASIPathsForward}.
 %A vast wealth of both periodic and aperiodic arrangements of nanomagnets has been explored throughout the literature, whose behaviour can vary wildly~\cite{nisoli2013colloquium,heyderman2013artificial,AdvancesASI,ASI_Evolutionary_ALife}.
 %For example, a superferromagnetic alignment is most favourable in pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a,b}), while square-lattice ASI (\crefSubFigRef{fig:2:ASIs}{c,d,i}) prefers an antiferromagnetic (AFM) alignment~\cite{ApparentFMpinwheel}.
-%The research presented in this thesis was performed in the context of the European \spinengine project, where three types of magnetic systems were considered: magnetic nanorings~\cite{DynamicEmergence_NanomagneticSystem}, IP ASI~\cite{RC_ASI}, and OOP ASI~\cite{KUR-24}.
 %All three present their own advantages and challenges. \par
 %Nanoring ensembles show very promising RC performance, but do not provide straightforward on-chip input and readout methods.
 %For input, rotating external fields were typically used.
