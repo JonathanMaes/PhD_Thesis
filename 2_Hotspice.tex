@@ -1249,18 +1249,24 @@ In the experiment of Mengotti~\etal~\cite{mengotti2011kagome}, Dirac strings wer
 % However, the exact energy barriers in the experiment were unclear, as they varied between magnets, with some barriers being lowered and others raised.
 Additionally, researchers using the `flatspin' ASI simulator, which employs a dipole-based model, observed Dirac strings to originate from vertical magnets, similar to our results with a point dipole model, highlighting the merit of the dumbbell model in capturing distinct dynamics~\cite{flatspin}.
 
+\newpage
 \section{Conclusion}
 % TODO: check if this conclusion is sufficiently concluding for a thesis, i.e. not just a summary but also discussing the lessons learnt.
-We have presented in detail the underlying models used by \hotspice{}, an open-source and easily extensible Monte Carlo simulator designed to simulate ASI dynamics.
-In particular, we focused on the evaluation of several model variants extending beyond the basic Ising model typically used for ASI simulations. \par
-Firstly, we considered more accurate calculations for magnetostatic interactions: OOP systems were found to benefit from a second-order correction, while IP systems achieve far more accurate results with a dumbbell model.
-Secondly, accounting for asymmetric switching channels proved key to e.g., correctly reproduce coercive fields in pinwheel ASI, provided that the reduced magnetization during non-coherent reversal processes was also accounted for.
-Finally, we provided two algorithms for handling switching events.
-The first-switch method is best suited for simulating the temporal evolution of the system, including out-of-equilibrium dynamics.
-The Metropolis-Hastings algorithm efficiently explores equilibrium configurations, especially when multiple magnets switch simultaneously.
-These methods were compared to experimental and theoretical results for pinwheel, kagome, and square ASI. \par
-This approach makes \hotspice{} complementary to traditional micromagnetic simulations.
-By sacrificing the detailed simulation of the internal magnetization structure of individual nanomagnets, the higher-level approximations employed by \hotspice{} enable the study of complex ASI dynamics in much larger systems and over significantly longer timescales.
-This opens new opportunities to use ASI for applied machine learning tasks like \xref{reservoir computing} (RC).
-The ability of \hotspice{} to quickly sweep parameters and evaluate RC metrics facilitates the optimization of ASI configurations and the identification of suitable input protocols, as demonstrated by our simulation of clocking protocols in pinwheel and OOP square ASI. \par
-In conclusion, \hotspice{}'s combination of speed, flexibility, and accuracy makes it a powerful tool to explore the rich physics of ASI systems and advance their use in innovative applications like reservoir computing.
+Throughout this chapter, the underlying model and implementation of \hotspice have been discussed in detail, with several model variants extending beyond the basic Ising model typically used for ASI simulations.
+A first variant on this basic model considered more accurate calculations for magnetostatic interactions.
+For OOP systems, it was found that a second-order correction on the magnetostatic energy $E_\mathrm{MS}$ brought it closer to its ideal value, while for IP systems a dumbbell model is preferred instead.
+Their influence on the magnetostatic energy can also yield qualitatively different dynamics, as was for instance observed in the kagome lattice.
+The second type of model variants considered improvements to the calculation of the energy barrier.
+There, accounting for asymmetric switching channels proved key to e.g., correctly reproduce coercive fields in pinwheel ASI, provided that the reduced magnetisation during non-coherent reversal processes was also accounted for.
+While it is possible to obtain an exact solution for the energy barrier in OOP magnets, the assumption of a sinusoidal energy landscape was found to be inaccurate, likely due to non-coherent reversal in real OOP nanomagnets. \par 
+Furthermore, two distinct algorithms have also been implemented to handle switching events: the first-switch method and the Metropolis-Hastings algorithm.
+They are both useful in different circumstances, as the former is best suited to simulate temporal (out-of-equilibrium) dynamics, while the latter can more efficiently explore equilibrium configurations.
+In particular, the MH algorithm can benefit from multiple simultaneous switching events, which is justifiable if these switching magnets are sufficiently distantly spaced.
+This technique was verified to yield correct results on a set of test cases using various lattices, and the accuracy of the first-switch method was later assessed in pinwheel and kagome ASI. \par
+The usage of a grid to represent ASI brought with it several advantages, at the cost of losing complete freedom to place magnets wherever.
+In particular, the grid enables the efficient calculation of the magnetostatic interaction between all magnets in the system, whereas other codes typically implement a truncation distance to improve performance.
+It was found that truncation, even at a distance as far as 20 grid cells, incurs a \SIrange{5}{10}{\percent} error on the total magnetostatic interaction energy of a magnet, but it can be argued that the other approximations made are of similar accuracy, rendering such truncation justifiable.
+Additionally, the grid enables an efficient simultaneous sampling of sufficiently distant magnets during the MH algorithm. \par
+All of this makes \hotspice complementary to traditional micromagnetic simulations: by sacrificing the internal magnetisation details of individual nanomagnets, these higher-level approximations enable the study of complex ASI dynamics in much larger systems an over significantly longer timescales.
+This opens new opportunities to model ASI for applied machine learning tasks like \xref{reservoir computing} (RC).
+The ability of \hotspice to quickly sweep parameters and evaluate RC metrics facilitates the optimization of ASI configurations and the identification of suitable input protocols, an ability that will be put to good use in the next chapter.
