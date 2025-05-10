@@ -335,11 +335,13 @@ To use nanomagnetic systems for RC, methods are required to inject information a
 One of the main factors that makes magnetic systems attractive candidates for RC is their ease of electrical interfacing, as many effects can manifest between currents and magnetic materials, enabling efficient input and output.
 In particular, for OOP systems --- the main focus of this thesis --- \xref{spin--orbit torque} provides an efficient input method that synergises well with readout via the \xref{anomalous Hall effect}.
 
-\subsubsection{Input}
+\subsubsection{Input} % TODO: address bartel's comment here
 In an experimental setting, input is often provided through external fields, but their inductance limits the attainable frequency.
 For on-chip applications, faster and more efficient all-electrical methods exist that skip the magnetic field step: these exert a torque on the magnetisation by directly injecting spins into the magnet.
 This avoids the generation of strong fields that may have unintended effects elsewhere in the system.
 %While it is possible to miniaturise these fields by patterning striplines on-chip, allowing for local control, all-electrical control is more desirable.
+% Compared to an \xref{external magnetic field}, this allows far greater control over the stimulus applied for each input bit, and can more easily be integrated on-chip without generating significant stray fields.
+% While it is possible to use an external field to switch both IP and OOP nanomagnets, this is undesirable in a real device due to stray fields and the need for bulky magnets or strip lines.
 
 \paragraph{Spin-transfer torque}
 A well-established method for switching nanomagnets is \idx{spin-transfer torque} (STT)~\cite{SlonczewskiSTT}, as has been widely used in e.g., magnetic random-access memory (STT-MRAM)~\cite{brataas2012current}.

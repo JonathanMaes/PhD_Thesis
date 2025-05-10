@@ -2,7 +2,7 @@
 % TODO END: go through this chapter (and the others, probably) at the end and see if any comments with additional information can be put or merged anywhere.
 \glijbaantje{If you find that you're spending almost all your time on theory,\\ start turning some attention to practical things; it will improve your theories.\\ If you find that you're spending almost all your time on practice,\\ start turning some attention to theoretical things; it will improve your practice.}{Donald Knuth}
 
-The main factor that attracted attention towards OOP ASI for \xref{reservoir computing} (RC) was that they allow very efficient and relatively simple input and read-out methods to be used.
+The main factor that motivated our research of OOP ASI for \xref{reservoir computing} (RC) was that they allow very efficient and relatively simple input and read-out methods to be used.
 Early on in the \spinengine project, methods to read the state of OOP ASI had already been demonstrated experimentally on a small scale by ETHZ/PSI.
 However, their potential for RC had not yet been investigated.
 As \hotspice is well-suited for the simulation of OOP ASI, this presented an appropriate use-case for the software developed in~\cref{ch:Hotspice}. \par % Furthermore, the other simulator developed by the consortium (flatspin) only supports in-plane magnetisation. Furthermore, \hotspice is more accurate for OOP ASI than IP ASI due to the high degree of symmetry in the former.
@@ -32,21 +32,21 @@ Then, the chapter is divided into two main parts, first discussing thermally act
 
 \section{Characteristics of out-of-plane ASI}
 \subsection{Structure of out-of-plane nanomagnets} % Co/Pt multilayer, energy contributions
-\label{sec:3:OOP_nanomagnet_PMA}
-Where in-plane (IP) magnets mostly rely on shape anisotropy to create an easy axis, out-of-plane (OOP) magnets can be realised using interfacial anisotropy between the ferromagnetic material and the substrate.
-One example of this is found at the interface between \ce{Co} and \ce{Pt}, as was used in the experimental OOP ASI fabricated within the context of the \spinengine project.
+\label{sec:3:OOP_nanomagnet_PMA} % TODO: check how much of this is already in the introduction
+Where in-plane (IP) magnets mostly rely on shape anisotropy to create an easy axis, out-of-plane (OOP) magnets are realised using interfacial anisotropy between the ferromagnetic material and the substrate.
+One example of this is the interface between \ce{Co} and \ce{Pt}, as was used in the experimental OOP ASI fabricated within the context of the \spinengine project.
 This \idx{perpendicular magnetic anisotropy} (PMA) acts in the immediate vicinity of the interface, where the magnetisation then prefers to align perpendicular to said interface. \par
-Typically, a number of \ce{Co}-\ce{Pt} interfaces are stacked vertically, with the number and thickness of the ferromagnetic \ce{Co} layers then controlling the OOP anisotropy.
+Typically, a number of \ce{Co}-\ce{Pt} interfaces are stacked vertically, with the number of ferromagnetic \ce{Co} layers then controlling the total PMA.
 The ferromagnetic layers in such stacks are typically made to be very thin for two main reasons.
 Firstly, since the PMA only acts at the interface, it does not increase for thicker layers.
-Secondly, recall that the energy associated with \xref{shape anisotropy} increases with volume ($\EB=K_\mathrm{u}V$), so a maximal number of layers for a given amount of ferromagnetic material is preferable for PMA to counteract the in-plane shape anisotropy.
+Secondly, in thin layers, the energy associated with in-plane \xref{shape anisotropy} increases roughly linearly with thickness ($\EB=K_\mathrm{u}V$), so a maximal number of layers for a given amount of ferromagnetic material is preferable for PMA to optimally counteract the in-plane shape anisotropy.
 We will elaborate on the interplay between these energy contributions later in~\cref{sec:3:E_contributions}. \par
-Other factors contribute to the anisotropy as well, e.g. a non-linear dependence on the \ce{Pt} layer thickness due to the RKKY interaction~\cite{RKKY_RK,RKKY_K,RKKY_Y}.
-However, this coupling is likely not dominant in a \ce{Co}-\ce{Pt} stack, as \ce{Pt} nearly satisfies the Stoner criterion~\cite{PtMagneticOrder}.
-Since the \ce{Pt} is combined with a ferromagnetic material (\ce{Co}), it is thought that this induces a ferromagnetic coupling between \ce{Co} layers in spite of the RKKY interaction, at least for reasonable \ce{Pt} thicknesses up to a few \SI{}{\nano\metre}~\cite{PerpendicularMagnetizationASI}.
+It must also be noted that the magnetisation of each \ce{Co} layer must point in the same direction to obtain a usable magnet, which is not guaranteed.
+For example, the RKKY interaction~\cite{RKKY_RK,RKKY_K,RKKY_Y} either promotes a parallel or anti-parallel magnetisation of successive \ce{Co} layers, depending on the precise \ce{Pt} layer thickness.
+Fortunately, the RKKY coupling is likely not dominant in a \ce{Co}-\ce{Pt} stack, as \ce{Pt} nearly satisfies the Stoner criterion~\cite{PtMagneticOrder}: since the \ce{Pt} is combined with a ferromagnetic material (\ce{Co}), it is thought that this induces a ferromagnetic coupling between \ce{Co} layers regardless --- at least for reasonable \ce{Pt} thicknesses up to a few \SI{}{\nano\metre}~\cite{PerpendicularMagnetizationASI}.
 
 \subsection{ASI ground state}
-The ground state of any system used for RC is crucial, as it dictates which input methods will induce desirable dynamics in the system and which input protocols will be ineffective, particularly for a non-volatile system.
+The ground state of any system used for RC is crucial, as it dictates which input methods will excite desirable dynamics in the system and which input protocols will be ineffective, particularly for a non-volatile system.
 For most OOP spin ices, the ground state exhibits some form of antiferromagnetic (AFM) ordering due to the magnetostatic interaction, which always encourages opposite magnetisation between two neighbouring OOP magnets.
 As is the case for any ASI, the ground state is at least twofold degenerate, because all interactions are symmetric under magnetisation reversal. \par
 Depending on the particular lattice upon which the OOP magnets are placed, \xref{frustration} may (e.g. triangle/Cairo; \crefSubFigRef{fig:2:ASIs}{j,l}) or may not (e.g. square/honeycomb; \crefSubFigRef{fig:2:ASIs}{i,k}) be present due to the local AFM ordering.
@@ -60,33 +60,33 @@ As a result, the ground state is largely determined by NN interactions, which pr
 Therefore, OOP lattices in which every closed NN loop contains an even number of magnets --- such as the square and honeycomb lattices --- are unlikely to exhibit geometric frustration.
 
 \subsection{Input and readout: experiment to simulation} \label{sec:3:IO_exp_to_sim}
-While it is possible to use an external field to switch both IP and OOP nanomagnets, this is undesirable in a real device due to stray fields and the need for bulky magnets.
-The main allure of OOP ASI for RC stems from the existence of efficient input and readout mechanisms for such OOP magnets.
+The main allure of OOP ASI for RC stems from the existence of efficient all-electrical input and readout mechanisms for such OOP magnets.
 Input can be applied via \xref{spin--orbit torque} (SOT)~\cite{SOT_FM_AFM,SOTswitchingCoPt}, while the system can be read out using the \xref{anomalous Hall effect} (AHE)~\cite{AHE}.
 Both of these only require a current to be passed through an underlayer that is electrically connected to the sample, and were explained earlier in the introduction (\cref{sec:1:ASI_IO}).
 % Nonetheless, external fields are often used for input anyway in the lab during the first stages of development, because they are easier to handle than the more complicated methods that would be used in a real device. By the end of the project, Alex had used SOT in his actual devices.
 
 \paragraph{Input by spin--orbit torque}
 In the experimental system, the intent was to apply input data by using SOT~\cite{SOTswitchingCoPt} to switch the OOP magnets.
-Compared to an \xref{external magnetic field}, this allows far greater control over the stimulus applied for each input bit, and can more easily be integrated on-chip without generating significant stray fields. \par
 Since the model used by \hotspice does not use torques, but is rather based on switching energies, SOT can not directly be modelled as a torque in our simulations.
-However, the net desired effect of SOT in our application is deterministic switching of magnets, which can be achieved if in-plane symmetry breaking is present in the system~\cite{SOT_Roadmap}. % SOT_Roadmap mentions symmetry breaking several times, very useful resource
-Such broken symmetry combined with SOT can be used to create a preferential magnetisation direction, which can be modelled in \hotspice as an additional external field $B_z$.
-This is a crude approximation to fit SOT into the Ising-like model; the modelled field $B_z$ is not necessarily related to the field-like SOT torque~\cite{SOT_firstprinciplesCoPt}, though a non-linear relationship between the SOT current density and the modelled field $B_z$ will exist.
+However, the desired effect of SOT in our application is deterministic switching of magnets, as can be achieved through in-plane symmetry breaking~\cite{SOT_Roadmap}. % SOT_Roadmap mentions symmetry breaking several times, very useful resource
+Indeed, SOT in the presence of broken symmetry results in a preferential magnetisation direction, which can be modelled in \hotspice as an additional external field $B_z$.
+This is an approximation to fit SOT into the Ising-like model; the modelled field $B_z$ is not necessarily related to the field-like SOT~\cite{SOT_firstprinciplesCoPt}, though a non-linear relationship between the SOT current density and the modelled field $B_z$ will exist.
 The exact form of this relationship is currently irrelevant for our RC purposes, because it only constitutes an additional non-linear transformation on the input which does not fundamentally change the RC performance of the OOP ASI itself.
 % In the case without symmetry breaking, the effect may be modelled as a temporary reduction of the PMA, as in reality a sufficiently strong SOT (applied over multiple $1/\nu_0$) will push the magnetic moment in-plane~\cite{SOT_Roadmap}, after which it falls back randomly (with higher likelihood to the lowest energy state, I suppose). But this approach raises multiple additional questions: is it meaningful to reduce the barrier only slightly?
 
 \paragraph{Readout by anomalous Hall effect}
 In our paper~\cite{KUR-24}, \textit{A. Kurenkov} experimentally demonstrated electrical readout of the average magnetisation $\llangle s \rrangle$ using the anomalous Hall effect~\cite{AHE}.
 This can therefore be used as a magnetic state readout in the simulations.
-However, reservoir computing benefits from having multiple readout values, so a readout vector $y_i(t)$ can for example be populated by the average magnetisation of each lattice column $i$. \par % Fig. 6a in paper
-A discussion about the experimental feasibility of such a grid of local readouts is given in Supplementary Information 7 of our paper~\cite{KUR-24}.
-In short, by adding more electrodes to the Hall bar --- the conductive layer underneath the ASI used to measure the magnetic state through the AHE --- inhomogeneities in the current density distribution result in different currents flowing through the various nanomagnets.
-This consequently results in unequal contributions to the Hall resistance, providing a way to differentiate between magnets.
-Individual states of the nanomagnets, not just $\llangle s \rrangle$, can be extracted through a set of linear operations.
-In the context of reservoir computing, this means that such a readout approach with multiple electrodes can be computationally equivalent to knowing the exact magnetic configuration of the system.
-
-%We will later notice that simple stimuli are not sufficient for RC in this (non-volatile) system, and instead more complicated patterns will have to be used to meaningfully address the system. However, the practical implementation of such complicated stimuli requires more complicated current line layouts, which also cannot interfere with the readout. This proves to be a conundrum, which I will address later again.
+However, reservoir computing benefits from having multiple readout values, so it would for example be desirable to populate a vector of readout values $x_i(t)$ by the average magnetisation of each lattice column $i$. \par % Fig. 6a in paper
+Experimentally\footnote{
+	A discussion about the experimental feasibility of such a grid of local readouts is given in Supplementary Information 7 of our paper~\cite{KUR-24}.
+}, this can be realised by adding more electrodes to the Hall bar (i.e., to the conductive layer underneath the ASI through which the AHE is measured).
+By probing different pairs of electrodes, inhomogeneities in the current density distribution provide a way to differentiate between magnets, based on their unequal contributions to the Hall resistance.
+By first performing a controlled measurement on known ASI states, where only one magnet has an opposite magnetisation to all others, the contribution of each magnet can be recorded for each pair of electrodes.
+This allows the magnetisation direction of each nanomagnet to be determined later for an unknown ASI state, through a set of linear operations. % that ``peel'' the known contributions off of the measured profile.
+In the context of reservoir computing, such a readout approach with multiple electrodes can therefore be computationally equivalent to knowing the exact magnetic configuration of the system.
+%In sufficiently small systems ($\lesssim 10 \times 10$), all magnets will have a noticeable effect
+%In larger systems, probing a pair of electrodes still provides local information about the average magnetisation of one column or a set of nearby columns, which is what we will use as our readout in simulation.
 
 \section{Thermally active out-of-plane ASI}
 \subsection{Energy contributions} \label{sec:3:E_contributions}
