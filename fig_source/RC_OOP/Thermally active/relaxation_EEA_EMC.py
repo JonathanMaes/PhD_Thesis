@@ -136,7 +136,7 @@ def plot(data_dir=None):
     fig.supylabel(vary_text(0).split("\n")[0] if len(vary_text(0).split("\n")) > 1 else "", fontsize=fontsize_headers, x=0.005, y=0.47) # 0.005 to not be right at the edge but not too far to the right either
     fig.supxlabel("Elapsed time [s]", fontsize=fontsize_labels, x=0.53)
 
-    insets_x = np.array([[0.8, 0.6, 0.8], [0.45, 0.35, 0.8], [0.8, 0.8, 0.8]])
+    insets_x = np.array([[0.65, 0.49, 0.8], [0.36, 0.21, 0.8], [0.8, 0.8, 0.8]])
     insets_y = np.ones((3,3))*.5
     insets_d = 0.4
     
@@ -205,15 +205,26 @@ def plot(data_dir=None):
                 ax.fill_between(X, perc_low, perc_high, color=d["color"], edgecolor="none", alpha=0.5)
             if CLIP_RANGES:
                 for a in [ax, ax_right]:
-                    a.set_xlim(xmin=max(1e-10, np.min(x_vals)/2), xmax=min(t_max, np.max(x_vals)*2))
+                    a.set_xlim(xmin=max((XMIN:=1e-10), np.min(x_vals)/2), xmax=min(t_max, np.max(x_vals)*2))
                     a.set_ylim([0,1])
 
             t = ax.text(0, 1, f" \n  {i*len(varx_values) + j + 1:d}  ",
                         bbox=dict(boxstyle='square,pad=0', facecolor='#000', edgecolor='#000'), color='w',
                         fontsize=fontsize_ticks*.85, fontfamily='DejaVu Sans', weight='bold',
                         linespacing=0.01, ha='left', va='bottom', transform=ax.transAxes, zorder=-1)
-            if any(phase_1_finished := (np.mean(m_avg, axis=0) < 0.2)): # Don't draw the green shading if m_avg doesn't even reach the threshold
-                plt.axvspan(np.mean(x_vals, axis=0)[np.argmax(phase_1_finished)], t_max, facecolor='g', alpha=0.1)
+            # Color phases
+            phase_1_start = np.mean(m_avg, axis=0) < 0.99
+            phase_1_start = np.mean(x_vals, axis=0)[np.argmax(phase_1_start)] if any(phase_1_start) else t_max
+            phase_1_finished = np.mean(m_avg, axis=0) < 0.2
+            phase_1_finished = np.mean(x_vals, axis=0)[np.argmax(phase_1_finished)] if any(phase_1_finished) else t_max
+            ax.axvspan(XMIN, phase_1_start, hatch='xxx', facecolor='none', alpha=0.1)
+            if phase_1_start < t_max: # Don't draw the Stage 1 shading if m_avg doesn't even reach the threshold
+                ax.axvline(phase_1_start, 0, 1, color='k', alpha=0.1)
+                ax.text(phase_1_finished/2, 0.98, s=r"①", va="top", ha="right", fontsize=fontsize_headers*1.2)
+            if phase_1_finished < t_max: # Don't draw the Stage 2 shading if m_avg doesn't even reach the threshold
+                ax.axvspan(phase_1_finished, t_max, facecolor='g', alpha=0.1)
+                # ax.axvline(phase_1_finished, 0, 1, color='k', alpha=0.2)
+                ax.text(phase_1_finished*2, 0.98, s=r"②", va="top", ha="left",  fontsize=fontsize_headers*1.2)
             
             ## Add final magnetisation state to this axis
             if SHOW_STATES:
