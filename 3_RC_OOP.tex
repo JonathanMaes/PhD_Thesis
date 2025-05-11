@@ -32,7 +32,7 @@ Then, the chapter is divided into two main parts, first discussing thermally act
 
 \section{Characteristics of out-of-plane ASI}
 \subsection{Structure of out-of-plane nanomagnets} % Co/Pt multilayer, energy contributions
-\label{sec:3:OOP_nanomagnet_PMA} % TODO: check how much of this is already in the introduction
+\label{sec:3:OOP_nanomagnet_PMA}
 Where in-plane (IP) magnets mostly rely on shape anisotropy to create an easy axis, out-of-plane (OOP) magnets are realised using interfacial anisotropy between the ferromagnetic material and the substrate.
 One example of this is the interface between \ce{Co} and \ce{Pt}, as was used in the experimental OOP ASI fabricated within the context of the \spinengine project.
 This \idx{perpendicular magnetic anisotropy} (PMA) acts in the immediate vicinity of the interface, where the magnetisation then prefers to align perpendicular to said interface. \par
@@ -314,7 +314,7 @@ The main region of interest --- region~$\mathrm{IV}$ with $\qNN \approx 1$ --- i
 The phase diagrams in~\cref{fig:3:OOP_relaxation_continuous} are snapshots at $t = \SI{e4}{\second}$.
 As time goes on, region~$\mathrm{IV}$ will expand and the boundaries between the regions will shift upwards.
 Therefore, for a longer observation time, a system initially located in the frozen region at $t = \SI{e4}{\second}$ may eventually find itself in the more ordered regions~$\mathrm{II}$, $\mathrm{III}$ or~$\mathrm{IV}$.
-However, due to the exponential character of the N\'eel-Arrhenius law, this shift will be minimal and region~$\mathrm{IV}$ will not grow by much more than $\approx 10 \kBT$ for any reasonable timescale, as compared to~\cref{fig:3:OOP_relaxation_continuous}~\cite{KUR-24}.% TODO: @jleliaert suggested to "+ comment on finite size?", so should say somewhere that a larger systems results in a smaller spread on the relaxation curves.
+However, due to the exponential character of the N\'eel-Arrhenius law, this shift will be minimal and region~$\mathrm{IV}$ will not grow by much more than $\approx 10 \kBT$ for any reasonable timescale, as compared to~\cref{fig:3:OOP_relaxation_continuous}~\cite{KUR-24}.% TODO: @jleliaert suggested to "+ comment on finite size?". Does this refer to the smaller spread on relaxation curves? Or ?
 
 \subsubsection{Exchange-coupled system}
 The presence of exchange coupling in a system affects the relaxation behaviour, resulting in deviations from the usual logarithmic ordering during stage $\circled{1}$.
@@ -551,7 +551,6 @@ Therefore, the stochastic nature of the relaxation can, in some cases, prevent t
 In conclusion, the strength of this stimulus determines how hard the ASI will be pushed away from the ground state towards the uniform state, while the frequency of the input determines how much the system can relax back towards the ground state after every input cycle.
 
 \subsection{Analog signal transformation and prediction}
-% TODO END: check if this is not partly redundant, given the introduction
 The transient dynamics of thermally active OOP ASI, as were illustrated in~\cref{fig:3:OOP_relaxation_input}, can be harnessed to perform reservoir computing.
 Since this system can respond to analog input signals $s: \mathbb{R} \rightarrow [0, 1]; t \mapsto s(t)$, an alluring test to evaluate the reservoir computing capability of this system is to have it perform a signal transformation or prediction task~\cite{gartside2022reconfigurable,AdaptiveProgrammableRC,RC_NNN,TaskAdaptivePRC}. \par % REF: AvalanchesChaosNNN also does signal transformation, but it is more of a sidenote there.
 Applying a signal $s(t)$ to the reservoir, here in the form of an external field $B_z(t)$, yields a response $\vc{x}(t) \in \mathbb{R}^p$ from the $p$ readout nodes the reservoir provides.
