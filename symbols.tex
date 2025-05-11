@@ -30,8 +30,8 @@
 	$a$ & Lattice spacing in a regular grid \\
 	&\\
 
-	$B_0$ & Magnetic field magnitude corresponding to lowest input value \\
-	$B_1$ & Magnetic field magnitude corresponding to highest input value \\
+	$B_0$ & Magnetic field magnitude corresponding to the lowest input value \\
+	$B_1$ & Magnetic field magnitude corresponding to the highest input value \\
 	$\vc{B}_\mathrm{eff}$ & Effective magnetic field experienced by a magnet \\
 	$\vc{B}_\mathrm{ext}$ & External magnetic field \\
 	&\\
@@ -39,7 +39,7 @@
 	$C$ & Computing capacity \\
 	&\\
 
-	$d$ & Effective distance between north and south poles of a magnet in the dumbbell approximation \\
+	$d$ & Effective distance between the north and south poles of a magnet in the dumbbell approximation \\
 	$D_\mathrm{NM}$ & Diameter of OOP nanomagnets \\
 	$\vc{D}$ & $N \times N$ matrix storing the magnetostatic interaction between each pair of magnets $(i,j)$ when $s_i=s_j=1$ \\
 	&\\
@@ -50,8 +50,8 @@
 	$\EBeff$ & Effective energy barrier \\
 	$\EBeffLeft$ & Effective energy barrier for clockwise coherent reversal \\
 	$\EBeffRight$ & Effective energy barrier for counter-clockwise coherent reversal \\
-	$\EEA$ & Net energy barrier of OOP nanomagnet (effective anisotropy) \\
-	$E_\mathrm{err}$ & Error to the MS interaction due to the use of a truncated kernel \\
+	$\EEA$ & Net energy barrier of OOP nanomagnets (effective anisotropy) \\
+	$E_\mathrm{err}$ & Discrepancy of the MS interaction due to the use of a truncated kernel \\
 	$E_\mathrm{Exch}$ & Exchange energy\\
 	$\EMC$ & Nearest-neighbour magnetostatic coupling energy \\
 	$E_\mathrm{MS}$ & Magnetostatic interaction energy \\
@@ -66,35 +66,35 @@
 	$G$ & Generalisation-capability \\
 	& \\
 
-	$h$ & Time offset for Mackey-Glass prediction task \\
+	$h$ & Time offset for the Mackey-Glass prediction task \\
 	&\\
 
-	$\mathcal{I}$ & Geometrical factor in second-order correction on MS interaction \\
+	$\mathcal{I}$ & Geometrical factor in the second-order correction on the MS interaction \\
 	&\\
 
 	$J$ & Exchange coupling constant \\
 	&\\
 
-	$k$ & Cut-off time for calculation of task-agnostic metrics \\
+	$k$ & Cut-off time for the calculation of task-agnostic metrics \\
 	$K$ & Kernel-quality \\ % Conflicts with elliptic integral but doesn't matter
 	$\vc{K}_i$ & Demagnetisation kernel for a magnet $i$ \\
 	$\vc{\mathcal{K}}^{(q)}$ & Demagnetisation kernel for a magnet at site $q$ in the unit cell \\
 	$K_u$ & Uniaxial shape anisotropy \\
 	&\\
 
-	$l$ & Length of elliptical magnet ($2a$) \\
+	$l$ & Length of an elliptical magnet \\
 	$L$ & Number of cells along each dimension in a square simulation \\
 	&\\
 
 	$\mavg$ & Normalised average magnetisation of OOP ASI \\
-	$M$ & Total magnetic moment of ASI \\
-	$M_0$ & Total magnetic moment of ASI in uniform state \\
-	$M_\parallel$ & Average magnetisation of ASI along the direction of the external field $\vc{B}_\mathrm{ext}$ \\
+	$M$ & Total magnetic moment of an ASI \\
+	$M_0$ & Total magnetic moment of an ASI in the uniform state \\
+	$M_\parallel$ & Average magnetisation of an ASI along the external field direction $\vc{B}_\mathrm{ext}$ \\
 	$\vc{M}$ & Magnetisation \\
 	$M_\mathrm{sat}$ & Saturation magnetisation \\
 	&\\
 
-	$n$ & Number of samples for training the weights $\vc{w}$ \\
+	$n$ & Number of samples for training the linear readout weights $\vc{w}$ \\
 	$n_{\ce{Co}}$ & Number of cobalt layers in OOP nanomagnets \\
 	$N$ & Number of magnets in the ASI \\
 	$N_x$ & Number of cells in the simulation along the x-direction \\
@@ -118,19 +118,19 @@
 	$r_{ij}$ & Distance between magnets $i$ and $j$ \\
 	$\vc{r}_{ij}$ & Distance vector between magnets $i$ and $j$ \\
 	$\rmin$ & Minimal allowed distance between simultaneously sampled magnets \\
-	$\vc{r_N}_i$ & Position of north monopole of magnet $i$ in the dumbbell model \\
-	$\vc{r_S}_i$ & Position of south monopole of magnet $i$ in the dumbbell model \\
+	$\vc{r_N}_i$ & Position of the north monopole of magnet $i$ in the dumbbell model \\
+	$\vc{r_S}_i$ & Position of the south monopole of magnet $i$ in the dumbbell model \\
 	$R_\mathrm{AHE}$ & Anomalous Hall coefficient \\
 	$R_x$ & Number of cells along the $x$-axis in a jittered grid subregion \\
 	$R_y$ & Number of cells along the $y$-axis in a jittered grid subregion \\
-	$\widetilde{R}$ & Radius (number of grid cells) of truncated MS kernel \\
+	$\widetilde{R}$ & Radius (number of grid cells) of a truncated magnetostatic kernel \\
 	$\mathcal{R}$ & Reservoir \\
 	&\\
 
-	$s(t)$ & Input signal applied to reservoir at time $t$ \\
+	$s(t)$ & Input signal applied to a reservoir at time $t$ \\
 	$s_i$ & State of a magnet ($\pm 1$) along the easy axis $\vc{u}_i$ \\
 	$\vc{s}$ & Column vector containing all $s_i$ \\
-	$S_\mathrm{ASI}$ & Spacing between magnets in OOP ASI \\
+	$S_\mathrm{ASI}$ & Spacing between nanomagnets in OOP ASI \\
 	$\vc{S}$ & $N_x \times N_y$ matrix containing all $s_i$ \\
 	$\langle s_i s_{i+1} \rangle$ & Nearest-neighbour correlation \\
 	&\\
@@ -138,7 +138,7 @@
 	$t$ & Time \\
 	$t_{\ce{Co}}$ & Thickness of cobalt layers in OOP nanomagnets \\
 	$t_{\ce{Pt}}$ & Thickness of platinum layers in OOP nanomagnets \\
-	$t_\mathrm{max}$ & Maximum time step with the first-switch method \\
+	$t_\mathrm{max}$ & Maximum time step in the first-switch method \\
 	$\Delta t$ & Random switching time interval of a single magnet \\
 	$T$ & Temperature \\
 	$T_c$ & Critical temperature (Ising model) \\
@@ -150,16 +150,16 @@
 	$V$ & Volume of a magnet \\
 	&\\
 
-	$w$ & Width of elliptical magnet ($2b$) \\
+	$w$ & Width of an elliptical magnet \\
 	$\vc{w}$ & Adjustable weights of a reservoir's linear readout layer \\
 	&\\
 	
-	$\vc{x}(t)$ & $p$-dimensional readout vector of reservoir at time $t$ \\
+	$\vc{x}(t)$ & $p$-dimensional readout vector of a reservoir at time $t$ \\
 	$\vc{X}$ & Readout matrix of sampled reservoir readout vectors \\
 	&\\
 	
-	$y(t)$ & Target output of reservoir at time $t$ \\
-	$\hat{y}(t)$ & Output of reservoir at time $t$ (i.e., estimate of $y(t)$) \\
+	$y(t)$ & Target output of a reservoir at time $t$ \\
+	$\hat{y}(t)$ & Output of a reservoir at time $t$ (i.e., estimate of $y(t)$) \\
 	$\vc{y}$ & Vector of sampled target output values \\
 	&\\
 	
@@ -191,7 +191,7 @@
 	$\lambda$ & Exchange length \\
 	&\\
 
-	$\mu_i$ & Size of magnetic moment of magnet $i$ \\
+	$\mu_i$ & Size of the magnetic moment of magnet $i$ \\
 	$\vc{\mu}_i$ & Total magnetic moment vector of magnet $i$ \\
 	$\vc{\bigmu}$ & $N_x \times N_y$ matrix containing all $\mu_i$ \\
 	&\\
@@ -204,7 +204,7 @@
 	&\\
 
 	$\pi_i$ & Equilibrium probability of state $i$ \\
-	$\pi_\tau(t)$ & Parity of binary input sequence between $t-\tau$ and $t$ \\
+	$\pi_\tau(t)$ & Parity of a binary input sequence between times $t-\tau$ and $t$ \\
 	&\\
 
 	$\rho$ & Perpendicular magnetisation factor \\
@@ -224,12 +224,12 @@
 	$\phi$ & Angle of the effective field $\vc{B}_\mathrm{eff}$ w.r.t. easy axis $\vc{u}$ \\
 	&\\
 
-	$\chi$ & Random variable with uniform distribution in $(0, 1]$ \\
+	$\chi$ & Random variable with a uniform distribution in $(0, 1]$ \\
 	&\\
 	
 	$\Omega$ & 3D geometry of a magnet \\
 	&\\
 	
-	$\sampi$ & Random variable with standard normal distribution (i.e. with mean 0 and standard deviation 1) \\
+	$\sampi$ & Random variable with a standard normal distribution (i.e. with mean 0 and standard deviation 1) \\
 	&\\
 \end{longtable}
