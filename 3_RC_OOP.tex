@@ -820,7 +820,7 @@ Nanowire networks~\cite{NanoarchitectonicAtomicSwitch,RC_NNN} appear to achieve 
 Chemical dynamics can also be utilised as a reservoir; for example, the use of electrochemical currents in a solution has yielded an $\MSE$ of $\approx 0.002$ for the sawtooth transformation task~\cite{ElectrochemicalPRC}. % 0.002 for polyoxometalate. For water, $\MSE \approx 0.04$.
 Abstract echo state networks do outperform our system, as they have reportedly achieved $\MSE \approx 0.006$ for a very far future prediction of $k \approx 5$~\cite{Moon_2021}. % They gets NRMSE of 0.045 for their single-reservoir ESN, which corresponds to MSE 0.002, but their definition divides the normal MSE by the average square deviation, which is never more than 0.25. So the correspondence is quite vague.
 
-\subsection{Conclusion}
+\subsection{Summary}
 By harnessing the spontaneous relaxation dynamics of thermally active OOP ASI, this type of system can be used as a reservoir thanks to its gradual response to external stimuli.
 While this working principle inevitably suffers from thermal noise, which imposes a limit to the achievable performance, the extent of this noise can be greatly reduced by enlarging the system.
 The computational capability of this system can be further boosted by including a property gradient.
@@ -1227,31 +1227,28 @@ Furthermore, one must take care to regularly apply both positive and negative cy
 Both of these factors complicate the input encoding. \par
 Ultimately, both of these scalar input concepts were dismissed as they did not provide a desirable effect.
 
-\subsection{Conclusion}
+\subsection{Summary}
 Achieving reservoir computing in non-volatile OOP ASI posed several challenges.
 A uniform global input could not be used for RC, as it does not distinguish between the degenerate ground states.
 This was solved by devising an input with the same checkerboard pattern as the AFM ground state.
 However, applying a global AFM input did not yield usable dynamics since uncontrolled domain wall motion saturates the system in one of its ground states, erasing prior information present in the system.
-Hence, a clocking protocol was introduced, such that not all magnets are simultaneously stimulated with equal magnitude.
-More specifically, the system was divided into two interleaved sublattices, allowing the controlled propagation of domain walls. \par
+This led us to formulate two basic requirements for using a non-volatile ASI as a reservoir: the input must lift the degeneracy of the ground states such that it can affect domain boundaries, and at least two independently addressable sublattices should exist to prevent avalanches. \par
+Hence, a clocking protocol was developed that does not stimulate all magnets simultaneously.
+More specifically, the system was divided into two interleaved sublattices, allowing the controlled propagation of domain walls.
 Nonetheless, in the absence of defects, the information stored by this clocking protocol was rather limited as a large portion of the response was reversible and highly symmetric.
-Since defects are always present in a real system, they were also accounted for in simulation.
-The reproducible disorder these defects offer --- at least within a single ASI with random defects --- breaks the symmetry and creates more irreversible dynamics in the bulk of the system, thereby enhancing the computational capability of the system.
-This was reflected by an increased memory capacity ($\approx 2.5$ bits instead of $\approx 1.5$) and parity check performance ($\approx 3$ bits instead of $\approx 1.5$), though the maximum non-linearity decreased. \par
+The reproducible disorder provided by defects --- within a specific ASI sample --- breaks the symmetry and creates more irreversible dynamics in the bulk of the system, thereby enhancing its computational capability.
+This was reflected by an increased memory capacity ($\approx 1.5 \rightarrow 2.5$ bits) and parity check performance ($\approx 1.5 \rightarrow 3$ bits), though the maximum non-linearity decreased. \par
 A limitation of the clocking protocol is that it only allows binary input, but for real-world applications scalar inputs are often more relevant.
 It is, however, non-trivial to devise a scalar input protocol for non-volatile ASI.
-In this sense, the non-volatile and thermally active ASI complement each other --- supporting binary and scalar input, respectively.
+In this sense, the thermally active and non-volatile ASI complement each other --- supporting analog and binary input, respectively.
 
 \section{Conclusion}
-Reservoir computing was achieved in both thermally active as well as non-volatile OOP ASI.
-For thermally active OOP ASI, this was enabled by its spontaneous logarithmic relaxation towards the ground state in the absence of input, which provides a gradual response to external stimuli over a broad frequency range.
-By harnessing these dynamics, a signal transformation and forecasting was performed with accuracy comparable to other single reservoirs.
-Including a property gradient throughout the ASI provides a richer output, while enlarging the system aids to reduce thermal noise which otherwise limits the attainable performance. \par
-Non-volatile OOP ASI is easier to manufacture than its thermally active counterpart, which prompted us to attempt reservoir computing with non-volatile systems as well.
-This resulted in the two-step AFM clocking protocol.
-While this input method may also provide manufacturing challenges, its concept provided several key takeaways that apply to any (non-volatile) ASI.
-Firstly, the input method must lift the degeneracy between the ground states of the system, such that the input can act on the domains and selectively affect the domain boundaries in the system.
-Secondly, at least two independently addressable sublattices should exist: an input protocol must never stimulate both of them at once, to prevent avalanches.
-Following these principles, controlled domain wall motion was achieved in non-volatile OOP square-lattice ASI, which led to a decent memory capacity of up to $2.5$ bits. \par
-In conclusion, reservoir computing capability has been demonstrated in OOP ASI, for both thermally active as well as non-volatile systems.
-These two types of system complement each other in the sense that they respectively support analog and binary input, for which they both achieved satisfactory results at benchmark tasks and metrics.
+We have numerically demonstrated the reservoir computing capability of both thermally active and non-volatile OOP ASI, each of which required very different input methods.
+The spontaneous logarithmic relaxation of thermally active ASI towards the ground state results in a gradual response to external stimuli over a broad frequency range, which allowed us to use them as a sort of leaky integrator.
+However, non-volatile ASI requires a more intricate input method in order to avoid avalanches, which led us to develop a clocking protocol that results in stepwise domain wall motion. \par
+Since thermally active systems can readily process analog input, we evaluated their RC performance on a signal transformation and prediction task.
+The binary character of the clocking scheme restricts its available tasks, so there we opted to use task-agnostic metrics instead.
+Both systems achieved a performance comparable to other single reservoirs on their respective tasks and metrics.
+Introducing spatial variation --- in the form of a property gradient in thermally active ASI and random disorder in non-volatile ASI --- was found to provide a richer output for both systems.
+On a similar note, enlarging the lattice of thermally active ASI aids to reduce thermal noise which otherwise limits the attainable performance. \par
+In conclusion, these two types of OOP ASI complement each other in the sense that they respectively support analog and binary input, for which they both achieved satisfactory results at benchmark tasks and metrics.
