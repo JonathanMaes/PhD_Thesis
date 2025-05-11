@@ -1,44 +1,45 @@
 \chapter{Conclusion and outlook}\label{ch:Conclusion}
 \glijbaantje{There is no prize to perfection, only an end to pursuit.}{Viktor, \textit{Arcane}}
 
-Throughout this thesis, we have investigated the use of artificial spin ice with out-of-plane magnetisation --- of both the thermally active and non-volatile kind --- as a physical reservoir.
+Throughout this thesis, we have investigated the use of artificial spin ice with perpendicular magnetisation --- of both the thermally active and non-volatile kind --- as a physical reservoir.
 Our interest in OOP ASI for RC was motivated by their well-established input (SOT) and readout (AHE) methods, but their RC potential had yet to be quantified.
 To support this work, we developed \hotspice, a flexible CPU/GPU-agnostic Monte Carlo simulator that captures the collective behaviour of large ASI arrays.
-Ultimately, three main topics were covered.
+Ultimately, we have covered three main topics.
 \begin{itemize}
-	\item The development and underlying model of \hotspice{}, with a focus on several variations of the basic model to improve physical accuracy and algorithmic performance.
-	\item The demonstration that thermally active OOP ASI can serve as a reservoir by harnessing its spontaneous relaxation, as evidenced by its ability to perform non-linear signal transformation and prediction.
-	\item The design and numerical validation of a two-step ``clocking'' protocol that enables controlled domain wall motion in non-volatile OOP ASI, making them usable for RC with binary input.
+	\item The development and underlying model of \hotspice{}, with a focus on several variations on the basic model to improve physical accuracy and algorithmic performance.
+	\item The demonstration that thermally active OOP ASI can serve as an analog-input reservoir by harnessing its spontaneous relaxation, as confirmed through non-linear signal transformation and prediction.
+	\item The design and numerical validation of a clocking protocol for non-volatile OOP ASI that provides controlled domain wall motion, enabling OOP ASI to be used as a binary-input reservoir.
 \end{itemize}
-The key conclusions are summarised below, followed by an outline of possible future research avenues.
+The key conclusions are summarised below, followed by an outline of promising avenues for future research.
 
 \newpage
-\paragraph{Summary of main results}
+\section{Summary of main results}
 The Ising-like model used by \textbf{\hotspice} to represent single-domain nanomagnets in an ASI allows it to strike a practical balance between physical accuracy and computational efficiency.
-Several model variants were proposed that have a limited performance impact but improve the physical accuracy of the simulation.
-Firstly, for a more accurate calculation of the magnetostatic interaction, a second-order correction was found to be appropriate for OOP ASI, while a dumbbell model is preferable for IP ASI. % and yields qualitatively different dynamics.
-Secondly, different estimates for the effective energy barrier were considered: accounting for asymmetric switching channels proved key to correctly reproduce experimental results for IP ASI, while an exact solution for an idealised energy landscape proved inaccurate for OOP magnets. % Provided that the reduced magnetisation during non-coherent reversal processes was also accounted for.
-Finally, two distinct switching algorithms were implemented: the first-switch method is best suited for temporal dynamics, while the Metropolis-Hastings algorithm can efficiently explore the equilibrium state space.
-The latter can gain performance by simultaneously sampling multiple sufficiently distant magnets. \par
-Using this tool, we showed that \textbf{thermally active} OOP ASI initialised in a uniform state exhibits logarithmic relaxation towards its ground state, as characterised in~\cref{sec:3:relaxation}.
-External stimuli can push it away from its ground state, leading to behaviour reminiscent of a leaky integrator.
-This allows it to serve as a fading-memory reservoir, as was verified by two benchmark tasks --- non-linear signal transformation and chaotic time-series prediction --- where comparable performance ($\MSE \sim 0.015$) to other physical reservoirs was obtained.
-Including a property gradient was found to have a positive impact, as it introduces different relaxation timescales throughout the system, thereby encoding more distinct information.
-The logarithmic relaxation leads to a remarkably broad operable frequency window, spanning at least two orders of magnitude. \par
-For \textbf{non-volatile} OOP ASI, such a global stimulus would simply saturate the lattice, as avalanches propagate through the system unimpeded.
+Two distinct switching algorithms were implemented: the first-switch method is best used to simulate temporal dynamics, while Metropolis-Hastings sampling efficiently explores the equilibrium state space.
+The latter can gain performance by simultaneously sampling multiple (sufficiently distant) magnets.
+Two classes of model variants were found to improve simulation accuracy at little to no performance impact.
+Firstly, accounting for the finite size of magnets in OOP ASI is best done through a second-order correction on the MS interaction.
+For IP ASI, on the other hand, a dumbbell model is preferable and can yield qualitatively different dynamics in e.g., kagome ASI.
+Secondly, to accurately estimate the effective energy barrier in IP ASI, accounting for asymmetric switching channels and non-coherent reversal proved key to reproduce experimental results.
+For OOP magnets, however, an exact solution for an idealised energy landscape proved inaccurate.
+In both ASI types, the assumption of switching by coherent reversal therefore seems to be a poor approximation. \par
+Using \hotspice, it was shown that \textbf{thermally active} OOP ASI exhibits logarithmic relaxation towards its ground state, a process characterised in detail in~\cref{sec:3:relaxation}.
+External stimuli can push it away from equilibrium, leading to behaviour reminiscent of a leaky integrator over a remarkably broad frequency window ($\gtrsim 2$ decades) owing to the logarithmic relaxation.
+This allows it to serve as a fading-memory reservoir, as verified by two benchmark tasks --- non-linear signal transformation and chaotic time-series prediction --- where performance comparable to other physical reservoirs was obtained ($\MSE \lesssim 0.015$).
+Including a property gradient was found to have a positive impact, as it introduces different relaxation timescales throughout the system, thereby encoding more distinct information. \par
+For \textbf{non-volatile} OOP ASI, global stimuli as used for thermally active ASI would simply saturate the lattice, as avalanches propagate through the system unimpeded.
 Therefore, we developed the ``AFM clocking'' protocol: by alternately stimulating two interleaved sublattices, avalanches were avoided and controlled stepwise domain wall motion was achieved in square-lattice OOP ASI.
-In the presence of realistic disorder on the energy barrier of magnets, this scheme produces sufficiently complex dynamics for reservoir computing, as the position and size of domains non-linearly encodes recent bits of information.
-More broadly, to achieve controlled domain wall movement in an ASI, two key takeaways from the clocking concept are that the input method must lift the degeneracy between the ground state and that at least two independently addressable sublattices must exist to prevent avalanches.  \\\par
+Defects, in the form of a variation on the OOP anisotropy, enable this scheme to produce more complex dynamics that can be harnessed for reservoir computing, as the position and size of domains non-linearly encodes recent bits of information.
+More broadly, we can say that controlled domain wall motion in any ASI requires (1) an input that lifts the ground state degeneracy and (2) at least two independently addressable sublattices to prevent avalanches. \\\par
 
-Overall, we have demonstrated that out-of-plane artificial spin ice can serve as an effective physical reservoir, with \hotspice serving as a versatile and efficient tool for exploring both ASI physics and optimising ASI for unconventional computing architectures.
-\hotspice has proven to be a useful tool for the purposes of this thesis, with potential for use in other settings.
-In a broader sense, it can complement micromagnetic simulations to enable the study of complex ASI dynamics in large systems. % TODO: rework this "ending" in the middle
+In summary, we have established that out-of-plane artificial spin ice can indeed function as a versatile physical reservoir: in its thermally active form, it responds to analog input akin to a leaky integrator, while its non-volatile counterpart supports binary input through the clocking protocol. % These results establish.
+Meanwhile, \hotspice has proven its worth as a flexible and efficient simulator, that can be used for both the exploration of ASI physics as well as their optimisation for unconventional computing architectures.
 
 \newpage
-\paragraph{Outlook and future directions}
+\section{Outlook and future directions}
 Looking ahead, several avenues can strengthen both the simulation toolkit and the proposed physical reservoir concepts.
 
-\subparagraph{Refinements to \hotspice}
+\paragraph{Refinements to \hotspice}
 The functionality implemented in \hotspice has grown organically, as it was initially unclear how accurate a basic Ising model would be.
 Hence, the various models presented in~\cref{ch:Hotspice} were mostly considered and implemented after the basic code structure had already been established.
 This has led to an API that can at times be opaque, with some functionality that has since become obsolete.
@@ -62,7 +63,7 @@ For higher throughput, multiple simulations could be ``stacked'' as 3D arrays, p
 
 While the implemented model variants already make \hotspice usable in a wide range of ASI systems, the aforementioned suggestions could raise the efficiency of \hotspice to the next level.
 
-\subparagraph{Reservoir computing in perpendicular-anisotropy artificial spin ice}
+\paragraph{Reservoir computing in perpendicular-anisotropy artificial spin ice}
 We have successfully used both thermally active and non-volatile out-of-plane ASI as a reservoir, which both required different input protocols.
 Still, there are limits to the presented approaches that affect their viability to use them for reservoir computing. \par
 
