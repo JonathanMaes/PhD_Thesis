@@ -562,24 +562,17 @@ The reason for this is that \hotspice assumes all aspects of the system remain s
 To approximate a continuous input in simulation, the input signal must be sampled at sufficiently short time intervals --- say, 20 samples per period.
 This can be done by imposing a maximum switching time $t_\mathrm{max} = 1/20f$ and updating the external field $\vc{B}_\mathrm{ext}$ after each iteration of the first-switch method (\cref{alg:2:FirstSwitchSingle}) --- regardless of whether a magnet has switched within the short interval $t_\mathrm{max}$ --- resulting in adequate sampling of the true input signal. \\\par
 
-By recording the reservoir state $\vc{x}(t_i)$ and the target output $y(t_i)$ at discrete intervals $t_i = i t_\mathrm{max}$ (with $i = 1,\dots,n$)\footnote{
-	When a magnet switches on a timescale $\Delta t < t_\mathrm{max}$, the external field $B_z(t)$ is updated immediately to more accurately represent the input signal.
-	The reservoir state, however, is only recorded at intervals of $t_\mathrm{max}$ for a consistent measure of reservoir performance that is independent of reservoir dynamics like individual switches.
-}, the readout layer can be trained on several periods of the input signal via ordinary least-squares (OLS) regression\footnote{
+By recording the reservoir state $\vc{x}(t_i)$ and the target output $y(t_i)$ at discrete intervals $t_i = i t_\mathrm{max}$ (with $i = 1,\dots,n$), the readout layer can be trained on several periods of the input signal via ordinary least-squares (OLS) regression\footnote{
 	Regularised OLS fitting was performed using the \python{statsmodels}~\cite{statsmodels} Python package.
 }.
-Throughout the remainder of this section, we will compare the performance of the OOP ASI reservoir as a function of several system parameters.
-For a consistent comparison, the training of the linear readout layer for signal transformation (prediction) is always performed on the first 12 (60) periods\footnote{
-	For signal transformation on periodic signals, as considered here, one period would normally suffice.
-	However, since the thermally active ASI reservoir is subject to thermal noise, multiple periods are used for increased robustness against such noise.
-} of the input signal.
-After training, the performance of a reservoir will be evaluated based on 8 (40) more periods of the input signal, as quantified by the mean squared error (MSE{\tiny }) of the ASI prediction $\hat{y}(t)$ with respect to the target function $y(t)$ at the sampled times $t_i$:
+After training, the reservoir will be evaluated based on several more periods --- the test set --- during which the weights $\vc{w}$ of the readout layer remain fixed. % TODO: search for OLS throughout this thesis and make sure it is used correctly
+The performance is then quantified by the mean squared error ($\MSE$) of the ASI prediction $\hat{y}(t)$ with respect to the target function $y(t)$ at the sampled times $t_i$:
 \begin{equation}
 	\label{eq:3:MSE}
 	\MSE = \frac{1}{n} \sum_{i=1}^n \big(\hat{y}(t_i) - y(t_i)\big)^2 \mathrm{.}
 \end{equation}
 Since all signals considered here will be normalised to the unit interval $[0,1]$, no additional normalisation is necessary. \par
-To evaluate the reservoir performance, the mean squared error of two estimators will be compared: one that is trained on the reservoir output $\vc{x}(t)$ as described before, and one that is trained only on the raw 1D input signal $s(t)$ (augmented with a constant\footnote{
+To interpret this value, the mean squared error of two estimators will be compared: one that is trained on the reservoir output $\vc{x}(t)$ as described before, and one that is trained only on the raw 1D input signal $s(t)$ (augmented with a constant\footnote{
 	Training an OLS estimator on a 1D signal is equivalent to an optimal scaling to fit the signal to the target function.
 	The inclusion of a constant factor enables a vertical offset of the input signal for a better fit (yielding up to $10 \times$ lower baseline MSE).
 	Some studies do not use such a constant factor~\cite{gartside2022reconfigurable}, thereby lowering the quality of the raw-input baseline and elevating the relative performance of the reservoir.
@@ -598,7 +591,11 @@ Hence, any value of the input signal $s$ is reached at two distinct instants $t_
 For example, compare $t_1 = 0$ and $t_2 = 0.5/f$: $\sin(0) = 0 \mapsto y(0) = 0$ but $\sin(\pi) = 0 \mapsto y(0.5) = 0.5$.
 Hence, the reservoir can not only rely on the input signal at the current time, but must also retain information on e.g. the derivative of the input signal, in order for the linear estimator to be able to accurately predict the sawtooth during both the increasing and decreasing parts of the sine wave.
 The thermally active OOP ASI reservoir should readily have such information available, since its operation resembles that of a leaky integrator.
-While most transformations indeed require some limited memory, some examples like a sine-to-square wave transformation do not.
+While most transformations indeed require some limited memory, some examples like a sine-to-square wave transformation do not. \par
+Throughout the remainder of this section, we will compare the performance of the OOP ASI reservoir as a function of several system parameters.
+For a consistent comparison, the linear readout layer will always be trained on the first 12 periods of the input signal, after which the reservoir performance is evaluated on 8 more periods.
+For signal transformation on periodic signals, as considered here, one period would normally suffice.
+However, since the thermally active ASI reservoir is subject to thermal noise, multiple periods are used to increase robustness against such noise.
 %Simulations of the signal transformation task are based on~\cite{gartside2022reconfigurable,AdaptiveProgrammableRC}, and the same thing is done in~\cite{TaskAdaptivePRC}.
 
 \paragraph{Frequency dependence}
@@ -662,7 +659,7 @@ The results of this parameter sweep are presented in~\cref{fig:3:Transformation_
 }
 
 A point symmetry is visible about the origin of~\cref{fig:3:Transformation_magn-magnmin}: $\MSE(B_0, B_1) = \MSE(-B_0, -B_1)$.
-The reason for this is the planar symmetry of the ASI, whose operation remains identical when it is flipped upside down.
+The reason for this is that the ASI is symmetrical under a reversal of the magnetic state.
 While the optimal input frequency often remains of a similar order of magnitude regardless of the transformation --- since the frequency is mostly dictated by the relaxation dynamics --- the optimal range of input field magnitudes is highly dependent on the desired transformation.
 For example, performance is somewhat reduced along the $B_0 = -B_1$ diagonal for the sine-to-sawtooth transformation considered here because this choice of input puts the sharp drop of the sawtooth at the moment when the input field is zero.
 Other transformations can behave very differently: this kind of $\MSE(B_0, B_1)$-map can be used to identify their optimal input field range at a given frequency.
@@ -701,7 +698,7 @@ When each readout node represents the average magnetisation of one column, a squ
 However, as $p$ increases, the danger of overfitting increases as well~\cite{DeepRC_IonGating_Overfitting,lukovsevivcius2009reservoir}.
 Overfitting is a general machine learning phenomenon that occurs when a model has too many trainable weights $\vc{w}$ for the limited data it has been given.
 This causes the model to train on noise present in the data --- rather than on the general trend underlying that noisy data --- resulting in worse performance on the test set.
-Since our thermally active OOP ASI reservoir is inherently noisy due to thermal fluctuations, overfitting is a possible concern.
+Since our thermally active OOP ASI reservoir is inherently noisy due to thermal fluctuations, overfitting is a potential concern.
 Overfitting is one reason for why data is typically split into a training and test set, as the $\MSE$ on the training set may be too optimistic a measure for the reservoir performance. \\\par
 
 The transformation performance with such single-column readouts is shown in~\crefSubFigRef{fig:3:Transformation_size-magn}{a}, as measured by $1/\MSE$ on both the training and test sets as a function of the number of readout nodes $p=N_x=N_y$.
@@ -763,8 +760,9 @@ which was discretised by a time step $\tau/1000$ using the integration of~\ccite
 Typical values for the parameters $\beta=0.2, \gamma=0.1$ and $n=10$ were used.
 For $\tau \gtrsim 16.8$, this system is chaotic~\cite{jaeger2001echo}: $\tau=23$ was used here to get sufficiently chaotic behaviour, though $\tau=17$ is a more common choice.
 To extinguish transients after releasing the oscillator from its initial state $\big(\mathrm{MG}(t \leq 0) = 0.5\big)$, a first timeframe $t \leq 25\tau$ is discarded.
-Meanwhile, the extrema attained during this initial timeframe were recorded, to allow a scaling of subsequent input to the appropriate field range between $B_0$ and $B_1$. \par
-While the Mackey-Glass oscillator is not strictly periodic, its delay parameter $\tau$ still provides a characteristic timeframe for its oscillations.
+Meanwhile, the extrema attained during this initial timeframe were recorded, to allow a scaling of subsequent input to the appropriate field range between $B_0$ and $B_1$.
+The OLS estimator is then trained over a timespan of $60\tau$, after which the test set spans $40\tau$. \par
+While the Mackey-Glass oscillator is not strictly periodic, its delay parameter $\tau$ still provides a characteristic timescale for its oscillations.
 Therefore, the specific transformation attempted here is written as
 \begin{equation}
 	s(t) = \mathrm{MG}(ft\tau) \mapsto y(t) = \mathrm{MG}((ft + h)\tau) \mathrm{,}
@@ -786,7 +784,7 @@ For larger offsets $h$, more such minima will appear near $h \in \mathbb{N}$, th
 The performance at $h=0$ presents the limit of what the thermally active ASI reservoir can achieve, due to the stochastic nature of the relaxation process it employs.
 Unsurprisingly, this limit improves by adding a gradient and increasing the system size.
 
-\vspace{-1em}
+\vspace{-1em} % TODO: change legend labels to be consistent between both panels
 \xfig{3_RC_OOP/Thermally active/Prediction/MG.pdf}{
 	\label{fig:3:Prediction_MG}
 	Performance of a thermally active OOP square-lattice ASI on a prediction task for the Mackey-Glass oscillator, for ASI of different size and gradient $\Gamma$.
