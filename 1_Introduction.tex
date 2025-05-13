@@ -170,8 +170,7 @@ These optimal weights then remain fixed, and the performance of the reservoir ca
 
 \subsection{Metrics} \label{sec:1:RC_metrics}
 To compare different physical reservoirs or identify optimal system parameters, metrics are needed that can provide a consistent evaluation of how suitable a given physical system is to be used as a reservoir.
-In this respect, two types of metrics are often used: those calculated based on the ranks of matrices, and those calculated through a form of linear regression.
-The latter are also referred to as task-agnostic metrics~\cite{RC_TaskAgnosticMetrics}. % Q: find a better name for them?
+In this respect, two types of metrics are often used: those calculated based on the ranks of matrices, and those calculated through linear estimators.
 
 \subsubsection{Matrix rank-based metrics}\indexlabel{matrix rank-based metrics} \label{sec:1:RC_metrics_KQ}
 Legenstein and Maass~\cite{WhatMakesPowerful} proposed three metrics, based on the readout vector $\vc{x}(t)$ of the reservoir.
@@ -200,9 +199,9 @@ To obtain a single metric for the computational capability of a reservoir, Legen
 This yields the \idx{computing capacity} $C = K - G$, where higher values typically indicate better performance.
 However, care should be taken with such claims, as high computing capacity does not necessarily mean that the reservoir will perform well on all tasks it is given.
 
-\subsubsection{Task-agnostic metrics}
-While the matrix rank-based metrics are, strictly speaking, also task-agnostic, the metrics to be discussed now are more commonly referred to when talking about task-agnostic metrics, since there is a clearer relation between them and the types of tasks that the reservoir will perform well on.
+\subsubsection{Linear estimator-based metrics}
 A practical definition of non-linearity and memory capacity was given by Love~\etal~\cite{RC_TaskAgnosticMetrics_v2}, which will also be used here.
+The parity check metric uses a similar calculation that is better suited for binary input sequences~\cite{hon2021numerical,tsunegi2019STOforcedsyncRC}.
 
 \paragraph{Non-linearity}
 The non-linearity of the reservoir can be measured by considering that its response consists of a linear and a non-linear contribution.
@@ -502,7 +501,7 @@ The main complication in micromagnetic simulations is the infinite range of the 
 This can pose an issue, since the high spatial resolution needed ($\leq \lambda$) can lead to simulations that contain millions of cells.
 Furthermore, the time step must be tiny, as magnetisation dynamics can occur over fractions of picoseconds~\cite{PhD_Leliaert}.
 Therefore, since ASI may contain hundreds of magnets whose switching rate is often orders of magnitude slower, micromagnetic simulations quickly become infeasible~\cite{leo2021chiral}.
-Furthermore, to determine statistically valid RC metrics, many input cycles must be applied --- on the order of 100 for the task-agnostic metrics --- during which many switches occur~\cite{RC_TaskAgnosticMetrics_v2}.
+Furthermore, to determine statistically valid RC metrics, many input cycles must be applied --- on the order of 100 for the linear estimator-based metrics --- during which many switches occur~\cite{RC_TaskAgnosticMetrics_v2}.
 To address these limitations, specialised ASI simulation tools have been developed.
 
 \subsection{Macrospin approximation}\label{sec:1:Modelling_macrospin}

@@ -26,7 +26,7 @@ By manually setting the \python{local_interaction} field of an \python{ExchangeE
 
 \paragraph{Reservoir computing} % io and experiments modules
 The \python{hotspice.io} module provides several basic input and readout routines for ASI, such as encoding data via an external field.
-These routines can readily be used by the \python{hotspice.experiments} module, which includes methods for determining kernel-rank~\cite{RC_ASI} and task-agnostic~\cite{RC_TaskAgnosticMetrics_v2} RC metrics.
+These routines can readily be used by the \python{hotspice.experiments} module, which includes methods for determining matrix rank-based~\cite{RC_ASI} and linear estimator-based~\cite{RC_TaskAgnosticMetrics_v2} RC metrics.
 While these routines suffice for most applications, we refer advanced users to the recently released \texttt{PRCpy} package~\cite{PRCpy}, which is more broadly applicable for the determination of RC metrics. \par
 Additionally, the \python{experiments} module includes the
 \python{Sweep} class, which will be used in \cref{ch:Applications} alongside the \python{utils.ParallelJobs} method to determine RC metrics during parameter sweeps across multiple GPUs or CPUs.

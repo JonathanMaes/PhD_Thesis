@@ -730,7 +730,7 @@ Contrary to the single-column readout, the performance is now equal between the 
 \vspace{-1em}
 
 \paragraph{Double-frequency transformation}
-% TODO: address JLeliaert's comment about task agnostic metrics
+% TODO: address JLeliaert's comment about determining linear estimator-based metrics
 With an ASI that can perform a decent sine-to-sawtooth transformation, other transformations can be targeted without changing the ASI --- provided the input is applied with an appropriate strength and frequency.
 Only the weights $\vc{w}$ of the readout layer have to be adjusted to reflect this new target.
 For example,~\cref{fig:3:Transformation_freq-magn_SINESQ} shows results for a double-frequency sine wave as target function.
@@ -1095,7 +1095,7 @@ Because of these benefits of weakly-coupled systems --- \crefSubFigRef{fig:3:Clo
 \subsection{Reservoir computing}
 Due to the binary nature of the clocked input protocol --- as each cycle either grows or shrinks domains of a particular type --- it is most straightforward to supply binary input. % The limitation of binary input will be further explored in~\cref{sec:3:clocking_input_encoding}.
 As this precludes the usage of certain tasks like signal transformation, we will instead evaluate the performance of this clocking protocol by determining more general RC metrics that do not rely on scalar input.
-As introduced in~\cref{sec:1:RC_metrics}, these include metrics based on matrix ranks as well as the so-called task-agnostic metrics.
+As introduced in~\cref{sec:1:RC_metrics}, these include metrics based on matrix ranks and those based on linear estimators.
 In the following, these will first be used to evaluate performance for a typical ASI that serves as our baseline, after which their effect on several system parameters can be assessed by adjusting this baseline ASI.
 
 \subsubsection{Baseline system}
@@ -1137,14 +1137,14 @@ Because $C=K-G$ provides an indication of RC performance, a low $G$ is advantage
 In this baseline system, this low generalisation-capability allows the computing capacity $C$ to reach values as high as 80 out of 100. \par
 Additionally, though not shown in the figure, it is worth noting that accounting for the finite size of magnets has no noticeable impact on RC performance, apart from shifting the entire metric map by roughly $\Delta a = \SIrange{20}{30}{\nano\metre}$ toward larger lattice constants as compared to a point dipole model. % If we want to show this as figures, compare Sweep20250325131714 vs. Sweep20250325105313.
 
-\paragraph{Task-agnostic metrics}
+\paragraph{Linear estimator-based metrics}
 Although the matrix rank-based metrics provide insight into how the system responds to various input patterns, they are relatively expensive to compute --- requiring as many input sequences as there are readout nodes (here: 100), with each sequence comprising many (here: 100) input values.
-In comparison, task-agnostic metrics such as non-linearity and memory capacity can be determined using only several hundred random input values, making them considerably more efficient to compute.
+In comparison, linear estimator-based metrics such as non-linearity and memory capacity can be determined using only several hundred random input values, making them considerably more efficient to compute.
 Furthermore, while matrix rank-based metrics can serve as useful initial indicators of whether a system can exhibit promising dynamics for RC, they do not guarantee that a system is actually suitable for RC.
-Task-agnostic metrics are more straightforward to interpret and provide a more accurate indication of a system's suitability for RC.
-For example, the input method with a uniform field --- which was previously dismissed for non-volatile ASI --- achieves a moderate $C \approx 40$, but yields very low values for all task-agnostic metrics like non-linearity and memory capacity. % Matrix rank-based metrics should rather be seen as indicators of which systems do NOT give decent RC performance.
-Therefore, to complement the findings from the previous paragraph, task-agnostic metrics were also determined for the baseline system over the same parameter range, as shown\footnote{
-	The stability metric is also among the task-agnostic metrics proposed in~\cite{RC_TaskAgnosticMetrics_v2}, but is not shown here as it is not relevant to non-volatile ASI which do not spontaneously reach a ground state in the absence of input.
+Linear estimator-based metrics are more straightforward to interpret and provide a more accurate indication of a system's suitability for RC.
+For example, the input method with a uniform field --- which was previously dismissed for non-volatile ASI --- achieves a moderate $C \approx 40$, but yields very low values for all linear estimator-based metrics like non-linearity and memory capacity. % Matrix rank-based metrics should rather be seen as indicators of which systems do NOT give decent RC performance.
+Therefore, to complement the findings from the previous paragraph, linear estimator-based metrics were also determined for the baseline system over the same parameter range, as shown\footnote{
+	The stability metric was also proposed in~\cite{RC_TaskAgnosticMetrics_v2}, but is not shown here as it is not relevant to non-volatile ASI which do not spontaneously reach a ground state in the absence of input.
 } in~\cref{fig:3:Clocking_Sweeps_binary_TA}. \par
 Note that the non-linearity metric will naturally be lower for binary input than for the scalar input it was designed for.
 The reason for this is that binary input offers only two possible values, making it generally easier to fit a linear model to the input-output relationship.
@@ -1152,8 +1152,8 @@ Therefore, the parity check metric is also shown, as it was specifically designe
 
 \xfig{3_RC_OOP/Nonvolatile/Sweeps/Clocking_binary_TA_averaged.pdf}{
 	\label{fig:3:Clocking_Sweeps_binary_TA}
-	Task-agnostic metrics for the same input, readout and system parameters as in~\cref{fig:3:Clocking_Sweeps_binary_KQ} ($20 \times 20$ OOP square-lattice ASI with $10 \times 10 = 100$ readout nodes, $\EEA = \SI{110}{\electronvolt} \pm \SI{5}{\percent}$, $\mu = \SI{2.5e-16}{\ampere\metre\squared}$), over the same range of lattice spacings $a$ and input magnitudes $B$.
-	The non-linearity is bounded in the range $[0,1]$, while the memory capacity and parity check have no upper limit.
+	Linear estimator-based metrics for the same input, readout and system parameters as in~\cref{fig:3:Clocking_Sweeps_binary_KQ} ($20 \times 20$ OOP square-lattice ASI with $10 \times 10 = 100$ readout nodes, $\EEA = \SI{110}{\electronvolt} \pm \SI{5}{\percent}$, $\mu = \SI{2.5e-16}{\ampere\metre\squared}$), over the same range of lattice spacings $a$ and input magnitudes $B$.
+	The non-linearity is bounded in the range $[0,1]$, while the other two metrics have no upper limit.
 }
 
 Systems with stronger MS interaction behave more non-linearly, though only in a narrow range of input field magnitude.
@@ -1181,22 +1181,22 @@ Therefore, to ensure consistency between the RC metric maps presented in this se
 
 \subsubsection{Influence of defects on RC metrics}
 We previously mentioned that disorder is beneficial to the RC capability of the system, but provided no evidence for this.
-Now, RC metrics can be used to verify this claim: the task-agnostic metrics for a system without defects ($\sigma(\EEA) = 0$) are shown in~\cref{fig:3:Clocking_Sweeps_binary_TA_EBstd0}. \par
+Now, RC metrics can be used to verify this claim: the linear estimator-based metrics for a system without defects ($\sigma(\EEA) = 0$) are shown in~\cref{fig:3:Clocking_Sweeps_binary_TA_EBstd0}. \par
 While the memory capacity and parity check are still definitively non-zero, they are at least $\approx \SI{40}{\percent}$ lower than for a system with $\sigma(\EEA)/\EEA = \SI{5}{\percent}$ defects.
 Furthermore, while a region with near-unity non-linearity now exists, the overlap between parameter combinations that yield decent non-linearity and those that yield decent memory capacity remains rather limited.
 
 \xfig{3_RC_OOP/Nonvolatile/Sweeps/Sweep20230124100320.pdf}{
 	\label{fig:3:Clocking_Sweeps_binary_TA_EBstd0}
-	Task-agnostic metrics for a defect-free system ($\sigma(\EEA) = 0$) with otherwise the same input, readout and system parameters as in~\cref{fig:3:Clocking_Sweeps_binary_TA} ($20 \times 20$ OOP square-lattice ASI with $10 \times 10 = 100$ readout nodes, $\EEA = \SI{110}{\electronvolt}$, $\mu = \SI{2.5e-16}{\ampere\metre\squared}$), over the same range of lattice spacings $a$ and input magnitudes $B$.
+	Linear estimator-based metrics for a defect-free system ($\sigma(\EEA) = 0$) with otherwise the same input, readout and system parameters as in~\cref{fig:3:Clocking_Sweeps_binary_TA} ($20 \times 20$ OOP square-lattice ASI with $10 \times 10 = 100$ readout nodes, $\EEA = \SI{110}{\electronvolt}$, $\mu = \SI{2.5e-16}{\ampere\metre\squared}$), over the same range of lattice spacings $a$ and input magnitudes $B$.
 	The non-linearity is bounded in the range $[0,1]$, while the memory capacity and parity check have no upper limit.
 }
 
 While this shows that defects improve the memory capacity of the system, it does not prove that a defect rate $\sigma(\EEA)/\EEA = \SI{5}{\percent}$ would be optimal.
-To assess this,~\cref{fig:3:Clocking_Sweeps_binary_TA_EBstd} shows task-agnostic metrics for a range of defect rates $\sigma(\EEA)/\EEA$ and input field magnitudes $B$ while the lattice spacing was kept constant.
+To assess this,~\cref{fig:3:Clocking_Sweeps_binary_TA_EBstd} shows linear estimator-based metrics for a range of defect rates $\sigma(\EEA)/\EEA$ and input field magnitudes $B$ while the lattice spacing was kept constant.
 
 \xfig{3_RC_OOP/Nonvolatile/Sweeps/Sweep20250327111551.pdf}{
 	\label{fig:3:Clocking_Sweeps_binary_TA_EBstd}
-	Task-agnostic metrics as a function of disorder $\sigma(\EEA)/\EEA$ with otherwise the same input, readout and system parameters as in~\cref{fig:3:Clocking_Sweeps_binary_TA} ($20 \times 20$ OOP square-lattice ASI with $10 \times 10 = 100$ readout nodes, $\EEA = \SI{110}{\electronvolt}$, $\mu = \SI{2.5e-16}{\ampere\metre\squared}$), over the same range of input magnitudes $B$, with $a=\SI{230}{\nano\metre}$ kept constant.
+	Linear estimator-based metrics as a function of disorder $\sigma(\EEA)/\EEA$ with otherwise the same input, readout and system parameters as in~\cref{fig:3:Clocking_Sweeps_binary_TA} ($20 \times 20$ OOP square-lattice ASI with $10 \times 10 = 100$ readout nodes, $\EEA = \SI{110}{\electronvolt}$, $\mu = \SI{2.5e-16}{\ampere\metre\squared}$), over the same range of input magnitudes $B$, with $a=\SI{230}{\nano\metre}$ kept constant.
 	The non-linearity is bounded in the range $[0,1]$, while the memory capacity and parity check have no upper limit.
 }
 
@@ -1246,7 +1246,7 @@ We have numerically demonstrated the reservoir computing capability of both ther
 The spontaneous logarithmic relaxation of thermally active ASI towards the ground state results in a gradual response to external stimuli over a broad frequency range, which allowed us to use them as a sort of leaky integrator.
 However, non-volatile ASI requires a more intricate input method in order to avoid avalanches, which led us to develop a clocking protocol that results in stepwise domain wall motion. \par
 Since thermally active systems can readily process analog input, we evaluated their RC performance on a signal transformation and prediction task.
-The binary character of the clocking scheme restricts its available tasks, so there we opted to use task-agnostic metrics instead.
+The binary character of the clocking scheme restricts its available tasks, so there we opted to use the linear estimator-based metrics instead.
 Both systems achieved a performance comparable to other single reservoirs on their respective tasks and metrics.
 Introducing spatial variation --- in the form of a property gradient in thermally active ASI and random disorder in non-volatile ASI --- was found to provide a richer output for both systems.
 On a similar note, enlarging the lattice of thermally active ASI aids to reduce thermal noise which otherwise limits the attainable performance. \par
