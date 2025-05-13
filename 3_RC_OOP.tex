@@ -866,7 +866,7 @@ To achieve clocking, Jensen~\etal~\cite{clocking-protocol} applied an external m
 By carefully tuning the field magnitude, only the magnets at the boundary of a domain --- or at the edge of the ASI --- will switch.
 This is possible because those magnets have a lower effective energy barrier $\EBeff$ than magnets in the bulk of a domain.
 Such a two-step clocking protocol therefore allows domain wall boundaries to advance one step at a time, while avoiding saturated magnetic states that would result from a stronger input. \par
-The key takeaway from this concept is that two key factors are necessary if one wants to achieve controlled domain wall movement in any ASI~\cite{MAES-24}.
+The main takeaway from this concept is that two key factors are necessary to achieve controlled domain wall movement in any ASI~\cite{MAES-24}.
 \begin{itemize}
 	\item The input method must lift the degeneracy between the ground states --- in pinwheel ASI, a global in-plane field readily distinguishes between the four types of superferromagnetic domains.
 	\item At least two independently addressable sublattices should exist to prevent avalanches --- in pinwheel ASI, two sublattices exist whose magnets are perpendicular to each other, enabling selective manipulation via in-plane fields.
@@ -879,7 +879,7 @@ This system is quite different from the IP pinwheel lattice used by Jensen~\etal
 A uniform external field, as was successfully used in thermally active ASI, does not fulfil the first requirement.
 It can not distinguish between the two checkerboard ground states, as it affects domains of both types equally and can therefore not be used in a clocking protocol.
 In fact, a uniform field is not suited for RC in any non-volatile ASI that does not exhibit superferromagnetic domains, as it simply causes the magnetisation of low-$\EBeff$ magnets to align with the external field.
-Any subsequent input cycle of opposite sign would either be too weak to have any additional effect, or be strong enough for the previously switched magnets to switch back, after which the same unremarkable process can repeat.
+Any subsequent input cycle of opposite sign would either be too weak to have any additional effect, or be strong enough for the previously switched magnets to switch back, after which the same process can repeat.
 Regardless, a uniform field will not obtain the much coveted fading memory, precluding its use for RC in this system.
 Hence, for an input protocol to induce desirable dynamics in non-volatile ASI, it must be specifically tailored to the lattice geometry.
 
@@ -956,8 +956,8 @@ Cycle $B$ is identical but promotes the opposite magnetisation direction for eac
 This clocking protocol, coupled with this definition of the input, readily provides basic memory in the system, as the previous few input bits become encoded in the size and location of the domains.
 Since this clocking protocol relies on deterministic switching, the duration over which the sub-steps are applied is irrelevant\footnote{
 	As time is irrelevant to non-volatile ASI, all simulations use a default duration of \qty{1}{\second} per input cycle.
-}. \par
-While this clocking protocol is likely not the only viable input method for non-volatile OOP ASI, we can at least say with certainty that simply applying a global uniform or AFM field would not yield any useful dynamics for RC.
+}.
+%While this clocking protocol is likely not the only viable input method for non-volatile OOP ASI, we can at least say with certainty that simply applying a global uniform or AFM field would not yield any useful dynamics for RC.
 In the remainder of this section, we will illustrate the behaviour of the clocking protocol and show that it yields desirable dynamics for RC.
 
 \subsection{Illustrative examples}
@@ -973,7 +973,7 @@ The top half of this figure shows the magnetisation state of each magnet, while 
 Both are equivalent, but the domain representation is more insightful in this context since the entire appeal of this input method is controlled domain wall motion.
 Therefore, only the domain representation will be shown in any subsequent figures.
 
-\makeshiftfig{
+\makeshiftfig{ % TODO: different color scheme, this looks awful in print. Also different legend for domains, everyone is confused by it (try a triangle instead, with ... diagonally down).
 	\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_clearly_EBstd0_moments.pdf}
 	\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_clearly_EBstd0_domains.pdf}
 	\vspace{-1.5em} % Looks more natural for this figure
@@ -994,7 +994,7 @@ During subsequent cycles, any existing domains of the type promoted by the appli
 A very important property of this input method is that cycle $A$ and $B$ are not each other's inverse, even though they only differ by the sign of their applied fields.
 In the figure, this is reflected in the fact that the states visited by $B$-cycles were not previously visited by $A$-cycles.
 Since some information from previous input cycles is often retained in this manner, this property provides the much coveted fading memory that is of great importance to RC. \par
-Even though this system is non-volatile and defect-free, it can still exhibit some stochasticity.
+Even though this system is non-volatile and defect-free, some stochastic events can still occur.
 One clear example of this is found in~\cref{fig:3:Clocking_clearly_EBstd0}: even though the three magnets at the bottom right switch during the first $A$-cycle, they do not switch during the first $B$-cycle.
 The reason for this is the relatively low MS coupling $\EMC=40\kBT$, due to which the input strength must strike a delicate balance to avoid switching magnets that are not part of a domain wall.
 These events can be suppressed by increasing the MS coupling, though a stronger input is then also required. \par % \\\par
@@ -1006,7 +1006,7 @@ Instead, it appears to preferably grow in such a way that it ends up with mostly
 This is part of the general phenomenon that, in the two-step AFM clocking protocol, domain growth preferentially occurs at the corners of a domain. \par
 To more clearly illustrate this phenomenon,~\cref{fig:3:Clocking_massive_seeded} shows a far larger ASI which was initialised in one ground state, apart from one ``seed'' magnet at the centre which is of the opposite domain type as compared to all other magnets in the system.
 
-\vspace{-1em}
+\vspace{-1.5em}
 \makeshiftfig{
 	\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_massive_seeded.pdf}
 	\vspace{-1.5em} % Looks more natural for this figure
@@ -1022,25 +1022,25 @@ To more clearly illustrate this phenomenon,~\cref{fig:3:Clocking_massive_seeded}
 \vspace{-1em}
 
 During the first clocking cycle, one neighbour of the seed magnet will switch first, creating an asymmetry that causes the central domain to preferentially grow along that axis.
-Magnets to the side of this elongated domain can also randomly switch, resulting in a gradual widening of the domain.
+Magnets to the side of this elongated domain can also randomly switch, resulting in its gradual widening.
 If this occurs at one of the domain's spearheads, whose tip is normally only 1 magnet thick, a small edge will be created that is 2 magnets long.
 This is sufficient for the domain to fork into two diagonal directions since growth occurs preferentially at the corners of a domain.
-This forking has occurred between the second and third panels of~\cref{fig:3:Clocking_massive_seeded}, but is a stochastic process: the right half of the domain in the figure did randomly fork. \par
-Note also that, during the $B$-cycles in~\cref{fig:3:Clocking_massive_seeded}, white-coloured domains nucleate at the edges while the central white domain re-grows.
+This is a stochastic process: while the left side of the central domain in~\cref{fig:3:Clocking_massive_seeded} randomly forks between the second and third panels, the right half does not during this particular run. \par % During this particular run
+Note that, during the $B$-cycles in~\cref{fig:3:Clocking_massive_seeded}, white-coloured domains nucleate at the edges while the central white domain re-grows.
 The white domains remain separated for about half as many $B$-cycles (18) as $A$-cycles were applied (36), at which time they reconnect and the rhombic black domain disappears.
 Due to this imbalance, it is hard for domains to propagate far towards the centre when the input sequence contains equal amounts of each input bit.
 Therefore, enhanced RC performance can be expected for systems with defects that allow domains to nucleate in the bulk of the system, or at least allow them to survive longer.
 
 \paragraph{System with defects}
 Any experimental realisation of OOP ASI will exhibit some degree of manufacturing defects, which are once again modelled by a normally distributed random anisotropy for each magnet in the ASI.
-This results in more erratic states during successive steps of the clocking protocol as compared to the defect-free system from~\cref{fig:3:Clocking_clearly_EBstd0}.
-However, contrary to the stochastic events mentioned before, the more erratic response caused by the disorder is reproducible and can therefore be used for computation. \par
-The main reason for the more erratic response is that the difference between low- and high-barrier magnets in a system with defects can be substantial.
+This results in less symmetric states during successive steps of the clocking protocol as compared to the defect-free system from~\cref{fig:3:Clocking_clearly_EBstd0}. % TODO: is complex the right word here?
+However, contrary to the stochastic events mentioned earlier, the more irregular response caused by the disorder is reproducible and can therefore be used for computation. \par
+The main reason for the more irregular response is that the difference between low- and high-barrier magnets in a system with defects can be substantial.
 This often makes it impossible to find an input magnitude for which domain walls can propagate through any defect in the system without affecting magnets that are not part of domain walls.
 Therefore, ``leaking'' can occur through low-barrier unstimulated magnets, which can spontaneously respond to the changing state of their neighbours even when they themselves are not stimulated~\cite{DisorderGroundStateASI}. % DisorderGroundStateASI says: "As expected, disorder allows dynamics to start inside the array at sites where ``loose'' spins with smaller switching fields are located."
 This can be observed in~\cref{fig:3:Clocking_clearly_EBstd5} for an example with $\sigma(\EEA)/\EEA = \SI{5}{\percent}$ and high MS coupling $\EMC = 200 \kBT$ compared to the anisotropy $\EEA = 100 \kBT$ to highlight leaking.
 
-\makeshiftfig{
+\makeshiftfig{ % TODO: highlight leaking in this figure, e.g. with red dots at leaked magnets. Refer to leaking in caption.
 	%\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_clearly_EBstd5_moments.pdf}
 	\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_clearly_EBstd5_domains.pdf}
 	\vspace{-1.5em} % Looks more natural for this figure
@@ -1065,7 +1065,7 @@ As the ratio $\sigma(\EEA) / \EMC$ increases, so does the range of fields where 
 Such nucleation is beneficial for RC, in contrast to defect-free ASI where domain walls could only be injected at corners of the ASI.
 %Fortunately from a fabrication perspective, systems with low $\EMC$ are typically easier to produce.
 To illustrate the impact of $\EMC$,~\cref{fig:3:Clocking_clearly_EBstd5_EMC} compares a strongly-coupled system (a) with a weakly-coupled system (b). % a system with $\sigma(\EEA) / \EMC = 0.025$ (\crefSubFigRef{fig:3:Clocking_clearly_EBstd5_EMC}{a}) against one with $\sigma(\EEA) / \EMC = 0.25$ (\crefSubFigRef{fig:3:Clocking_clearly_EBstd5_EMC}{b}).
-Indeed, nucleation occurs in the bulk of the weakly-coupled system because the disorder $\sigma(\EEA) = 10 \kBT$ is significant compared to $\EMC = 40 \kBT$, which also leads to far more irregular domain wall motion that encourages interactions between domain walls.
+Indeed, nucleation occurs in the bulk of the latter because the disorder $\sigma(\EEA) = 10 \kBT$ is significant compared to $\EMC = 40 \kBT$, which also leads to even more irregular domain wall motion that encourages interactions between domain walls.
 
 \vspace{-1em}
 \makeshiftfig{
@@ -1098,14 +1098,15 @@ In the following, these will first be used to evaluate performance for a typical
 
 \subsubsection{Baseline system}
 The ASI we consider here as our baseline system contains magnets with a very large perpendicular anisotropy\footnote{
-	Note that the values for $\EEA$ and $\EMC$ used here are not expressed as multiples of $\kBT$ because the initial research on non-volatile ASI was conducted before the practice of scaling these parameters by $\kBT$ was adopted.
-	For this reason, $\EEA$ is provided in \SI{}{\electronvolt} and the metrics are presented as a function of the lattice parameter $a$ rather than the magnetostatic coupling $\EMC$.
-} $\EEA = \SI{110}{\electronvolt} \approx 4255\kBT (\pm \SI{5}{\percent})$ and the same magnetic moment as the thermally active ASI ($\mu = \SI{2.5e-16}{\ampere\metre\squared}$), which was based on magnets with a diameter $D_\mathrm{NM} = \SI{170}{\nano\metre}$.
+	For reference, $\SI{110}{\electronvolt} \approx 4255\kBT$ at room temperature.
+	The values for $\EEA$ and $\EMC$ used here are not expressed as multiples of $\kBT$, because the initial research on non-volatile ASI was conducted before the practice of scaling these parameters by $\kBT$ was adopted.
+	For this reason, $\EEA$ is provided in \SI{}{\electronvolt} and the metrics will be presented as a function of the lattice parameter $a$ rather than the magnetostatic coupling $\EMC$.
+} $\EEA = \SI{110}{\electronvolt} \pm \SI{5}{\percent}$ and the same magnetic moment as the thermally active ASI ($\mu = \SI{2.5e-16}{\ampere\metre\squared}$), which was based on magnets with a diameter $D_\mathrm{NM} = \SI{170}{\nano\metre}$.
 As these parameters are kept constant, the MS coupling $\EMC$ only depends on the lattice parameter $a$.
 To avoid an unintentionally interconnected ASI as previously encountered in~\cref{sec:3:MFM}, a lower limit $a > D_\mathrm{NM} + \SI{25}{\nano\metre} = \SI{195}{\nano\metre}$ is imposed. \par
 The high anisotropy guarantees a weakly-coupled system with a high $\sigma(\EEA)/\EMC$-ratio, which we previously suggested to be the most promising regime for RC.
-Given the constant values of the aforementioned system parameters, two variables remain: the input strength and the NN MS interaction energy $\EMC$.
-To determine their optimal values, the RC metrics will be determined for a range of external field magnitudes $B$ and lattice spacings $a$. \par
+To determine the optimal input strength and NN MS interaction energy $\EMC$, the RC metrics will be determined for a range of external field magnitudes $B$ and lattice spacings $a$.
+It is worth noting that the difference between using a point dipole or finite-size model was found to be negligible, apart from a nearly uniform shift of the following metric maps toward larger lattice spacings, by about $\Delta a = 20$ to \SI{30}{\nano\metre}. \par % TODO: nicer wording % If we want to show this as figures, compare Sweep20250325131714 vs. Sweep20250325105313.
 Note that, while domain wall propagation can be expected near a field magnitude $B \approx (\EEA + \EMC)/\mu$, it is not guaranteed that optimal RC performance will occur exactly at this value.
 The clocking dynamics are sensitive to the precise input strength, and the presence of disorder broadens the range where the input has a meaningful effect.
 This makes it harder to predict which input strength $B$ will result in the best performance, which can also be different for each metric.
@@ -1117,6 +1118,7 @@ The latter provides a general indication of how suitable a particular system is 
 \cref{fig:3:Clocking_Sweeps_binary_KQ} shows these metrics for the baseline system over a range of lattice spacings $a$ and field magnitudes $B$.
 Recall that the maximum value of $K$, $G$ and $C$ is the number of readout nodes; here, a $20 \times 20$ ASI with $10 \times 10$ readout nodes --- each representing the average domain type of a $2 \times 2$ magnet cluster --- yields a maximum value of 100 for all three metrics.
 
+\vspace{-1em}
 \xfig{3_RC_OOP/Nonvolatile/Sweeps/Sweep20230208082817.pdf}{
 	\label{fig:3:Clocking_Sweeps_binary_KQ}
 	Kernel-quality $K$, generalisation-capability $G$ and computing capacity $C$ of a $20 \times 20$ OOP square-lattice ASI with $\EEA = \SI{110}{\electronvolt} \pm \SI{5}{\percent}$.
@@ -1129,11 +1131,10 @@ Recall that the maximum value of $K$, $G$ and $C$ is the number of readout nodes
 Some noise is visible in the figure due to the random distribution of $\EEA$; for each set of parameters, a new randomly sampled value of $\EEA$ was assigned to each magnet.
 The local noise level therefore reflects how impactful a $\sigma(\EEA)/\EEA = \SI{5}{\percent}$ disorder is on the clocking dynamics and, by extension, on RC performance.
 For example, near the maximum of the metric map in~\cref{fig:3:Clocking_Sweeps_binary_KQ}, the computing capacity $C$ may vary between approximately 50 and 80.
-This suggests that, unless such defects can be reproducibly incorporated into the system, performance can vary significantly between various manufactured ASI samples. \par
+This suggests that, unless such defects can be reproducibly incorporated into the system, performance can vary significantly between various manufactured ASI samples, though this effect will diminish in larger lattices. \par
 The generalisation-capability $G$ is very low for any combination of $a$ and $B$, apart from a few outliers where the randomly sampled defect distribution results in uncharacteristically high values of $G$.
 Because $C=K-G$ provides an indication of RC performance, a low $G$ is advantageous: it indicates that recent inputs have a far greater impact on the current state of the system than older input cycles.
-In this baseline system, this low generalisation-capability allows the computing capacity $C$ to reach values as high as 80 out of 100. \par
-Additionally, though not shown in the figure, it is worth noting that accounting for the finite size of magnets has no noticeable impact on RC performance, apart from shifting the entire metric map by roughly $\Delta a = \SIrange{20}{30}{\nano\metre}$ toward larger lattice constants as compared to a point dipole model. % If we want to show this as figures, compare Sweep20250325131714 vs. Sweep20250325105313.
+In this baseline system, this low generalisation-capability allows the computing capacity $C$ to reach values as high as 80 out of 100.
 
 \paragraph{Linear estimator-based metrics}
 Although the matrix rank-based metrics provide insight into how the system responds to various input patterns, they are relatively expensive to compute --- requiring as many input sequences as there are readout nodes (here: 100), with each sequence comprising many (here: 100) input values.
@@ -1154,15 +1155,13 @@ Therefore, the parity check metric is also shown, as it was specifically designe
 	The non-linearity is bounded in the range $[0,1]$, while the other two metrics have no upper limit.
 }
 
-Systems with stronger MS interaction behave more non-linearly, though only in a narrow range of input field magnitude.
-The trade-off between non-linearity and memory capacity, which has been extensively discussed~\cite{dambre2012information,MemoryNonlinearityReservoirs,RC_BeyondMemoryNonlinearity,RC_unification} and reported in various systems~\cite{DynamicEmergence_NanomagneticSystem,RC_TaskAgnosticMetrics_v2,TaskAdaptivePRC}, is striking in this system as well.
-As envisioned, the clocking protocol indeed yields a relatively high memory capacity, obtaining values $>2$ over a wide range of the parameter space.
-The parity check reveals that, on average, the parity of the previous 3 input cycles can be recalled over a wide range of the metric map.
+Systems with stronger MS interaction behave more non-linearly, though only in a narrow range of input field magnitudes.
+As envisioned, the clocking protocol indeed enables the system to retain some information from previous inputs: the memory capacity reaches values $>2$ over a wide range of the parameter space, while the parity check reveals that (on average) the parity of the previous 3 input cycles can be recalled.
 That the parity check reaches higher values than the memory capacity was to be expected, as it is specifically tailored to binary input data whereas memory capacity is more generally applicable to scalar data, though the parity check also includes a notion of non-linearity.
 These metrics provide more insight than the matrix rank-based metrics, as they can directly be related to the performance of the system for certain tasks --- some tasks mostly rely on fading memory while others mostly require non-linearity, and yet others prefer a mix of both. \par
 While $<3$ bits of memory may sound low, it is comparable to the memory capacity and parity check of other magnetic reservoirs~\cite{AdaptiveProgrammableRC,hon2021numerical,tsunegi2019STOforcedsyncRC,Venkat_2024,Vidamour_2022}. % AdaptiveProgrammableRC is similar when using a normal square ASI, but width-modulated and pinwheel ASI perform better.
 Higher performance can be achieved by using general RC architectures like the rotating neurons reservoir~\cite{RotatingNeuronsRC} or the single dynamical node paradigm~\cite{appeltant2011information}, as for example used in~\ccite{Venkat_2024,Vidamour2023}.
-However, here we only consider the performance of the clocked ASI by itself, as these architectures can be applied to any reservoir.
+%However, here we only consider the performance of the clocked ASI by itself, as these architectures can be applied to any reservoir.
 
 \paragraph{Effect of initial state}
 The initial state of the system can, in some cases, influence RC performance.
@@ -1198,6 +1197,7 @@ To assess this,~\cref{fig:3:Clocking_Sweeps_binary_TA_EBstd} shows linear estima
 	The non-linearity is bounded in the range $[0,1]$, while the memory capacity and parity check have no upper limit.
 }
 
+The trade-off between non-linearity and memory capacity, which has been extensively discussed~\cite{dambre2012information,MemoryNonlinearityReservoirs,RC_BeyondMemoryNonlinearity,RC_unification} and reported in various systems~\cite{DynamicEmergence_NanomagneticSystem,RC_TaskAgnosticMetrics_v2,TaskAdaptivePRC}, is striking in this figure as well.
 The non-linearity quickly drops as the disorder increases; only systems with rather low disorder ($< \SI{10}{\percent}$) display an appreciable non-linearity, and only do so over a limited field range.
 The memory capacity and parity check, on the other hand, benefit greatly from disorder.
 Note that the first column in~\cref{fig:3:Clocking_Sweeps_binary_TA_EBstd} (i.e., $\sigma(\EEA) = 0$, a defect-free system), displays a far lower memory capacity or parity check performance than any system with defects ($\sigma(\EEA) > 0$).
@@ -1212,17 +1212,14 @@ The clocking protocol naturally lends itself to binary input\footnote{
 	In OOP ASI, this results in binary input (2 values).
 	One could similarly imagine a quaternary input (4 values) for Pinwheel ASI, which exhibits superferromagnetic domains with 4 possible average magnetisation angles, though this is mere conjecture as binary input was used by Jensen~\etal~\cite{clocking-protocol} when demonstrating clocking in pinwheel ASI.
 }.
-For many real-world RC tasks, however, scalar input is preferable.
-Within the limits of the clocking protocol, we propose two concepts to address this, though neither are desirable. \par
-The first concept is to use an analog-to-digital conversion that encodes scalar values as integers represented as little-endian bytes consisting of 8 bits.
-This is the natural habitat of conventional computers, but is not a viable solution here since the memory capacity of the system is less than one bit.
-The non-linearity, on the other hand, was found to remain mostly unaffected, aside from a slight increase due to the larger input space (256 values as compared to 2 for binary input).
-However, all things considered, this byte-wise method is not a viable alternative to binary input. \par
-The second concept is to use the input magnitude as a scalar input, similar to the thermally active ASI.
-However, non-volatile ASI only exhibit a non-trivial response to the input in a narrow range of field magnitudes.
-Furthermore, one must take care to regularly apply both positive and negative cycles to keep the domain wall dynamics going.
-Both of these factors complicate the input encoding. \par
-Ultimately, both of these scalar input concepts were dismissed as they did not provide a desirable effect.
+For many real-world RC tasks, however, analog input is preferable.
+Within the limits of the clocking protocol, we considered two concepts to address this, though neither are desirable.
+The first concept was to use an analog-to-digital conversion that encodes scalar values as integers represented as little-endian bytes consisting of 8 bits.
+While this is the natural habitat of conventional computers, it is not a viable solution here due to the limited linear memory capacity of the system.
+The second concept was to use the input magnitude as an analog input, similar to the thermally active ASI.
+However, non-volatile ASI only exhibit a sufficiently non-linear response to the input in a narrow range of field magnitudes.
+Furthermore, one must take care to regularly apply both positive and negative cycles to keep the domain wall dynamics going, complicating the input encoding.
+Ultimately, both of these analog input concepts were dismissed as they did not provide a desirable effect.
 
 \subsection{Summary}
 Achieving reservoir computing in non-volatile OOP ASI posed several challenges.
