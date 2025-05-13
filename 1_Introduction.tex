@@ -1,14 +1,13 @@
 \chapter{Introduction}\label{ch:Introduction}
 \glijbaantje{It is important to draw wisdom from many different places.\\If we take it from only one place, it becomes rigid and stale.}{Uncle Iroh}
 %\glijbaantje{If a machine is expected to be infallible then it cannot also be intelligent.}{Alan Turing}
-% TODO: write CMOS instead of or alongside "transistor"
 
 %This introduction opens with the discussion of and motivation for the research presented in this thesis.
 %We then introduce the physical reservoir computing paradigm and the key metrics used to quantify performance.
 %Since we focus on magnetic reservoirs,~\cref{sec:1:Nanomagnetism} describes the fundamentals of nanomagnetism and the physical phenomena that enable efficient input and readout.
 %Next, we turn to magnetic reservoirs, in particular artificial spin ice, before concluding with a brief description of simulation techniques suitable for these systems.
 
-%\section{Context}\label{sec:1:Context}
+\section{Context and motivation}\label{sec:1:Context}
 Computers are currently used for a wide variety of applications, like scientific simulations, graphics rendering, processing well-structured data, running the internet\dots\,
 Conventional computers --- consisting of transistors arranged into logic gates --- are well suited for such tasks which require exact mathematical operations to be executed.
 However, our world provides many challenging tasks that can not be captured by such simple, exact sets of predefined rules.
@@ -59,10 +58,11 @@ By designing materials with specific behaviours, systems can be created that nat
 Among the various substrates being explored for material computation, magnetic and spintronic (spin transport electronic~\cite{Spintronics}) hardware are especially appealing~\cite{grollier2020neuromorphic,NeuromorphicSpintronicsProspect,QuantumNeuromorphicOpportunities}.
 Single-domain ferromagnetic nanomagnets, for example, have the ability to store information, respond non-linearly to stimuli~\cite{NeuromorphicSpintronics} and can dissipate very little energy during information processing~\cite{ThermodynamicLimitsComputation,SpintronicsEnergyEfficientComputing}.
 The \link{magnetostatic interaction}{magnetostatic (MS) coupling} within ensembles of nanomagnets provides further advantages, as it can give rise to rich collective behaviour like phase transitions, which the constituent magnets would not exhibit in isolation~\cite{NeuromorphicSpintronicsProspect,RC_ASI}.
+This inspired the European \spinengine project --- within the context of which the work presented in this thesis was performed --- to research how tunable ensembles of nanomagnets could be used for material computation. \par % three types of magnetic reservoirs were considered: magnetic nanorings~\cite{DynamicEmergence_NanomagneticSystem}, in-plane ASI~\cite{RC_ASI}, and perpendicular-anisotropy ASI~\cite{KUR-24}.
 A well-established example of such an ensemble is \xref{artificial spin ice} (ASI): an ordered lattice of bistable $\approx \SI{100}{\nano\metre}$-size nanomagnets where the lattice geometry does not allow all local interactions to be simultaneously satisfied, leading to emergent dynamics~\cite{ASIpyrochlores}.
-The other aforementioned factors have made them a platform of particular interest for scalable and energy-efficient material computation~\cite{PhD_Stromberg}. \par
-This finally brings us to the topic of this thesis: ``\!\emph{\phdtitle}''.
-This research was performed in the context of the European \spinengine project, which had the broader goal of demonstrating how tunable ensembles of nanomagnets could be used for reservoir computing, by exploiting the complex collective behaviour that emerges from their local interactions. % three types of magnetic reservoirs were considered: magnetic nanorings~\cite{DynamicEmergence_NanomagneticSystem}, in-plane ASI~\cite{RC_ASI}, and perpendicular-anisotropy ASI~\cite{KUR-24}.
+The other aforementioned factors have made them a platform of particular interest for scalable and energy-efficient material computation~\cite{PhD_Stromberg}.
+ASI with out-of-plane magnetisation offers particularly convenient electrical interfacing for both input and readout, but its computational capability had yet to be demonstrated. \par % In comparison to in-plane ASI, for which the computational capability had already been demonstrated numerically~\cite{ASI_computation,hon2021numerical}
+This provided the main motivation for this thesis, ``\!\emph{\phdtitle}''.
 A more detailed description of ASI follows in~\cref{sec:1:ASI}; first,~\cref{sec:1:RC} introduces the general principles of \xref{reservoir computing}.
 
 \newpage
@@ -347,10 +347,10 @@ This offers much faster, more energy-efficient control without requiring strong 
 \paragraph{Spin-transfer torque}
 A well-established method for switching nanomagnets is \idx{spin-transfer torque} (STT)~\cite{SlonczewskiSTT}, as has been widely used in e.g., magnetic random-access memory (STT-MRAM)~\cite{brataas2012current}.
 When an electrical current with a spin polarisation $\vc{\sigma}$ enters a ferromagnetic material, the injected spins will exert a torque $\vc{\tau}_\mathrm{STT} \propto \vc{\mu} \times (\vc{\mu} \times \vc{\sigma})$ on the local magnetisation $\vc{\mu}$, causing it to align with the injected spin polarisation.
-This polarisation is typically generated by first passing the current through another ferromagnetic layer, whose magnetisation is known or controlled by other means~\cite{SOT_FM_AFM,mumax3tutorial}.
-Hence, if both layers are sufficiently close by for the spin polarisation to survive until the second layer, a sufficiently strong STT will cause the magnetisation of the second layer to align with that of the first layer the current passes through.
-In OOP nanomagnets, both layers are therefore typically stacked on top of each other, with the current passing vertically through both of them.
-While this is an effective method, such a multilayer structure increases fabrication complexity and requires the magnet stack to be fully conductive, which can be limiting in some situations.
+Typically, this polarisation is generated by passing a current through a stack of two ferromagnetic layers: the free layer (i.e., the thin-film nanomagnet to be switched) and a fixed layer whose magnetisation is known or controlled by other means.
+When both layers are sufficiently close together for the spin polarisation to survive between them, the STT will promote a known magnetisation direction in the free layer~\cite{SOT_FM_AFM,mumax3tutorial}. % remain coherent?
+In OOP nanomagnets, both layers are therefore often stacked on top of each other, with the current passing vertically through both of them.
+While this is an effective method, such a multilayer structure increases fabrication complexity and requires the magnet stack to be fully conductive (or at least allow tunnelling), which can be limiting in some situations.
 
 \paragraph{Spin--orbit torque}
 More recently, switching through \idx{spin--orbit torque} (SOT) has attracted attention as an alternative to STT, as it eliminates the need for a second magnetic layer or vertically flowing current~\cite{mumax3tutorial}.
@@ -426,7 +426,7 @@ Care must also be taken that the sample is not affected by the magnetic moment o
 \paragraph{Other magnetic microscopy techniques}
 While MFM is the most commonly available magnetic microscopy technique, X-ray and optical methods are also often used~\cite{DynamicEmergence_NanomagneticSystem}.
 These can provide different information about nanomagnetic systems, as they are directly sensitive to the magnetisation rather than stray fields, making them easier to interpret in systems with in-plane magnetisation.
-X-ray based measurements like photo-electron emission microscopy (PEEM)~\cite{PEEM} and magnetic transmission X-ray microscopy (MTXM)~\cite{Imaging_MTXM} can make use of the \xlabel{X-ray magnetic circular dichroism} (XMCD) effect to achieve even higher resolution than MFM.
+X-ray based measurements like photo-electron emission microscopy (PEEM)~\cite{PEEM} and scanning transmission X-ray microscopy (STXM)~\cite{Imaging_MTXM} can make use of the \xlabel{X-ray magnetic circular dichroism} (XMCD) effect to achieve even higher resolution than MFM.
 However, they require circularly polarised X-rays, which are typically only available at synchrotron radiation facilities.
 Another option is to use optical techniques like the magneto-optical Kerr effect (MOKE)~\cite{KerrFaraday_book}: while these do not require a synchrotron, their resolution is diffraction-limited to several hundred \SI{}{\nano\metre}. \par
 Recently, scanning nitrogen-vacancy (NV) microscopy has emerged as a high-sensitivity scanning-probe technique.
@@ -481,7 +481,7 @@ ASI also holds significant potential for computational applications~\cite{heyder
 %AMR readout obscures a lot of the system's dynamics and requires the use of lock-in amplifiers, while FMR can provide a higher-dimensional readout in the form of spin-wave spectra~\cite{swindells2024fingerprinting} but requires bulky waveguides. \par % Only provides a single readout value, pretty much
 The reservoir computing potential of IP ASI has been demonstrated numerically~\cite{RC_ASI}, but the experimental application of input and state readout is not straightforward.
 For OOP ASI, efficient input (SOT) and readout (AMR) mechanisms are available, but their RC potential has not yet been demonstrated.
-The motivation of the work presented in this thesis is therefore to fill this knowledge gap, by assessing the viability of reservoir computing with OOP ASI. % TODO: maybe one more sentence on the motivation?
+Therefore, the motivation behind the work presented in this thesis was to fill this knowledge gap, by assessing the viability of reservoir computing with OOP ASI.
 
 \newpage
 \section{Modelling}\label{sec:1:Modelling}
