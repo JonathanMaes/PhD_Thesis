@@ -4,7 +4,7 @@
 To assess the potential of \link{reservoir computing}{Reservoir Computing} in (perpendicular-anisotropy) \link{artificial spin ice}{Artificial Spin Ice}, as is the main topic of this thesis, a simulation framework is needed to efficiently explore the impact of various system parameters and input methods on reservoir performance. \par
 To this end, the \hotspice simulator was developed, as introduced in~\cref{sec:1:Modelling_macrospin}.
 In this chapter, we discuss several model variants that have been implemented, and assess their accuracy in simulating the behaviour of ASI.
-These variants differ in their choice of Monte Carlo spin-flip algorithm and their calculation of the magnetostatic interactions and energy barriers.
+These variants differ in their choice of Monte Carlo spin-flip algorithm and their calculation of the \xref{magnetostatic interactions} and \xref{effective energy barriers}.
 
 \begin{adjustwidth}{2em}{2em}
 	\vspace{0em}
@@ -1247,12 +1247,12 @@ This highlights the importance of accounting for the finite size of magnets to o
 
 \newpage
 \section{Conclusion}
-% TODO: check if this conclusion is sufficiently concluding for a thesis, i.e. not just a summary but also discussing the lessons learnt.
-Throughout this chapter, the underlying model and implementation of \hotspice have been discussed in detail, with several model variants extending beyond the basic Ising model typically used for ASI simulations.
-A first variant considered more accurate calculations for magnetostatic interactions.
-In OOP systems, it was found that a \link{finite dipole model}{second-order correction} on the magnetostatic energy $E_\mathrm{MS}$ yielded more realistic values, while for IP systems a \xref{dumbbell model} is more effective in reproducing experimental results.
+Throughout this chapter, the underlying model and implementation of the \hotspice ASI simulator have been discussed in detail.
+A couple of improvements to the underlying \xref{point dipole model} were proposed.
+A first improvement considers more accurate calculations for the \xref{magnetostatic interactions}.
+In OOP systems, it was found that a \link{finite dipole model}{second-order correction} on the magnetostatic energy $E_\mathrm{MS}$ yields more realistic values, while for IP systems a \xref{dumbbell model} is more effective in reproducing experimental results.
 The influence of these corrections can result in qualitatively different dynamics as compared to a \xref{point dipole model}, as was for instance observed in the kagome lattice.
-The second type of model variants considered improvements to the calculation of the \xref{effective energy barrier}.
+The second type of model improvement concerns the calculation of the \xref{effective energy barrier}.
 There, accounting for \link{asymmetric energy barrier}{asymmetric switching channels} proved key to e.g., correctly reproduce \xref{coercive fields} in pinwheel ASI, provided that the reduced magnetisation during \link{non-coherent magnetisation reversal}{non-coherent reversal processes} was also accounted for.
 While it is possible to obtain an exact solution for the energy barrier in OOP magnets, the assumption of a sinusoidal energy landscape was found to be inaccurate, likely due to non-coherent reversal in real OOP nanomagnets. \par 
 Furthermore, two distinct algorithms have been implemented to handle switching events: the \xref{first-switch method} and \xref{Metropolis-Hastings sampling}.
