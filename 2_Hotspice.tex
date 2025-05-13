@@ -123,7 +123,7 @@ The combined \idx{interaction energy} $E_i$ of a single magnet $i$ with its envi
 	E_i = E_{\mathrm{Z},i} + \sum_j E_{\mathrm{MS},i,j} + \sum_{j \in \mathcal{N}_i} E_{\mathrm{exch},i,j} \mathrm{,}
 \end{equation}
 where $\mathcal{N}_i$ is the collection of nearest neighbours of magnet $i$.
-Which magnets are included in this collection depends on the ASI lattice and which site of the unit cell magnet $i$ is in, and can be defined separately for each ASI lattice. \\\par
+Which magnets are included in this collection depends on the ASI lattice and which site of the unit cell magnet $i$ is in, and can be defined separately for each ASI lattice. \par
 Note that all terms in \cref{eq:2:E} simply change sign\footnote{
 	Energy contributions which are independent of the state $s_i$, such as the magnetostatic self-energy (i.e., the energy due to the magnetisation profile $\vc{M}(\vc{r})$ throughout the magnet), are not included in \cref{eq:2:E} because they are constant and therefore do not affect the ASI dynamics.
 } when magnet $i$ switches ($\vc{\mu}_i \rightarrow -\vc{\mu}_i$): if the switch occurs at time $t$, then $E_i(t + dt) = -E_i(t - dt)$.
@@ -132,7 +132,7 @@ Note that all terms in \cref{eq:2:E} simply change sign\footnote{
 %}.
 Therefore, the change in energy of the ASI when that magnet switches is simply $\Delta E_{i,1\rightarrow2} = -2 E_i$.
 This is called the \idx{switching energy}, and we will see in the next few sections that it plays a central role in both algorithms used for simulating system dynamics as well as the calculation of the \xref{effective energy barrier} $\EBeff$.
-It is therefore very advantageous that the switching energy is so cheap to compute. \\\par
+It is therefore very advantageous that the switching energy is so cheap to compute. \par
 When the simulation is initialised, the energy contributions are calculated for all magnets.
 Each magnet therefore stores a value in memory for each of the terms in \cref{eq:2:E}.
 Whenever a magnet switches, the energies of all magnets it interacts with are updated appropriately, which constitutes a major part of the calculation effort required for every step in the simulation.
