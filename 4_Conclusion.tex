@@ -6,7 +6,7 @@ Our interest in OOP ASI for reservoir computing was motivated by their well-esta
 To support this work, we developed \hotspice, a flexible CPU/GPU-agnostic Monte Carlo simulator that captures the collective behaviour of large ASI arrays.
 Altogether, we have covered three main topics.
 \begin{itemize}
-	\item The development and underlying model of \hotspice{}, with a focus on several variations on the basic model to improve physical accuracy and algorithmic performance.
+	\item The development \hotspice, with a focus on several improvements that increase the physical accuracy and algorithmic performance of the underlying model.
 	\item The demonstration that thermally active OOP ASI can serve as an analog-input reservoir by harnessing its spontaneous relaxation, as confirmed through non-linear signal transformation and prediction.
 	\item The design and numerical validation of a clocking protocol for non-volatile OOP ASI that provides controlled domain wall motion, enabling it to be used as a binary-input reservoir.
 \end{itemize}
@@ -30,7 +30,7 @@ Including a property gradient was found to have a positive impact, as it introdu
 For \textbf{non-volatile} OOP ASI, global stimuli would saturate the lattice, as avalanches can propagate through the system unimpeded --- this was not an issue for thermally active ASI, since their finite relaxation time allows them to gradually respond to input.
 Therefore, we developed the ``AFM clocking'' protocol: by alternately stimulating two interleaved sublattices, avalanches were avoided and controlled stepwise domain wall motion was achieved.
 Defects, in the form of a variation on the OOP anisotropy, enable this scheme to produce more complex dynamics that can be harnessed for RC, as the position and size of domains non-linearly encodes recent bits of information.
-More broadly, we can say that controlled domain wall motion in any ASI requires (1) an input that lifts the ground state degeneracy and (2) at least two independently addressable sublattices to prevent avalanches. \\\par
+In general, we can say that controlled domain wall motion in any ASI requires (1) an input that lifts the ground state degeneracy and (2) at least two independently addressable sublattices to prevent avalanches. \\\par
 
 In summary, we have established that out-of-plane artificial spin ice can indeed function as a versatile physical reservoir: in its thermally active form, it responds to analog input akin to a leaky integrator, while its non-volatile counterpart supports binary input through the clocking protocol. % These results establish.
 Meanwhile, \hotspice has proven its worth as a flexible and efficient simulator, that can be used for both the exploration of ASI physics as well as their optimisation for unconventional computing architectures.
@@ -40,18 +40,18 @@ Meanwhile, \hotspice has proven its worth as a flexible and efficient simulator,
 Looking ahead, several avenues can strengthen both the \hotspice simulation toolkit and the proposed physical reservoir concepts.
 
 \paragraph{Improvements to \hotspice}
-\hotspice has gradually grown as new model variants were repeatedly introduced to improve physical accuracy or performance, which has led to some features having a rather opaque API.
+\hotspice has gradually grown as new improvements to physical accuracy or performance were consecutively introduced, which has led to some features having a rather opaque API.
 Now that the main functionality is well-defined and has been validated, the public API should be streamlined by removing deprecated functions and clearly exposing the most commonly used routines. % while retaining the versatility of the current implementation.
 This will make the package easier to maintain and more approachable for prospective users.
 While the implemented model variants already make \hotspice usable in a wide range of ASI, several other factors listed below could be kept in mind during refactoring, to raise the efficiency of \hotspice to the next level. \\\par
 
 Several algorithmic improvements remain possible.
 First, for equilibrium studies, the usage of clustering algorithms (e.g., Wolff) could drastically reduce critical slowing down, though this route was previously abandoned since it is non-trivial to correctly apply such algorithms to the broad range of ASI that \hotspice aims to simulate (i.e., arbitrarily oriented magnets with full dipolar coupling between them).
-Second, the first-switch method is limited by the fastest-switching magnets in the system, which can pose an issue in situations where only a select few magnets repeatedly switch back-and-forth.
-Its single-switch nature also limits its use to small systems: a method akin to MH multi-switching that alleviates these restrictions would be a welcome addition. \par
+Second, the first-switch method is limited by the fastest-switching magnets in the system, which can pose an issue in situations where only a small set of magnets repeatedly switch back-and-forth.
+Due to its single-switch nature, its application is also restricted to small systems: a method akin to MH multi-switching that alleviates these restrictions would be a welcome addition. \par
 We chose to represent ASI on a rectilinear grid in \hotspice, trading some geometrical freedom for enhanced performance. %, though many popular lattices can nonetheless be recreated.
 Most notably, the grid enables the efficient calculation of \textit{all} magnetostatic interactions by means of convolutions, whereas other codes are often forced to truncate the interaction distance.
-We found that such truncation incurs a non-negligible error on the total magnetostatic energy --- exceeding $\SIrange{5}{10}{\percent}$ even when accounting for the $\approx 1000$ nearest magnets --- though it can be argued that the Ising model itself constitutes a more severe approximation than this, possibly rendering such truncation justifiable.
+We found that such truncation incurs a non-negligible error on the total magnetostatic energy --- exceeding $\SIrange{5}{10}{\percent}$ even when accounting for the $\approx 1000$ nearest magnets --- though it can be argued that the macrospin approximation itself constitutes a more severe approximation than this, possibly rendering such truncation justifiable.
 Besides this, the grid also enables efficient multi-sampling of sufficiently distant magnets for the MH algorithm, which would be much harder on an unstructured lattice. \par
 For the relatively small lattices considered in~\cref{ch:Applications}, it was found that CPUs outperform GPUs at the array operations underlying this grid. % except in~\cref{fig:3:Clocking_massive_seeded}
 Nonetheless, the effort of porting \hotspice to GPU was not wasted, as it has expanded the scope of \hotspice by allowing it to handle large ASI.
@@ -73,14 +73,16 @@ However, analog data is more prevalent in nature and allows a higher information
 A few approaches were proposed to combine the clocking scheme with analog input, but were ultimately dismissed for not yielding the rich dynamics we require.
 Thermally active ASI, on the other hand, can readily act as a leaky integrator of analog input. \par
 Manufacturing both non-volatile and thermally active ASI reservoirs is not so straightforward, but both for different reasons.
-Non-volatile ASI require intricate layouts of conduction pathways and must avoid electrical conflicts with the readout method, whereas for thermally active ASI a full conductive underlayer is sufficient to use them as a reservoir.
-Conversely, thermally active nanomagnets pose greater fabrication challenges, as precise control over the anisotropy is required --- on the order of tens of $\kBT$.
-It is unclear whether downscaling may aid to achieve this level of control, since switching is thought to occur through non-coherent reversal: a better understanding of this process may be achieved through micromagnetic simulations.
+Non-volatile ASI requires intricate layouts of conduction pathways for input, which must avoid electrical conflicts with the readout method, whereas for thermally active ASI a full conductive underlayer is sufficient to use them as a reservoir.
+Conversely, thermally active nanomagnets pose greater fabrication challenges, as precise control over the effective energy barrier is required --- on the order of tens of $\kBT$. \par
+In this regard, it is important to note that we have encountered indications of non-coherent reversal in both IP (\cref{sec:2:Applications_reversal_Pinwheel}) and OOP (\cref{sec:3:MFM}) ASI, in the form of a lower energy barrier than would be expected for coherent reversal.
+For the OOP magnets, it is therefore unclear whether downscaling would aid to achieve the required level of control over the effective energy barrier.
+A better understanding of the reversal process may be achieved through micromagnetic simulations.
 Overall, the experimental aspect of these approaches requires further consideration. \\\par
 
 In conclusion, while OOP ASI are alluring for their ease of electrical interfacing, the aforementioned factors complicate their usage as physical reservoirs.
 Nonetheless, we succeeded in using them as such, with a performance on par with other types of reservoirs described in literature.
-Following this numerical exploration of the RC potential of OOP ASI, an experimental lithographic realisation of the clocking protocol would be desirable, to achieve a better understanding of the performance, feasibility and efficiency of this approach in a real environment.
+Following this numerical exploration of the RC potential of OOP ASI, a lithographic experimental realisation of the clocking protocol would be desirable, to achieve a better understanding of its performance, feasibility and efficiency in a real environment.
 
 
 % Furthermore, for the functionality they enable, they take up a non-negligible amount of space on-chip as compared to traditional computer architectures, as the magnets have a size on the order of $\SI{100}{\nano\metre}$ (it is indeed possible to make the magnets smaller, as a high magnetostatic coupling is not required in thermally active ASI, but controlling the OOP anisotropy might be hard), a space in which typically one transistor can be implemented including peripherals like current lines, though one could argue that (thermally active) ASI can react to analog input signals whereas representing floating-point values would require a large number of transistors.
