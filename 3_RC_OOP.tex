@@ -194,12 +194,12 @@ In the Ising-like model used by \hotspice, two essential system parameters remai
 Due to the N\'eel-Arrhenius switching law~\eqref{eq:2:Néel}, it is more appropriate to write dimensionless energies ($\EEA/\kBT$ and $\EMC/\kBT$), as it is only this ratio --- not the absolute value of the energies or temperature --- that controls the switching times. \par
 In real ASI, manufacturing inevitably introduces imperfections.
 Slight geometrical variations can result in a significant variance of the net OOP anisotropy between magnets~\cite{Budrikis2012,DisorderGroundStateASI}.
-In simulations, this will be modelled by sampling $\EEA$ from a normal distribution: unless otherwise specified, a standard deviation $\sigma(\EEA) = \SI{5}{\percent}$ is used~\cite{Farhan2013}.
+In simulations, this will be modelled by sampling $\EEA$ from a normal distribution: unless otherwise specified, a standard deviation $\sigma(\EEA)/\EEA = \SI{5}{\percent}$ is used~\cite{Farhan2013}.
 This kind of ``consistent variation'' within an ASI can make the relaxation process more reproducible and could ultimately be beneficial for RC by providing a richer output space. \par
 The effective energy barrier $\EBeff$ of a magnet $i$ can then symbolically be written as
 \begin{equation}
 	\label{eq:3:OOP_relaxation_EBeff}
-	\EBeff{}_{,i}(t) = \EEA \Big(1 + \sigma\ab(\EEA) \sampi_i \Big) + \EMC \sum_j s_i(t) D_{ij} s_j(t)
+	\EBeff{}_{,i}(t) = \EEA + \sigma(\EEA) \sampi_i + \EMC \sum_j s_i(t) D_{ij} s_j(t)
 \end{equation}
 with $\sampi$ a random value from a standard normal distribution and $D_{ij}$ a factor proportional to the magnetostatic interaction energy between magnets $i$ and $j$. \\\par
 
@@ -209,7 +209,7 @@ During relaxation, they transition to $\mavg=0$ and $\qNN=1$, corresponding to a
 Note that, while for a random state $\qNN \approx 0.5$, a value of $\qNN=0.5$ does not necessarily imply a random state. \par
 
 \cref{fig:3:OOP_relaxation} shows relaxation profiles for a few combinations of $\EEA$ and $\EMC$, providing some insight into the relaxation process.
-Each panel shows the mean, standard deviation and 1st/99th percentile of $\mavg$ and $\qNN$ over 200 relaxations --- this variability is both due to the randomness of N\'eel-Arrhenius switching and because each relaxation used unique randomly sampled $\EEA$ for individual magnets, in accordance with the $\sigma(\EEA) = \SI{5}{\percent}$ variation.
+Each panel shows the mean, standard deviation and 1st/99th percentile of $\mavg$ and $\qNN$ over 200 relaxations --- this variability is both due to the randomness of N\'eel-Arrhenius switching and because each relaxation used unique randomly sampled $\EEA$ for individual magnets, in accordance with the $\sigma(\EEA)/\EEA = \SI{5}{\percent}$ variation.
 While the mean relaxation profile is essentially unaffected by the number of magnets $N$ in the system, the variability between relaxations (indicated by the shaded regions in the figure) decreases for larger systems as $\approx 1/\sqrt{N}$, in accordance with the central limit theorem.
 Each relaxation consisted of at most $40N$ switches using the first-switch method, as this is sufficient for the system to achieve equilibrium.
 
@@ -628,9 +628,9 @@ Since the $\MSE$ metric considers a square wave a better fit to a sawtooth than 
 }{
 	\label{fig:3:Transformation_freq-magn_baseline}
 	Monte Carlo simulations of a sine-to-sawtooth signal transformation performed by a thermally active $11 \times 11$ OOP square-lattice ASI reservoir.
-	The top panel shows the inverse mean squared error $1/\MSE$ as a function of the input magnetic field frequency $f$ and amplitude $B_1$, with constant $B_0 = \SI{-0.35}{\milli\tesla}$, averaged over 5 runs with random $\sigma(\EEA)=\SI{5}{\percent}$ defects.
+	The top panel shows the inverse mean squared error $1/\MSE$ as a function of the input magnetic field frequency $f$ and amplitude $B_1$, with constant $B_0 = \SI{-0.35}{\milli\tesla}$, averaged over 5 runs with random $\sigma(\EEA)/\EEA=\SI{5}{\percent}$ defects.
 	Higher (lower) values in yellow (purple) indicate better (worse) performance.
-	The black contours correspond to $1/\MSE \sim 30$, encompassing regions where the reservoir performs better than the linear transformation of the original input signal.
+	The black contours indicate $1/\MSE \sim 30$, encompassing regions where the reservoir outperforms a linear transformation of the original input signal.
 	In the top panel, several points are indicated with Roman numerals, corresponding to the bottom panels which show a temporal view of the transformation.
 	There, the input sine-wave signal (grey dotted curve) and target sawtooth signal (black dashed line) are shown, alongside the prediction with and without the reservoir (blue and red curve, respectively).
 }
@@ -656,9 +656,9 @@ The results of this parameter sweep are presented in~\cref{fig:3:Transformation_
 \sidefig[0.53]{3_RC_OOP/Thermally active/Transformation/magn-magnmin/averaged.pdf}{
 	\label{fig:3:Transformation_magn-magnmin}
 	Inverse mean squared error $1/\MSE$ of a sine-to-sawtooth signal transformation using a thermally active $11 \times 11$ OOP square-lattice ASI, as a function of the input magnetic field range $B_0 \rightarrow B_1$ at a constant input frequency $f=\SI{100}{\hertz}$.
-	Averaged results are shown over 5 runs with random $\sigma(\EEA)=\SI{5}{\percent}$ defects.
+	Averaged results are shown over 5 runs with random $\sigma(\EEA)/\EEA=\SI{5}{\percent}$ defects.
 	Higher (lower) values in yellow (purple) indicate better (worse) performance.
-	The black contours correspond to $1/\MSE \sim 30$, encompassing regions where the reservoir performs better than the linear transformation of the original input signal.
+	The black contours indicate $1/\MSE \sim 30$, encompassing regions where the reservoir outperforms a linear transformation of the original input signal.
 }
 
 A point symmetry is visible about the origin of~\cref{fig:3:Transformation_magn-magnmin}: $\MSE(B_0, B_1) = \MSE(-B_0, -B_1)$.
@@ -677,9 +677,9 @@ The varying magnetic moment $\mu$ also affects the NN MS coupling: the previousl
 \sidefigs[0.53]{3_RC_OOP/Thermally active/Transformation/grad-magn/freq1/averaged.pdf}{3_RC_OOP/Thermally active/Transformation/grad-magn/freq1/details.pdf}{
 	\label{fig:3:Transformation_grad-magn_freq1}
 	Impact of the \xref{property gradient} $\Gamma$ on the performance of a \SI{1}{\hertz} sine-to-sawtooth signal transformation by an $11 \times 11$ OOP square-lattice ASI reservoir.
-	The top panel shows the inverse mean squared error $1/\MSE$ as a function of the gradient $\Gamma$ and amplitude $B_1$, with constant $B_0 = \SI{0}{\milli\tesla}$, averaged over 5 runs with random $\sigma(\EEA)=\SI{5}{\percent}$ defects.
+	The top panel shows the inverse mean squared error $1/\MSE$ as a function of the gradient $\Gamma$ and amplitude $B_1$, with constant $B_0 = \SI{0}{\milli\tesla}$, averaged over 5 runs with random $\sigma(\EEA)/\EEA=\SI{5}{\percent}$ defects.
 	Higher (lower) values in yellow (purple) indicate better (worse) performance.
-	The black contours correspond to $1/\MSE \sim 30$, encompassing regions where the reservoir performs better than the linear transformation of the original input signal.
+	The black contours indicate $1/\MSE \sim 30$, encompassing regions where the reservoir outperforms a linear transformation of the original input signal.
 	The panel at the bottom provides a temporal view of the transformation for a gradient $\Gamma = \SI{52}{\percent}$ and $B_1=\SI{0.45}{\milli\tesla}$, showing the input sine-wave signal (black dotted curve) and target sawtooth signal (black dashed line) alongside the prediction with and without the reservoir (blue and red curve, respectively).
 }
 \vspace{-0.5em}
@@ -720,10 +720,10 @@ Contrary to the single-column readout, the performance is now equal between the 
 	\vspace{-2.5em} % Looks more natural for this figure
 }{
 	\label{fig:3:Transformation_size-magn}
-	Impact of system size on a sine-to-sawtooth signal transformation by an OOP ASI reservoir as measured by the inverse mean squared error $1/\MSE$ as a function of the input magnetic field magnitude $B_1$, averaged over 5 runs with random $\sigma(\EEA)=\SI{5}{\percent}$ defects.
+	Impact of system size on a sine-to-sawtooth signal transformation by an OOP ASI reservoir as measured by the inverse mean squared error $1/\MSE$ as a function of the input magnetic field magnitude $B_1$, averaged over 5 runs with random $\sigma(\EEA)/\EEA=\SI{5}{\percent}$ defects.
 	The input frequency and minimal magnitude were kept constant at $f=\SI{800}{\hertz}$ and $B_0=\SI{0}{\milli\tesla}$, respectively.
 	Higher (lower) values in yellow (purple) indicate better (worse) performance.
-	The black contours correspond to $1/\MSE \sim 30$, encompassing regions where the reservoir performs better than the linear transformation of the original input signal.
+	The black contours indicate $1/\MSE \sim 30$, encompassing regions where the reservoir outperforms a linear transformation of the original input signal.
 	In panel \textbf{(a)}, each column of the ASI constitutes an individual readout node, while in panel \textbf{(b)} the number of readout nodes was kept constant at 11 by averaging multiple columns together.
 	The left (right) panels show performance on the test (training) set, to identify overfitting.
 }
@@ -741,7 +741,7 @@ For this transformation, the best fit attainable with a linear scaling of the in
 	Transformation of a sine wave input signal into a double-period sine wave by an $11 \times 11$ OOP square-lattice ASI reservoir.
 	The top panel shows the inverse mean squared error $1/\MSE$ as a function of the input frequency and amplitude $B_1$, with constant $B_0 = \SI{0}{\milli\tesla}$.
 	Higher (lower) values in yellow (purple) indicate better (worse) performance.
-	The black contours correspond to $1/\MSE \sim 8$, encompassing regions where the reservoir performs better than the linear transformation of the original input signal.
+	The black contours indicate $1/\MSE \sim 8$, encompassing regions where the reservoir outperforms a linear transformation of the original input signal.
 	The panel at the bottom provides a temporal view of the transformation for $f=\SI{0.5}{\hertz}$ and $B_1=\SI{0.25}{\milli\tesla}$, showing the input sine-wave signal (black dotted curve) and target double-frequency sine (black dashed line) alongside the prediction with and without the reservoir (blue and red curve, respectively).
 }
 
@@ -967,7 +967,7 @@ To show that the \xref{two-step AFM clocking protocol} does indeed move domain w
 This will illustrate that the growth of domains can be controlled as originally envisioned, while providing insight into the effect of system parameters on the domain wall motion.
 
 \paragraph{Defect-free system}
-First, for a clean illustration of the general behaviour of the clocking protocol, consider an example without any defects, i.e. $\sigma(\EEA) = \SI{0}{\percent}$.
+First, for a clean illustration of the general behaviour of the clocking protocol, consider an example without any defects, i.e. $\sigma(\EEA) = 0$.
 The absence of defects results in a far more orderly domain wall motion than expected in a real system, where domain walls would be likely to remain pinned at high-anisotropy magnets.
 The effect of subsequent clocking cycles on such a ``perfect'' system is shown in~\cref{fig:3:Clocking_clearly_EBstd0}.
 The top half of this figure shows the magnetisation state of each magnet, while the bottom half shows the same states but instead visualises the two degenerate domain types as black and white.
@@ -984,7 +984,7 @@ Therefore, only the domain representation will be shown in any subsequent figure
 	Evolution of a $16 \times 16$ OOP square-lattice ASI when using the \xref{two-step AFM clocking protocol} (for seven cycles $A$ and seven opposite cycles $B$).
 	The moment orientation (\textbf{top}) and domain type (\textbf{bottom}) of each magnet are shown after each cycle was applied.
 	The finite size of magnets was accounted for with $D_\mathrm{NM} = \SI{170}{\nano\metre}$ and $S_\mathrm{ASI} = \SI{200}{\nano\metre}$.
-	System parameters were chosen such that $\EMC = 40 \kBT$ and $\EEA = 200 \kBT$, with $\sigma(\EEA) = \SI{0}{\percent}$.
+	System parameters were chosen such that $\EMC = 40 \kBT$ and $\EEA = 200 \kBT$, without defects ($\sigma(\EEA) = 0$).
 	All magnets are initially magnetised in one of the antiferromagnetic ground states (white).
 	The magnetic field used in the clocking cycles has a magnitude $B_\mathrm{ext} = \qty{3.78}{\milli\tesla}$.
 }
@@ -1018,7 +1018,7 @@ To more clearly illustrate this phenomenon,~\cref{fig:3:Clocking_massive_seeded}
 	The domain type of each magnet is shown every six cycles.
 	All magnets are initially magnetised in one of the antiferromagnetic ground states (white), apart from one magnet at the centre which started in the opposite state (black).
 	The finite size of magnets was accounted for with $D_\mathrm{NM} = \SI{170}{\nano\metre}$ and $S_\mathrm{ASI} = \SI{200}{\nano\metre}$.
-	System parameters were chosen to result in $\EMC = 40 \kBT$ and $\EEA = 200 \kBT$, with $\sigma(\EEA) = \SI{0}{\percent}$.
+	System parameters were chosen to result in $\EMC = 40 \kBT$ and $\EEA = 200 \kBT$, without defects ($\sigma(\EEA) = 0$).
 	The magnetic field used in the clocking cycles has a magnitude $B_\mathrm{ext} = \qty{3.78}{\milli\tesla}$.
 }
 \vspace{-1em}
@@ -1040,7 +1040,7 @@ However, contrary to the stochastic events mentioned before, the more erratic re
 The main reason for the more erratic response is that the difference between low- and high-barrier magnets in a system with defects can be substantial.
 This often makes it impossible to find an input magnitude for which domain walls can propagate through any defect in the system without affecting magnets that are not part of domain walls.
 Therefore, ``leaking'' can occur through low-barrier unstimulated magnets, which can spontaneously respond to the changing state of their neighbours even when they themselves are not stimulated~\cite{DisorderGroundStateASI}. % DisorderGroundStateASI says: "As expected, disorder allows dynamics to start inside the array at sites where ``loose'' spins with smaller switching fields are located."
-This can be observed in~\cref{fig:3:Clocking_clearly_EBstd5} for an example with $\sigma(\EEA) = \SI{5}{\percent}$ and high MS coupling $\EMC = 200 \kBT$ compared to the anisotropy $\EEA = 100 \kBT$ to highlight leaking.
+This can be observed in~\cref{fig:3:Clocking_clearly_EBstd5} for an example with $\sigma(\EEA)/\EEA = \SI{5}{\percent}$ and high MS coupling $\EMC = 200 \kBT$ compared to the anisotropy $\EEA = 100 \kBT$ to highlight leaking.
 
 \makeshiftfig{
 	%\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_clearly_EBstd5_moments.pdf}
@@ -1051,7 +1051,7 @@ This can be observed in~\cref{fig:3:Clocking_clearly_EBstd5} for an example with
 	Evolution of a $20 \times 20$ OOP square-lattice ASI when using the two-step AFM clocking protocol (for five cycles $A$ and five opposite cycles $B$).
 	The domain type of each magnet is shown after each cycle.
 	The finite size of magnets was accounted for with $D_\mathrm{NM} = \SI{170}{\nano\metre}$ and $S_\mathrm{ASI} = \SI{200}{\nano\metre}$.
-	System parameters were chosen to result in $\EMC = 200 \kBT$ and $\EEA = 100 \kBT$, with $\sigma(\EEA) = \SI{5}{\percent}$.
+	System parameters were chosen to result in $\EMC = 200 \kBT$ and $\EEA = 100 \kBT$, with $\sigma(\EEA)/\EEA = \SI{5}{\percent}$.
 	All magnets are initially magnetised in one of the antiferromagnetic ground states (white). The magnetic field used in the clocking cycles has a magnitude $B_\mathrm{ext} = \qty{5.5}{\milli\tesla}$.
 }
 
@@ -1063,11 +1063,11 @@ It can even enhance RC performance, as it introduces asymmetry which is benefici
 % Since leaking occurs due to low-barrier unstimulated magnets spontaneously switching in response to their neighbours, it is highly dependent on the magnetostatic interaction $\EMC$.
 
 \paragraph{Energy balance}
-As the ratio $\sigma(\EEA) \EEA / \EMC$ increases, so does the range of fields where low-anisotropy magnets can be switched in the bulk of a domain without significant leaking during stepwise domain wall propagation.
+As the ratio $\sigma(\EEA) / \EMC$ increases, so does the range of fields where low-anisotropy magnets can be switched in the bulk of a domain without significant leaking during stepwise domain wall propagation.
 Such nucleation is beneficial for RC, in contrast to defect-free ASI where domain walls could only be injected at corners of the ASI.
 %Fortunately from a fabrication perspective, systems with low $\EMC$ are typically easier to produce.
-To illustrate the impact of $\EMC$,~\cref{fig:3:Clocking_clearly_EBstd5_EMC} compares a strongly-coupled system (a) with a weakly-coupled system (b). % a system with $\sigma(\EEA) \EEA / \EMC = 0.025$ (\crefSubFigRef{fig:3:Clocking_clearly_EBstd5_EMC}{a}) against one with $\sigma(\EEA) \EEA / \EMC = 0.25$ (\crefSubFigRef{fig:3:Clocking_clearly_EBstd5_EMC}{b}).
-Indeed, nucleation occurs in the bulk of the weakly-coupled system because the disorder $\sigma(\EEA)\EEA=10\kBT$ is significant compared to $\EMC = 40 \kBT$, which also leads to far more irregular domain wall motion that encourages interactions between domain walls.
+To illustrate the impact of $\EMC$,~\cref{fig:3:Clocking_clearly_EBstd5_EMC} compares a strongly-coupled system (a) with a weakly-coupled system (b). % a system with $\sigma(\EEA) / \EMC = 0.025$ (\crefSubFigRef{fig:3:Clocking_clearly_EBstd5_EMC}{a}) against one with $\sigma(\EEA) / \EMC = 0.25$ (\crefSubFigRef{fig:3:Clocking_clearly_EBstd5_EMC}{b}).
+Indeed, nucleation occurs in the bulk of the weakly-coupled system because the disorder $\sigma(\EEA) = 10 \kBT$ is significant compared to $\EMC = 40 \kBT$, which also leads to far more irregular domain wall motion that encourages interactions between domain walls.
 
 \vspace{-1em}
 \makeshiftfig{
@@ -1082,7 +1082,7 @@ Indeed, nucleation occurs in the bulk of the weakly-coupled system because the d
 	Evolution of the spatial distribution of domain types in a $20 \times 20$ OOP square-lattice ASI when using the two-step AFM clocking protocol (for six cycles $A$ and six opposite cycles $B$).
 	All magnets are initially magnetised in one of the antiferromagnetic ground states (white).
 	The finite size of magnets was accounted for with $D_\mathrm{NM} = \SI{170}{\nano\metre}$ and $S_\mathrm{ASI} = \SI{200}{\nano\metre}$.
-	System parameters were chosen to result in $\EEA = 200 \kBT$, with $\sigma(\EEA) = \SI{5}{\percent}$.
+	System parameters were chosen to result in $\EEA = 200 \kBT$, with $\sigma(\EEA)/\EEA = \SI{5}{\percent}$.
 	\textbf{(a)} System with high magnetostatic interaction $\EMC = 400 \kBT$, requiring an external input magnitude $B_\mathrm{ext} = \qty{11.2}{\milli\tesla}$ for controlled domain wall movement.
 	\textbf{(b)} System with low MS interaction $\EMC = 40 \kBT$ and $B_\mathrm{ext} = \qty{3.78}{\milli\tesla}$.
 }
@@ -1105,7 +1105,7 @@ The ASI we consider here as our baseline system contains magnets with a very lar
 } $\EEA = \SI{110}{\electronvolt} \approx 4255\kBT (\pm \SI{5}{\percent})$ and the same magnetic moment as the thermally active ASI ($\mu = \SI{2.5e-16}{\ampere\metre\squared}$), which was based on magnets with a diameter $D_\mathrm{NM} = \SI{170}{\nano\metre}$.
 As these parameters are kept constant, the MS coupling $\EMC$ only depends on the lattice parameter $a$.
 To avoid an unintentionally interconnected ASI as previously encountered in~\cref{sec:3:MFM}, a lower limit $a > D_\mathrm{NM} + \SI{25}{\nano\metre} = \SI{195}{\nano\metre}$ is imposed. \par
-The high anisotropy guarantees a weakly-coupled system with a high $\sigma(\EEA)\EEA / \EMC$-ratio, which we previously suggested to be the most promising regime for RC.
+The high anisotropy guarantees a weakly-coupled system with a high $\sigma(\EEA)/\EMC$-ratio, which we previously suggested to be the most promising regime for RC.
 Given the constant values of the aforementioned system parameters, two variables remain: the input strength and the NN MS interaction energy $\EMC$.
 To determine their optimal values, the RC metrics will be determined for a range of external field magnitudes $B$ and lattice spacings $a$. \par
 Note that, while domain wall propagation can be expected near a field magnitude $B \approx (\EEA + \EMC)/\mu$, it is not guaranteed that optimal RC performance will occur exactly at this value.
@@ -1129,7 +1129,7 @@ Recall that the maximum value of $K$, $G$ and $C$ is the number of readout nodes
 }
 
 Some noise is visible in the figure due to the random distribution of $\EEA$; for each set of parameters, a new randomly sampled value of $\EEA$ was assigned to each magnet.
-The local noise level therefore reflects how impactful a $\sigma(\EEA) = \SI{5}{\percent}$ disorder is on the clocking dynamics and, by extension, on RC performance.
+The local noise level therefore reflects how impactful a $\sigma(\EEA)/\EEA = \SI{5}{\percent}$ disorder is on the clocking dynamics and, by extension, on RC performance.
 For example, near the maximum of the metric map in~\cref{fig:3:Clocking_Sweeps_binary_KQ}, the computing capacity $C$ may vary between approximately 50 and 80.
 This suggests that, unless such defects can be reproducibly incorporated into the system, performance can vary significantly between various manufactured ASI samples. \par
 The generalisation-capability $G$ is very low for any combination of $a$ and $B$, apart from a few outliers where the randomly sampled defect distribution results in uncharacteristically high values of $G$.
@@ -1181,9 +1181,9 @@ Therefore, to ensure consistency between the RC metric maps presented in this se
 
 \subsubsection{Influence of defects on RC metrics}
 We previously mentioned that disorder is beneficial to the RC capability of the system, but provided no evidence for this.
-Now, RC metrics can be used to verify this claim: the task-agnostic metrics for a system without defects ($\sigma(\EEA) = \SI{0}{\percent}$) are shown in~\cref{fig:3:Clocking_Sweeps_binary_TA_EBstd0}. \par
-While the memory capacity and parity check are still definitively non-zero, they are at least $\approx \SI{40}{\percent}$ lower than for a system with $\sigma(\EEA) = \SI{5}{\percent}$ defects.
-Furthermore, while a region with near-unity non-linearity now exists, the overlap between parameter combinations that yield decent non-linearity and those that yield decent memory capacity remains rather limited. \\\par
+Now, RC metrics can be used to verify this claim: the task-agnostic metrics for a system without defects ($\sigma(\EEA) = 0$) are shown in~\cref{fig:3:Clocking_Sweeps_binary_TA_EBstd0}. \par
+While the memory capacity and parity check are still definitively non-zero, they are at least $\approx \SI{40}{\percent}$ lower than for a system with $\sigma(\EEA)/\EEA = \SI{5}{\percent}$ defects.
+Furthermore, while a region with near-unity non-linearity now exists, the overlap between parameter combinations that yield decent non-linearity and those that yield decent memory capacity remains rather limited.
 
 \xfig{3_RC_OOP/Nonvolatile/Sweeps/Sweep20230124100320.pdf}{
 	\label{fig:3:Clocking_Sweeps_binary_TA_EBstd0}
@@ -1191,19 +1191,19 @@ Furthermore, while a region with near-unity non-linearity now exists, the overla
 	The non-linearity is bounded in the range $[0,1]$, while the memory capacity and parity check have no upper limit.
 }
 
-While this shows that defects improve the memory capacity of the system, it does not prove that a defect rate $\sigma(\EEA) = \SI{5}{\percent}$ would be optimal.
-To assess this,~\cref{fig:3:Clocking_Sweeps_binary_TA_EBstd} shows task-agnostic metrics for a range of defect rates $\sigma(\EEA)$ and input field magnitudes $B$ while the lattice spacing was kept constant.
+While this shows that defects improve the memory capacity of the system, it does not prove that a defect rate $\sigma(\EEA)/\EEA = \SI{5}{\percent}$ would be optimal.
+To assess this,~\cref{fig:3:Clocking_Sweeps_binary_TA_EBstd} shows task-agnostic metrics for a range of defect rates $\sigma(\EEA)/\EEA$ and input field magnitudes $B$ while the lattice spacing was kept constant.
 
 \xfig{3_RC_OOP/Nonvolatile/Sweeps/Sweep20250327111551.pdf}{
 	\label{fig:3:Clocking_Sweeps_binary_TA_EBstd}
-	Task-agnostic metrics as a function of disorder $\sigma(\EEA) = 0$ with otherwise the same input, readout and system parameters as in~\cref{fig:3:Clocking_Sweeps_binary_TA} ($20 \times 20$ OOP square-lattice ASI with $10 \times 10 = 100$ readout nodes, $\EEA = \SI{110}{\electronvolt}$, $\mu = \SI{2.5e-16}{\ampere\metre\squared}$), over the same range of input magnitudes $B$, with $a=\SI{230}{\nano\metre}$ kept constant.
+	Task-agnostic metrics as a function of disorder $\sigma(\EEA)/\EEA$ with otherwise the same input, readout and system parameters as in~\cref{fig:3:Clocking_Sweeps_binary_TA} ($20 \times 20$ OOP square-lattice ASI with $10 \times 10 = 100$ readout nodes, $\EEA = \SI{110}{\electronvolt}$, $\mu = \SI{2.5e-16}{\ampere\metre\squared}$), over the same range of input magnitudes $B$, with $a=\SI{230}{\nano\metre}$ kept constant.
 	The non-linearity is bounded in the range $[0,1]$, while the memory capacity and parity check have no upper limit.
 }
 
 The non-linearity quickly drops as the disorder increases; only systems with rather low disorder ($< \SI{10}{\percent}$) display an appreciable non-linearity, and only do so over a limited field range.
 The memory capacity and parity check, on the other hand, benefit greatly from disorder.
 Note that the first column in~\cref{fig:3:Clocking_Sweeps_binary_TA_EBstd} (i.e., $\sigma(\EEA) = 0$, a defect-free system), displays a far lower memory capacity or parity check performance than any system with defects ($\sigma(\EEA) > 0$).
-The severity of these defects has no substantial impact on these two metrics; they remain reasonably high ($\gtrsim 2.5$ and $\gtrsim 3$, respectively) even for extremely severe defects beyond $\sigma(\EEA)=\SI{30}{\percent}$. \par
+The severity of these defects has no substantial impact on these two metrics; they remain reasonably high ($\gtrsim 2.5$ and $\gtrsim 3$, respectively) even for extremely severe defects beyond $\sigma(\EEA)/\EEA=\SI{30}{\percent}$. \par
 The optimal field range always remains centred around the same value, but broadens as the disorder increases.
 This is a consequence of the greater spread of effective energy barriers throughout the ASI due to the increased disorder, widening the range of field strengths at which any of the magnets can switch.
 

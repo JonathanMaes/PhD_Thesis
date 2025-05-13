@@ -26,7 +26,7 @@ class Sweep_OOPSquare_AFM2_TA_byteInput(hotspice.experiments.Sweep):
         } | kwargs # Dict with all parameter values as tuples of length 1 or greater
         names = {
             'a': "Lattice spacing $a$", 'nx': "$n_x$", 'ny': "$n_y$", 'PBC': "Periodic Boundary Conditions", 
-            'T': "Temperature", 'E_B_mean': "Mean energy barrier", 'E_B_std': r"Defects $\sigma(E_\mathrm{EA})$", 'E_B': "Energy barrier",
+            'T': "Temperature", 'E_B_mean': "Mean energy barrier", 'E_B_std': r"Defects $\sigma(E_\mathrm{EA})/E_\mathrm{EA}$", 'E_B': "Energy barrier",
             'moment': "Magnetic moment", 'ext_field': "External field magnitude $B$", 'res_x': "# readout nodes along x-axis", 'res_y': "# readout nodes along y-axis"
         }
         units = {'a': "m", 'T': "K", 'E_B_mean': "J", 'E_B_std': "", 'E_B': "J", 'moment': "Am²", 'ext_field': "T"}
@@ -130,4 +130,4 @@ if __name__ == "__main__":
                        "fig_width": thesis_utils.page_width, "fig_height": thesis_utils.page_width/2.6,
                        "metrics": ["NL", "MC", "PC"],
                        "colormap": "magma"}
-        sweep.plot(os.path.join(os.path.splitext(__file__)[0], r"Sweep20250327111551.json"), plot=False, **plot_kwargs)
+        sweep.plot(os.path.join(os.path.splitext(__file__)[0], r"Sweep20250327111551.json"), plot=False, check=False, **plot_kwargs)
