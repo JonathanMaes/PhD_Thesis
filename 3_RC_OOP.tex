@@ -1,10 +1,10 @@
 \chapter{Reservoir computing in out-of-plane artificial spin ice}\label{ch:Applications} % TODO END: link to index terms
 \glijbaantje{If you find that you're spending almost all your time on theory,\\ start turning some attention to practical things; it will improve your theories.\\ If you find that you're spending almost all your time on practice,\\ start turning some attention to theoretical things; it will improve your practice.}{Donald Knuth}
 
-The main factor that motivated our research of OOP ASI for \xref{reservoir computing} (RC) was that they allow very efficient and relatively simple input and read-out methods to be used.
-Early on in the \spinengine project, methods to read the state of OOP ASI had already been demonstrated experimentally on a small scale by ETHZ/PSI.
-However, their potential for RC had not yet been investigated.
-As \hotspice is well-suited for the simulation of OOP ASI, this presented an appropriate use-case for the software developed in~\cref{ch:Hotspice}. \par % Furthermore, the other simulator developed by the consortium (flatspin) only supports in-plane magnetisation. Furthermore, \hotspice is more accurate for OOP ASI than IP ASI due to the high degree of symmetry in the former.
+The main factor that motivated our research of OOP ASI for \xref{reservoir computing} (RC) was that these systems allow very efficient and relatively simple input and read-out methods to be used.
+%Early on in the \spinengine project, methods to read the state of OOP ASI had already been demonstrated experimentally on a small scale by ETHZ/PSI.
+However, their potential for RC had yet to be investigated.
+Since \hotspice is well-suited for the simulation of OOP ASI, this presented an appropriate use-case for the software developed in~\cref{ch:Hotspice}. \par % Furthermore, the other simulator developed by the consortium (flatspin) only supports in-plane magnetisation. Furthermore, \hotspice is more accurate for OOP ASI than IP ASI due to the high degree of symmetry in the former.
 Therefore, in this chapter, \hotspice will be used to assess the viability and characteristics of a couple of methods to achieve RC in OOP ASI.
 It will be shown that RC is indeed possible in such systems by using an appropriate input and readout protocol.
 This chapter starts with a discussion of the basic properties of OOP ASI and the motivation for researching them.
@@ -290,7 +290,7 @@ Therefore, for a system to reach the checkerboard state on a given timescale, a 
 This is most clearly seen in phase diagrams like~\cref{fig:3:OOP_relaxation_continuous}, which summarise the values of $\mavg$ and $\qNN$ at $t = \SI{e4}{\second}$ (i.e., the maximum time in \cref{fig:3:OOP_relaxation}) over a wide range of $\EEA$ and $\EMC$.
 This encompasses the nine $(\EMC,\EEA)$ combinations of the various panels in~\cref{fig:3:OOP_relaxation}, as indicated by grey numbered crosses in~\cref{fig:3:OOP_relaxation_continuous}. \par
 Five distinct regions can be distinguished in this $\EMC \times \EEA$ phase space.
-In region~$\mathrm{I}$ (panel 1), weak coupling and high anisotropy result in a non-volatile system where no spontaneous switches occur and $\mavg = 1$ and $\qNN = 0$ remain unchanged. % TODO: better name for non-volatile?
+In region~$\mathrm{I}$ (panel 1), weak coupling and high anisotropy result in a frozen system where no spontaneous switches occur and $\mavg = 1$ and $\qNN = 0$ remain unchanged.
 Increasing the $\EMC/\EEA$ ratio shifts the system through the transient region~$\mathrm{II}$ (panel 2), characterised by decreasing $\mavg$ and increased ordering.
 Further increase of $\EMC/\EEA$ shifts the system to region~$\mathrm{III}$ (panel 6) with $\mavg \approx 0$ but $\qNN \neq 1$, characteristic of stage~$\circled{2}$.
 Systems in this region exhibit local domains, but their domain walls remain immobile.
@@ -301,19 +301,22 @@ Reducing $\EMC$ too much puts the system in region~$\mathrm{V}$ (panel 7), where
 For a magnet to have a mean switching time $t = \SI{e4}{\second}$, the N\'eel-Arrhenius switching law states that it must have an anisotropy $\EEA/\kBT = \ln(t \nu_0) \approx 32$: this is the reason why region~$\mathrm{V}$ extends upwards to $\EEA \lesssim 32 \kBT$.
 The main region of interest --- region~$\mathrm{IV}$ with $\qNN \approx 1$ --- is therefore constrained from the left by the superparamagnetic regime, from the top by the transient/frozen regime, and from the right by states in which domain boundaries are immobile at the observed timescale.
 
+\vspace{-1.5em}
 \xfig{3_RC_OOP/OOP_relaxation_continuous.pdf}{
 	\label{fig:3:OOP_relaxation_continuous}
-	Phase diagrams at $t=\SI{e4}{\second}$, of the normalised average magnetisation $\mavg$ and the local antiferromagnetic parameter $\qNN$, as a function of net out-of-plane anisotropy $\EEA$ and nearest-neighbour magnetostatic coupling $\EMC$.
+	Phase diagrams at $t=\SI{e4}{\second}$, of the normalised average magnetisation $\mavg$ and the local antiferromagnetic parameter $\qNN$, as a function of net out-of-plane anisotropy $\EEA$ and nearest-neighbour magnetostatic coupling $\EMC$ for an $11 \times 11$ lattice.
 	Five regions can be distinguished: $\mathrm{I}$ -- frozen state, $\mathrm{II}$ -- transient states, $\mathrm{III}$ -- state with domains and domain boundaries, $\mathrm{IV}$ -- checkerboard ordering, $\mathrm{V}$ -- superparamagnetic state.
 	The white and black dotted line respectively correspond to $\mavg = 0.05$ and $\qNN = 0.95$.
 	The nine panels of~\cref{fig:3:OOP_relaxation} are indicated by grey crosses.
 	The three symbols ($\raisebox{0.1pt}{\ensuremath{\boldsymbol{\ocircle}}}, \raisebox{-1pt}{\ensuremath{\boldsymbol{\triangle}}}, \boldsymbol{\times}$) correspond to the experimental lattices shown in~\cref{fig:3:MFM_grid} with nanomagnet diameter $D_\mathrm{NM} = \SI{170}{\nano\metre}$, \ce{Co} thickness $t_{\ce{Co}} = \SI{1.45}{\nano\metre}$ and nanomagnet separations $S_\mathrm{ASI} = \SI{20}{\nano\metre}$ (circle), $S_\mathrm{ASI} = \SI{25}{\nano\metre}$ (triangle), $S_\mathrm{ASI} = \SI{30}{\nano\metre}$ (cross).
 }
+\vspace{-1em}
 
 The phase diagrams in~\cref{fig:3:OOP_relaxation_continuous} are snapshots at $t = \SI{e4}{\second}$.
 As time goes on, region~$\mathrm{IV}$ will expand and the boundaries between the regions will shift upwards.
 Therefore, for a longer observation time, a system initially located in the frozen region at $t = \SI{e4}{\second}$ may eventually find itself in the more ordered regions~$\mathrm{II}$, $\mathrm{III}$ or~$\mathrm{IV}$.
-However, due to the exponential character of the N\'eel-Arrhenius law, this shift will be minimal and region~$\mathrm{IV}$ will not grow by much more than $\approx 10 \kBT$ for any reasonable timescale, as compared to~\cref{fig:3:OOP_relaxation_continuous}~\cite{KUR-24}.% TODO: @jleliaert suggested to "+ comment on finite size?". Does this refer to the smaller spread on relaxation curves? Or ?
+However, due to the exponential character of the N\'eel-Arrhenius law, this shift will be minimal and region~$\mathrm{IV}$ will not grow by much more than $\approx 10 \kBT$ for any reasonable timescale, as compared to~\cref{fig:3:OOP_relaxation_continuous}~\cite{KUR-24}.
+On a similar note, since the size of the ASI only affects the standard deviation on the relaxation traces, these phase diagrams will not be much different for larger lattices.
 
 \subsubsection{Exchange-coupled system}
 The presence of exchange coupling in a system affects the relaxation behaviour, resulting in deviations from the usual logarithmic ordering during stage $\circled{1}$.
