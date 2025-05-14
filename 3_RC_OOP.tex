@@ -839,11 +839,11 @@ Note that a ``non-volatile'' system is not the same as a non-interacting system.
 While a low magnetostatic coupling $\EMC \ll \EEA$ results in a frozen system, a sufficiently high coupling will still induce spontaneous ordering, albeit only locally as the high anisotropy renders domain walls immobile.
 Recall in this regard the five regions previously outlined in~\cref{fig:3:OOP_relaxation_continuous}.
 Because of the high anisotropy $\EEA$, the superparamagnetic region~$\mathrm{V}$ and perfectly ordered region~$\mathrm{IV}$ are not relevant.
-Instead, non-volatile ASI only exhibit two regimes: one where the magnetostatic coupling is sufficiently strong to overcome the energy barrier $\EEA$, and another where it is not.
+Instead, non-volatile ASI only exhibits two regimes: one where the magnetostatic coupling is sufficiently strong to overcome the energy barrier $\EEA$, and another where it is not.
 These respectively correspond to region~$\mathrm{III}$~and~$\mathrm{I}$, while region~$\mathrm{II}$ is simply a smooth transition between these two regimes.
 If, however, the RC input method does not cause significant local deviations from the ground state --- by for instance using domain wall motion for computation --- then these two regimes are equivalent from an RC perspective. \par
 
-% Nomenclature: thermally active ASI has low energy barriers that allow the domain walls to move by thermal fluctuations, as all interactions are on the order of several $\kBT$. Spontaneously relaxing ASI just has a sufficiently strong MS interaction for domains to form, but domain walls will remain fixed in place when $\EMC$ or $\EEA$ is high. \par
+% Nomenclature: thermally active ASI has low energy barriers that allow the domain walls to move by thermal fluctuations, as all interactions are on the order of several $\kBT$. \par
 % Achieving computation in a frozen system (i.e., region~$\mathrm{I}$) requires careful tuning of the strength of the input stimulus and the $\EMC/\EEA$ balance.
 
 While the thermally active ASI typically had a MS coupling $\EMC \lesssim 10\kBT$, as was determined from the MFM images in~\cref{fig:3:MFM_grid}, such low coupling will be insufficient in non-volatile ASI.
@@ -851,10 +851,10 @@ For deterministic switching, both the anisotropy $\EEA$ and magnetostatic coupli
 Increasing the magnetostatic coupling beyond $10\kBT$ should not present a significant practical issue, as the inclusion of a separate ferromagnetic layer above the magnets can significantly increase the MS coupling by focusing the stray fields onto nearby magnets~\cite[Supp. 10]{KUR-24}.
 
 \paragraph{Uniform external field}
-While it was possible to achieve decent signal transformation in thermally active OOP ASI by using a uniform external field, this approach is no longer viable in non-volatile ASI.
-They lack the intrinsic relaxation dynamics that RC in thermally active ASI relied on, so a fundamentally different input method will be required.
-In a non-volatile system, the temporal dimension is irrelevant, as a magnet will either switch within a reasonable timeframe or it will not.
-Therefore, we must instead make use of the spatial dimensions of an ASI to perform RC.
+While it was possible to perform signal transformation with thermally active OOP ASI by using a uniform external field, this approach is no longer viable in non-volatile ASI.
+They lack the intrinsic relaxation dynamics of thermally active ASI, making the temporal dimension largely irrelevant: a magnet will either switch within a reasonable timeframe, or it will not.
+Furthermore, the magnets only respond within a narrow range of fields near the coercive field, leading to a very steep hysteresis loop.
+Hence, a fundamentally different input method will be required, where we instead make use of the spatial dimensions of an ASI to perform RC.
 Rather than pulling the system away from equilibrium and expecting it to evolve back to the ground state all by itself, we can instead use the domain structure for computation.
 
 \subsection{Two-step input protocol: clocking}
@@ -864,7 +864,7 @@ As such, some key concepts can be carried over, but the specific realisation of 
 To achieve clocking, Jensen~\etal~\cite{clocking-protocol} applied an external magnetic field in a well-chosen direction to selectively affect one of the two pinwheel sublattices at a time, and then changed the field direction to affect the other sublattice.
 By carefully tuning the field magnitude, only the magnets at the boundary of a domain --- or at the edge of the ASI --- will switch.
 This is possible because those magnets have a lower effective energy barrier $\EBeff$ than magnets in the bulk of a domain.
-Such a two-step clocking protocol therefore allows domain wall boundaries to advance one step at a time, while avoiding saturated magnetic states that would result from a stronger input. \par
+Such a two-step clocking protocol therefore allows domain wall boundaries to advance one step at a time, while avoiding avalanches that would result from a stronger input. \par
 The main takeaway from this concept is that two key factors are necessary to achieve controlled domain wall movement in any ASI~\cite{MAES-24}.
 \begin{itemize}
 	\item The input method must lift the degeneracy between the ground states --- in pinwheel ASI, a global in-plane field readily distinguishes between the four types of superferromagnetic domains.
@@ -894,19 +894,6 @@ In the specific case of square-lattice OOP ASI, the two degenerate domain types 
 This alternating field temporarily lifts the degeneracy between the two domain types while the input is applied, hence promoting domains of one type at the expense of the other.
 Information can then be encoded into the system by mapping a positive input value to one domain type, while a negative input corresponds to the other.
 
-\subparagraph{AFM readout}
-The readout method must be able to pick up on the changes induced by the input for there to be a meaningful input-output relation to perform RC with.
-In our case, using the domain types for computation requires a readout method that can distinguish between the ground states.
-This precludes the usage of a local $\mavg$ readout, as used for the thermally active system, nor can the order parameters $\qNN$ be used.
-Instead, the domain type of each magnet will henceforth be used as the readout quantity, by mapping the two equivalent domain types to the values $\pm 1$.
-Recall that it is theoretically possible to determine the state of all magnets in a small ASI from AHE measurements~\cite[Supp. 7]{KUR-24}.
-Hence, such an AFM readout is practically achievable since it only requires a multiplication of the state of each magnet by $\pm 1$, depending on their location in the ASI. \par
-To turn these individual magnetic states into a robust output vector, we will once again use averaging to avoid overfitting.
-Since the $x$- and $y$-axes are equivalent, this is done via ``squinting'' --- effectively dividing the ASI into a coarser square lattice and averaging the states of $k \times k$ magnets for each readout value.
-Hence, absolute values $<1$ indicate the presence of a domain boundary and it is even possible to distinguish between straight domain walls, corners and other features based on these averaged readout values.
-Since there are $\approx N/k^2$ readout values, overfitting can be avoided by choosing $k$ sufficiently large.
-Typically, we use rather small ASI just like we did for thermally active ASI, so $k=2$ is often a good choice for systems up to $20 \times 20$ magnets.
-
 \paragraph{Avalanches and saturation}
 The previously discussed AFM input method, which applies a spatially alternating up/down field, is insufficient to achieve controlled domain wall movement.
 Because it applies a global stimulus, it easily triggers avalanches of switching magnets, rather than stepwise domain wall motion.
@@ -923,7 +910,7 @@ The fact that the AFM input can selectively influence domain walls is crucial, a
 Saturation can be avoided by instead applying two sub-steps for each applied input value. As illustrated in~\cref{fig:3:Clocking_protocol}, the magnets are divided into two groups, akin to the black and white squares on a checkerboard.
 In the first sub-step, the AFM stimulus is only applied to the first group, while the second sub-step only addresses the second group of magnets.
 The strength and/or sign of the stimulus is determined by the input value.
-We refer to this method as the \idx{two-step AFM clocking protocol}.
+We refer to this method as the \idx{AFM clocking protocol}.
 This way, since only half of the magnets are stimulated simultaneously, the other half is prevented from switching at the same time --- provided their anisotropy $\EEA$ is sufficiently high compared to the NN MS coupling $\EMC$.
 The avalanches that plagued the global input strategies are thereby avoided. \par
 For this to result in controlled domain wall motion, the strength of the input is of great importance.
@@ -937,7 +924,7 @@ Hence, by combining an appropriate choice of input strength with the two-step pr
 
 \xfig{3_RC_OOP/Nonvolatile/Clocking_protocol.pdf}{
 	\label{fig:3:Clocking_protocol}
-	 Illustration of the \xref{two-step AFM clocking protocol} for controlled domain wall movement in ASI.
+	 Illustration of the \xref{AFM clocking protocol} for controlled domain wall movement in ASI.
 	 The symbols $\bigodot$ and $\bigotimes$ respectively indicate that the external stimulus is such, that the magnet at that location would prefer an `up' or `down' magnetisation.
 	 This example shows a $5 \times 5$ ASI, but the concept is analogous for other lattice sizes.
 	 Each input cycle consists of two sub-steps that each affect a different set of magnets, arranged in a checkerboard pattern: only half of the magnets are stimulated at once.
@@ -959,18 +946,32 @@ Since this clocking protocol relies on deterministic switching, the duration ove
 %While this clocking protocol is likely not the only viable input method for non-volatile OOP ASI, we can at least say with certainty that simply applying a global uniform or AFM field would not yield any useful dynamics for RC.
 In the remainder of this section, we will illustrate the behaviour of the clocking protocol and show that it yields desirable dynamics for RC.
 
+\paragraph{Readout of domain states}
+The readout method must be able to pick up on the changes induced by the input for there to be a meaningful input-output relation to perform RC with.
+In our case, using the domain types for computation requires a readout method that can distinguish between the ground states.
+This precludes the usage of a local $\mavg$ readout, as used for the thermally active system, nor can the order parameters $\qNN$ be used.
+Instead, the domain type of each magnet will henceforth be used as the readout quantity, by mapping the two equivalent domain types to the values $\pm 1$.
+Recall that it is theoretically possible to determine the state of all magnets in a small ASI from AHE measurements~\cite[Supp. 7]{KUR-24}.
+Hence, such an AFM readout is practically achievable since it only requires a multiplication of the state of each magnet by $\pm 1$, depending on their location in the ASI. \par
+To turn these individual magnetic states into a robust output vector, we will once again use averaging to avoid overfitting.
+Since the $x$- and $y$-axes are equivalent, this is done via ``squinting'' --- effectively dividing the ASI into a coarser square lattice and averaging the states of $k \times k$ magnets for each readout value.
+Hence, absolute values $<1$ indicate the presence of a domain boundary and it is even possible to distinguish between straight domain walls, corners and other features based on these averaged readout values.
+Since there are $\approx N/k^2$ readout values, overfitting can be avoided by choosing $k$ sufficiently large.
+Typically, we use rather small ASI just like we did for thermally active ASI, so $k=2$ is often a good choice for systems up to $20 \times 20$ magnets.
+
 \subsection{Illustrative examples}
-To show that the \xref{two-step AFM clocking protocol} does indeed move domain walls step by step, independent of their orientation or precise location, we will now consider a few example systems.
+To show that the \xref{AFM clocking protocol} does indeed move domain walls step by step, independent of their orientation or precise location, we will now consider a few example systems.
 This will illustrate that the growth of domains can be controlled as originally envisioned, while providing insight into the effect of system parameters on the domain wall motion.
 
 \paragraph{Defect-free system}
 First, for a clean illustration of the general behaviour of the clocking protocol, consider an example without any defects, i.e. $\sigma(\EEA) = 0$.
 The absence of defects results in a far more orderly domain wall motion than expected in a real system, where domain walls would be likely to remain pinned at high-anisotropy magnets.
 The effect of subsequent clocking cycles on such a ``perfect'' system is shown in~\cref{fig:3:Clocking_clearly_EBstd0}.
-The top half of this figure shows the magnetisation state of each magnet, while the bottom half shows the same states but instead visualises the two degenerate domain types as black and white.
+The top half of this figure shows the magnetisation state of each magnet, which directly translates to the bottom half where the two degenerate domain types are visualised as black and white.
 % While diagonal domain walls stand out in the top panels as lines of the same colour, horizontal/vertical domain walls (e.g. in the centre of the ASI during the $B$ cycles) are harder to see.
 Both are equivalent, but the domain representation is more insightful in this context since the entire appeal of this input method is controlled domain wall motion.
 Therefore, only the domain representation will be shown in any subsequent figures.
+Since we start from one ground state, an alternative interpretation for the white-coloured magnets is that those are (back) in their initial state, while the black ones are not.
 
 \makeshiftfig{ % TODO: different color scheme, this looks awful in print. Also different legend for domains, everyone is confused by it (try a triangle instead, with ... diagonally down).
 	\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_clearly_EBstd0_moments.pdf}
@@ -978,7 +979,7 @@ Therefore, only the domain representation will be shown in any subsequent figure
 	\vspace{-1.5em} % Looks more natural for this figure
 }{
 	\label{fig:3:Clocking_clearly_EBstd0}
-	Evolution of a $16 \times 16$ OOP square-lattice ASI when using the \xref{two-step AFM clocking protocol} (for seven cycles $A$ and seven opposite cycles $B$).
+	Evolution of a $16 \times 16$ OOP square-lattice ASI when using the \xref{AFM clocking protocol} (for seven cycles $A$ and seven opposite cycles $B$).
 	The moment orientation (\textbf{top}) and domain type (\textbf{bottom}) of each magnet are shown after each cycle was applied.
 	The finite size of magnets was accounted for with $D_\mathrm{NM} = \SI{170}{\nano\metre}$ and $S_\mathrm{ASI} = \SI{200}{\nano\metre}$.
 	System parameters were chosen such that $\EMC = 40 \kBT$ and $\EEA = 200 \kBT$, without defects ($\sigma(\EEA) = 0$).
@@ -1002,7 +1003,7 @@ Note also that, during the $B$-cycles in~\cref{fig:3:Clocking_clearly_EBstd0}, t
 	The ``Petit Beurre'' is a French biscuit decorated with serrated edges and four corners in the shape of ears, schematically resembling the central white-coloured domain that appears during the $A$-cycles of~\cref{fig:3:Clocking_clearly_EBstd0}.
 } it previously had during the $A$-cycles.
 Instead, it appears to preferably grow in such a way that it ends up with mostly horizontal and vertical edges, rather than diagonal ones.
-This is part of the general phenomenon that, in the two-step AFM clocking protocol, domain growth preferentially occurs at the corners of a domain. \par
+This is part of the general phenomenon that, in the \xref{AFM clocking protocol}, domain growth preferentially occurs at the corners of a domain. \par
 To more clearly illustrate this phenomenon,~\cref{fig:3:Clocking_massive_seeded} shows a far larger ASI which was initialised in one ground state, apart from one ``seed'' magnet at the centre which is of the opposite domain type as compared to all other magnets in the system.
 
 \vspace{-1.5em}
@@ -1011,7 +1012,7 @@ To more clearly illustrate this phenomenon,~\cref{fig:3:Clocking_massive_seeded}
 	\vspace{-1.5em} % Looks more natural for this figure
 }{
 	\label{fig:3:Clocking_massive_seeded}
-	Evolution of a $141 \times 141$ OOP square-lattice ASI when using the \xref{two-step AFM clocking protocol} (for 36 cycles $A$ and 36 opposite cycles $B$).
+	Evolution of a $141 \times 141$ OOP square-lattice ASI when using the \xref{AFM clocking protocol} (for 36 cycles $A$ and 36 opposite cycles $B$).
 	The domain type of each magnet is shown every six cycles.
 	All magnets are initially magnetised in one of the antiferromagnetic ground states (white), apart from one magnet at the centre which started in the opposite state (black).
 	The finite size of magnets was accounted for with $D_\mathrm{NM} = \SI{170}{\nano\metre}$ and $S_\mathrm{ASI} = \SI{200}{\nano\metre}$.
@@ -1032,7 +1033,7 @@ Therefore, enhanced RC performance can be expected for systems with defects that
 
 \paragraph{System with defects}
 Any experimental realisation of OOP ASI will exhibit some degree of manufacturing defects, which are once again modelled by a normally distributed random anisotropy for each magnet in the ASI.
-This results in less symmetric states during successive steps of the clocking protocol as compared to the defect-free system from~\cref{fig:3:Clocking_clearly_EBstd0}. % TODO: is complex the right word here?
+This results in less symmetric states during successive steps of the clocking protocol as compared to the defect-free system from~\cref{fig:3:Clocking_clearly_EBstd0}.
 However, contrary to the stochastic events mentioned earlier, the more irregular response caused by the disorder is reproducible and can therefore be used for computation. \par
 The main reason for the more irregular response is that the difference between low- and high-barrier magnets in a system with defects can be substantial.
 This often makes it impossible to find an input magnitude for which domain walls can propagate through any defect in the system without affecting magnets that are not part of domain walls.
@@ -1045,7 +1046,7 @@ This can be observed in~\cref{fig:3:Clocking_clearly_EBstd5} for an example with
 	\vspace{-1.5em} % Looks more natural for this figure
 }{
 	\label{fig:3:Clocking_clearly_EBstd5}
-	Evolution of a $20 \times 20$ OOP square-lattice ASI when using the two-step AFM clocking protocol (for five cycles $A$ and five opposite cycles $B$).
+	Evolution of a $20 \times 20$ OOP square-lattice ASI when using the \xref{AFM clocking protocol} (for five cycles $A$ and five opposite cycles $B$).
 	The domain type of each magnet is shown after each cycle.
 	The finite size of magnets was accounted for with $D_\mathrm{NM} = \SI{170}{\nano\metre}$ and $S_\mathrm{ASI} = \SI{200}{\nano\metre}$.
 	System parameters were chosen to result in $\EMC = 200 \kBT$ and $\EEA = 100 \kBT$, with $\sigma(\EEA)/\EEA = \SI{5}{\percent}$.
@@ -1076,7 +1077,7 @@ Indeed, nucleation occurs in the bulk of the latter because the disorder $\sigma
 	\vspace{-1.5em} % Looks more natural for this figure
 }{
 	\label{fig:3:Clocking_clearly_EBstd5_EMC}
-	Evolution of the spatial distribution of domain types in a $20 \times 20$ OOP square-lattice ASI when using the two-step AFM clocking protocol (for six cycles $A$ and six opposite cycles $B$).
+	Evolution of the spatial distribution of domain types in a $20 \times 20$ OOP square-lattice ASI when using the \xref{AFM clocking protocol} (for six cycles $A$ and six opposite cycles $B$).
 	All magnets are initially magnetised in one of the antiferromagnetic ground states (white).
 	The finite size of magnets was accounted for with $D_\mathrm{NM} = \SI{170}{\nano\metre}$ and $S_\mathrm{ASI} = \SI{200}{\nano\metre}$.
 	System parameters were chosen to result in $\EEA = 200 \kBT$, with $\sigma(\EEA)/\EEA = \SI{5}{\percent}$.
