@@ -1249,19 +1249,21 @@ This highlights the importance of accounting for the finite size of magnets to o
 \section{Conclusion}
 Throughout this chapter, the underlying model and implementation of the \hotspice ASI simulator have been discussed in detail.
 A couple of improvements to the underlying \xref{point dipole model} were proposed.
-A first improvement considers more accurate calculations for the \xref{magnetostatic interactions}.
-In OOP systems, it was found that a \link{finite dipole model}{second-order correction} on the magnetostatic energy $E_\mathrm{MS}$ yields more realistic values, while for IP systems a \xref{dumbbell model} is more effective in reproducing experimental results.
+The first considers more accurate calculations for the \xref{magnetostatic interactions} by accounting for the finite size of magnets.
+In OOP systems, it was found that more realistic values for the magnetostatic energy $E_\mathrm{MS}$ could be obtained through a \link{finite dipole model}{second-order correction}, while for IP systems a \xref{dumbbell model} is more effective in reproducing experimental results.
 The influence of these corrections can result in qualitatively different dynamics as compared to a \xref{point dipole model}, as was for instance observed in the kagome lattice.
-The second type of model improvement concerns the calculation of the \xref{effective energy barrier}.
+A second improvement concerns the calculation of the \xref{effective energy barrier}.
 There, accounting for \link{asymmetric energy barrier}{asymmetric switching channels} proved key to e.g., correctly reproduce \xref{coercive fields} in pinwheel ASI, provided that the reduced magnetisation during \link{non-coherent magnetisation reversal}{non-coherent reversal processes} was also accounted for.
-While it is possible to obtain an exact solution for the energy barrier in OOP magnets, the assumption of a sinusoidal energy landscape was found to be inaccurate, likely due to non-coherent reversal in real OOP nanomagnets. \par 
+While it is possible to obtain an exact solution for the energy barrier in OOP magnets, the assumption of a sinusoidal energy landscape was found to be inaccurate, likely due to non-coherent reversal in real OOP nanomagnets. \par % TODO: we don't know that yet before Ch. 3
 Furthermore, two distinct algorithms have been implemented to handle switching events: the \xref{first-switch method} and \xref{Metropolis-Hastings sampling}.
 They are both useful in different circumstances, as the former is best suited to simulate temporal (out-of-equilibrium) dynamics, while the latter can more efficiently explore equilibrium configurations.
 In particular, the MH algorithm can benefit from \link{multi-switching}{multiple simultaneous switching events}, which is justifiable if these switching magnets are all sufficiently distant.
-It was verified that this technique yields correct results for a set of test cases on various lattices, and the accuracy of the first-switch method was later assessed in pinwheel and kagome ASI by comparing to experimental results. \par
-The usage of a grid to represent ASI brought with it several advantages, at the cost of some geometrical restriction.
+It was verified that this technique yields correct results for a set of test cases on various lattices, and the accuracy of the first-switch method was later assessed in pinwheel and kagome ASI through comparison with experimental results. \par
+The usage of a grid to represent ASI brought with it several advantages, at the cost of some geometrical restrictions.
 In particular, the grid enables the efficient calculation of the \xref{magnetostatic interaction} between all magnets in the system, whereas other codes typically implement a \link{truncated kernel}{truncation distance} to improve performance.
 However, we found that truncation, even at a distance as far as 20 grid cells, incurs a \SIrange{5}{10}{\percent} error on the total magnetostatic interaction energy of a magnet.
-Additionally, the grid facilitates the simultaneous sampling of sufficiently distant magnets in the MH algorithm. \par
+Additionally, the grid facilitates the simultaneous sampling of sufficiently distant magnets in the MH algorithm. \\\par
+
 These factors make \hotspice a versatile tool that can complement \link{micromagnetic theory}{micromagnetic simulations} in the study of ASI: by sacrificing the internal magnetisation details of individual nanomagnets, these higher-level approximations make it possible to simulate complex dynamics in larger arrays over significantly longer timescales.
+We have shown that different systems call for different model variants or update algorithms, of which we provided several notable examples: for instance, changing from a point dipole to a dumbbell model was found to have a significant impact on kagome ASI, whereas pinwheel ASI is barely affected by this. % not every model improvement is relevant to every lattice, nor does a single update scheme suit all simulation goals.
 The ability of \hotspice to quickly sweep parameters and evaluate RC metrics facilitates the optimisation of ASI configurations and the identification of suitable input protocols; an ability that will be put to good use in the next chapter.
