@@ -1183,6 +1183,7 @@ This yields a magnetic moment $\mu = M_\mathrm{sat} V = \qty{5.9e-16}{\ampere\me
 These values result in a good match with experiment as far as the field magnitude of the first reversal step is concerned.
 The simulations used the point dipole model; performing the same simulations with the dumbbell model results in a nearly identical hysteresis since changing to the dumbbell model has little effect in pinwheel ASI.
 
+\vspace{-1.6em}
 \xfig{2_Hotspice/Hysteresis_Pinwheel.pdf}{
 	\label{fig:2:Hysteresis_Pinwheel}
 	Hysteresis of the pinwheel ASI for an \xref{external magnetic field} applied at \ang{30} with respect to the system edges.
@@ -1195,6 +1196,7 @@ The simulations used the point dipole model; performing the same simulations wit
 	The colour of each pixel shows the local average magnetisation angle of the ASI, as encoded by the colour wheel shown on the right.
 	Snapshots (1,5,9) are taken near the saturated $M_\parallel/M_{\parallel,\mathrm{sat}} \approx \pm 1$ state, (3) and (7) at the zero-average $M_\parallel/M_{\parallel,\mathrm{sat}} = 0$, and (2,4,6,8) at $M_\parallel/M_{\parallel,\mathrm{sat}} = \pm\sqrt{3}/3 \approx 0.58$ i.e., the value at the plateau between the two steps for $\rho=0$ and $\rho=0.4$.
 }
+\vspace{-1.25em}
 
 In the experiment, the two reversal steps occurred gradually over a range of fields, resembling more of an S-curve rather than a sharp step.
 This is due to a random spread on the coercive field of each nanomagnet due to imperfections in lithography~\cite{fraleigh2017characterization}. % REF: 'fraleigh2017characterization' examines this spread in OOP square: they infer the coercive field distribution of the magnets in their system from the width of the hysteresis loop.
@@ -1206,7 +1208,7 @@ Increasing $\rho$ reduces the field magnitude at which the second step occurs, b
 This is understandable, since the first step corresponds to magnets that are nearly aligned (\ang{15}) with the external field, so the asymmetry between the two switching channels is not as pronounced for them.
 When $\rho \gtrapprox 0.6$, the second step disappears entirely, with the reversal instead occurring by domain nucleation at the edges of the ASI, as illustrated in \crefSubFigRef{fig:2:Hysteresis_Pinwheel}{e}. \par
 Hence, $\rho \approx 0.4$ yields the best correspondence to the experiment.
-A possible explanation for this is that the switching of magnets in the experimental ASI does not occur by uniform rotation, as is assumed by the N\'eel-Arrhenius switching law (\cref{eq:2:Néel}).
+A possible explanation for this is that the magnets in the experimental ASI do not switch via uniform rotation, as is assumed by the N\'eel-Arrhenius switching law (\cref{eq:2:Néel}).
 Indications of non-uniform rotation or domain wall-mediated reversal were previously noticed by Morley~\etal~\cite{VogelFulcherTammannFreezing}.
 
 \subsection{Kagome reversal}
@@ -1218,32 +1220,38 @@ We therefore expect the dumbbell model to provide a more accurate simulation of 
 To illustrate this, we used \hotspice to reproduce the reversal process of kagome ASI as observed by Mengotti~\etal~\cite{mengotti2011kagome}
 They studied the hysteresis loop using \link{X-ray magnetic circular dichroism}{XMCD} to image the evolution of the system's microstate during a gradual increase of the \link{external magnetic field}{external field} near the \xref{coercive field}.
 We simulated a kagome ASI consisting of 173 magnets whose \link{shape anisotropy}{energy barrier} $\EB = \SI{120}{\electronvolt}$ with a standard deviation $\sigma(\EB)/\langle \EB \rangle=\SI{5}{\percent}$.
-An increasing magnetic field $\vc{B}_\mathrm{ext}$ was applied at an angle of \ang{-93.6} relative to the horizontal axis.
-This corresponds to a reverse field in the negative y-direction with a slight \ang{-3.6} offset to break the symmetry between sloped magnets, resulting in the creation of \xlabel{Dirac strings} of switched magnets. \par
+An increasing magnetic field $\vc{B}_\mathrm{ext}$ was applied downwards with a slight \ang{-3.6} offset to break the symmetry between sloped magnets, resulting in the creation of \xlabel{Dirac strings} of switched magnets. \par
 As the field strength increases, the \xref{Zeeman energy} of the magnets rises, but this increase is faster for the vertical magnets than for the sloped ones.
 However, the \link{magnetostatic interaction}{magnetostatic energy} is lowest for the vertical magnets in the initial state.
-The balance between these contributions results in a \xlabel{critical energy barrier} $E_\mathrm{B}^\mathrm{c}$: when the energy barrier $E_\mathrm{B}$ is lower (higher) than this value, a sloped (vertical) magnet will flip first, as shown in~\crefSubFigRef{fig:2:kagome_reversal}{b}.
+The balance between these contributions results in a \xlabel{critical energy barrier} $E_\mathrm{B}^\mathrm{c}$: when the energy barrier $E_\mathrm{B}$ is lower (higher) than this value, a sloped (vertical) magnet will flip first, as illustrated in~\cref{fig:2:kagome_reversal_EBc}.
 Therefore, the dynamics may depend on the simulation method, as the dumbbell model increases the magnetostatic interaction energy between nearest neighbours.
 
-\xfig{2_Hotspice/Hysteresis_Kagome.pdf}{ % TODO FIG: split in two
-	\label{fig:2:kagome_reversal}
-	Reversal of a kagome ASI under an \xref{external magnetic field} applied at \ang{-93.6} relative to the horizontal axis.
-	\textbf{(a)} Comparison between the \link{dumbbell model}{dumbbell} and \link{point dipole model}{point dipole} models at different external field magnitudes $B$.
-	Note that the critical field $B_C$ differs between the models:  $B_C = \SI{26.7}{\milli\tesla}$ for the dumbbell model and $B_C = \SI{23.9}{\milli\tesla}$ for the point dipole model.
-	The NN centre-to-centre distance is \SI{500}{\nano\meter}, with a length $d=\SI{470}{\nano\meter}$ for the dumbbell model.
-	The magnets have a \xref{magnetic moment} $\mu=\SI{1.1}{\femto\ampere\meter^2}$, and their \link{shape anisotropy}{energy barrier} is normally distributed with a mean of \SI{120}{\electronvolt} and \SI{5}{\percent} standard deviation.
-	Arrows represent the magnetic moment of the magnets, and the blue and red points ({\color{blue}{$\bullet$}} and {\color{red}{$\bullet$}}) represent the net change in charge of a vertex.
-	\textbf{(b)} The effect of an externally applied magnetic field on a vertical and sloped magnet for different values of the energy barrier.
+\sidefig[0.45]{2_Hotspice/Hysteresis_Kagome_EBc.pdf}{
+	\label{fig:2:kagome_reversal_EBc}
+	\textbf{(b)} The effect of an \xref{external magnetic field} applied at \ang{-3.6} relative to the vertical axis on a vertical and sloped magnet in kagome ASI for different values of the energy barrier.
 	$E_\mathrm{MS}$ is the same for each $E_\mathrm{B}$, however it is higher for the sloped magnets compared to the vertical ones.
 	When $E_\mathrm{B}<E_\mathrm{B}^c$ ($E_\mathrm{B}>E_\mathrm{B}^c$), the sloped (vertical) magnet will flip first since the Zeeman energy $E_\mathrm{Z}$ increases faster for the vertical magnets.
+	\newline
 }
+\vspace{-.75em}
 
-The results, shown in~\crefSubFigRef{fig:2:kagome_reversal}{a}, reveal a qualitative difference between the dumbbell and dipole models.
+The results, shown in~\cref{fig:2:kagome_reversal}, reveal a qualitative difference between the dumbbell and dipole models.
 In the \xref{dumbbell model}, sloped magnets on the boundaries of the ASI flip first, while for the \xref{point dipole model} vertical magnets in the bulk flip first~\cite{DDG_Masterproef}.
 In the experiment of Mengotti~\etal~\cite{mengotti2011kagome}, \xref{Dirac strings} were observed to originate from sloped magnets, which is in agreement with the dumbbell simulation. % But they saw them in the bulk, which is not in agreement with the dumbbells.
 Furthermore, using other ASI software that employs a Stoner-Wohlfarth model (a type of point dipole model), Dirac strings were observed to originate from vertical magnets~\cite{flatspin}, similar to our results with a point dipole model.
 This highlights the importance of accounting for the finite size of magnets to obtain a good estimate for the magnetostatic interaction between NN, which allows distinct dynamics to be captured as compared to a point dipole model.
 % However, the exact energy barriers in the experiment were unclear, as they varied between magnets, with some barriers being lowered and others raised.
+
+\vspace{-1.25em}
+\xfig{2_Hotspice/Hysteresis_Kagome.pdf}{
+	\label{fig:2:kagome_reversal}
+	Reversal of a kagome ASI under an \xref{external magnetic field} applied at \ang{-93.6} relative to the horizontal axis.
+	Comparison between the \link{dumbbell model}{dumbbell} and \link{point dipole model}{point dipole} models at different external field magnitudes $B$.
+	Note that the critical field $B_C$ differs between the models:  $B_C = \SI{26.7}{\milli\tesla}$ for the dumbbell model and $B_C = \SI{23.9}{\milli\tesla}$ for the point dipole model.
+	The NN centre-to-centre distance is \SI{500}{\nano\meter}, with a length $d=\SI{470}{\nano\meter}$ for the dumbbell model.
+	The magnets have a \xref{magnetic moment} $\mu=\SI{1.1}{\femto\ampere\meter^2}$, and an \link{shape anisotropy}{energy barrier} $\EB = \SI{120}{\electronvolt} \pm \SI{5}{\percent}$.
+	Arrows represent the magnetic moment of the magnets, and the blue and red points ({\color{blue}{$\bullet$}} and {\color{red}{$\bullet$}}) represent the net change in charge of a vertex.
+}
 
 \newpage
 \section{Conclusion}
