@@ -198,7 +198,7 @@ def legend_moments(ax: plt.Axes, x, y, cmap, text_size: float = thesis_utils.fs_
         ax.add_patch(Rectangle((x_square - wh_square/2, ys[i] - wh_square/2), wh_square, wh_square, facecolor=cmap(i*255), edgecolor=color, linewidth=lw))
         
         # Equals sign
-        ax.text(x_equals, ys[i], r"$\in$", va="center_baseline", ha="center", color=color, fontdict=dict(size=fs))
+        ax.text(x_equals, ys[i], r"=", va="center_baseline", ha="center", color=color, fontdict=dict(size=fs))
         
         # The magnet icon
         draw_Zvector(ax, i % 2, x_magnet, ys[i], r_magnet, facecolor=cmap(i*255))
