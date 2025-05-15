@@ -316,7 +316,7 @@ def draw_reservoir(ax: plt.Axes,
                                       y0+decorate_r-boxpad, y0+height-decorate_r+boxpad, k=10)
         for dot in samples:
             ax.add_patch(Circle(dot, decorate_r/2, facecolor=text_color,
-                                edgecolor='none', alpha=0.15, zorder=2))
+                                edgecolor='none', alpha=0.17, zorder=2))
 
     # Text
     ax.text(x0 + width / 2, y0 + height - 0.02, 'RNN?', color=text_color,
