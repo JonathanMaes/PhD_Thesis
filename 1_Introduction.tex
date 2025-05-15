@@ -16,10 +16,10 @@ The field of \idx{machine learning} aims to tackle these rather complex tasks us
 Over the years, neural networks have advanced significantly, most recently evidenced by the rise of large language models which have demonstrated a broad societal impact~\cite{ImprovingLanguageGPT,GPT-4}.
 However, training these systems to the point where they can perform any of the aforementioned tasks at a decent level requires vast amounts of data to fine-tune their ever increasing number of internal parameters --- accompanied by an unsustainably rising energy cost~\cite{QuantumNeuromorphicOpportunities,BLOOM_CarbonFootprint_176Bparam}.
 This stands in stark contrast to biological brains, which are capable of learning patterns based on a far more limited set of data, while consuming orders of magnitude less power than an artificial system of equivalent computational capability~\cite{NeuromorphicSpintronics}.
-Furthermore, running such neural networks on conventional hardware is encountering limits: to increase performance, the number of trainable parameters is rapidly being increased, but transistor scaling and power density limitations make it hard for hardware to keep up. % TODO REF
+Furthermore, running such neural networks on conventional hardware is encountering limits: to increase performance, the number of trainable parameters is rapidly being increased, but transistor scaling and power density limitations make it hard for hardware to keep up.
 Hence, while advances in training algorithms and the ever increasing wealth of available data create ever more potent machine learning systems, the underlying approach is leading to a bottleneck. \par
 Several factors that contribute to this bottleneck are often quoted in the context of neural networks or other machine learning algorithms running on conventional hardware:
-\begin{itemize} % TODO: more references for these bullet points
+\begin{itemize}
 	\item Conventional hardware uses transistors to perform logical operations.
 	The ever increasing computational demands have driven \xlabel{Moore's law}, which states that the number of transistors on a chip doubles every couple of years.
 	However, this scaling law appears untenable as transistors approach nanometre scales.
@@ -158,12 +158,12 @@ The final output value\footnote{
 } $\hat{y}(t)$ of the system is then obtained by a weighted sum $\hat{y}(t) = \vc{x}^\mathrm{T}(t) \cdot \vc{w}$ of the components of the readout vector $\vc{x}(t)$.
 Depending on the task performed, one or multiple such sums can be trained and interpreted in the context of that specific task~\cite{RC_RecentAdvances}. \par % For example, temporal pattern classification may provide multiple outputs, while prediction and generation only uses a single one
 When the desired input-output relation $s(t) \mapsto y(t)$ is known for a limited set of data --- the training set --- the weights $\vc{w}$ can be adjusted to minimise the difference between the output $\hat{y}(t)$ and the desired output $y(t)$.
-This is usually done by ordinary least-squares (OLS) regression, which requires only a single matrix inversion.
+This is usually done by \xlabel{ordinary least-squares} (OLS) regression, which requires only a single matrix inversion.
 By sampling the readout and desired output at $n$ moments in time, $n$ vectors $\vc{x}_i$ and $\vc{y}_i$, $i = 1, \dots, n$ are obtained.
-These can be arranged into an $n \times p$ readout matrix $\vc{X}$ (whose row $i$ is $\vc{x}_i^T$) and the $n$-dimensional desired output vector $\vc{y}$.
+These can be arranged into an $n \times p$ readout matrix $\vc{X}$ (whose row $i$ is $\vc{x}_i^\mathrm{T}$) and the $n$-dimensional desired output vector $\vc{y}$.
 The optimal weights can then directly be calculated as
 \begin{equation}
-	\vc{w} = (\vc{X}^T \vc{X})^{-1} \vc{X}^T \vc{y} \mathrm{,}
+	\vc{w} = (\vc{X}^\mathrm{T} \vc{X})^{-1} \vc{X}^\mathrm{T} \vc{y} \mathrm{,}
 \end{equation}
 which minimises $\norm{\vc{y} - \hat{\vc{y}}}^2 = \norm{\vc{y} - \vc{X}\vc{w}}^2$~\cite{RC_NNN}.
 These optimal weights then remain fixed, and the performance of the reservoir can be evaluated by feeding it the test set --- a previously unknown, yet similar data set as the training set.
@@ -459,7 +459,7 @@ A class of ensemble of particular interest is artificial spin ice~\cite{RC_ASI}.
 \textit{Artificial spin ice}\indexlabel{artificial spin ice} (ASI) is a type of metamaterial where magnetostatically coupled single-domain (bistable) nanomagnets are arranged on an ordered lattice~\cite{RC_ASI,flatspin}.
 The magnetisation direction of the constituent nanomagnets can switch between two states under the influence of nearby magnets, externally applied magnetic fields, thermal fluctuations, or any of the electronic input methods previously discussed~\cite{CoerciveFieldReversal,BrownThermalFluctuations,SOT_FM_AFM,brataas2012current}. \par
 A defining property of ASI is \idx{frustration}, meaning that the underlying lattice does not allow all local pairwise interactions to be simultaneously satisfied.
-The term ``spin ice'' draws inspiration from water ice, where the oxygen atoms are positioned on a diamond lattice, so each has four nearest neighbours with which it shares a hydrogen bond. % TODO: figure of water ice, then spin ice, then ASI?
+The term ``spin ice'' draws inspiration from water ice, where the oxygen atoms are positioned on a diamond lattice, so each has four nearest neighbours with which it shares a hydrogen bond. % TODO FIG: figure of water ice, then spin ice, then ASI?
 However, each oxygen atom is closely bound to two hydrogen atoms, so the hydrogen atoms in the two other bonds must be more distant, leading to geometrical frustration with a ``two-in, two-out'' ice rule~\cite{nisoli2013colloquium,ZeroPointEntropy,heyderman2013artificial,MagnetizationDynamicsASI}.
 Similar to this, natural spin ices have been found in certain crystal structures like pyrochlores, whose atomic magnetic moments must obey similar ice rules that also lead to frustrated spin configurations~\cite{nisoli2013colloquium}.
 From there, it is only a small leap to ASI, where 2D lattices of nanomagnets mimic the frustration present in natural spin ices~\cite{heyderman2013artificial}.
