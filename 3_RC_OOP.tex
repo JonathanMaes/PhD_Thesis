@@ -972,7 +972,7 @@ Both are equivalent, but the domain representation is more insightful in this co
 Therefore, only the domain representation will be shown in any subsequent figures.
 Since we start from one ground state, an alternative interpretation for the white-coloured magnets is that those are (back) in their initial state, while the black ones are not.
 
-\makeshiftfig{ % TODO: different color scheme, this looks awful in print. Also different legend for domains, everyone is confused by it (try a triangle instead, with ... diagonally down).
+\makeshiftfig{
 	\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_clearly_EBstd0_moments.pdf}
 	\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_clearly_EBstd0_domains.pdf}
 	\vspace{-1.5em} % Looks more natural for this figure
@@ -1039,17 +1039,18 @@ This often makes it impossible to find an input magnitude for which domain walls
 Therefore, ``leaking'' can occur through low-barrier unstimulated magnets, which can spontaneously respond to the changing state of their neighbours even when they themselves are not stimulated~\cite{DisorderGroundStateASI}. % DisorderGroundStateASI says: "As expected, disorder allows dynamics to start inside the array at sites where ``loose'' spins with smaller switching fields are located."
 This can be observed in~\cref{fig:3:Clocking_clearly_EBstd5} for an example with $\sigma(\EEA)/\EEA = \SI{5}{\percent}$ and high MS coupling $\EMC = 200 \kBT$ compared to the anisotropy $\EEA = 100 \kBT$ to highlight leaking.
 
-\makeshiftfig{ % TODO: highlight leaking in this figure, e.g. with red dots at leaked magnets. Refer to leaking in caption.
-	%\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_clearly_EBstd5_moments.pdf}
+\makeshiftfig{
 	\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_clearly_EBstd5_domains.pdf}
 	\vspace{-1.5em} % Looks more natural for this figure
 }{
 	\label{fig:3:Clocking_clearly_EBstd5}
 	Evolution of a $20 \times 20$ OOP square-lattice ASI when using the \xref{AFM clocking protocol} (for five cycles $A$ and five opposite cycles $B$).
 	The domain type of each magnet is shown after each cycle.
+	Magnets that have switched through ``leaking'' are indicated by red dots.
 	The finite size of magnets was accounted for with $D_\mathrm{NM} = \SI{170}{\nano\metre}$ and $S_\mathrm{ASI} = \SI{200}{\nano\metre}$.
 	System parameters were chosen to result in $\EMC = 200 \kBT$ and $\EEA = 100 \kBT$, with $\sigma(\EEA)/\EEA = \SI{5}{\percent}$.
-	All magnets are initially magnetised in one of the antiferromagnetic ground states (white). The magnetic field used in the clocking cycles has a magnitude $B_\mathrm{ext} = \qty{5.5}{\milli\tesla}$.
+	All magnets are initially magnetised in one of the antiferromagnetic ground states (white).
+	The magnetic field used in the clocking cycles has a magnitude $B_\mathrm{ext} = \qty{5.5}{\milli\tesla}$.
 }
 
 Leaking can be mitigated by using a rather weak input, but this can make it impossible to switch some high-barrier magnets, rendering them frozen in their initial state.

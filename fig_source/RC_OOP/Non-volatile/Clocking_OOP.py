@@ -134,12 +134,13 @@ def plot(data_dir=None, label_domains=None, label_moments=None, highlight_leakin
         
         ## Draw "legend" on the axes
         x, y = 0 if N%2 else .5, -1 # (0, -1) is the index of the empty tile in the figure, DON'T CHANGE
+        fs_legend = min(thesis_utils.fs_large + 1, 160/N)
         if show_domains:
-            legend_domains(ax, x, y, OOPcmap, text_size=fs)
+            legend_domains(ax, x, y, OOPcmap, text_size=fs_legend)
             if label_domains is not None:
                 thesis_utils.label_ax(ax, label_domains, axis_units=False, offset=(-0.47*imfrac, 0.47*imfrac), va="top", ha="left")
         else:
-            legend_moments(ax, x, y, OOPcmap, text_size=fs)
+            legend_moments(ax, x, y, OOPcmap, text_size=fs_legend)
             if label_moments is not None:
                 thesis_utils.label_ax(ax, label_moments, axis_units=False, offset=(-0.47*imfrac, 0.47*imfrac), va="top", ha="left")
         
@@ -153,47 +154,54 @@ def plot(data_dir=None, label_domains=None, label_moments=None, highlight_leakin
 def legend_domains(ax: plt.Axes, x, y, cmap, text_size: float = thesis_utils.fs_large + 1, scale: float = 1.):
     fs = text_size*scale
     lw, color = 1, "k"
-    ys = [y + 0.15*scale, y - 0.25*scale]
-    x_square  = x - 0.25*scale
-    wh_square = 0.2*scale # Width/height of the black/white square
-    r_magnets = 0.08*scale # Radius of circles indicating magnets
-    x_equals  = x_square + wh_square
-    x_magnets = x_equals + wh_square/2 + 2*r_magnets
+    ys = [y + 0.25*scale, y - 0.25*scale]
+    x_square  = x - 0.32*scale
+    r_magnets = 0.07*scale # Radius of circles indicating magnets
+    wh_square = 2*r_magnets*0.9 # Width/height of the black/white square
+    spacing = wh_square*1.5
+    x_equals  = x_square + spacing
+    x_magnets = x_equals + spacing/2 + 3*r_magnets
     
-    ax.text(x_magnets, ys[0] + r_magnets*2, r"$\boldsymbol{\mu}$", va="bottom", ha="center", color=color, fontdict=dict(size=fs)) # Bold mu symbol for tiny states
+    # ax.text(x_magnets, ys[0] + r_magnets*2, r"$\boldsymbol{\mu}$", va="bottom", ha="center", color=color, fontdict=dict(size=fs)) # Bold mu symbol for tiny states
     for i in range(2): # Black (i=0) and white (i=1) states
         # The square
         ax.add_patch(Rectangle((x_square - wh_square/2, ys[i] - wh_square/2), wh_square, wh_square, facecolor=cmap(i*255), edgecolor=color, linewidth=lw))
         
         # Equals sign
-        ax.text(x_equals, ys[i], r"=", va="center", ha="center", color=color, fontdict=dict(size=fs))
+        ax.text(x_equals, ys[i], r"$\in$", va="center_baseline", ha="center", color=color, fontdict=dict(size=fs))
         
-        # The four magnet icons
-        for ix in range(2):
-            for iy in range(2):
-                pos = (x_magnets + (2*ix-1)*r_magnets, ys[i] + (2*iy-1)*r_magnets)
-                draw_Zvector(ax, (ix + iy + i) % 2, pos[0], pos[1], r_magnets*0.9)
+        # The six magnet icons
+        for ix in range(3):
+            for iy in range(3):
+                pos = (x_magnets + (2*ix-2)*r_magnets, ys[i] + (2-2*iy)*r_magnets)
+                if ix + iy < 3:
+                    draw_Zvector(ax, (ix + iy + i) % 2, pos[0], pos[1], r_magnets*0.9)
+                elif ix == iy == 2: # Draw dots
+                    offsets = [-1.5, -0.5, 0.5]
+                    ax.scatter([pos[0] + j*r_magnets/2 for j in offsets], [pos[1] - j*r_magnets/2 for j in offsets],
+                               s=((lw*200)/ax.get_figure().dpi)**2, edgecolors="none", color='k')
 
 def legend_moments(ax: plt.Axes, x, y, cmap, text_size: float = thesis_utils.fs_large + 1, scale: float = 1.):
     fs = text_size*scale
     lw, color = 1, "k"
     ys = [y + 0.15*scale, y - 0.25*scale]
-    x_square  = x - 0.18*scale
-    wh_square = 0.2*scale # Width/height of the black/white square
+    x_square  = x - 0.2*scale
     r_magnet  = 0.1*scale # Radius of circles indicating magnets
-    x_equals  = x_square + wh_square
-    x_magnet  = x_equals + wh_square/2 + r_magnet
+    wh_square = 2*r_magnet*0.9 # Width/height of the black/white square
+    spacing = wh_square*1.2
+    x_equals  = x_square + spacing
+    x_magnet  = x_equals + spacing/2 + r_magnet
     
-    ax.text(x_magnet, ys[0] + r_magnet, r"$\boldsymbol{\mu}$", va="bottom", ha="center", color=color, fontdict=dict(size=fs)) # Bold mu symbol for tiny states
+    ax.text(x_magnet, ys[0] + r_magnet*1.2, r"$\boldsymbol{\mu}$", va="bottom", ha="center", color=color, fontdict=dict(size=fs)) # Bold mu symbol for tiny states
     for i in range(2): # Black (i=0) and white (i=1) states
         # The square
         ax.add_patch(Rectangle((x_square - wh_square/2, ys[i] - wh_square/2), wh_square, wh_square, facecolor=cmap(i*255), edgecolor=color, linewidth=lw))
         
         # Equals sign
-        ax.text(x_equals, ys[i], r"=", va="center", ha="center", color=color, fontdict=dict(size=fs))
+        ax.text(x_equals, ys[i], r"$\in$", va="center_baseline", ha="center", color=color, fontdict=dict(size=fs))
         
         # The magnet icon
-        draw_Zvector(ax, i % 2, x_magnet, ys[i], r_magnet*0.9, facecolor=cmap(i*255))
+        draw_Zvector(ax, i % 2, x_magnet, ys[i], r_magnet, facecolor=cmap(i*255))
 
 
 def draw_Zvector(ax: plt.Axes, up: bool, x: float, y: float, r: float, lw: float = 1, edgecolor='k', facecolor=None):
@@ -220,7 +228,7 @@ def annotate_connection(ax: plt.Axes, text, x1, y1, x2, y2, color='k', opposite_
     text_offset = transforms.offset_copy(ax.transData, x=offset_x, y=offset_y, units="points", fig=ax.get_figure())
     ax.text(x=np.mean((x1, x2)), y=np.mean((y1, y2)), s=text, color=color, ha=ha, va=va, transform=text_offset, fontdict=dict(size=text_size))
 
-def get_leaked_magnets(domains, prev_domains, cycles=1):
+def get_leaked_magnets(domains, prev_domains, cycles=1): # TODO: find a way to not include nucleation
     switched = domains != prev_domains # Leaking obviously only occurs at switched magnets
     spread = np.copy(2*prev_domains-1)
     mask = [[0,0,1,0,0], [0,1,1,1,0], [1,1,1,1,1], [0,1,1,1,0], [0,0,1,0,0]]
