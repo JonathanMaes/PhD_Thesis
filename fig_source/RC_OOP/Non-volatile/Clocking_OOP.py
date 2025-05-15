@@ -6,6 +6,7 @@ import numpy as np
 
 from matplotlib import colormaps, colors
 from matplotlib.patches import Circle, FancyArrowPatch, Rectangle
+from scipy.signal import convolve2d
 
 import hotspice
 import thesis_utils
@@ -49,7 +50,7 @@ def run(N: int = 13, E_B_std: float = 0.05, E_EA_ratio: float = 100, E_MC_ratio:
     plot()
 
 
-def plot(data_dir=None, label_domains=None, label_moments=None):
+def plot(data_dir=None, label_domains=None, label_moments=None, highlight_leaking=False):
     """ (Re)plots the figures in the `data_dir` folder.
         If `data_dir` is not specified, the most recently created directory in <filename>.out is used.
     """
@@ -120,6 +121,11 @@ def plot(data_dir=None, label_domains=None, label_moments=None):
             ax.imshow(image, extent=[x-imfrac/2, x+imfrac/2, y-imfrac/2, y+imfrac/2],
                     vmin=0, vmax=1, cmap=OOPcmap if OOP else 'hsv', origin='lower')
             ax.add_patch(Rectangle((x-imfrac/2, y-imfrac/2), imfrac, imfrac, fill=False, color="gray", linewidth=1))
+            if highlight_leaking and i > 0:
+                y_leaks, x_leaks = get_leaked_magnets(data['domains'][i], data['domains'][i-1], cycles=repeats).nonzero()
+                ny, nx = image.shape
+                ax.scatter(x + imfrac*((.5 + x_leaks)/nx - .5), y + imfrac*((.5 + y_leaks)/ny - .5),
+                           color="red", s=(100/ax.get_figure().dpi)**2)
             # Draw arrow from previous
             if i == 0: continue # No arrow drawn before the first image
             text = f"{repeats:d}"*(repeats != 1) + ('$A$' if data['values'][i] else '$B$')
@@ -214,8 +220,21 @@ def annotate_connection(ax: plt.Axes, text, x1, y1, x2, y2, color='k', opposite_
     text_offset = transforms.offset_copy(ax.transData, x=offset_x, y=offset_y, units="points", fig=ax.get_figure())
     ax.text(x=np.mean((x1, x2)), y=np.mean((y1, y2)), s=text, color=color, ha=ha, va=va, transform=text_offset, fontdict=dict(size=text_size))
 
+def get_leaked_magnets(domains, prev_domains, cycles=1):
+    switched = domains != prev_domains # Leaking obviously only occurs at switched magnets
+    spread = np.copy(2*prev_domains-1)
+    mask = [[0,0,1,0,0], [0,1,1,1,0], [1,1,1,1,1], [0,1,1,1,0], [0,0,1,0,0]]
+    total = convolve2d(np.ones_like(spread), mask, mode='same')
+    for _ in range(cycles): spread = convolve2d(spread, mask, mode='same')/total
+    leaked = np.logical_and(switched, np.isclose(np.abs(spread), 1))
+    injection_points = np.asarray([[0,0], [0,1], [1,0], [-1,-1], [-1,-2], [-2,-1], [0,-1], [-1,0]]) # Never mark these corners as 'leaked'
+    leaked[injection_points.T] = False
+    return leaked
+
 
 if __name__ == "__main__":
+    thesis_utils.replot_all(plot, recursive=True)
+    
     ## OLD SYSTEMS
     # run(E_B_std=0.1, E_EA=hotspice.utils.eV_to_J(1), moment=1.6e-16, magnitude=0.003, vacancy_fraction=0.01) # Here, vacancies are important.
     # run(E_B_std=0.01, E_EA=hotspice.utils.eV_to_J(60), moment=2.37e-16, magnitude=0.0615, vacancy_fraction=0.01)
@@ -231,17 +250,16 @@ if __name__ == "__main__":
     ## Clocking_clearly_EBstd5.pdf IS GENERATED WITH:
     # run(E_B_std=0.05, E_EA_ratio=100, E_MC_ratio=200, magnitude=0.0055, size=20, N=11) # Region III
     # run(E_B_std=0.05, E_EA_ratio=100, E_MC_ratio=200, magnitude=0.0055, size=64, N=41) # Region III but ridiculous
+    thesis_utils.replot_all(plot, subdir="20250306090630", highlight_leaking=True)
     
     ## Clocking_clearly_EBstd5_highEMC.pdf and _lowEMC.pdf ARE GENERATED WITH:
     # run(E_B_std=0.05, E_EA_ratio=200, E_MC_ratio=400, magnitude=0.0112, size=20, N=13)
-    # thesis_utils.replot_all(plot, subdir="EBstd=5%/EMC_high", label_domains=0)
+    thesis_utils.replot_all(plot, subdir="EBstd=5%/EMC_high", label_domains=0)
     # run(E_B_std=0.05, E_EA_ratio=200, E_MC_ratio=40, magnitude=0.00378, size=20, N=13)
-    # thesis_utils.replot_all(plot, subdir="EBstd=5%/EMC_low", label_domains=1)
+    thesis_utils.replot_all(plot, subdir="EBstd=5%/EMC_low", label_domains=1)
     
     ## Clocking_binary_KQ_states.pdf IS GENERATED WITH:
     # run(E_B_std=0.05, E_EA_ratio=455, E_MC_ratio=110, magnitude=0.01, finite=False, size=20, N=9)
     
     ## Clocking_massive_seeded.pdf IS GENERATED WITH:
     # run(E_B_std=0.00, E_EA_ratio=200, E_MC_ratio=40, magnitude=0.00378, size=141, N=13, repeats=6, pattern='seed')
-
-    thesis_utils.replot_all(plot, recursive=True)
