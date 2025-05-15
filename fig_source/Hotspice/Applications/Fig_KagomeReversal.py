@@ -161,7 +161,7 @@ def plot():
     thesis_utils.init_style()
     figsize = (thesis_utils.page_width, thesis_utils.page_width*0.43)
     fig, axes = plt.subplots(2, 4, figsize=figsize)
-    fig.subplots_adjust(top=0.9, bottom=0, left=0.05, right=1, wspace=0.15, hspace=0.12)
+    fig.subplots_adjust(top=0.9, bottom=0, left=0.05, right=0.98, wspace=0.15, hspace=0.12)
     fig.patch.set_alpha(0) # Transparent fig, but not axes cause I put transparent=False in save_results()
 
     i_vals = [79, 86, 92, 99]
@@ -227,9 +227,6 @@ def plot():
                 fig.patches.append(FancyArrowPatch((x0, y2), (x1, y2), transform=fig.transFigure, **arrow_kwargs))
     
     ## Save figure
-    import os
-    # fig.savefig(os.path.splitext(__file__)[0] + '.out/Hysteresis_Kagome.png')
-    
     hotspice.utils.save_results(figures={f"Hysteresis_Kagome": fig}, timestamped=False, copy_script=False, transparent=False)
 
 if __name__ == "__main__":
