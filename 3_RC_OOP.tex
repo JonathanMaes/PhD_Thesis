@@ -214,7 +214,8 @@ Each relaxation consisted of at most $40N$ switches using the first-switch metho
 
 \xfig{3_RC_OOP/OOP_relaxation.pdf}{
 	\label{fig:3:OOP_relaxation}
-	Dependence of the ordering timescale on the energy balance between net OOP anisotropy $\EEA$ and nearest-neighbour magnetostatic coupling $\EMC$ in an $11 \times 11$ OOP square-lattice ASI. % This system size was chosen because it matched the size of our fabricated systems discussed later.
+	Dependence of the ordering timescale on the energy balance between net OOP anisotropy $\EEA$ and nearest-neighbour magnetostatic coupling $\EMC$ in an $11 \times 11$ OOP square-lattice ASI.
+	This system size was chosen because it matched the size of our fabricated systems discussed later.
 	The ASI is initialised in a uniform magnetic state with all spins pointing `up' and is released at $t = 0$, after which the lattice relaxes to lower energies.
 	Blue traces show the absolute value of the normalised average magnetisation $\mavg$ while orange traces represent the local antiferromagnetic parameter $\qNN$.
 	Each trace shows the mean (central line), standard deviation (central shaded area), and 1st/99th percentile (outer shaded area) of 200 repeated relaxations with randomly sampled $\EEA$ profiles.
@@ -223,6 +224,7 @@ Each relaxation consisted of at most $40N$ switches using the first-switch metho
 	The simulations are either stopped after \SI{e4}{} seconds or $40N$ switches --- whichever is reached first.
 	\textbf{The insets} show the resulting final magnetic states, where white (black) indicates up (down) spins.
 }
+\vspace{-1em}
 
 \subsubsection{Logarithmic relaxation}
 Most strikingly, by using a logarithmic scale for the time axis, both $\mavg$ and (to a lesser extent) $\qNN$ trace a straight line during relaxation.
@@ -329,9 +331,10 @@ This is depicted in~\cref{fig:3:OOP_relaxation_exchange} for a negative (AFM) ex
 	The ASI is initialised in a uniform magnetic state with all spins pointing `up' and is released at $t = 0$, after which the lattice relaxes to lower energies.
 	Blue traces show the absolute value of the normalised average magnetisation $\mavg$ while orange traces represent the local antiferromagnetic parameter $\qNN$.
 	Each trace shows the mean (central line), standard deviation (central shaded area), and 1st/99th percentile (outer shaded area) of 200 repeated relaxations with randomly sampled $\EEA$ profiles.
-	The green shaded region highlights stage~$\circled{2}$ of ordering.
+	The hatched ($\times$) region highlights the frozen timescales, while the white and green shaded region highlight stage~$\circled{1}$~and~$\circled{2}$ of ordering, respectively.
 	\textbf{The insets} show the resulting final magnetic states, where white (black) indicates up (down) spins.
 }
+\vspace{-1em}
 
 Since a negative exchange coupling further stabilises the checkerboard state, the relaxation generally occurs faster than in a system without exchange coupling (compare, for instance, panels 2--3 of \cref{fig:3:OOP_relaxation_exchange} with panels 1--2 of \cref{fig:3:OOP_relaxation}).
 Most strikingly, the relaxation of an exchange-coupled system is clearly separated into plateaus, with stairs appearing at timescales where the relaxation occurs faster.
@@ -399,7 +402,7 @@ For a more accurate fit, we also used the longer-range order parameters $\qNN[2]
 With this\footnote{
 	Because $\eta$ can easily vary over many orders of magnitude, the optimiser will instead use $\log_{10}(\eta)$.
 } fit metric $\eta$, the optimum combination of $\EEA$ and $\EMC$ can be determined.
-We will also allow the exchange coupling $J$ to be varied during fitting --- if the fit yields a significantly non-zero value of $J$, this can indicate that the system contains defects in the form of interconnected magnets. \\\par
+We will also allow the exchange coupling $J$ to be varied during fitting --- if the fit yields a significantly non-zero value of $J$, this can indicate that the system contains defects in the form of interconnected magnets. \par % \\\par
 
 The fit metric $\eta$ is rather expensive to compute, because calculating the distribution of relaxations takes a non-negligible amount of time.
 Therefore, an optimisation method must be used that can find the optimum with a limited number of $\eta$-evaluations.
