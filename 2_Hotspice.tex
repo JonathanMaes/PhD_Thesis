@@ -93,7 +93,7 @@ Three \idx{energy contributions} have been implemented\footnote{
 		E_{\mathrm{MS},i,j} = \frac{\mu_0}{4 \pi} \ab(\frac{\vc{\mu}_i \bcdot \vc{\mu}_j}{\abs{\vc{r}_{ij}}^3} - \frac{3(\vc{\mu}_i \bcdot \vc{r}_{ij}) (\vc{\mu}_j \bcdot \vc{r}_{ij})}{\abs{\vc{r}_{ij}}^5}) \mathrm{,}
 	\end{equation}
 	with $\mu_0$ the vacuum permeability and $\vc{r}_{ij} = \vc{r}_j - \vc{r}_i$ the vector connecting the two magnetic dipoles $\vc{\mu}_i$ and $\vc{\mu}_j$. \par
-	This is the main interaction dictating how separate nanomagnets influence each other, causing the typical properties of the various ASI lattices, e.g. superferromagnetism in the pinwheel lattice~\cite{li2018pinwheel}.
+	This is the main interaction dictating how separate nanomagnets influence each other, causing the typical properties of the various ASI lattices, such as superferromagnetism in pinwheel ASI~\cite{li2018pinwheel}.
 	Because of its importance, this is the only interaction \hotspice considers by default when an ASI is created.
 	An ASI stores a list of energy contributions: when needed, the user must explicitly add other energy contributions to this list; see \cref{app:API}.
 	This avoids wasting calculations on energies not relevant to the simulation.
@@ -166,7 +166,7 @@ These $\mathcal{I}$ are calculated similar to a moment of inertia:
 with $\Omega_i$ the geometry of magnet $i$.
 We assume all magnets have the same shape, such that $\mathcal{I}_{ij} = \mathcal{I}_i = \mathcal{I}_j$.
 For elliptic cylinders, these moments of inertia reduce to the simple expression $\mathcal{I}_{ij} = \frac{1}{16}(l^2 + w^2)$.
-Therefore, \hotspice assumes the magnets in an ASI to be round (OOP ASI, e.g.~\cite{PerpendicularMagnetizationASI}) or elliptical (IP ASI), and allows the user to set the length $l$ and width $w$ of the magnets comprising an ASI.
+Therefore, \hotspice assumes the magnets in an ASI to be round (OOP ASI) or elliptical (IP ASI), and allows the user to set the length $l$ and width $w$ of the magnets comprising an ASI.
 Although IP magnets are typically more stadium-shaped~\cite{EmergentChiralityRatchet,clocking-protocol}, the moment of inertia for an ellipse does not differ by much --- if necessary, an appropriate value of $l$ and $w$ can account for this.
 %While this correction can be applied to both IP and OOP magnetic dipoles, it is most effective for OOP systems, as can be seen in~\cref{fig:2:MS_distance}.
 
@@ -250,12 +250,12 @@ Shape anisotropy is quantified by a \xlabel{uniaxial anisotropy} constant $K_\ma
 These demagnetising factors can be calculated analytically for simple shapes like ellipsoids~\cite{EllipsoidDemag,EllipseDemag}.
 Assuming that switching occurs by \xlabel{coherent rotation}\footnote{
 	Depending on the magnet's properties, \xlabel{non-coherent magnetisation reversal} such as switching by domain wall nucleation may be energetically cheaper.
-	An accurate estimate of the energy barrier for such processes can be determined by e.g. \link{micromagnetic theory}{micromagnetic simulations}.
+	An accurate estimate of the energy barrier for such processes can, for instance, be determined through \link{micromagnetic theory}{micromagnetic simulations}.
 }, this leads to an energy barrier $\EB = K_\mathrm{u} V$, with $V$ the magnet's volume.
 Similar to the calculation of the magnetic moment $\mu$ in \cref{fn:2:moment_integral}, relaxation of the magnetisation profile $\vc{M}(\vc{r})$ near the surface of the magnet may cause the actual energy barrier to be slightly smaller than $K_\mathrm{u} V$.
 \hotspice ignores the specifics of the reversal process by allowing the user to set an arbitrary value of $\EB$. \par
 Since magnets in ASI are typically very flat, the shape anisotropy usually results in a preferential in-plane magnetisation direction.
-OOP nanomagnets can nonetheless be obtained by properly choosing materials that exhibit a strong interfacial anisotropy, as occurs at e.g. the Co/Pt interface, resulting in a net preferential out-of-plane magnetisation.
+OOP nanomagnets can nonetheless be obtained by properly choosing materials that exhibit a strong interfacial anisotropy, as for example occurs at the Co/Pt interface, resulting in a net preferential out-of-plane magnetisation.
 
 \subsubsection{Mean-barrier model}
 The simplest approximation of the effective energy barrier $\EBeff$ is the \idx{mean-barrier model}.
@@ -292,7 +292,7 @@ Such an asymmetry can not occur in OOP ASI, so the asymmetric barrier is only ap
 Accounting for the existence of these separate chiral switching channels profoundly affects the switching rates and transition kinetics, since switching will occur predominantly via the more favourable pathway~\cite{leo2021chiral}. \\\par
 
 In the dipole model, this can be accounted for by considering the energy of each magnet in these transitional states along the hard axis.
-Therefore, \hotspice tracks yet another quantity for every magnet: $E_\perp$\indexlabel{hard-axis interaction energy}, representing the \xref{interaction energy} of a magnet if it would point along $\vc{e}_z \times \vc{u}$, i.e. \ang{90} counter-clockwise from its normal magnetisation direction $\vc{u}$.
+Therefore, \hotspice tracks yet another quantity for every magnet: $E_\perp$\indexlabel{hard-axis interaction energy}, representing the \xref{interaction energy} of a magnet if it would point along $\vc{e}_z \times \vc{u}$ i.e., \ang{90} counter-clockwise from its normal magnetisation direction $\vc{u}$.
 Note that we are not deviating from the two-state Ising model: we are simply putting ``test dipoles'' along the hard axis to get a better estimate of $\EBeff$, but magnets will never end up in these states during a simulation. \par
 In \cref{eq:2:EB_meanbarrier_cases}, $\EB$ essentially represented an estimate of the total energy in the transitional state.
 With our newfound knowledge of the interaction energy $E_\perp$ in that state, our improved estimate of the total hard-axis energy becomes $\EB + E_\perp$.
@@ -425,7 +425,7 @@ Their different strategies for calculating random switching times and selecting 
 \subsection{Metropolis-Hastings: sampling equilibrium states} \label{sec:2:Dynamics_MH}
 \idx{Metropolis-Hastings sampling} is a rejection-based KMC method designed to sample the state space at thermal equilibrium, where the probability of each state appearing is proportional to their \xlabel{Boltzmann factor} $\exp(-E/\kBT)$~\cite{IntroductionMC,kyimba2006comparisonIsingAlgorithms}.
 Hence, in contrast to the \xref{first-switch method}, Metropolis-Hastings sampling is not intended to accurately model the system's transient dynamics.
-Instead, it is more suitable for examining equilibrium statistical properties of ASI, e.g. the average magnetisation, heat capacity, correlations...~\cite{ApparentFMpinwheel} \par
+Instead, it is more suitable for examining equilibrium statistical properties of ASI e.g., the average magnetisation, heat capacity, correlations...~\cite{ApparentFMpinwheel} \par
 
 \paragraph{Algorithm}
 A rejection-based KMC method works by selecting magnets at random and subsequently deciding, with a certain probability $P$, whether or not to switch them.
@@ -484,7 +484,7 @@ For a MCMC algorithm to sample the equilibrium state space, it must satisfy two 
 	\item The principle of \textit{detailed balance} states that, in a system at equilibrium, each elementary process must also be in equilibrium with its reverse process.
 	This can be expressed mathematically as $\pi_i P_{ij} = \pi_j P_{ji}, \forall i,j$, with $P_{ij}$ the Markov transition probability from state $i$ to $j$, and with $\pi_i$ and $\pi_j$ the equilibrium probabilities of these states appearing.
 	Since all magnets are equally likely to be chosen in step 1 of~\cref{alg:2:MetropolisHastingsSingle}, it can be shown that both $P_\mathrm{MH}$ and $P_\mathrm{GD}$ result in an algorithm that satisfies detailed balance~\cite{kyimba2006comparisonIsingAlgorithms}.
-	\item To guarantee that a Monte Carlo Markov chain algorithm will eventually reach this equilibrium, it must be \textit{ergodic}, i.e. from a given state it must be possible to reach any other state via some route~\cite{kyimba2006comparisonIsingAlgorithms}.
+	\item To guarantee that a Monte Carlo Markov chain algorithm will eventually reach this equilibrium, it must be \textit{ergodic} i.e., from a given state it must be possible to reach any other state via some route~\cite{kyimba2006comparisonIsingAlgorithms}.
 	This is clearly satisfied by~\cref{alg:2:MetropolisHastingsSingle}, for both $P_\mathrm{MH}$ and $P_\mathrm{GD}$, as the acceptance probability is strictly positive at non-zero temperatures.
 \end{itemize}
 As such, \cref{alg:2:MetropolisHastingsSingle} is guaranteed to reach equilibrium eventually.
@@ -698,7 +698,7 @@ This also explains why the plateau starts after $\approx N$ switches ($N=5000$ m
 	Accumulation of error in the \link{magnetostatic interaction}{magnetostatic energy} $E_\mathrm{MS}$ for a simulation of $100 \times 100$ pinwheel ASI, when using a truncated $41 \times 41$ kernel instead of the usual $199 \times 199$ kernel.
 	The ASI starts in the uniform state and evolves to a random state due to high temperature.
 	\textbf{(a)} Mean and maximum error of the magnetostatic energy $E_\mathrm{MS}$ throughout the ASI, as a function of the number of switches after initialising the system in the uniform state.
-	\textbf{(b)} Final situation at the right edge of panel (a), i.e. after $\approx \SI{5e6}{}$ random switches.
+	\textbf{(b)} Final situation at the right edge of panel (a) i.e., after $\approx \SI{5e6}{}$ random switches.
 	The absolute error $\abs{E_\mathrm{err}}$ is the absolute difference between the simulations with (``Approximation'') and without (``Exact $E_\mathrm{MS}$'') a truncated kernel.
 }
 \vspace{-1em}
@@ -846,7 +846,7 @@ CPU and GPU performance is compared at the start and end of the tables. \\\par
 % Q: should we use L or N=L²? I would prefer L because at some point we talk about 2D indexation, so L makes it clearer that we have a 2D system.
 \vspace{-1em}
 \xtable[tab:2:perf_init]{
-	\textbf{Initialisation time} for various simulation sizes $L$ (i.e. $L \times L = N$ magnets).
+	\textbf{Initialisation time} for various simulation sizes $L$ (i.e., $L \times L = N$ magnets).
 	`Mem' indicates that the simulation required more memory than available on our benchmark system ($>\SI{8}{\giga\byte}$), while `?' indicates a prohibitively long simulation time ($\gtrsim \SI{1000}{\second}$).
 }{
 	\begin{tabular}{r|c|c|c|c|c|c}
@@ -868,7 +868,7 @@ CPU and GPU performance is compared at the start and end of the tables. \\\par
 }
 
 \xtable[tab:2:perf_switch]{
-	\textbf{Time for 5000 switches} using the \xref{first-switch method}, for various simulation sizes $L$ (i.e. $L \times L = N$ magnets).
+	\textbf{Time for 5000 switches} using the \xref{first-switch method}, for various simulation sizes $L$ (i.e., $L \times L = N$ magnets).
 		`Mem' indicates that the simulation required more memory than available on our benchmark system ($>\SI{8}{\giga\byte}$), while `?' indicates a prohibitively long simulation time ($\gtrsim \SI{1000}{\second}$).
 }{
 	\begin{tabular}{r|c|c|c|c|c|c}

@@ -48,7 +48,7 @@ Fortunately, the RKKY coupling is likely not dominant in a \ce{Co}-\ce{Pt} stack
 The ground state of any system used for RC is crucial, as it dictates which input methods will excite desirable dynamics in the system and which input protocols will be ineffective, particularly for a non-volatile system.
 For most OOP spin ices, the ground state exhibits some form of antiferromagnetic (AFM) ordering due to the magnetostatic interaction, which always encourages opposite magnetisation between two neighbouring OOP magnets.
 As is the case for any ASI, the ground state is at least twofold degenerate, because all interactions are symmetric under magnetisation reversal. \par
-Depending on the particular lattice upon which the OOP magnets are placed, \xref{frustration} may (e.g. triangle/Cairo; \crefSubFigRef{fig:2:ASIs}{j,l}) or may not (e.g. square/honeycomb; \crefSubFigRef{fig:2:ASIs}{i,k}) be present due to the local AFM ordering.
+Depending on the particular lattice upon which the OOP magnets are placed, \xref{frustration} may (e.g., triangle/Cairo; \crefSubFigRef{fig:2:ASIs}{j,l}) or may not (e.g., square/honeycomb; \crefSubFigRef{fig:2:ASIs}{i,k}) be present due to the local AFM ordering.
 If frustration is present, the global ground states of the system are hard to reach as not all local interactions can be satisfied simultaneously.
 Otherwise, the symmetry of the system imposes exactly two opposite ground states, which may give rise to domain walls in the ASI --- not to be confused with domain walls within a magnet. \par % Locally, vertices where magnets meet will have a degenerate ground state, giving rise to mobile domains dictated by frustration.
 For the OOP square-lattice ASI (\crefSubFigRef{fig:2:ASIs}{i}) in particular, which we focus on in this chapter, the ground state adopts an AFM checkerboard pattern of `up' ($\uparrow$) and `down' ($\downarrow$) magnetisation.
@@ -495,7 +495,7 @@ This would also explain why the effective anisotropy is on the order of $60 \kBT
 \subsection{Concept}
 In order to use this thermally active OOP ASI as a reservoir, a method must be devised that generates a non-linear response with fading memory.
 One option to achieve this, is to use the transient regime between the AFM ground state and the uniform state: the previously discussed spontaneous relaxation makes the system evolve towards the ground state, while an external stimulus can instead push the system towards the uniform state.
-This allows the usage of analog input, i.e. a continuous range of input values, since the rate at which the system is pushed away from the ground state is determined by the strength of this stimulus.
+This allows the usage of analog input i.e., a continuous range of input values, since the rate at which the system is pushed away from the ground state is determined by the strength of this stimulus.
 The relaxation towards the ground state, on the other hand, is governed by parameters intrinsic to the ASI itself, like the OOP anisotropy $\EEA$ and MS coupling $\EMC$.
 
 \paragraph{Input}
@@ -547,7 +547,7 @@ When $vB$ is sufficiently small, the equilibrium magnetisation $\mavg$ approache
 This can, for instance, be observed during cycles 12 and 14 in~\cref{fig:3:OOP_relaxation_input}, where the input is very weak: for $f=\SI{1}{\kilo\hertz}$ (panels 1--3), $\mavg$ always returns to $\approx 0.2$, whereas for $f=\SI{100}{\kilo\hertz}$ it drops to a different value ($\mavg \approx 0.55$).
 The sole exception is panel 4, where the input with $(f,B)=(\SI{100}{\kilo\hertz}, \SI{200}{\micro\tesla})$ is not sufficiently impactful to bring the system far from its ground state. \par
 In contrast to these minima of $\mavg$, the maxima do depend on the input magnitude.
-Logically, the lower the frequency $f$ and the higher the input magnitude $B$, the easier the system reaches saturation, i.e. the uniform state, characterised by $\mavg=1$ and $\qNN=0$.
+Logically, the lower the frequency $f$ and the higher the input magnitude $B$, the easier the system reaches saturation (i.e., the uniform state), characterised by $\mavg=1$ and $\qNN=0$.
 Optimal reservoir performance can be expected when the system never saturates, yet still uses as much of the available $\mavg$-range as possible to minimise the relative impact of the stochasticity intrinsic to the relaxation process. \par
 Indeed, some of the smaller changes of input value do not incur a statistically significant change of $\mavg$ nor $\qNN$, as measured by their standard deviations.
 This is most striking for high-frequency input --- for instance, the value of $\mavg$ remains statistically unaltered during input cycles 7--9 in panels 4--6 of~\cref{fig:3:OOP_relaxation_input}, regardless of the input magnitude $B$, even though the input values applied during those cycles vary significantly between $0.54$ and $0.73$.
@@ -589,11 +589,11 @@ If the estimator operating on the reservoir output outperforms the one that uses
 \subsection{Signal transformation task}
 First, we will consider signal transformation --- a prediction task will follow in~\cref{sec:3:Thermal_Prediction}.
 Signal transformation primarily relies on the non-linearity and high dimensionality of a reservoir, rather than its fading memory capacity, though the balance between these can differ depending on the specific transformation~\cite{FewMoleculeReservoir,gartside2022reconfigurable,TaskAdaptivePRC}.
-Here, we will focus on the sine-to-sawtooth transformation with a given frequency $f$, i.e. $s(t) = \sin(2 \pi f t) \mapsto y(t) = ft - \lfloor ft \rfloor$.
+Here, we will focus on the sine-to-sawtooth transformation with a given frequency $f$ i.e., $s(t) = \sin(2 \pi f t) \mapsto y(t) = ft - \lfloor ft \rfloor$.
 While this is a non-linear transformation, it nonetheless requires some limited memory capacity since the sine wave both rises and falls during each period, while the sawtooth always rises apart from a discontinuous drop after each period.
 Hence, any value of the input signal $s$ is reached at two distinct instants $t_1$ and $t_2$ during each period $\big(s(t_1) = s(t_2)\big)$, but the target function is not the same at those two instants $\big(y(t_1) \neq y(t_2)\big)$. % A sine wave is symmetric in time, while the sawtooth is not.
 For example, compare $t_1 = 0$ and $t_2 = 0.5/f$: $\sin(0) = 0 \mapsto y(0) = 0$ but $\sin(\pi) = 0 \mapsto y(0.5) = 0.5$.
-Hence, the reservoir can not only rely on the input signal at the current time, but must also retain information on e.g. the derivative of the input signal, in order for the linear estimator to be able to accurately predict the sawtooth during both the increasing and decreasing parts of the sine wave.
+Hence, the reservoir can not only rely on the input signal at the current time, but must also retain information on e.g., the derivative of the input signal, in order for the linear estimator to be able to accurately predict the sawtooth during both the increasing and decreasing parts of the sine wave.
 The thermally active OOP ASI reservoir should readily have such information available, since its operation resembles that of a leaky integrator.
 While most transformations indeed require some limited memory, some examples like a sine-to-square wave transformation do not. \par
 Throughout the remainder of this section, we will compare the performance of the OOP ASI reservoir as a function of several system parameters.
@@ -963,11 +963,11 @@ To show that the \xref{AFM clocking protocol} does indeed move domain walls step
 This will illustrate that the growth of domains can be controlled as originally envisioned, while providing insight into the effect of system parameters on the domain wall motion.
 
 \paragraph{Defect-free system}
-First, for a clean illustration of the general behaviour of the clocking protocol, consider an example without any defects, i.e. $\sigma(\EEA) = 0$.
+First, for a clean illustration of the general behaviour of the clocking protocol, consider an example without any defects ($\sigma(\EEA) = 0$).
 The absence of defects results in a far more orderly domain wall motion than expected in a real system, where domain walls would be likely to remain pinned at high-anisotropy magnets.
 The effect of subsequent clocking cycles on such a ``perfect'' system is shown in~\cref{fig:3:Clocking_clearly_EBstd0}.
 The top half of this figure shows the magnetisation state of each magnet, which directly translates to the bottom half where each magnet is coloured black or white based on its domain type.
-% While diagonal domain walls stand out in the top panels as lines of the same colour, horizontal/vertical domain walls (e.g. in the centre of the ASI during the $B$ cycles) are harder to see.
+% While diagonal domain walls stand out in the top panels as lines of the same colour, horizontal/vertical domain walls (e.g., in the centre of the ASI during the $B$ cycles) are harder to see.
 Both are equivalent, but the domain representation is more insightful in this context since the entire appeal of this input method is controlled domain wall motion.
 Therefore, only the domain representation will be shown in any subsequent figures.
 Since we start from one ground state, an alternative interpretation for the white-coloured magnets is that those are (back) in their initial state, while the black ones are not.

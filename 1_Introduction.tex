@@ -178,7 +178,7 @@ By periodically sampling this $p$-dimensional vector at $n$ moments in time, an 
 Depending on the choice of input sequence, the rank of this matrix gives information about certain properties of the system~\cite{RC_ASI}.
 
 \paragraph{Kernel-quality}
-The \idx{kernel-quality} $K$ measures the \xref{separation property}, i.e. how well the reservoir can separate distinct temporal input patterns.
+The \idx{kernel-quality} $K$ measures the \xref{separation property} i.e., how well the reservoir can separate distinct temporal input patterns.
 Practically, it is determined by applying $n$ random input sequences and recording the readout after every sequence, each of which consists of a large number of discrete input values.
 Here, we will use $n=p$ to obtain a square matrix for a more consistent measure.
 Using random sequences ensures that they are maximally distinct, such that the rank of this matrix (i.e., the kernel-quality $K$) is a measure for how distinct the responses obtained from the reservoir can be~\cite{Vidamour_2022}.
@@ -390,7 +390,7 @@ While this is a very accessible resistance measurement-based technique, it has s
 First off, while permalloy exhibits a relatively strong AMR, the absolute effect remains rather small in comparison to the total resistance --- at most a few percent.
 This can make it hard to accurately determine the magnetisation state without the use of lock-in amplifiers~\cite{ArchitecturesNanoringRC,Vidamour2023}.
 Furthermore, due to the $\cos(2 \theta)$-dependence, AMR does not reveal information about the magnetisation direction, only about the local angle between the magnetisation and current.
-It also requires the system to be electrically connected: this makes it an appropriate choice for e.g. the ring system in the \spinengine project~\cite{Vidamour2023,ArchitecturesNanoringRC,DynamicEmergence_NanomagneticSystem}, but prevents it from directly being applied to ensembles of nanomagnets.
+It also requires the system to be electrically connected: this makes it an appropriate choice for the ring system in the \spinengine project~\cite{Vidamour2023,ArchitecturesNanoringRC,DynamicEmergence_NanomagneticSystem}, for example, but prevents it from directly being applied to ensembles of nanomagnets.
 In interconnected ferromagnets, it only provides a limited amount of information for RC as a lot of the system's dynamics are obscured.
 Ensembles of OOP nanomagnets, in particular, would need the current to flow vertically through each magnet, further complicating the system.
 
@@ -519,7 +519,7 @@ However, these are typically specialized to a select few lattice geometries.
 Early works often accounted only for nearest-neighbour (NN) interactions, whose strength was either arbitrarily set or calculated separately using micromagnetic codes~\cite{Qi2008,PerpendicularMagnetizationASI}. % REFS: 'moller2006artificial': bit broader using dipolar interaction, though seemingly still only for nearest neighbors. 'lou2023competing': dipole model for half-occupation IP Ising. 'sendetskyi2019continuous': dipole model for square ASI. 'EngineeringRelaxationComputation': KMC on dipole model, seemingly for square arrays.
 More recently, the importance of long-range magnetostatic interactions has been emphasized to improve correspondence to experiments~\cite{Chioar2014,Rougemaille2011,Brunn2021}.
 As such, vertex~\cite{gilbert2014emergent,Saglam2022Tetris,Goryca2021Plasma,MeltingASI} or hybrid NN/vertex charge~\cite{Canals2016,zhang2013crystallites} models have become more prevalent, especially for square-lattice ASI. % 'MeltingASI': 16-vertex ice model, 'gilbert2014emergent': MC sims based on a vertex model and interacting magnetic charges. 'zhang2013crystallites': uses monopoles and NN couplings to model kagome ASI with Metropolis and loop update. 
-Beyond-NN interaction models, including full magnetostatically coupled models~\cite{ApparentFMpinwheel,mengotti2011kagome}, are also used for e.g. square-~\cite{Brunn2021,Farhan2013,sklenar2019field} and triangular-based~\cite{Chioar2014,Rougemaille2011,Hofhuis2020} lattices. \par % 'sklenar2019field': 3NN interactions calculated by mumax on quadrupole lattice. 'mengotti2011kagome' use a full dipole model with Ewald summation for PBC.
+Beyond-NN interaction models, including full magnetostatically coupled models~\cite{ApparentFMpinwheel,mengotti2011kagome}, are also used for square-~\cite{Brunn2021,Farhan2013,sklenar2019field} and triangular-based~\cite{Chioar2014,Rougemaille2011,Hofhuis2020} lattices, for example. \par % 'sklenar2019field': 3NN interactions calculated by mumax on quadrupole lattice. 'mengotti2011kagome' use a full dipole model with Ewald summation for PBC.
 Here, we opt to develop our own simulation toolkit: \hotspice~\cite{MAES-24}.
 This was driven by a desire to blend the approach of \texttt{flatspin}~\cite{flatspin} --- a general-purpose GPU-accelerated IP ASI simulator --- with the rather purpose-built Monte Carlo toolkits listed above, to obtain efficient simulation of RC in OOP ASI.
 The result is a versatile Monte Carlo simulator that aims to capture IP and OOP ASI physics with minimal arbitrary parameters (most importantly, the magnets' anisotropy, magnetic moment and temperature) for a variety of lattice configurations.
