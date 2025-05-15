@@ -113,7 +113,7 @@ As we will see in~\cref{sec:3:relaxation}, achieving spontaneous thermal orderin
 \paragraph{Magnet geometry}
 \label{sec:3:OOP_geometry}
 % The geometry of nanomagnets in an OOP ASI is shown schematically in~\cref{fig:3:OOP_geometry}.
-% TODO: make own figure of nanomagnets?
+% TODO FIG: make own figure of nanomagnets?
 
 The magnets considered here are cylindrical with a diameter $D_\mathrm{NM}$ and consist of $n_{\ce{Co}}$ layers of \ce{Co} with a thickness $t_{\ce{Co}}$, separated and surrounded by \ce{Pt} layers of thickness $t_{\ce{Pt}}$.
 They are placed in an ASI where the lateral spacing between magnets is $S_\mathrm{ASI}$ --- resulting in a lattice parameter $a=D_\mathrm{NM}+S_\mathrm{ASI}$ in a square lattice. \par
@@ -516,7 +516,7 @@ Here, this will be accomplished by gradually increasing the net OOP anisotropy $
 Hence, by using the average magnetisation of individual columns of magnets as the readout values, greater variation can be obtained since each column is unique (while the magnets within a column are all identical).
 Vice versa, all rows of magnets in this square-lattice ASI are identical (while the magnets within a row are all different).
 Averaging over multiple columns or enlarging the system is expected to be beneficial, as this reduces thermal noise in the output since each readout value then becomes the average of more magnets.
-% TODO: schematic as in fig. 6a to illustrate column-wise readout?
+% TODO FIG: schematic as in fig. 6a to illustrate column-wise readout?
 
 \subsection{Influence of input on dynamics}
 Since we intend to use the spontaneous relaxation of thermally active OOP ASI for reservoir computing, it is desirable to maximally use the available range of intermediate states, meaning the relaxation process should not span too many timescales.
@@ -569,7 +569,7 @@ This can be done by imposing a maximum switching time $t_\mathrm{max} = 1/20f$ a
 By recording the reservoir state $\vc{x}(t_i)$ and the target output $y(t_i)$ at discrete intervals $t_i = i t_\mathrm{max}$ (with $i = 1,\dots,n$), the readout layer can be trained on several periods of the input signal via \xref{ordinary least-squares} (OLS) regression\footnote{
 	Regularised OLS fitting was performed using the \python{statsmodels}~\cite{statsmodels} Python package.
 }.
-After training, the reservoir will be evaluated based on several more periods --- the test set --- during which the weights $\vc{w}$ of the readout layer remain fixed. % TODO: search for OLS throughout this thesis and make sure it is used correctly
+After training, the reservoir will be evaluated based on several more periods --- the test set --- during which the weights $\vc{w}$ of the readout layer remain fixed.
 The performance is then quantified by the mean squared error ($\MSE$) of the ASI prediction $\hat{y}(t)$ with respect to the target function $y(t)$ at the sampled times $t_i$:
 \begin{equation}
 	\label{eq:3:MSE}
@@ -788,7 +788,7 @@ For larger offsets $h$, more such minima will appear near $h \in \mathbb{N}$, th
 The performance at $h=0$ presents the limit of what the thermally active ASI reservoir can achieve, due to the stochastic nature of the relaxation process it employs.
 Unsurprisingly, this limit improves by adding a gradient and increasing the system size.
 
-\vspace{-1em} % TODO: change legend labels to be consistent between both panels (and do the same for all other waveforms in previous figures)
+\vspace{-1em} % TODO FIG: change legend labels to be consistent between both panels (and do the same for all other waveforms in previous figures)
 \xfig{3_RC_OOP/Thermally active/Prediction/MG.pdf}{
 	\label{fig:3:Prediction_MG}
 	Performance of a thermally active OOP square-lattice ASI on a prediction task for the Mackey-Glass oscillator, for different lattice sizes and gradients $\Gamma$.
@@ -833,7 +833,7 @@ Still, manufacturing thermally active ASI remains challenging, as this requires 
 
 \newpage
 \section{Reservoir computing in non-volatile out-of-plane ASI}
-We now turn our attention to non-volatile ASI, to show that an ASI need not be thermally active to use it for reservoir computing. % TODO: Ctrl+F for ASI and make sure it is always used in singular form, not plural (otherwise write ASIs)
+We now turn our attention to non-volatile ASI, to show that an ASI need not be thermally active to use it for reservoir computing.
 When the energy barrier $\EEA$ of a magnet is significantly higher than the thermal energy $\kBT$, the N\'eel-Arrhenius switching law implies that it will remain stable over any reasonable timescale in the absence of external perturbations.
 For example, a magnet with $\EEA > 40 \kBT$ will most likely remain stable for multiple years.
 Therefore, non-volatile ASI is easier to construct than thermally active ASI, as great control over the perpendicular anisotropy is not required --- the anisotropy just has to be sufficiently large.
