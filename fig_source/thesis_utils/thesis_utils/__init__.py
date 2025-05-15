@@ -17,6 +17,7 @@ matplotlib.use("Agg")
 
 import hotspice
 import inspect
+import os
 import traceback
 
 import matplotlib.pyplot as plt
@@ -53,7 +54,7 @@ def init_style(style=None):
     # rc('font',**{'family':'serif','serif':['Times']})
     # rc('text', usetex=True)
 
-def replot_all(plot_function, subdir: str = None, **plot_kwargs):
+def replot_all(plot_function, subdir: str = None, recursive: bool = False, **plot_kwargs):
     """ Replots all the timestamp dirs """
     script = Path(inspect.stack()[1].filename) # The caller script, i.e. the one where __name__ == "__main__"
     outdir = script.parent / (script.stem + '.out')
@@ -69,9 +70,14 @@ def replot_all(plot_function, subdir: str = None, **plot_kwargs):
         except Exception:
             print(traceback.format_exc())
     
-    replot_dir(outdir)
-    for data_dir in outdir.iterdir():
-        replot_dir(data_dir)
+    if recursive:
+        for dirpath, dirnames, filenames in os.walk(outdir.absolute()):
+            replot_dir(Path(dirpath))
+    else:
+        replot_dir(outdir)
+        for data_dir in outdir.iterdir():
+            replot_dir(data_dir)
+            
         
 
 def label_ax(ax: plt.Axes, i: int = None, form: str = "(%s)", offset: tuple[float, float] = (0,0), roman: bool = False, fontsize: float = 11, axis_units: bool = True, **kwargs):

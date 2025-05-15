@@ -56,7 +56,8 @@ def plot(data_dir=None, label_domains=None, label_moments=None):
     ## Load data
     if data_dir is None: data_dir = thesis_utils.get_last_outdir()
     params, data = hotspice.utils.load_results(data_dir)
-    N = params['N'] # Number of panels
+    if params is None and data is None: return
+    N = params.get('N', len(data['values'])) if params is not None else len(data['values']) # Number of panels
     repeats = params.get('repeats', 1) # Number of repeated A- or B-cycles between state snapshots
     
     ## Plot
@@ -241,6 +242,6 @@ if __name__ == "__main__":
     # run(E_B_std=0.05, E_EA_ratio=455, E_MC_ratio=110, magnitude=0.01, finite=False, size=20, N=9)
     
     ## Clocking_massive_seeded.pdf IS GENERATED WITH:
-    run(E_B_std=0.00, E_EA_ratio=200, E_MC_ratio=40, magnitude=0.00378, size=141, N=13, repeats=6, pattern='seed')
+    # run(E_B_std=0.00, E_EA_ratio=200, E_MC_ratio=40, magnitude=0.00378, size=141, N=13, repeats=6, pattern='seed')
 
-    # thesis_utils.replot_all(plot)
+    thesis_utils.replot_all(plot, recursive=True)
