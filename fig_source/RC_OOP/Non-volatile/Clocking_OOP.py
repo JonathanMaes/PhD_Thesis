@@ -69,7 +69,7 @@ def plot(data_dir=None, label_domains=None, label_moments=None):
         ax: plt.Axes = axes[0,0]
         ax.set_aspect('equal')
         ax.set_axis_off()
-        fs = min(thesis_utils.fs_large + 1, 150/N)
+        fs = min(thesis_utils.fs_large + 1, 180/N)
 
         ## Setup plot variables
         OOP = params['ASI_type'] == "OOP_Square"
