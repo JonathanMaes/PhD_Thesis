@@ -61,7 +61,7 @@ def plot(data_dir=None, label_domains=None, label_moments=None):
     repeats = params.get('repeats', 1) # Number of repeated A- or B-cycles between state snapshots
     
     ## Plot
-    thesis_utils.init_style()
+    thesis_utils.init_style(style="default")
     figs = {}
     for show_domains in (True, False):
         fig, axes = plt.subplots(nrows=1, ncols=1, squeeze=False, figsize=(thesis_utils.page_width, thesis_utils.page_width/int((N+2)/2)*2))
@@ -78,9 +78,9 @@ def plot(data_dir=None, label_domains=None, label_moments=None):
                 OOPcmap = mpl.colormaps.get_cmap('gray')  # viridis is the default colormap for imshow
                 OOPcmap.set_bad(color='red')
             else:
-                cmap = colormaps['hsv']
-                r0, g0, b0, _ = cmap(.5) # Value at angle 'pi' (-1)
-                r1, g1, b1, _ = cmap(0) # Value at angle '0' (1)
+                cmap = colormaps['inferno']
+                r0, g0, b0 = colors.to_rgb("C0") # Value at angle 'pi' (-1)
+                r1, g1, b1, _ = cmap(0.85) # Value at angle '0' (1)
                 cdict = {
                     'red':   [[0.0, r0,  r0], # x, value_left, value_right
                             [0.5, 0.0, 0.0],
