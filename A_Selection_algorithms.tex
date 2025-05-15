@@ -20,7 +20,7 @@ Several variants have been proposed over the years to further improve performanc
 Using Bridson's algorithm, $k=4$ yields on average half as many samples as an optimal close packing would achieve, and in \hotspice this results in the highest number of samples per second when including the time required to perform all other ASI calculations during a \link{alg:2:MetropolisHastingsSingle}{Monte Carlo iteration}. \\\par
 
 Insight into the spatial distribution of this algorithm can be gained from~\cref{fig:2:MultiSwitch_select_Poisson}, where Bridson's algorithm was used to sample magnets in an OOP square-lattice ASI.
-Using the algorithm on sparser ASI is non-trivial because they contain unoccupied cells.
+Using the algorithm on sparser ASI lattices is non-trivial because they contain unoccupied cells.
 These cells should not be sampled, as this would significantly reduce the number of simultaneously sampled magnets.
 Therefore, rather than randomly placing a point inside the $\rmin \leq r \leq 2 \rmin$ annulus at an integer coordinate, a random magnet should be selected within this annulus instead, which is more computationally demanding.
 

@@ -283,10 +283,10 @@ This adjustment is shown in red in~\cref{fig:2:EB_meanbarrier}: it is closer to 
 Notwithstanding that the original mean-barrier approximation~\eqref{eq:2:EB_meanbarrier_original} lies closer to the exact solution in this range, we choose not to use it as this lies outside its valid range of $\abs{\Delta E} < 2 \EB$.
 
 \subsubsection{Asymmetric barrier}\indexlabel{asymmetric energy barrier}\label{sec:2:E_B_asymm}
-The simple \xref{mean-barrier model} is insufficient for many IP ASI.
+The simple \xref{mean-barrier model} is insufficient for many IP ASI lattices.
 In real nanomagnets, reversal by \xref{coherent rotation} can occur via two pathways; clockwise ($\clockwise$) or counter-clockwise ($\counterclockwise$) rotation of the magnetisation.
 In an asymmetrical environment --- when the \xref{effective field} has a non-zero component perpendicular to the \xref{easy axis} --- one of these two rotation directions will be preferred~\cite{leo2021chiral,DirectionalEnergyBarrier}.
-Take for example the pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a}): any two neighbouring magnets form a T-shape, so the magnet pointing into the side of the other will greatly influence whether the other magnet prefers $\clockwise$ or $\counterclockwise$ rotation~\cite{DirectionalEnergyBarrier}. % Q: does this need a figure?
+Take for example the pinwheel lattice (\crefSubFigRef{fig:2:ASIs}{a}): any two neighbouring magnets form a T-shape, so the magnet pointing into the side of the other will greatly influence whether the other magnet prefers $\clockwise$ or $\counterclockwise$ rotation~\cite{DirectionalEnergyBarrier}. % Q: does this need a figure?
 % The mean-barrier model would take the energy difference $\Delta e$ between the two states; for two magnets in a T-shape, $\Delta E = 0$ for both, resulting in an unchanged energy barrier $\EB$ which is clearly incorrect in this situation.
 Such an asymmetry can not occur in OOP ASI, so the asymmetric barrier is only applicable to IP ASI.
 Accounting for the existence of these separate chiral switching channels profoundly affects the switching rates and transition kinetics, since switching will occur predominantly via the more favourable pathway~\cite{leo2021chiral}. \\\par
@@ -566,7 +566,7 @@ By leveraging \link{unit cell}{unit cells}, this storage requirement can be redu
 Each occupied grid point in the unit cell is assigned a unique index $q = 1,\dots,\widetilde{N}$, with $\widetilde{N}$ the number of magnets in a single unit cell. % TODO: maybe use \kappa instead of q? But it appears a lot in the following text.
 Hence, each magnet in the ASI is associated with a specific value of $q$. \par
 This way, all magnets with the same value of $q$ share the same layout of surrounding magnets\footnote{
-	In some ASI, it is possible that different sites inside a single unit cell also experience the same surrounding layout.
+	In some ASIs, it is possible that different sites inside a single unit cell also experience the same surrounding layout.
 	This can be used to further improve memory usage (but not performance) by only storing unique kernels.
 	This was not implemented as this constitutes only a minor improvement; for the lattices in~\cref{fig:2:ASIs}, this would at best half the number of kernels.
 }, apart from a different cut-off at the border in case of open boundary conditions.
@@ -989,7 +989,7 @@ Moreover, \xref{multi-switching} in the \link{Metropolis-Hastings sampling}{Metr
 In irregular ASI, maintaining sufficient spacing between selected magnets would be far more difficult and likely necessitate the use of an underlying `virtual' grid regardless.
 
 \subsubsection{GPU/CPU}
-In retrospect, porting \hotspice to the GPU was not necessary for the work published in this thesis, as the ASI needed for the work presented in \cref{ch:Applications} are relatively small and are most often simulated using the \xref{first-switch method}.
+In retrospect, porting \hotspice to the GPU was not necessary for the work published in this thesis, as the ASIs needed for the work presented in \cref{ch:Applications} are relatively small and are most often simulated using the \xref{first-switch method}.
 Since rejection-free KMC does not support \xref{multi-switching}, the majority of computations in that chapter are performed on the CPU. \par
 Nonetheless, GPU support has broadened the range of systems that \hotspice can efficiently simulate, in particular for the \link{Metropolis-Hastings sampling}{Metropolis-Hastings algorithm}, making it a viable simulator to be used in other works beyond thesis.
 %One remaining limitation is that the current implementation requires the user to choose between GPU and CPU before the \python{import hotspice} statement.
@@ -1186,7 +1186,7 @@ The simulations used the point dipole model; performing the same simulations wit
 \vspace{-1.6em}
 \xfig{2_Hotspice/Hysteresis_Pinwheel.pdf}{
 	\label{fig:2:Hysteresis_Pinwheel}
-	Hysteresis of the pinwheel ASI for an \xref{external magnetic field} applied at \ang{30} with respect to the system edges.
+	Hysteresis of pinwheel ASI for an \xref{external magnetic field} applied at \ang{30} with respect to the system edges.
 	The parameter $\rho = \mu_\perp/\mu_\parallel$ modulates the effect of the \xref{asymmetric energy barrier} as described in~\cref{sec:2:E_B_asymm}.
 	\textbf{(a)} Component of the average magnetisation along the direction of the external field.
 	The experimental \xref{hysteresis} by Li~\etal~\cite{li2018pinwheel} is shown in black.
@@ -1212,7 +1212,7 @@ A possible explanation for this is that the magnets in the experimental ASI do n
 Indications of non-uniform rotation or domain wall-mediated reversal were previously noticed by Morley~\etal~\cite{VogelFulcherTammannFreezing}.
 
 \subsection{Kagome reversal}
-The in-plane kagome ASI (\crefSubFigRef{fig:2:ASIs}{g}) is a typical example of a \xref{frustrated} system: every vertex is formed by three magnets that must obey the two-in/one-out or two-out/one-in ice rule.
+In-plane kagome ASI (\crefSubFigRef{fig:2:ASIs}{g}) is a typical example of a \xref{frustrated} system: every vertex is formed by three magnets that must obey the two-in/one-out or two-out/one-in ice rule.
 Each magnet has four NN located near its endpoints, making this lattice an interesting testing ground for the \xref{dumbbell model}.
 Both the \xref{point dipole model}~\cite{Chern2011} and dumbbell model~\cite{Moller2009} have been used in previous studies of kagome ASI.
 The point dipole model tends to significantly underestimate the NN interaction, while the dumbbell model increases the \xref{magnetostatic interaction} energy between closely spaced magnets, potentially affecting the dynamics of the system.
@@ -1228,7 +1228,7 @@ Therefore, the dynamics may depend on the simulation method, as the dumbbell mod
 
 \sidefig[0.45]{2_Hotspice/Hysteresis_Kagome_EBc.pdf}{
 	\label{fig:2:kagome_reversal_EBc}
-	\textbf{(b)} The effect of an \xref{external magnetic field} applied at \ang{-3.6} relative to the vertical axis on a vertical and sloped magnet in kagome ASI for different values of the energy barrier.
+	The effect of a vertically applied \xref{external magnetic field} on a vertical and sloped magnet in kagome ASI, for different values of the energy barrier.
 	$E_\mathrm{MS}$ is the same for each $E_\mathrm{B}$, however it is higher for the sloped magnets compared to the vertical ones.
 	When $E_\mathrm{B}<E_\mathrm{B}^c$ ($E_\mathrm{B}>E_\mathrm{B}^c$), the sloped (vertical) magnet will flip first since the Zeeman energy $E_\mathrm{Z}$ increases faster for the vertical magnets.
 	\newline

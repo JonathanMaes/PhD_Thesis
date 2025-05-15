@@ -1,13 +1,13 @@
 \chapter{Reservoir computing in out-of-plane artificial spin ice}\label{ch:Applications} % TODO END: link to index terms
 \glijbaantje{If you find that you're spending almost all your time on theory,\\ start turning some attention to practical things; it will improve your theories.\\ If you find that you're spending almost all your time on practice,\\ start turning some attention to theoretical things; it will improve your practice.}{Donald Knuth}
 
-The main factor that motivated our research of OOP ASI for \xref{reservoir computing} (RC) was that these systems allow very efficient and relatively simple input and read-out methods to be used.
+The main factor that motivated our research of OOP ASI for \xref{reservoir computing} (RC) was that this kind of system allows very efficient and relatively simple input and read-out methods to be used.
 %Early on in the \spinengine project, methods to read the state of OOP ASI had already been demonstrated experimentally on a small scale by ETHZ/PSI.
 However, their potential for RC had yet to be investigated.
 Since \hotspice is well-suited for the simulation of OOP ASI, this presented an appropriate use-case for the software developed in~\cref{ch:Hotspice}. \par % Furthermore, the other simulator developed by the consortium (flatspin) only supports in-plane magnetisation. Furthermore, \hotspice is more accurate for OOP ASI than IP ASI due to the high degree of symmetry in the former.
 Therefore, in this chapter, \hotspice will be used to assess the viability and characteristics of a couple of methods to achieve RC in OOP ASI.
 It will be shown that RC is indeed possible in such systems by using an appropriate input and readout protocol.
-This chapter starts with a discussion of the basic properties of OOP ASI and the motivation for researching them.
+This chapter starts with a discussion of the basic properties of OOP ASIs and the motivation for researching them.
 Then, the chapter is divided into two main parts, first discussing thermally active ASI, followed by non-volatile ASI.
 
 \begin{adjustwidth}{2em}{2em} % TODO END: update once published.
@@ -89,7 +89,7 @@ In the context of reservoir computing, such a readout approach with multiple ele
 
 \section{Thermally active out-of-plane ASI}
 \subsection{Energy contributions} \label{sec:3:E_contributions}
-Thermally active OOP ASI are hard to manufacture, because they must strike a delicate balance between several strong energy contributions to end up in an OOP state with a net energy barrier of only several tens of $\kBT$ at most.
+Thermally active OOP ASI is hard to manufacture, because it must strike a delicate balance between several strong energy contributions to end up in an OOP state with a net energy barrier of only several tens of $\kBT$ at most.
 To appreciate this difficulty, let us first take a closer look at the various energy contributions in the system --- ranging from local anisotropy to large-scale interactions --- and their dependence on the geometrical structure of the OOP magnets.
 \begin{enumerate}
 	\item \textbf{Perpendicular magnetic anisotropy} constitutes the largest contribution to the total OOP anisotropy.
@@ -103,7 +103,7 @@ To appreciate this difficulty, let us first take a closer look at the various en
 	One can think of this effect as being similar to the shape anisotropy, but on the scale of separate layers rather than individual atomic magnetic moments.
 	This contribution aids the PMA in stabilising the OOP anisotropy, counteracting the \xref{demagnetising field}, but is smaller in magnitude. % Cross MS E: \approx\SI{0.5e-16}{\joule}
 	\item \textbf{Inter-magnet magnetostatic interaction} is the only contribution --- besides external input --- that distinguishes between the $\uparrow$ and $\downarrow$ magnetisation states.
-	All aforementioned energy contributions are internal to individual OOP magnets, making the \xref{magnetostatic interaction} the sole reason for the AFM ground state of the OOP ASI. % E_MS: \lesssim\SI{1.1e-17}{\joule}
+	All aforementioned energy contributions are internal to individual OOP magnets, making the \xref{magnetostatic interaction} the sole reason for the AFM ground state of OOP ASI. % E_MS: \lesssim\SI{1.1e-17}{\joule}
 	\item \textbf{External stimuli} that provide input to the system, like SOT.
 	In simulations, an \xref{external magnetic field} is used as a proxy to model SOT, leading to a Zeeman energy contribution.
 \end{enumerate}
@@ -151,7 +151,7 @@ Note that the numerical values of the limits given below are only indicative and
 	This upper bound was experimentally determined~\cite{KUR-24} and is imposed by shape anisotropy.
 	Layers must be sufficiently thin to maintain OOP anisotropy, as \xref{shape anisotropy} is proportional to volume (and hence $\propto t_{\ce{Co}}$) while the PMA is mostly independent of $t_{\ce{Co}}$. \par % t_{\ce{Co}} controls the demag compensation of $K_u$.
 	The closer the thickness is to this upper bound, the lower the effective OOP anisotropy will be.
-	Therefore, non-volatile ASI must steer clear of this limit, while thermally active ASI generally try to approach this limit as close as possible.
+	Therefore, non-volatile ASI must steer clear of this limit, while thermally active ASI generally tries to approach this limit as close as possible.
 	As such, this geometrical parameter is often key for balancing the energy landscape.
 	\item \textbf{Separation between magnets} $\boldsymbol{S_\mathrm{ASI}} \gtrsim \SI{20}{\nano\metre}$. \newline
 	This constraint is of a practical nature, as the minimal size of lateral geometrical features is limited by the accuracy of the lithographic process. \par
@@ -173,7 +173,7 @@ Note that the numerical values of the limits given below are only indicative and
 \end{itemize}
 
 Given these constraints, thermally active OOP ASI was experimentally fabricated by \textit{A. Kurenkov} in the context of our paper~\cite{KUR-24}.
-In the simulations presented hereafter, parameters will be used that are based on these values for fabricated ASI.
+In the simulations presented hereafter, parameters will be used that are based on the fabricated ASI.
 More precisely, each nanomagnet consisted of $n_{\ce{Co}}=7$ ferromagnetic layers of $D_\mathrm{NM}=\SI{170}{\nano\metre}$ diameter and $t_{\ce{Co}} \approx \SI{1.45}{\nano\metre}$ thickness, with $t_{\ce{Pt}} \approx \SI{0.8}{\nano\metre}$ spacing layers in between.
 The edge-to-edge spacing between neighbouring magnets is $S_\mathrm{ASI}=\SI{30}{\nano\metre}$, unless specified otherwise.
 The saturation magnetisation $M_\mathrm{sat}$ is thickness-dependent~\cite{CoFilmPropertiesCVD}, with a value of $M_\mathrm{sat}=\SI{1063}{\kilo\ampere\per\metre}$ reported for thicknesses in the \SI{}{\nano\metre} range~\cite{Msat_Co}.
@@ -216,7 +216,7 @@ Each relaxation consisted of at most $40N$ switches using the first-switch metho
 	\label{fig:3:OOP_relaxation}
 	Dependence of the ordering timescale on the energy balance between net OOP anisotropy $\EEA$ and nearest-neighbour magnetostatic coupling $\EMC$ in an $11 \times 11$ OOP square-lattice ASI.
 	This system size was chosen because it matched the size of our fabricated systems discussed later.
-	The ASI is initialised in a uniform magnetic state with all spins pointing `up' and is released at $t = 0$, after which the lattice relaxes to lower energies.
+	The ASI is initialised in a uniform magnetic state with all spins pointing `up' and is released at $t = 0$, after which the ASI relaxes to lower energies.
 	Blue traces show the absolute value of the normalised average magnetisation $\mavg$ while orange traces represent the local antiferromagnetic parameter $\qNN$.
 	Each trace shows the mean (central line), standard deviation (central shaded area), and 1st/99th percentile (outer shaded area) of 200 repeated relaxations with randomly sampled $\EEA$ profiles.
 	At most $40N$ switches are simulated for each relaxation.
@@ -328,7 +328,7 @@ This is depicted in~\cref{fig:3:OOP_relaxation_exchange} for a negative (AFM) ex
 	\label{fig:3:OOP_relaxation_exchange}
 	Dependence of the ordering timescale on the nearest-neighbour magnetostatic coupling $\EMC$ in an $11 \times 11$ exchange-coupled OOP square-lattice ASI.
 	The NN exchange coupling is $J=-8\kBT$ and the net OOP anisotropy is $\EEA = 40\kBT$.
-	The ASI is initialised in a uniform magnetic state with all spins pointing `up' and is released at $t = 0$, after which the lattice relaxes to lower energies.
+	The ASI is initialised in a uniform magnetic state with all spins pointing `up' and is released at $t = 0$, after which the ASI relaxes to lower energies.
 	Blue traces show the absolute value of the normalised average magnetisation $\mavg$ while orange traces represent the local antiferromagnetic parameter $\qNN$.
 	Each trace shows the mean (central line), standard deviation (central shaded area), and 1st/99th percentile (outer shaded area) of 200 repeated relaxations with randomly sampled $\EEA$ profiles.
 	The hatched ($\times$) region highlights the frozen timescales, while the white and green shaded region highlight stage~$\circled{1}$~and~$\circled{2}$ of ordering, respectively.
@@ -374,7 +374,7 @@ For typical nanomagnet dimensions (7 layers of $t_{\ce{Co}} \approx \SI{1.45}{\n
 Due to manufacturing defects, the discrepancy between theoretical estimates of these energy contributions and their real magnitudes can easily exceed $100 \kBT$. % Theoretically, $\EEA$ of an isolated magnet (as manufactured by Alex and observed to be part of a thermally relaxing OOP ASI) is $\approx\SI{-3.6e-18}{\joule} = \SI{-22.5}{\electronvolt} = -871\kBT$ which is far too large to get thermal switching. Furthermore, it is negative, implying an IP magnetisation. This discrepancy between Mathematica and reality could be due to non-coherent reversal, lowering the real energy barrier.
 However, we just saw that $\EEA$ and $\EMC$ must not exceed several tens of $\kBT$ if a system is to spontaneously reach the checkerboard ground state.
 It is therefore inappropriate to calculate $\EEA$ and $\EMC$ theoretically --- they must be empirically determined from manufactured ASI. \\\par
-For this reason, \textit{A. Kurenkov} manufactured several $11 \times 11$ OOP square-lattice ASI, initialised them in the `up' state by a \SI{0.9}{\tesla} OOP field and measured their state using MFM at different time intervals since initialisation.
+For this reason, \textit{A. Kurenkov} manufactured several $11 \times 11$ OOP square-lattice ASIs, initialised them in the `up' state by a \SI{0.9}{\tesla} OOP field and measured their state using MFM at different time intervals since initialisation.
 For each of these MFM images, the values of $\mavg$ and $\qNN$ can be determined.
 The knowledge of these quantities at different moments in time can then be used to fit this data to simulated relaxations, like the ones in~\cref{fig:3:OOP_relaxation}, by varying simulation parameters like $\EEA$ and $\EMC$.
 
@@ -493,7 +493,7 @@ This would also explain why the effective anisotropy is on the order of $60 \kBT
 \newpage
 \section{Reservoir computing in thermally active out-of-plane ASI}
 \subsection{Concept}
-In order to use these thermally active OOP ASI as a reservoir, a method must be devised that generates a non-linear response with fading memory.
+In order to use this thermally active OOP ASI as a reservoir, a method must be devised that generates a non-linear response with fading memory.
 One option to achieve this, is to use the transient regime between the AFM ground state and the uniform state: the previously discussed spontaneous relaxation makes the system evolve towards the ground state, while an external stimulus can instead push the system towards the uniform state.
 This allows the usage of analog input, i.e. a continuous range of input values, since the rate at which the system is pushed away from the ground state is determined by the strength of this stimulus.
 The relaxation towards the ground state, on the other hand, is governed by parameters intrinsic to the ASI itself, like the OOP anisotropy $\EEA$ and MS coupling $\EMC$.
@@ -566,7 +566,7 @@ The reason for this is that \hotspice assumes all aspects of the system remain s
 To approximate a continuous input in simulation, the input signal must be sampled at sufficiently short time intervals --- say, 20 samples per period.
 This can be done by imposing a maximum switching time $t_\mathrm{max} = 1/20f$ and updating the external field $\vc{B}_\mathrm{ext}$ after each iteration of the first-switch method (\cref{alg:2:FirstSwitchSingle}) --- regardless of whether a magnet has switched within the short interval $t_\mathrm{max}$ --- resulting in adequate sampling of the true input signal. \\\par
 
-By recording the reservoir state $\vc{x}(t_i)$ and the target output $y(t_i)$ at discrete intervals $t_i = i t_\mathrm{max}$ (with $i = 1,\dots,n$), the readout layer can be trained on several periods of the input signal via ordinary least-squares (OLS) regression\footnote{
+By recording the reservoir state $\vc{x}(t_i)$ and the target output $y(t_i)$ at discrete intervals $t_i = i t_\mathrm{max}$ (with $i = 1,\dots,n$), the readout layer can be trained on several periods of the input signal via \xref{ordinary least-squares} (OLS) regression\footnote{
 	Regularised OLS fitting was performed using the \python{statsmodels}~\cite{statsmodels} Python package.
 }.
 After training, the reservoir will be evaluated based on several more periods --- the test set --- during which the weights $\vc{w}$ of the readout layer remain fixed. % TODO: search for OLS throughout this thesis and make sure it is used correctly
@@ -765,7 +765,7 @@ Typical values for the parameters $\beta=0.2, \gamma=0.1$ and $n=10$ were used.
 For $\tau \gtrsim 16.8$, this system is chaotic~\cite{jaeger2001echo}: $\tau=23$ was used here to get sufficiently chaotic behaviour, though $\tau=17$ is a more common choice.
 To extinguish transients after releasing the oscillator from its initial state $\big(\mathrm{MG}(t \leq 0) = 0.5\big)$, a first timeframe $t \leq 25\tau$ is discarded.
 Meanwhile, the extrema attained during this initial timeframe were recorded, to allow a scaling of subsequent input to the appropriate field range between $B_0$ and $B_1$.
-The OLS estimator is then trained over a timespan of $60\tau$, after which the test set spans $40\tau$. \par
+The linear readout layer is then trained over a timespan of $60\tau$, after which the test set spans $40\tau$. \par
 While the Mackey-Glass oscillator is not strictly periodic, its delay parameter $\tau$ still provides a characteristic timescale for its oscillations.
 Therefore, the specific transformation attempted here is written as
 \begin{equation}
@@ -788,10 +788,10 @@ For larger offsets $h$, more such minima will appear near $h \in \mathbb{N}$, th
 The performance at $h=0$ presents the limit of what the thermally active ASI reservoir can achieve, due to the stochastic nature of the relaxation process it employs.
 Unsurprisingly, this limit improves by adding a gradient and increasing the system size.
 
-\vspace{-1em} % TODO: change legend labels to be consistent between both panels
+\vspace{-1em} % TODO: change legend labels to be consistent between both panels (and do the same for all other waveforms in previous figures)
 \xfig{3_RC_OOP/Thermally active/Prediction/MG.pdf}{
 	\label{fig:3:Prediction_MG}
-	Performance of a thermally active OOP square-lattice ASI on a prediction task for the Mackey-Glass oscillator, for ASI of different size and gradient $\Gamma$.
+	Performance of a thermally active OOP square-lattice ASI on a prediction task for the Mackey-Glass oscillator, for different lattice sizes and gradients $\Gamma$.
 	The number of readout nodes is fixed at $p=11$ for the $11 \times 11$ systems and $p=10$ for the $20 \times 20$ ASI.
 	\textbf{(a)} Mean squared error as a function of the offset $h$, for the reservoir prediction (blue) and a linear transformation of the original input signal (red).
 	The ultimate performance limit of each reservoir, $\MSE(h=0)$, is indicated by the horizontal grey dotted line.
@@ -857,7 +857,7 @@ Increasing the magnetostatic coupling beyond $10\kBT$ should not present a signi
 
 \paragraph{Uniform external field}
 While it was possible to perform signal transformation with thermally active OOP ASI by using a uniform external field, this approach is no longer viable in non-volatile ASI.
-They lack the intrinsic relaxation dynamics of thermally active ASI, making the temporal dimension largely irrelevant: a magnet will either switch within a reasonable timeframe, or it will not.
+It lacks the intrinsic relaxation dynamics of thermally active ASI, making the temporal dimension largely irrelevant: a magnet will either switch within a reasonable timeframe, or it will not.
 Furthermore, the magnets only respond within a narrow field range near the coercive field, leading to a very steep hysteresis loop.
 Hence, a fundamentally different input method will be required, where we instead make use of the spatial dimensions of an ASI to perform RC.
 Rather than pulling the system away from equilibrium and expecting it to evolve back to the ground state all by itself, we can instead use the domain structure for computation.
@@ -922,10 +922,10 @@ Hence, by combining an appropriate choice of input strength with the two-step pr
 
 \xfig{3_RC_OOP/Nonvolatile/Clocking_protocol.pdf}{
 	\label{fig:3:Clocking_protocol}
-	Illustration of the \xref{AFM clocking protocol} for controlled domain wall movement in ASI.
+	Illustration of the \xref{AFM clocking protocol} for controlled domain wall movement in square-lattice OOP ASI.
 	The symbols $\bigodot$ and $\bigotimes$ respectively indicate that the external stimulus is such, that the magnet at that location would prefer an `up' or `down' magnetisation.
-	This example shows a $5 \times 5$ ASI, but the concept is analogous for other lattice sizes.
-	Each input cycle consists of two sub-steps that each affect a different set of magnets, arranged in a checkerboard pattern: only half of the magnets are stimulated at once.
+	This example shows a $5 \times 5$ lattice, but the concept is analogous for other lattice sizes.
+	Each input cycle consists of two sub-steps that each affect a different set of magnets, arranged in a checkerboard pattern: as such, only half of the magnets are stimulated at once.
 	Input cycle $A$ (associated with bit 0) and input cycle $B$ (bit 1) apply opposite stimuli.
 }
 
@@ -966,7 +966,7 @@ This will illustrate that the growth of domains can be controlled as originally 
 First, for a clean illustration of the general behaviour of the clocking protocol, consider an example without any defects, i.e. $\sigma(\EEA) = 0$.
 The absence of defects results in a far more orderly domain wall motion than expected in a real system, where domain walls would be likely to remain pinned at high-anisotropy magnets.
 The effect of subsequent clocking cycles on such a ``perfect'' system is shown in~\cref{fig:3:Clocking_clearly_EBstd0}.
-The top half of this figure shows the magnetisation state of each magnet, which directly translates to the bottom half where the two degenerate domain types are visualised as black and white.
+The top half of this figure shows the magnetisation state of each magnet, which directly translates to the bottom half where each magnet is coloured black or white based on its domain type.
 % While diagonal domain walls stand out in the top panels as lines of the same colour, horizontal/vertical domain walls (e.g. in the centre of the ASI during the $B$ cycles) are harder to see.
 Both are equivalent, but the domain representation is more insightful in this context since the entire appeal of this input method is controlled domain wall motion.
 Therefore, only the domain representation will be shown in any subsequent figures.
@@ -1106,7 +1106,7 @@ As these parameters are kept constant, the MS coupling $\EMC$ only depends on th
 To avoid an unintentionally interconnected ASI as previously encountered in~\cref{sec:3:MFM}, a lower limit $a > D_\mathrm{NM} + \SI{25}{\nano\metre} = \SI{195}{\nano\metre}$ is imposed. \par
 The high anisotropy guarantees a weakly-coupled system with a high $\sigma(\EEA)/\EMC$-ratio, which we previously suggested to be the most promising regime for RC.
 To determine the optimal input strength and NN MS interaction energy $\EMC$, the RC metrics will be determined for a range of external field magnitudes $B$ and lattice spacings $a$.
-It is worth noting that the difference between using a point dipole or finite-size model was found to be negligible, apart from a nearly uniform shift of the following metric maps toward larger lattice spacings, by about $\Delta a = 20$ to \SI{30}{\nano\metre}. \par % TODO: nicer wording % If we want to show this as figures, compare Sweep20250325131714 vs. Sweep20250325105313.
+It is worth noting that the difference between using a point dipole or finite-size model was found to be negligible, apart from a nearly uniform shift of the following metric maps toward larger lattice spacings, by about $\Delta a = 20$ to \SI{30}{\nano\metre}. \par % If we want to show this as figures, compare Sweep20250325131714 vs. Sweep20250325105313.
 Note that, while domain wall propagation can be expected near a field magnitude $B \approx (\EEA + \EMC)/\mu$, it is not guaranteed that optimal RC performance will occur exactly at this value.
 The clocking dynamics are sensitive to the precise input strength, and the presence of disorder broadens the range where the input has a meaningful effect.
 This makes it harder to predict which input strength $B$ will result in the best performance, which can also be different for each metric.
@@ -1143,7 +1143,7 @@ Furthermore, while matrix rank-based metrics can serve as useful initial indicat
 Linear estimator-based metrics are more straightforward to interpret and provide a more accurate indication of a system's suitability for RC.
 For example, the input method with a uniform field --- which was previously dismissed for non-volatile ASI --- achieves a moderate $C \approx 40$, but yields very low values for all linear estimator-based metrics like non-linearity and memory capacity. % Matrix rank-based metrics should rather be seen as indicators of which systems do NOT give decent RC performance.
 Therefore, to complement the findings from the previous paragraph, linear estimator-based metrics were also determined for the baseline system over the same parameter range, as shown\footnote{
-	The stability metric was also proposed in~\cite{RC_TaskAgnosticMetrics_v2}, but is not shown here as it is not relevant to non-volatile ASI which do not spontaneously reach a ground state in the absence of input.
+	The stability metric was also proposed in~\cite{RC_TaskAgnosticMetrics_v2}, but is not shown here as it is not relevant to non-volatile ASI which does not spontaneously reach a ground state in the absence of input.
 } in~\cref{fig:3:Clocking_Sweeps_binary_TA}. \par
 Note that the non-linearity metric will naturally be lower for binary input than for the scalar input it was designed for.
 The reason for this is that binary input offers only two possible values, making it generally easier to fit a linear model to the input-output relationship.
@@ -1217,7 +1217,7 @@ Within the limits of the clocking protocol, we considered two concepts to addres
 The first concept was to use an analog-to-digital conversion that encodes scalar values as integers represented as little-endian bytes consisting of 8 bits.
 While this is the natural habitat of conventional computers, it is not a viable solution here due to the limited linear memory capacity of the system.
 The second concept was to use the input magnitude as an analog input, similar to the thermally active ASI.
-However, non-volatile ASI only exhibit a sufficiently non-linear response to the input in a narrow range of field magnitudes.
+However, non-volatile ASI only exhibits a sufficiently non-linear response to the input in a narrow range of field magnitudes.
 Furthermore, one must take care to regularly apply both positive and negative cycles to keep the domain wall dynamics going, complicating the input encoding.
 Ultimately, both of these analog input concepts were dismissed as they did not provide a desirable effect.
 
@@ -1238,7 +1238,7 @@ In this sense, the thermally active and non-volatile ASI complement each other -
 
 \section{Conclusion}
 We have numerically demonstrated the reservoir computing capability of both thermally active and non-volatile OOP ASI, each of which required very different input methods.
-The spontaneous logarithmic relaxation of thermally active ASI towards the ground state results in a gradual response to external stimuli over a broad frequency range, which allowed us to use them as a sort of leaky integrator.
+The spontaneous logarithmic relaxation of thermally active ASI towards the ground state results in a gradual response to external stimuli over a broad frequency range, which allowed us to use it as a sort of leaky integrator.
 However, non-volatile ASI requires a more intricate input method in order to avoid avalanches, which led us to develop a clocking protocol that results in stepwise domain wall motion. \par
 Since thermally active systems can readily process analog input, we evaluated their RC performance on a signal transformation and prediction task.
 The binary character of the clocking scheme restricts its available tasks, so there we opted to use the linear estimator-based metrics instead.
