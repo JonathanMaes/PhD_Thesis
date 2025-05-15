@@ -121,7 +121,7 @@ def plot(data_dir=None, label_domains=None, label_moments=None, highlight_leakin
             ax.imshow(image, extent=[x-imfrac/2, x+imfrac/2, y-imfrac/2, y+imfrac/2],
                     vmin=0, vmax=1, cmap=OOPcmap if OOP else 'hsv', origin='lower')
             ax.add_patch(Rectangle((x-imfrac/2, y-imfrac/2), imfrac, imfrac, fill=False, color="gray", linewidth=1))
-            if highlight_leaking and i > 0:
+            if highlight_leaking and show_domains and i > 0:
                 y_leaks, x_leaks = get_leaked_magnets(data['domains'][i], data['domains'][i-1], cycles=repeats).nonzero()
                 ny, nx = image.shape
                 ax.scatter(x + imfrac*((.5 + x_leaks)/nx - .5), y + imfrac*((.5 + y_leaks)/ny - .5),
@@ -227,8 +227,8 @@ def get_leaked_magnets(domains, prev_domains, cycles=1):
     total = convolve2d(np.ones_like(spread), mask, mode='same')
     for _ in range(cycles): spread = convolve2d(spread, mask, mode='same')/total
     leaked = np.logical_and(switched, np.isclose(np.abs(spread), 1))
-    injection_points = np.asarray([[0,0], [0,1], [1,0], [-1,-1], [-1,-2], [-2,-1], [0,-1], [-1,0]]) # Never mark these corners as 'leaked'
-    leaked[injection_points.T] = False
+    injection_points = [[0,0], [-1,-1], [-1,0], [-1,1], [-2,0], [0,-1], [1,-1], [0,-2]] # Never mark these corners as 'leaked'
+    for x, y in injection_points: leaked[y, x] = False
     return leaked
 
 
