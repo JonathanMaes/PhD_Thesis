@@ -292,7 +292,7 @@ Such an asymmetry can not occur in OOP ASI, so the asymmetric barrier is only ap
 Accounting for the existence of these separate chiral switching channels profoundly affects the switching rates and transition kinetics, since switching will occur predominantly via the more favourable pathway~\cite{leo2021chiral}. \\\par
 
 In the dipole model, this can be accounted for by considering the energy of each magnet in these transitional states along the hard axis.
-Therefore, \hotspice tracks yet another quantity for every magnet: $E_\perp$\indexlabel{hard-axis interaction energy}, representing the \xref{interaction energy} of a magnet if it would point along $\vc{e}_z \times \vc{u}$ i.e., \ang{90} counter-clockwise from its normal magnetisation direction $\vc{u}$.
+Therefore, \hotspice tracks yet another quantity for every magnet: $E_\perp$\indexlabel{hard-axis interaction energy}, representing the \xref{interaction energy} of a magnet if it would point along $\vc{e}_z \times \vc{u}$, i.e., \ang{90} counter-clockwise from its normal magnetisation direction $\vc{u}$.
 Note that we are not deviating from the two-state Ising model: we are simply putting ``test dipoles'' along the hard axis to get a better estimate of $\EBeff$, but magnets will never end up in these states during a simulation. \par
 In \cref{eq:2:EB_meanbarrier_cases}, $\EB$ essentially represented an estimate of the total energy in the transitional state.
 With our newfound knowledge of the interaction energy $E_\perp$ in that state, our improved estimate of the total hard-axis energy becomes $\EB + E_\perp$.
@@ -425,7 +425,7 @@ Their different strategies for calculating random switching times and selecting 
 \subsection{Metropolis-Hastings: sampling equilibrium states} \label{sec:2:Dynamics_MH}
 \idx{Metropolis-Hastings sampling} is a rejection-based KMC method designed to sample the state space at thermal equilibrium, where the probability of each state appearing is proportional to their \xlabel{Boltzmann factor} $\exp(-E/\kBT)$~\cite{IntroductionMC,kyimba2006comparisonIsingAlgorithms}.
 Hence, in contrast to the \xref{first-switch method}, Metropolis-Hastings sampling is not intended to accurately model the system's transient dynamics.
-Instead, it is more suitable for examining equilibrium statistical properties of ASI e.g., the average magnetisation, heat capacity, correlations...~\cite{ApparentFMpinwheel} \par
+Instead, it is more suitable for examining equilibrium statistical properties of ASI, e.g., the average magnetisation, heat capacity, correlations...~\cite{ApparentFMpinwheel} \par
 
 \paragraph{Algorithm}
 A rejection-based KMC method works by selecting magnets at random and subsequently deciding, with a certain probability $P$, whether or not to switch them.
@@ -484,7 +484,7 @@ For a MCMC algorithm to sample the equilibrium state space, it must satisfy two 
 	\item The principle of \textit{detailed balance} states that, in a system at equilibrium, each elementary process must also be in equilibrium with its reverse process.
 	This can be expressed mathematically as $\pi_i P_{ij} = \pi_j P_{ji}, \forall i,j$, with $P_{ij}$ the Markov transition probability from state $i$ to $j$, and with $\pi_i$ and $\pi_j$ the equilibrium probabilities of these states appearing.
 	Since all magnets are equally likely to be chosen in step 1 of~\cref{alg:2:MetropolisHastingsSingle}, it can be shown that both $P_\mathrm{MH}$ and $P_\mathrm{GD}$ result in an algorithm that satisfies detailed balance~\cite{kyimba2006comparisonIsingAlgorithms}.
-	\item To guarantee that a Monte Carlo Markov chain algorithm will eventually reach this equilibrium, it must be \textit{ergodic} i.e., from a given state it must be possible to reach any other state via some route~\cite{kyimba2006comparisonIsingAlgorithms}.
+	\item To guarantee that a Monte Carlo Markov chain algorithm will eventually reach this equilibrium, it must be \textit{ergodic}, i.e., from a given state it must be possible to reach any other state via some route~\cite{kyimba2006comparisonIsingAlgorithms}.
 	This is clearly satisfied by~\cref{alg:2:MetropolisHastingsSingle}, for both $P_\mathrm{MH}$ and $P_\mathrm{GD}$, as the acceptance probability is strictly positive at non-zero temperatures.
 \end{itemize}
 As such, \cref{alg:2:MetropolisHastingsSingle} is guaranteed to reach equilibrium eventually.
@@ -698,7 +698,7 @@ This also explains why the plateau starts after $\approx N$ switches ($N=5000$ m
 	Accumulation of error in the \link{magnetostatic interaction}{magnetostatic energy} $E_\mathrm{MS}$ for a simulation of $100 \times 100$ pinwheel ASI, when using a truncated $41 \times 41$ kernel instead of the usual $199 \times 199$ kernel.
 	The ASI starts in the uniform state and evolves to a random state due to high temperature.
 	\textbf{(a)} Mean and maximum error of the magnetostatic energy $E_\mathrm{MS}$ throughout the ASI, as a function of the number of switches after initialising the system in the uniform state.
-	\textbf{(b)} Final situation at the right edge of panel (a) i.e., after $\approx \SI{5e6}{}$ random switches.
+	\textbf{(b)} Final situation at the right edge of panel (a), i.e., after $\approx \SI{5e6}{}$ random switches.
 	The absolute error $\abs{E_\mathrm{err}}$ is the absolute difference between the simulations with (``Approximation'') and without (``Exact $E_\mathrm{MS}$'') a truncated kernel.
 }
 \vspace{-1em}
@@ -1194,7 +1194,7 @@ The simulations used the point dipole model; performing the same simulations wit
 	Triangles pointing up (down) correspond to the ramp-up (down) of the external field, whose direction is indicated by the double-headed arrow.
 	\textbf{(c-e)} Snapshots of the system when passing through threshold values of $M_\parallel/M_{\parallel,\mathrm{sat}}$, in chronological order through the hysteresis loop.
 	The colour of each pixel shows the local average magnetisation angle of the ASI, as encoded by the colour wheel shown on the right.
-	Snapshots (1,5,9) are taken near the saturated $M_\parallel/M_{\parallel,\mathrm{sat}} \approx \pm 1$ state, (3) and (7) at the zero-average $M_\parallel/M_{\parallel,\mathrm{sat}} = 0$, and (2,4,6,8) at $M_\parallel/M_{\parallel,\mathrm{sat}} = \pm\sqrt{3}/3 \approx 0.58$ i.e., the value at the plateau between the two steps for $\rho=0$ and $\rho=0.4$.
+	Snapshots (1,5,9) are taken near the saturated $M_\parallel/M_{\parallel,\mathrm{sat}} \approx \pm 1$ state, (3) and (7) at the zero-average $M_\parallel/M_{\parallel,\mathrm{sat}} = 0$, and (2,4,6,8) at $M_\parallel/M_{\parallel,\mathrm{sat}} = \pm\sqrt{3}/3 \approx 0.58$, i.e., the value at the plateau between the two steps for $\rho=0$ and $\rho=0.4$.
 }
 \vspace{-1.25em}
 
@@ -1263,7 +1263,7 @@ The first considers more accurate calculations for the \xref{magnetostatic inter
 In OOP systems, it was found that more realistic values for the magnetostatic energy $E_\mathrm{MS}$ could be obtained through a \link{finite dipole model}{second-order correction}, while for IP systems a \xref{dumbbell model} is more effective in reproducing experimental results.
 The influence of these corrections can result in qualitatively different dynamics as compared to a \xref{point dipole model}, as was for instance observed in the kagome lattice.
 A second improvement concerns the calculation of the \xref{effective energy barrier}.
-There, accounting for \link{asymmetric energy barrier}{asymmetric switching channels} proved key to e.g., correctly reproduce \xref{coercive fields} in pinwheel ASI, provided that the reduced magnetisation during \link{non-coherent magnetisation reversal}{non-coherent reversal processes} was also accounted for.
+There, accounting for \link{asymmetric energy barrier}{asymmetric switching channels} proved key to, e.g., correctly reproduce \xref{coercive fields} in pinwheel ASI, provided that the reduced magnetisation during \link{non-coherent magnetisation reversal}{non-coherent reversal processes} was also accounted for.
 While it is possible to obtain an exact solution for the energy barrier in OOP magnets, the assumption of a sinusoidal energy landscape is likely inaccurate due to non-coherent reversal in real OOP nanomagnets. \par
 Furthermore, two distinct algorithms have been implemented to handle switching events: the \xref{first-switch method} and \xref{Metropolis-Hastings sampling}.
 They are both useful in different circumstances, as the former is best suited to simulate temporal (out-of-equilibrium) dynamics, while the latter can more efficiently explore equilibrium configurations.

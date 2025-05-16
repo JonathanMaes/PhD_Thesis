@@ -495,7 +495,7 @@ This would also explain why the \link{net out-of-plane anisotropy}{effective ani
 \subsection{Concept}
 In order to use this thermally active OOP ASI as a \link{reservoir computing}{reservoir}, a method must be devised that generates a non-linear response with fading memory.
 One option to achieve this, is to use the transient regime between the AFM ground state and the uniform state: the previously discussed \link{logarithmic relaxation}{spontaneous relaxation} makes the system evolve towards the ground state, while an external stimulus can instead push the system towards the uniform state.
-This allows the usage of analog input i.e., a continuous range of input values, since the rate at which the system is pushed away from the ground state is determined by the strength of this stimulus.
+This allows the usage of analog input (i.e., a continuous range of input values) since the rate at which the system is pushed away from the ground state is determined by the strength of this stimulus.
 The relaxation towards the ground state, on the other hand, is governed by parameters intrinsic to the ASI itself, like the \link{net out-of-plane anisotropy}{OOP anisotropy} $\EEA$ and \link{magnetostatic coupling}{MS coupling} $\EMC$.
 
 \paragraph{Input}
@@ -589,11 +589,11 @@ If the estimator operating on the reservoir output outperforms the one that uses
 \subsection{Signal transformation task}
 First, we will consider signal transformation --- a prediction task will follow in~\cref{sec:3:Thermal_Prediction}.
 Signal transformation primarily relies on the \xref{non-linearity} and \xref{high dimensionality} of a \link{reservoir computing}{reservoir}, rather than its \xref{fading memory} capacity, though the balance between these can differ depending on the specific transformation~\cite{FewMoleculeReservoir,gartside2022reconfigurable,TaskAdaptivePRC}.
-Here, we will focus on the sine-to-sawtooth transformation with a given frequency $f$ i.e., $s(t) = \sin(2 \pi f t) \mapsto y(t) = ft - \lfloor ft \rfloor$.
+Here, we will focus on the sine-to-sawtooth transformation with a given frequency $f$, i.e., $s(t) = \sin(2 \pi f t) \mapsto y(t) = ft - \lfloor ft \rfloor$.
 While this is a non-linear transformation, it nonetheless requires some limited memory capacity since the sine wave both rises and falls during each period, while the sawtooth always rises apart from a discontinuous drop after each period.
 Hence, any value of the input signal $s$ is reached at two distinct instants $t_1$ and $t_2$ during each period $\big(s(t_1) = s(t_2)\big)$, but the target function is not the same at those two instants $\big(y(t_1) \neq y(t_2)\big)$. % A sine wave is symmetric in time, while the sawtooth is not.
 For example, compare $t_1 = 0$ and $t_2 = 0.5/f$: $\sin(0) = 0 \mapsto y(0) = 0$ but $\sin(\pi) = 0 \mapsto y(0.5) = 0.5$.
-Hence, the reservoir can not only rely on the input signal at the current time, but must also retain information on e.g., the derivative of the input signal, in order for the \link{linear readout layer}{linear estimator} to be able to accurately predict the sawtooth during both the increasing and decreasing parts of the sine wave.
+Hence, the reservoir can not only rely on the input signal at the current time, but must also retain information on, e.g., the derivative of the input signal, in order for the \link{linear readout layer}{linear estimator} to be able to accurately predict the sawtooth during both the increasing and decreasing parts of the sine wave.
 The thermally active OOP ASI reservoir should readily have such information available, since its operation resembles that of a \xref{leaky integrator}.
 While most transformations indeed require some limited memory, some examples like a sine-to-square wave transformation do not. \par
 Throughout the remainder of this section, we will compare the performance of the OOP ASI reservoir as a function of several system parameters.
