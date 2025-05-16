@@ -114,7 +114,7 @@ Jaeger~\cite{jaeger2001echo} presented echo state networks (ESNs), while Maass~\
 }.
 Both are recurrent networks and operate on very similar principles: their main difference lies in their nodes, as LSMs use \xlabel{spiking neurons} while nodes in ESNs use sigmoidal activation functions.
 The crucial property that sets them apart from other training methods is that their underlying recurrent network is randomly initialised and remains unmodified during training~\cite{ReviewESNs,RC_Tensegrity}.
-Instead, only a single linear readout layer is trained via linear regression to obtain the desired output from this random network~\cite{D-LSM,D-ESN-Improved}.
+Instead, only a single \xlabel{linear readout layer} is trained via linear regression to obtain the desired output from this random network~\cite{D-LSM,D-ESN-Improved}.
 This decoupling of internal dynamics from learning is the core insight that underpins both LSMs and ESNs.
 Training ESNs and LSMs is a walk in the park as compared to BPTT, as linear regression is far less computationally demanding and does not require the (sometimes problematic) calculation of gradients~\cite{D-ESN-Improved}. \par
 From these principles, it is but a small step to reservoir computing (RC), which generalises these ideas by treating the internal network as a black box~\cite{RC_unification,D-ESN-Improved,RC_Tensegrity}.
@@ -140,7 +140,7 @@ Nonetheless, PRC combines many advantages of all the previously discussed concep
 The combination of these factors has attracted significant interest to (P)RC.
 
 \paragraph{Reservoir requirements}
-For a physical substrate to be suitable as a reservoir, several requirements need to be satisfied: high dimensionality, non-linearity, fading memory, and a separation/approximation property~\cite{appeltant2011information}.
+For a physical substrate to be suitable as a reservoir, several requirements need to be satisfied: \xlabel{high dimensionality}, non-linearity, \xlabel{fading memory}, and a separation/approximation property~\cite{appeltant2011information}.
 High dimensionality and non-linearity cooperate, as a non-linear mapping of inputs from a small-dimensional into a high-dimensional space can enable the separation of otherwise linearly inseparable inputs, making them both essential properties for classification tasks~\cite{VoltageControlled_SuperparamagneticRC,RC_ASI,appeltant2011information,RC_RecentAdvances}. % The dimensionality is related to the number of independent signals obtained from the reservoir~\cite{RC_RecentAdvances}.
 In prediction tasks, the non-linearity of a reservoir can enable the extraction of non-linear dependencies from the inputs for better inference. \par
 Fading memory~\cite{boyd1985ApproximatingVolterra} originates from the echo state property of ESNs, where recurrent connections preserve information of the past while it slowly fades out as new input values are applied.
@@ -199,12 +199,12 @@ To obtain a single metric for the computational capability of a reservoir, Legen
 This yields the \idx{computing capacity} $C = K - G$, where higher values typically indicate better performance.
 However, care should be taken with such claims, as high computing capacity does not necessarily mean that the reservoir will perform well on all tasks it is given.
 
-\subsubsection{Linear estimator-based metrics}
+\subsubsection{Linear estimator-based metrics}\indexlabel{linear estimator-based metrics}
 A practical definition of non-linearity and memory capacity was given by Love~\etal~\cite{RC_TaskAgnosticMetrics_v2}, which will also be used here.
 The parity check metric uses a similar calculation that is better suited for binary input sequences~\cite{hon2021numerical,tsunegi2019STOforcedsyncRC}.
 
 \paragraph{Non-linearity}
-The non-linearity of the reservoir can be measured by considering that its response consists of a linear and a non-linear contribution.
+The \xlabel{non-linearity} of the reservoir can be measured by considering that its response consists of a linear and a non-linear contribution.
 The linear contribution can be extracted by training a linear estimator $\hat{\vc{x}}(t)$ for the current reservoir readout based on the past input $s(t - \tau)$.
 More specifically, the estimators
 \begin{equation}
@@ -221,7 +221,7 @@ which represents the mean non-linearity of all readout nodes as a value $\mathrm
 Since a value of 0 indicates a perfectly linear response, higher values of NL are more desirable.
 
 \paragraph{Linear memory capacity}
-The linear memory capacity can also be calculated through by means of linear estimators, but by working the other way around: an estimator for the past input $s(t - \tau)$ is now trained based on the current readout $\vc{x}(t)$ of the reservoir~\cite{tsunegi2019STOforcedsyncRC,NeuromorphicFewShot}.
+The linear \xlabel{memory capacity} can also be calculated through by means of linear estimators, but by working the other way around: an estimator for the past input $s(t - \tau)$ is now trained based on the current readout $\vc{x}(t)$ of the reservoir~\cite{tsunegi2019STOforcedsyncRC,NeuromorphicFewShot}.
 In other words, the estimator
 \begin{equation}
 	\hat{s}(t - \tau) = c_\tau + \sum_{i=1}^{p} w_{i,\tau} x_i(t)
@@ -241,7 +241,7 @@ Furthermore, this only captures the linear memory capacity: the non-linear memor
 We therefore limit this discussion to the linear memory capacity.
 
 \paragraph{Parity check}
-Closely related to the memory capacity is the parity check metric~\cite{hon2021numerical,tsunegi2019STOforcedsyncRC}.
+Closely related to the memory capacity is the \xlabel{parity check} metric~\cite{hon2021numerical,tsunegi2019STOforcedsyncRC}.
 This is particularly intended for use with binary input, as it defines the parity of a binary input sequence $s(t)$ as
 \begin{equation}
 	\pi_\tau(t) = \Bigg[\sum_{j = 0}^{\tau} s(t - j) \Bigg] \mathrm{mod}~2 \mathrm{.}
