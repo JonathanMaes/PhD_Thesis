@@ -1064,7 +1064,7 @@ It can even enhance RC performance, as it introduces asymmetry which is benefici
 
 \paragraph{Energy balance}
 As the ratio $\sigma(\EEA) / \EMC$ increases, so does the range of fields where low-\link{net out-of-plane anisotropy}{anisotropy} magnets can be switched in the bulk of a domain without significant \xref{leaking} during stepwise \xref{domain wall} propagation.
-Such \indexlabel{domain wall nucleation}nucleation is beneficial for RC, in contrast to defect-free ASI where domain walls could only be injected at corners of the ASI.
+Such \indexlabel{domain nucleation}nucleation is beneficial for RC, in contrast to defect-free ASI where domain walls could only be injected at corners of the ASI.
 %Fortunately from a fabrication perspective, systems with low $\EMC$ are typically easier to produce.
 To illustrate the impact of $\EMC$,~\cref{fig:3:Clocking_clearly_EBstd5_EMC} compares a strongly-coupled system (a) with a weakly-coupled system (b). % a system with $\sigma(\EEA) / \EMC = 0.025$ (\crefSubFigRef{fig:3:Clocking_clearly_EBstd5_EMC}{a}) against one with $\sigma(\EEA) / \EMC = 0.25$ (\crefSubFigRef{fig:3:Clocking_clearly_EBstd5_EMC}{b}).
 Indeed, nucleation occurs in the bulk of the latter because the disorder $\sigma(\EEA) = 10 \kBT$ is significant compared to $\EMC = 40 \kBT$, which also leads to even more irregular domain wall motion that encourages interactions between domain walls.
@@ -1170,7 +1170,7 @@ The initial state of the system can, in some cases, influence RC performance.
 While the initial state has little to no impact when the input is sufficiently strong, as the initial state gets washed out after several clocking cycles, it can significantly affect the results at lower input magnitudes.
 The reason for this is that different initial states require different minimal input \link{external magnetic field}{field} magnitudes --- it is easier to switch a magnet when the ASI is in a uniform state than when it is in the \link{antiferromagnetic}{AFM} ground state. % Compare Sweep_230220_1_binaryInput_randomInit.out/Sweep20230220132509 with Sweep_230119_2_binaryInput.out/Sweep20230119153543
 This is further complicated by defects, which may impede \xref{domain wall} motion.
-For example, when starting from the AFM ground state, domain walls must be injected from the edges and propagate throughout the system, whereas an initially uniform state will enable initial switches (i.e., \xref{domain wall nucleation}) to occur throughout the bulk of the system.
+For example, when starting from the AFM ground state, domain walls must be injected from the edges and propagate throughout the system, whereas an initially uniform state will enable initial switches (i.e., \xref{domain nucleation}) to occur throughout the bulk of the system.
 Therefore, a field range exists where an ASI in the uniform state will respond to the input, while it would not if it were in the AFM ground state.
 This range is broader for more strongly-coupled and disordered systems. \par
 This effect is an example of how metric maps can be affected by other factors than just system parameters.
