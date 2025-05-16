@@ -3,8 +3,8 @@
 
 To assess the potential of \link{reservoir computing}{Reservoir Computing} in (perpendicular-anisotropy) \link{artificial spin ice}{Artificial Spin Ice}, as is the main topic of this thesis, a simulation framework is needed to efficiently explore the impact of various system parameters and input methods on reservoir performance. \par
 To this end, the \hotspice simulator was developed, as introduced in~\cref{sec:1:Modelling_macrospin}.
-In this chapter, we discuss several model variants that have been implemented, and assess their accuracy in simulating the behaviour of ASI.
-These variants differ in their choice of Monte Carlo spin-flip algorithm and their calculation of the \xref{magnetostatic interactions} and \xref{effective energy barriers}.
+In this chapter, we discuss its underlying model and several model improvements that have been implemented, and assess their accuracy in simulating the behaviour of ASI.
+These improvements differ in their choice of Monte Carlo spin-flip algorithm and their calculation of the \xref{magnetostatic interactions} and \xref{effective energy barriers}.
 
 \begin{adjustwidth}{2em}{2em}
 	\vspace{0em}
@@ -1160,12 +1160,12 @@ This variance between experiments may be due to differences in defects or quench
 
 \newpage
 \section{Applications}
-Whereas the previous section verified that \hotspice works as intended, this section will investigate the impact of the different model variants proposed in~\cref{sec:2:Energy}.
+Whereas the previous section verified that \hotspice works as intended, this section will investigate the impact of the different model improvements proposed in~\cref{sec:2:Energy}.
 Firstly, accounting for the \link{asymmetric energy barrier}{asymmetry} between the clockwise and counter-clockwise effective energy barriers is most noticeable in pinwheel ASI, where each magnet points perpendicularly into the side of its nearest neighbours.
 Hence, a \xref{hysteresis} in pinwheel ASI will be used to investigate the importance of the parameter $\rho = \mu_\perp/\mu_\parallel > 0$ that models \xref{non-coherent magnetisation reversal} in~\cref{eq:2:EB_asymmetric}.
 Secondly, the \link{finite dipole model}{finite-size corrections} are most impactful in ASI where magnets are aligned end-to-end, such as kagome ASI.
 Therefore, we will also perform a hysteresis in kagome ASI to unveil some differences between the \xref{point dipole model} and \xref{dumbbell model}.
-Note that hysteresis can not be simulated using \xref{Metropolis-Hastings sampling}, because it ignores the \xref{uniaxial anisotropy} (i.e., the energy barrier $\EB$) to sample the equilibrium state space.
+Note that hysteresis can not be simulated using \xref{Metropolis-Hastings sampling}, because it samples the equilibrium state space. % ignores the \xref{uniaxial anisotropy} (i.e., the energy barrier $\EB$).
 Since a hysteresis only exists because the equilibrium is not reached within the timescale of the observation, Metropolis-Hastings sampling would therefore not capture the experimentally observed hysteresis at all.
 Hence, the \xref{first-switch method} must be used, with an appropriate maximum switching time $t_\mathrm{max}$. 
 
@@ -1218,27 +1218,29 @@ Both the \xref{point dipole model}~\cite{Chern2011} and dumbbell model~\cite{Mol
 The point dipole model tends to significantly underestimate the NN interaction, while the dumbbell model increases the \xref{magnetostatic interaction} energy between closely spaced magnets, potentially affecting the dynamics of the system.
 We therefore expect the dumbbell model to provide a more accurate simulation of the kagome lattice than the point dipole model~\cite{flatspin,mengotti2011kagome}. \par
 To illustrate this, we used \hotspice to reproduce the reversal process of kagome ASI as observed by Mengotti~\etal~\cite{mengotti2011kagome}
-They studied the hysteresis loop using \link{X-ray magnetic circular dichroism}{XMCD} to image the evolution of the system's microstate during a gradual increase of the \link{external magnetic field}{external field} near the \xref{coercive field}.
-We simulated a kagome ASI consisting of 173 magnets whose \link{shape anisotropy}{energy barrier} $\EB = \SI{120}{\electronvolt}$ with a standard deviation $\sigma(\EB)/\langle \EB \rangle=\SI{5}{\percent}$.
-An increasing magnetic field $\vc{B}_\mathrm{ext}$ was applied downwards with a slight \ang{-3.6} offset to break the symmetry between sloped magnets, resulting in the creation of \xlabel{Dirac strings} of switched magnets. \par
-As the field strength increases, the \xref{Zeeman energy} of the magnets rises, but this increase is faster for the vertical magnets than for the sloped ones.
-However, the \link{magnetostatic interaction}{magnetostatic energy} is lowest for the vertical magnets in the initial state.
-The balance between these contributions results in a \xlabel{critical energy barrier} $E_\mathrm{B}^\mathrm{c}$: when the energy barrier $E_\mathrm{B}$ is lower (higher) than this value, a sloped (vertical) magnet will flip first, as illustrated in~\cref{fig:2:kagome_reversal_EBc}.
+They studied the hysteresis loop using \indexlabel[nolabel]{X-ray magnetic circular dichroism}\link{X-ray magnetic circular dichroism}{XMCD} to image the evolution of the system's microstate during a gradual increase of the \link{external magnetic field}{external field}.
+We simulated a kagome ASI consisting of 173 magnets whose \link{shape anisotropy}{energy barrier} $\EB = \SI{120}{\electronvolt} \pm \SI{5}{\percent}$.
+Kagome ASI contains 3 sublattices of magnets with different orientations: an increasing magnetic field $\vc{B}_\mathrm{ext}$ was parallel to the \xref{easy axis} of one of them, with a slight \ang{-3.6} offset to break the symmetry between the two other sublattices that are slanted with respect to the field.
+This results in the creation of \idx{Dirac strings} of switched magnets. \par
+As the field strength increases, the \xref{Zeeman energy} of all magnets rises.
+This increase is fastest for those mostly parallel to the field, but their total \link{magnetostatic interaction}{magnetostatic energy} in the initial state is lower than for the other two sublattices.
+The balance between these two contributions results in a \xlabel{critical energy barrier} $E_\mathrm{B}^\mathrm{c}$: when the energy barrier $E_\mathrm{B}$ is lower (higher) than this value, a slanted (parallel) magnet will flip first, as illustrated in~\cref{fig:2:kagome_reversal_EBc}.
 Therefore, the dynamics may depend on the simulation method, as the dumbbell model increases the magnetostatic interaction energy between nearest neighbours.
 
 \sidefig[0.45]{2_Hotspice/Hysteresis_Kagome_EBc.pdf}{
 	\label{fig:2:kagome_reversal_EBc}
-	The effect of a vertically applied \xref{external magnetic field} on a vertical and sloped magnet in kagome ASI, for different values of the energy barrier.
-	$E_\mathrm{MS}$ is the same for each $E_\mathrm{B}$, however it is higher for the sloped magnets compared to the vertical ones.
-	When $E_\mathrm{B}<E_\mathrm{B}^c$ ($E_\mathrm{B}>E_\mathrm{B}^c$), the sloped (vertical) magnet will flip first since the Zeeman energy $E_\mathrm{Z}$ increases faster for the vertical magnets.
+	The effect of an \xref{external magnetic field} on magnets in kagome ASI that are aligned with the field ($\,\boldsymbol{|}\,$) and slanted with respect to the field (\rotatebox[origin=c]{120}{$\boldsymbol{|}$}), for different values of the energy barrier.
+	$E_\mathrm{MS}$ is the same for each $E_\mathrm{B}$, however it is higher for the slanted magnets compared to those parallel to the field.
+	When $E_\mathrm{B}<E_\mathrm{B}^c$ ($E_\mathrm{B}>E_\mathrm{B}^c$), the slanted (parallel) magnet will flip first since the Zeeman energy $E_\mathrm{Z}$ increases faster for the parallel magnets.
 	\newline
 }
 \vspace{-.75em}
 
 The results, shown in~\cref{fig:2:kagome_reversal}, reveal a qualitative difference between the dumbbell and dipole models.
-In the \xref{dumbbell model}, sloped magnets on the boundaries of the ASI flip first, while for the \xref{point dipole model} vertical magnets in the bulk flip first~\cite{DDG_Masterproef}.
-In the experiment of Mengotti~\etal~\cite{mengotti2011kagome}, \xref{Dirac strings} were observed to originate from sloped magnets, which is in agreement with the dumbbell simulation. % But they saw them in the bulk, which is not in agreement with the dumbbells.
-Furthermore, using other ASI software that employs a Stoner-Wohlfarth model (a type of point dipole model), Dirac strings were observed to originate from vertical magnets~\cite{flatspin}, similar to our results with a point dipole model.
+In the \xref{dumbbell model}, slanted magnets on the boundaries of the ASI flip first.
+With the \xref{point dipole model}, however, bulk magnets parallel to the field (vertical in the figure) flip first~\cite{DDG_Masterproef}.
+In the experiment of Mengotti~\etal~\cite{mengotti2011kagome}, \xref{Dirac strings} were observed to originate from slanted magnets, which is in agreement with the dumbbell simulation. % But they saw them in the bulk, which is not in agreement with the dumbbells.
+Furthermore, using other ASI software that employs a \xref{Stoner-Wohlfarth model} (a type of point dipole model), \xref{Dirac strings} were observed to originate from magnets parallel to the field~\cite{flatspin}, similar to our results with a point dipole model.
 This highlights the importance of accounting for the finite size of magnets to obtain a good estimate for the magnetostatic interaction between NN, which allows distinct dynamics to be captured as compared to a point dipole model.
 % However, the exact energy barriers in the experiment were unclear, as they varied between magnets, with some barriers being lowered and others raised.
 
@@ -1273,5 +1275,5 @@ However, we found that truncation, even at a distance as far as 20 grid cells, i
 Additionally, the grid facilitates the simultaneous sampling of sufficiently distant magnets in the MH algorithm. \\\par
 
 These factors make \hotspice a versatile tool that can complement \link{micromagnetic theory}{micromagnetic simulations} in the study of ASI: by sacrificing the internal magnetisation details of individual nanomagnets, these higher-level approximations make it possible to simulate complex dynamics in larger arrays over significantly longer timescales.
-We have shown that different systems call for different model variants or update algorithms, of which we provided several notable examples: for instance, changing from a point dipole to a dumbbell model was found to have a significant impact on kagome ASI, whereas pinwheel ASI is barely affected by this. % not every model improvement is relevant to every lattice, nor does a single update scheme suit all simulation goals.
+We have shown that different systems call for different kinds of model improvements or update algorithms, of which we provided several notable examples: for instance, changing from a point dipole to a dumbbell model was found to have a significant impact on kagome ASI, whereas pinwheel ASI is barely affected by this. % not every model improvement is relevant to every lattice, nor does a single update scheme suit all simulation goals.
 The ability of \hotspice to quickly sweep parameters and evaluate RC metrics facilitates the optimisation of ASI configurations and the identification of suitable input protocols; an ability that will be put to good use in the next chapter.

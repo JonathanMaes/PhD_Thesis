@@ -17,7 +17,7 @@ The key conclusions are summarised below, followed by an outline of promising av
 The Ising-like model used by \textbf{\hotspice} to represent single-domain nanomagnets in an ASI allows it to strike a practical balance between physical accuracy and computational efficiency.
 Two distinct switching algorithms were implemented: the first-switch method is best used to simulate temporal dynamics, while Metropolis-Hastings (MH) sampling efficiently explores the equilibrium state space.
 The latter can gain performance by simultaneously sampling multiple (sufficiently distant) magnets.
-Two classes of model variants were found to improve simulation accuracy at little to no performance impact.
+Two classes of model improvements were found to enhance simulation accuracy at little to no performance impact.
 Firstly, accounting for the finite size of magnets in OOP ASI is best done through a second-order correction on the MS interaction.
 For IP ASI, on the other hand, a dumbbell model is preferable and can yield qualitatively different dynamics in e.g., kagome ASI.
 Secondly, to accurately estimate the effective energy barrier in IP ASI, accounting for asymmetric switching channels and non-coherent reversal proved key to reproduce experimental results.
@@ -40,10 +40,10 @@ Meanwhile, \hotspice has proven its worth as a flexible and efficient simulator,
 Looking ahead, several avenues can strengthen both the \hotspice simulation toolkit and the proposed physical reservoir concepts.
 
 \paragraph{Improvements to \hotspice}
-\hotspice has gradually grown as new improvements to physical accuracy or performance were successively introduced, which has led to some features having a rather opaque API.
+\hotspice has gradually grown as new improvements to physical accuracy or performance were consecutively introduced, which has led to some features having a rather opaque API.
 Now that the main functionality is well-defined and has been validated, the public API should be streamlined by removing deprecated functions and clearly exposing the most commonly used routines. % while retaining the versatility of the current implementation.
 This will make the package easier to maintain and more approachable for prospective users.
-While the implemented model variants already make \hotspice usable in a wide range of lattices, several other factors listed below could be kept in mind during refactoring, to raise the efficiency of \hotspice to the next level. \\\par
+While the various implemented improvements to the underlying model already make \hotspice usable in a wide range of lattices, several other factors listed below could be kept in mind during refactoring, to raise the efficiency of \hotspice to the next level. \\\par
 
 Several algorithmic improvements remain possible.
 First, for equilibrium studies, the usage of clustering algorithms (e.g., \xref{Wolff}) could drastically reduce critical slowing down, though this route was previously abandoned since it is non-trivial to correctly apply such algorithms to the broad range of ASI lattices that \hotspice aims to simulate (i.e., arbitrarily oriented magnets with full dipolar coupling between them).
