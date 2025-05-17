@@ -9,8 +9,20 @@
 \newcommand{\colorcode}{(Color code on page \pageref{colorcode}.)\xspace}
 
 %% Index labels.
-% To avoid multiply-defined labels, but allow multiple pages in the index, use e.g. \idx[nolabel]{...} after the first \idx{...}. 
-\newcommand{\indexlabel}[2][]{\index{#2}\ifthenelse{\equal{#1}{nolabel}}{}{\label{#2}\label{#2s}}}
+% To avoid multiply-defined labels, but allow multiple pages in the index, use e.g. \idx[nolabel]{...} after the first \idx{...}.
+% To link to the section header instead of the word, use e.g. \idx[tosection]{...}
+\makeatletter
+\newcommand{\indexlabel}[2][]{%
+	\index{#2}%
+	\ifthenelse{\equal{#1}{nolabel}}{}{%
+		\ifthenelse{\equal{#1}{tosection}}{}{%
+			\phantomsection
+			\def\@currentlabel{\unexpanded{#2}}%
+		}%
+		\label{#2}\label{#2s}%
+	}%
+}
+\makeatother
 \newcommand{\idx}[2][]{\emph{#2}\indexlabel[#1]{#2}} %no xspace
 \newcommand{\xlabel}[2][]{#2\indexlabel[#1]{#2}}
 %% Index references.
