@@ -351,7 +351,7 @@ class Sweep_SignalTf_ThermalOOPSquare(hotspice.experiments.Sweep):
             ax2.tick_params(axis='both', labelsize=fontsize_axes)
             ax2.xaxis.set_major_locator(plt.MaxNLocator(5))
         
-        legend = fig.legend(handles=[line_input, line_target, line_input_pred, line_reservoir], labels=["Input signal", "Target", "Prediction with input only", "Prediction with ASI"],
+        legend = fig.legend(handles=[line_input, line_target, line_input_pred, line_reservoir], labels=["Input signal", "Target", "Optimal input scaling", "ASI reservoir prediction"],
                    loc='upper center', ncol=4 if show_train else 2, fontsize=fontsize_legend)
         fig.tight_layout()
         fig.canvas.draw() # Force a draw so the legend position is updated

@@ -166,7 +166,7 @@ def plot_MSE_offset(ax: plt.Axes, params: list, data: list, legend_cols: int = 0
     ax.plot(offsets, results_avg["MSE_rawinput_train"], "r:", alpha=0.5, label="Input scaling (train)")
     ax.errorbar(offsets, results_avg["MSE_reservoir_test"], yerr=results_std["MSE_reservoir_test"], marker="H", color="b", label=f"Reservoir (test)")
     ax.errorbar(offsets, results_avg["MSE_reservoir_train"], yerr=results_std["MSE_reservoir_train"], linestyle=":", color='b', alpha=0.5, label=f"Reservoir (train)")
-    ax.set_ylabel("MSE", fontsize=fontsize_axes)
+    ax.set_ylabel("Mean squared error (MSE)", fontsize=fontsize_axes)
     ax.set_xlabel(r"Offset $h$", fontsize=fontsize_axes)
     ax.set_ylim(bottom=0)
     ax.tick_params(axis='both', labelsize=fontsize_axes)
@@ -175,8 +175,8 @@ def plot_MSE_offset(ax: plt.Axes, params: list, data: list, legend_cols: int = 0
         
     ## Create legend
     if legend_cols:
-        line_input = Line2D([], [], color='r', linestyle='none', marker='h', markersize=10, label="Input scaling")
-        line_reservoir = Line2D([], [], color='b', linestyle='none', marker='H', markersize=10, label="Reservoir")
+        line_input = Line2D([], [], color='r', linestyle='none', marker='h', markersize=10, label="Optimal input scaling")
+        line_reservoir = Line2D([], [], color='b', linestyle='none', marker='H', markersize=10, label="ASI reservoir")
         line_test = Line2D([], [], color='k', linestyle='-', label='Test set')
         line_train = Line2D([], [], color='k', linestyle=':', alpha=0.5, label='Train set')
         # line_test = ax.errorbar([], [], yerr=[], color='k', linestyle='-', label='Test set')
@@ -241,10 +241,10 @@ def plot_waveform(exp: SignalTransformationExperiment, ax: plt.Axes, train=False
     
     if show_signal:
         handles = [line_input, line_target, line_input_pred, line_reservoir]
-        labels = ["Input signal", "Target", "Prediction with input only", "Prediction with ASI"]
+        labels = ["Input signal", "Target", "Optimal input scaling", "ASI reservoir prediction"]
     else:
         handles = [line_target, line_input_pred, line_reservoir]
-        labels = ["Target", "Prediction with input only", "Prediction with ASI"]
+        labels = ["Target", "Optimal input scaling", "ASI reservoir prediction"]
     return handles, labels
 
 
@@ -256,7 +256,7 @@ def plot():
     
     dir_base = os.path.splitext(__file__)[0]
     fig = plt.figure(figsize=(thesis_utils.page_width, 4.5))
-    gs = fig.add_gridspec(2, 6, height_ratios=[2,1.5], hspace=0.9, right=0.99, top=0.87, bottom=0.08, left=0.1)
+    gs = fig.add_gridspec(2, 6, height_ratios=[2,1.5], hspace=0.9, right=0.98, top=0.87, bottom=0.08, left=0.1)
     axMSE1 = fig.add_subplot(gs[0,0:2])
     axMSE2 = fig.add_subplot(gs[0,2:4])
     axMSE3 = fig.add_subplot(gs[0,4:6])
@@ -265,8 +265,7 @@ def plot():
     
     thesis_utils.label_ax(axMSE1, 0, offset=(-0.2, 0.3), ha="right", va="baseline")
     thesis_utils.label_ax(axwave1, 1, offset=(-0.2/3*2 + 0.006, 0.3), ha="right", va="baseline")
-    
-    axMSE1.set_ylabel("1/MSE")
+
     axMSE1.set_title(r"$11 \times 11$ no gradient", fontsize=fs_title)
     params, data = zip(*(hotspice.utils.load_results(f"{dir_base}/{folders[0]}/offset{offset:.1f}") for offset in offsets))
     coord_top = plot_MSE_offset(axMSE1, params, data, fig=fig)
