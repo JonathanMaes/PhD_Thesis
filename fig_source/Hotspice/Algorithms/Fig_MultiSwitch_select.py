@@ -142,6 +142,7 @@ def plot(data_dir=None):
     ## Load data
     if data_dir is None: data_dir = thesis_utils.get_last_outdir()
     params, data = hotspice.utils.load_results(data_dir)
+    if params is None and data is None: return
     
     r, L, scale = params["r"], params["L"], params["scale"]
     bin_width, max_dist_bin, ONLY_SMALLEST_DISTANCE = params["bin_width"], params["max_dist_bin"], params['ONLY_SMALLEST_DISTANCE']
@@ -214,6 +215,8 @@ def plot(data_dir=None):
     ax4 = fig.add_subplot(2, 4, 8)
     freq = hotspice.utils.asnumpy(xp.fft.fftshift(xp.fft.fftfreq(L, d=1))) # use fftshift to get ascending frequency order
     data4 = hotspice.utils.asnumpy(spectrum)/total
+    data4[data4.shape[0]//2, data4.shape[1]//2] = np.nan
+    data4[np.isinf(data4)] = np.nan
     extent = [-.5+freq[0], .5+freq[-1], -.5+freq[0], .5+freq[-1]]
     im4 = ax4.imshow(data4, extent=extent, interpolation_stage='rgba', interpolation='none', cmap='gray')
     zoom = 4
