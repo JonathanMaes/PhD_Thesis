@@ -229,7 +229,7 @@ Each relaxation consisted of at most $40N$ switches using the \xref{first-switch
 
 \subsubsection{Logarithmic relaxation}
 Most strikingly, by using a logarithmic scale for the time axis, both $\mavg$ and (to a lesser extent) $\qNN$ trace a straight line during relaxation.
-This \idx{logarithmic relaxation} implies that the first switches occur on a vastly different timescale than the last.
+This \idx[tosection]{logarithmic relaxation} implies that the first switches occur on a vastly different timescale than the last.
 In other words, the switching process slows down exponentially, with the $i$-th switch occurring at time $t_i = x t_{i-1} = t_0 x^i$. \par
 The cause of this is the \xref{magnetostatic interaction}\footnote{
 	Without the \xref{magnetostatic interaction}, the system would simply be a non-interacting ensemble of nanomagnets, which is known to relax to the ground state exponentially.
@@ -261,7 +261,7 @@ The effects of $\EMC$ and $\EEA$ can be quantified by fitting a logarithmic curv
 %  	t_{\mavg=0} = \frac{10^{-b/a}}{\nu_0} = \frac{10^{\frac{\EEA - 0.3 \EMC}{3\kBT} - 0.5}}{\nu_0} \mathrm{.}
 % \end{equation}
 
-\subsubsection{Two-stage relaxation}\indexlabel{relaxation stages}
+\subsubsection{Two-stage relaxation}\indexlabel[tosection]{relaxation stages}
 While $\mavg$ follows a near-perfect \xref{logarithmic relaxation}, $\mavg \approx 0$ is reached earlier than the perfect checkerboard ordering $\qNN = 1$ --- most strikingly in panels 6 and 9 of~\cref{fig:3:OOP_relaxation}.
 This is accompanied by a decreased ordering rate $\frac{\partial \qNN}{\partial \log_{10}(t)}$, marking the transition between stage~$\circled{1}$ and~$\circled{2}$ of relaxation.
 The latter is indicated by the green shaded area in the figure. \par
@@ -300,7 +300,7 @@ Systems in this region exhibit local domains, but their \xref{domain walls} rema
 Any further increase of $\EMC/\EEA$ does not affect the average magnetisation or ordering at $t = \SI{e4}{\second}$ --- unless both $\EEA$ and $\EMC$ are sufficiently small, as in regions~$\mathrm{IV}$ and~$\mathrm{V}$. \par
 Region~$\mathrm{IV}$ (panel~9) is the only region where the system spontaneously achieves the checkerboard ground state.
 In~\cref{fig:3:OOP_relaxation_continuous}, it is delineated by the dotted black line that envelops a region with $\qNN \geq 0.95$.
-Reducing $\EMC$ too much puts the system in region~$\mathrm{V}$ (panel 7), where the system is superparamagnetic at this timescale.
+Reducing $\EMC$ too much puts the system in region~$\mathrm{V}$ (panel 7), where the system is \indexlabel{superparamagnetism}superparamagnetic at this timescale.
 For a magnet to have a mean switching time $t = \SI{e4}{\second}$, the \xref{N\'eel-Arrhenius} switching law states that it must have an anisotropy $\EEA/\kBT = \ln(t \nu_0) \approx 32$: this is the reason why region~$\mathrm{V}$ extends upwards to $\EEA \lesssim 32 \kBT$.
 The main region of interest --- region~$\mathrm{IV}$ with $\qNN \approx 1$ --- is therefore constrained from the left by the superparamagnetic regime, from the top by the transient/frozen regime, and from the right by states in which domain walls are immobile at the observed timescale.
 
@@ -308,7 +308,7 @@ The main region of interest --- region~$\mathrm{IV}$ with $\qNN \approx 1$ --- i
 \xfig{3_RC_OOP/OOP_relaxation_continuous.pdf}{
 	\label{fig:3:OOP_relaxation_continuous}
 	Phase diagrams at $t=\SI{e4}{\second}$, of the normalised average magnetisation $\mavg$ and the local antiferromagnetic parameter $\qNN$, as a function of \xref{net out-of-plane anisotropy} $\EEA$ and nearest-neighbour magnetostatic coupling $\EMC$ for an $11 \times 11$ lattice.
-	Five regions can be distinguished: $\mathrm{I}$ -- frozen state, $\mathrm{II}$ -- transient states, $\mathrm{III}$ -- state with domains and domain boundaries, $\mathrm{IV}$ -- checkerboard ordering, $\mathrm{V}$ -- \indexlabel{superparamagnetism}superparamagnetic state.
+	Five regions can be distinguished: $\mathrm{I}$ -- frozen state, $\mathrm{II}$ -- transient states, $\mathrm{III}$ -- state with domains and domain boundaries, $\mathrm{IV}$ -- checkerboard ordering, $\mathrm{V}$ -- superparamagnetic state.
 	The white and black dotted line respectively correspond to $\mavg = 0.05$ and $\qNN = 0.95$.
 	The nine panels of~\cref{fig:3:OOP_relaxation} are indicated by grey crosses.
 	The three symbols ($\raisebox{0.1pt}{\ensuremath{\boldsymbol{\ocircle}}}, \raisebox{-1pt}{\ensuremath{\boldsymbol{\triangle}}}, \boldsymbol{\times}$) correspond to the experimental lattices shown in~\cref{fig:3:MFM_grid} with nanomagnet diameter $D_\mathrm{NM} = \SI{170}{\nano\metre}$, \ce{Co} thickness $t_{\ce{Co}} = \SI{1.45}{\nano\metre}$ and nanomagnet separations $S_\mathrm{ASI} = \SI{20}{\nano\metre}$ (circle), $S_\mathrm{ASI} = \SI{25}{\nano\metre}$ (triangle), $S_\mathrm{ASI} = \SI{30}{\nano\metre}$ (cross).
@@ -518,7 +518,7 @@ Vice versa, all rows of magnets in this square-lattice ASI are identical (while 
 Averaging over multiple columns or enlarging the system is expected to be beneficial, as this reduces thermal noise in the output since each readout value then becomes the average of more magnets.
 % TODO FIG: schematic as in fig. 6a to illustrate column-wise readout?
 
-\subsection{Influence of input on dynamics}
+\subsection{Influence of input on dynamics}\indexlabel[tosection]{leaky integrator}
 Since we intend to use the spontaneous relaxation of thermally active OOP ASI for reservoir computing, it is desirable to maximally use the available range of intermediate states, meaning the relaxation process should not span too many timescales.
 Hence, a low \link{magnetostatic coupling}{NN MS coupling} $\EMC=2.5\kBT$ will be used as a baseline, as this is the lowest value that fully avoids the \link{superparamagnetism}{superparamagnetic} regime, though its relaxation already spans $>5$ orders of magnitude.
 As previously seen in~\cref{fig:3:OOP_relaxation}, systems with this level of coupling relax over timescales suitable for computation (i.e., $\mavg \rightarrow 0$ within $\approx \SI{1}{\milli\second}$) when $\EEA \leq 20\kBT$.
@@ -542,7 +542,7 @@ The main factors influencing the dynamics, beyond those intrinsic to the ASI, ar
 Their effect is illustrated in~\cref{fig:3:OOP_relaxation_input}, where a random scalar input sequence is applied to the ASI.
 More specifically, the upwards-pointing \link{external magnetic field}{external field} $B_z$ that provides the input can take any random magnitude between 0 and $B$, with each value being maintained for a period determined by the input frequency $f$. \par % \\\par
 Larger input values $v$ drive the system further from its ground state, while smaller values applied for a sufficiently long time allow a gradual \link{logarithmic relaxation}{relaxation} back towards $\mavg \approx 0$.
-The equilibrium magnetisation depends only on the input field magnitude $vB$, resembling the behaviour of a \xlabel{leaky integrator}~\cite{jaeger2001echo}.
+The equilibrium magnetisation depends only on the input field magnitude $vB$, resembling the behaviour of a leaky integrator~\cite{jaeger2001echo}.
 When $vB$ is sufficiently small, the equilibrium magnetisation $\mavg$ approaches zero, in which case the system always reaches roughly the same state after one input period, with this state depending on the frequency $f$.
 This can, for instance, be observed during cycles 12 and 14 in~\cref{fig:3:OOP_relaxation_input}, where the input is very weak: for $f=\SI{1}{\kilo\hertz}$ (panels 1--3), $\mavg$ always returns to $\approx 0.2$, whereas for $f=\SI{100}{\kilo\hertz}$ it drops to a different value ($\mavg \approx 0.55$).
 The sole exception is panel 4, where the input with $(f,B)=(\SI{100}{\kilo\hertz}, \SI{200}{\micro\tesla})$ is not sufficiently impactful to bring the system far from its ground state. \par
@@ -754,7 +754,7 @@ The same cut-off at $f_c$ is observed (though not shown in a figure) when the ta
 \subsection{Signal prediction task: chaotic Mackey-Glass oscillator} \label{sec:3:Thermal_Prediction}
 A special kind of ``transformation'' is a signal prediction, where the target function $y(t) = s(t + \Delta t)$ is a transformation of the input signal offset through time.
 Such a prediction task benefits from the \xref{fading memory} property of a \link{reservoir computing}{reservoir} to better infer the future evolution of the signal, while it relies less on a reservoir's \xref{non-linearity}~\cite{TaskAdaptivePRC,NeuromorphicFewShot}.
-The particular signal we will be attempting to predict with the thermally active OOP ASI is the chaotic \xlabel{Mackey-Glass oscillator} $\mathrm{MG}(t)$~\cite{MackeyGlass}, as this is a popular benchmark in literature~\cite{RotatingNeuronsRC,AdaptiveProgrammableRC,TaskAdaptivePRC,Moon_2021,JaegerHaasWireless,ArchitecturalMarkovianESN}.
+The particular signal we will be attempting to predict with the thermally active OOP ASI is the chaotic \xlabel[tosection]{Mackey-Glass oscillator} $\mathrm{MG}(t)$~\cite{MackeyGlass}, as this is a popular benchmark in literature~\cite{RotatingNeuronsRC,AdaptiveProgrammableRC,TaskAdaptivePRC,Moon_2021,JaegerHaasWireless,ArchitecturalMarkovianESN}.
 It can not be written in closed form; instead, it is implicitly defined by the delay-differential equation
 \begin{equation}
 	\label{eq:3:MG}
@@ -904,12 +904,12 @@ The fact that the AFM input can selectively influence domain walls is crucial, t
 % In this regard, the AFM input method is not fundamentally different from the uniform input strategy we previously dismissed. Both simply provide each magnet with a preferential orientation, with only high-anisotropy magnets refusing to switch. Given this similarity, one might be inclined to consider them mathematically equivalent when paired with their respective readout methods. However, while both methods ultimately lead to saturation and are therefore unsuitable for RC, they differ in how they affect the microstate of the system when the magnetostatic interaction is appreciable. \par Compared to the AFM input method, a uniform field must be far stronger to have any effect, as it has to switch all magnets to the highest-energy state where all magnets have the same magnetisation direction. While the AFM input method also just pulls magnets in a certain direction, it differs in that it pulls the ASI to one of the ground states. This allows it to achieve saturation already with a far weaker input, since it only needs to affect domain wall magnets which have just $\leq 3$ oppositely magnetized NN and are therefore stable with $\EBeff \propto \EEA + 2\EMC$, as compared to $\EEA + 4\EMC$ for bulk magnets. It is therefore far easier to propagate a domain wall through the system to switch the ASI to the opposite ground state, as compared to pulling the system away from this near-equilibrium state to a uniform state. \par Hence, the effect of both global input methods on the ASI is fundamentally different, even though they both achieve saturation near-instantaneously which precludes their usage for RC.
 % Summary of the previous comment: Both the AFM input method and the uniform input impose a preferred magnetisation direction, leading to saturation and making them unsuitable for RC. However, they differ in how they interact with the system when magnetostatic interactions are significant. A uniform input requires a much stronger field to overcome the stability of bulk magnets, which have four anti-parallel NN. In contrast, the AFM input naturally drives the system toward one of its ground states and requires a weaker stimulus, as it primarily affects domain wall magnets which have fewer oppositely magnetised NN and are therefore easier to switch.
 
-\paragraph{Avoiding avalanches with a clocking protocol}
+\paragraph{Avoiding avalanches with a clocking protocol\indexlabel{AFM clocking protocol}}
 \link{avalanches}{Avalanches} can be avoided by instead applying two sub-steps for each applied input value.
 As illustrated in~\cref{fig:3:Clocking_protocol}, the magnets are divided into two groups, akin to the black and white squares on a checkerboard.
 In the first sub-step, the AFM stimulus is only applied to the first group, while the second sub-step only addresses the second group of magnets.
 The strength and/or sign of the stimulus is determined by the input value.
-We refer to this method as the \idx{AFM clocking protocol}.
+We refer to this method as the \emph{AFM clocking protocol}.
 This way, since only half of the magnets are stimulated simultaneously, the other half is prevented from switching at the same time --- provided their \link{net out-of-plane anisotropy}{anisotropy} $\EEA$ is sufficiently high compared to the \link{magnetostatic coupling}{NN MS coupling }$\EMC$.
 The avalanches that plagued the global input strategies are thereby avoided. \par
 For this to result in controlled \xref{domain wall} motion, the strength of the input is of great importance.

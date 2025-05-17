@@ -35,7 +35,7 @@ These improvements differ in their choice of Monte Carlo spin-flip algorithm and
 \end{adjustwidth}
 
 \newpage
-\section{Artificial spin ice model}\indexlabel{point dipole model}
+\section{Artificial spin ice model}\indexlabel[tosection]{point dipole model}
 In single-domain IP nanomagnets, the magnetisation prefers to align along the fixed \xref{easy axis} of the geometry, while for OOP magnets a strong interfacial anisotropy with the substrate causes a preferential orientation along the $z$-axis.
 Either way, it is natural to use an Ising-like approximation for simulating such single-domain nanomagnets.
 The easy axis, position $\vc{r}_i$ and size of the magnetic moment\footnote{
@@ -50,9 +50,9 @@ Thus, the total magnetic moment vector $\vc{\mu}_i$ of magnet $i$ can be express
 where $s_i = \pm 1$, and $\vc{u}_i$ is a fixed unit vector parallel to the easy axis. \par
 The switching rate between these two states is determined by the energy barrier that separates them, as well as the temperature $T$. % A canonical ensemble is used, though each magnet can have a different effective temperature $T_i$.
 For an isolated nanomagnet, the energy barrier $\EB$ originates from its \xref{shape anisotropy} and can, for instance, be estimated from \link{micromagnetic theory}{micromagnetic simulations}.
-However, interactions with other magnets or \xref{external magnetic fields} modify the energy landscape, leading to an effective barrier which we will denote as $\EBeff$~\cite{leo2021chiral}.
-Each magnet can have a unique magnetic moment size $\mu_i$, temperature $T_i$ and energy barrier $E_{\mathrm{B},i}$.
-This enables, for instance, modelling some of the disorder due to lithographic variations by assigning a different shape anisotropy to each magnet, typically sampled from a Gaussian distribution with mean $\EB$ and standard deviation $\sigma(\EB)$~\cite{DisorderGroundStateASI}. \\\par
+However, interactions with other magnets or \xref{external magnetic fields} modify the \xref{energy landscape}, leading to an \link{effective energy barrier}{effective barrier} which we will denote as $\EBeff$~\cite{leo2021chiral}.
+Each magnet can have a unique \xref{magnetic moment} size $\mu_i$, temperature $T_i$ and energy barrier $E_{\mathrm{B},i}$.
+This enables, for instance, modelling some of the disorder due to \link{lithography}{lithographic} variations by assigning a different shape anisotropy to each magnet, typically sampled from a Gaussian distribution with mean $\EB$ and standard deviation $\sigma(\EB)$~\cite{DisorderGroundStateASI}. \\\par
 
 Due to the periodic nature of many ASI, \hotspice chooses to perform the simulation on a rectilinear grid as this allows efficient matrix and array manipulations, as well as straightforward implementation of both open and \xref{periodic boundary conditions} (PBC).
 Each grid point may or may not contain a magnet, and the magnets must either all be of the IP type, or all OOP.
@@ -145,7 +145,7 @@ The \xref{magnetostatic interaction}, however, depends on the relative position,
 This may result in inadequate simulation of closely spaced ASI where the true magnetostatic coupling can be significantly stronger than predicted by a point dipole approximation.
 Therefore, two (mutually exclusive) improvements have been implemented in \hotspice, which rescale the magnetostatic interaction energy between magnets.
 
-\subsubsection{Second-order correction for dipoles}\indexlabel{finite dipole model}
+\subsubsection{Second-order correction for dipoles}\indexlabel[tosection]{finite dipole model}
 \textit{Politi and Pini}~\cite{Dipolar2Dparticles} have presented a multipole expansion of the magnetostatic interaction, to account for the finite size of 2D nanomagnets (i.e., lateral dimensions $\gg$ thickness), assuming a uniform magnetisation.
 This results in a second-order correction
 \begin{equation}
@@ -170,10 +170,10 @@ Therefore, \hotspice assumes the magnets in an ASI to be round (OOP ASI) or elli
 Although IP magnets are typically more stadium-shaped~\cite{EmergentChiralityRatchet,clocking-protocol}, the moment of inertia for an ellipse does not differ by much --- if necessary, an appropriate value of $l$ and $w$ can account for this.
 %While this correction can be applied to both IP and OOP magnetic dipoles, it is most effective for OOP systems, as can be seen in~\cref{fig:2:MS_distance}.
 
-\subsubsection{Dumbbell model}\label{sec:2:Dumbbell}
-Instead of representing a magnet as a \link{point dipole model}{point dipole}, one may instead choose to represent it as a pair of opposite \indexlabel{magnetic charge}magnetic charges~\cite{MagneticMonopoles2008,MagneticMonopoleDynamics}.
+\subsubsection{Dumbbell model\indexlabel{dumbbell model}}\label{sec:2:Dumbbell}
+Instead of representing a magnet as a \link{point dipole model}{point dipole}, one may instead choose to represent it as a pair of opposite \xlabel[tosection]{magnetic charge}s~\cite{MagneticMonopoles2008,MagneticMonopoleDynamics}.
 This introduces a new parameter $d$: the effective distance between the north and south poles of a magnet, with respective positions $\vc{r_N}_i = \vc{r}_i + s_i\frac{d_i}{2}\vc{u}_i$ and $\vc{r_S}_i = \vc{r}_i - s_i\frac{d_i}{2}\vc{u}_i$.
-An appropriate choice of $d_i$ (slightly smaller than the physical length $l$ of the nanomagnet~\cite{DDG_Masterproef}) allows this \idx{dumbbell model} to emulate the spatial extent of a real nanomagnet. \par
+An appropriate choice of $d_i$ (slightly smaller than the physical length $l$ of the nanomagnet~\cite{DDG_Masterproef}) allows this \emph{dumbbell model} to emulate the spatial extent of a real nanomagnet. \par
 The north and south poles are assigned the magnetic charges $+q_i$ and $-q_i$, respectively, with $q_i=\mu_i/d_i$~\cite{MagneticMonopoles2008}.
 This choice yields the same effective dipole moment at long distance.
 The interaction energy between two magnetic charges $q$ and $q'$ can be derived from the magnetic version of Coulomb's law~\cite{ForceMagneticDipole} as
@@ -218,7 +218,7 @@ It emulates increased spatial extent and therefore always increases the interact
 In conclusion, the dumbbell model is preferred for IP systems, while the second-order dipole correction is most suitable for OOP systems.
 
 \subsection{Effective energy barrier}\label{sec:2:E_B_eff}
-To properly simulate ASI dynamics and hysteresis, knowledge of the \idx{effective energy barrier} $\EBeff$, which separates the two magnetisation states of each magnet, is crucial.
+To properly simulate ASI dynamics and hysteresis, knowledge of the \idx[tosection]{effective energy barrier} $\EBeff$, which separates the two magnetisation states of each magnet, is crucial.
 Recall that this quantity is distinct from the \xref{shape anisotropy} $\EB$: the effective energy barrier $\EBeff$ is a modification of $\EB$ caused by the interaction with other magnets. \par
 This is illustrated in~\crefSubFigRef{fig:2:EB_meanbarrier}{a}, where \indexlabel{energy landscape}energy landscapes are shown for various values of the \xref{switching energy} $\Delta E$.
 The energy landscape for $\Delta E = 0$ reveals the shape anisotropy $\EB$ while slanted energy landscapes for $\Delta E \neq 0$ show how $\EBeff$ is affected by these interactions.
@@ -246,7 +246,7 @@ The subscript $i$ will be omitted for the remainder of this section; it is impli
 An isolated single-domain nanomagnet often exhibits two stable magnetisation states separated by energy barriers.
 In IP ASI, these states usually arise from \textit{shape anisotropy}, which originates from the \xlabel{demagnetising field} of the magnet itself.
 This imposes an additional energy cost when the \xref{magnetisation} does not point along the preferential \idx{easy axis}, which is usually the longest axis of the magnet's geometry~\cite{PhD_Leliaert}. \par
-Shape anisotropy is quantified by a \xlabel{uniaxial anisotropy} constant $K_\mathrm{u} = \frac{\mu_0}{2} M_\mathrm{sat}^2 \Delta \mathcal{N}$, with $\Delta \mathcal{N}$ the difference between the demagnetising factors along the IP easy and hard axes of a magnet~\cite{AdvancesASI,VogelFulcherTammannFreezing,andersson2016thermally}. % (when normalised as $\mathcal{N}_x + \mathcal{N}_y + \mathcal{N}_z = 1$)
+Shape anisotropy is quantified by a \xlabel{uniaxial anisotropy} constant $K_\mathrm{u} = \frac{\mu_0}{2} M_\mathrm{sat}^2 \Delta \mathcal{N}$, with $\Delta \mathcal{N}$ the difference between the \xlabel[tosection]{demagnetising factor}s along the IP easy and hard axes of a magnet~\cite{AdvancesASI,VogelFulcherTammannFreezing,andersson2016thermally}. % (when normalised as $\mathcal{N}_x + \mathcal{N}_y + \mathcal{N}_z = 1$)
 These demagnetising factors can be calculated analytically for simple shapes like ellipsoids~\cite{EllipsoidDemag,EllipseDemag}.
 Assuming that switching occurs by \xlabel{coherent rotation}\footnote{
 	Depending on the magnet's properties, \xlabel{non-coherent magnetisation reversal} such as switching by \xlabel{domain wall nucleation} may be energetically cheaper.
@@ -282,7 +282,7 @@ This way, $\Delta E$ serves as the barrier when the original energy barrier disa
 This adjustment is shown in red in~\cref{fig:2:EB_meanbarrier}: it is closer to the exact solution except for $-4 \EB < \Delta E < -2 \EB$.
 Notwithstanding that the original mean-barrier approximation~\eqref{eq:2:EB_meanbarrier_original} lies closer to the exact solution in this range, we choose not to use it as this lies outside its valid range of $\abs{\Delta E} < 2 \EB$.
 
-\subsubsection{Asymmetric barrier}\indexlabel{asymmetric energy barrier}\label{sec:2:E_B_asymm}
+\subsubsection{Asymmetric barrier}\indexlabel[tosection]{asymmetric energy barrier}\label{sec:2:E_B_asymm}
 The simple \xref{mean-barrier model} is insufficient for many IP ASI lattices.
 In real nanomagnets, reversal by \xref{coherent rotation} can occur via two pathways; clockwise ($\clockwise$) or counter-clockwise ($\counterclockwise$) rotation of the magnetisation.
 In an asymmetrical environment --- when the \xref{effective field} has a non-zero component perpendicular to the \xref{easy axis} --- one of these two rotation directions will be preferred~\cite{leo2021chiral,DirectionalEnergyBarrier}.
@@ -292,7 +292,7 @@ Such an asymmetry can not occur in OOP ASI, so the asymmetric barrier is only ap
 Accounting for the existence of these separate chiral switching channels profoundly affects the switching rates and transition kinetics, since switching will occur predominantly via the more favourable pathway~\cite{leo2021chiral}. \\\par
 
 In the dipole model, this can be accounted for by considering the energy of each magnet in these transitional states along the hard axis.
-Therefore, \hotspice tracks yet another quantity for every magnet: $E_\perp$\indexlabel{hard-axis interaction energy}, representing the \xref{interaction energy} of a magnet if it would point along $\vc{e}_z \times \vc{u}$, i.e., \ang{90} counter-clockwise from its normal magnetisation direction $\vc{u}$.
+Therefore, \hotspice tracks yet another quantity for every magnet: $E_\perp$\indexlabel{hard-axis interaction energy}, representing the \xref{interaction energy} of a magnet if it would point along $\vc{e}_z \times \vc{u}$, i.e., \ang{90} counter-clockwise from its normal \xref{magnetisation} direction $\vc{u}$.
 Note that we are not deviating from the two-state Ising model: we are simply putting ``test dipoles'' along the hard axis to get a better estimate of $\EBeff$, but magnets will never end up in these states during a simulation. \par
 In \cref{eq:2:EB_meanbarrier_cases}, $\EB$ essentially represented an estimate of the total energy in the transitional state.
 With our newfound knowledge of the interaction energy $E_\perp$ in that state, our improved estimate of the total hard-axis energy becomes $\EB + E_\perp$.
@@ -379,7 +379,7 @@ This yields the total switching rate as presented by Koraltan~\etal~\cite{Direct
 where a halved attempt frequency $\nu_0/2$ was assigned to either switching channel such that~\cref{eq:2:Néel_2} reduces to~\cref{eq:2:Néel} in the case of $\EBeffLeft=\EBeffRight$~\cite{leo2021chiral}.
 % Note that it does not matter which barrier corresponds to clockwise or counter-clockwise rotation; only the height of both barriers matters when determining the switching rate of a magnet.
 
-\paragraph{Attempt frequency}\indexlabel{attempt frequency}
+\paragraph{Attempt frequency\indexlabel{attempt frequency}}
 An estimate of $\nu_0$ for coherent magnetisation reversal can be obtained from the limit $\EB \rightarrow 0$, where the \xref{switching rate} $\nu$ should approach the \xlabel{gyromagnetic precession frequency} of the magnetisation of a nanomagnet.
 This is reported to be on the order of \qtyrange{e9}{e10}{\hertz}~\cite{BrownThermalFluctuations,bean1959superparamagnetism}.
 As $\EB \rightarrow 0$, \cref{eq:2:Néel} implies that $\nu \rightarrow \nu_0$, so we use $\nu_0=\qty{e10}{\hertz}$~\cite{JM_Masterproef}. \par % Each oscillation is an attempt to leave this energy minimum.
@@ -395,9 +395,8 @@ For other reversal processes (e.g., domain wall-mediated reversal), the attempt 
 Knowledge of the \xref{switching rate} $\nu$ can be used to construct a rejection-free kinetic Monte Carlo method, first presented by \textit{Gillespie}~\cite{gillespie1976general}, referred to as the ``first-switch'' method.
 Each iteration, as presented in~\cref{alg:2:FirstSwitchSingle}, will increment the elapsed time by a certain duration $t \leq t_\mathrm{max}$, where the maximum time $t_\mathrm{max}$ can be set by the user to prevent excessively long switching times.
 These iterations are then repeated until the desired elapsed time is reached. \par
-\begin{algorithm}[Single iteration of the ``first-switch'' method]
+\begin{algorithm}[Single iteration of the ``first-switch'' method\indexlabel{first-switch method}]
 	\label{alg:2:FirstSwitchSingle}
-	\indexlabel{first-switch method}
 	\begin{enumerate}[rightmargin=15pt]
 		\item Calculate the \xref{effective energy barriers} of all magnets (i.e., $\EBeff{}_{,i}$ for OOP ASI, $\EBeffLeft{}_{,i}$ and $\EBeffRight{}_{,i}$ for IP ASI, $\forall i$) based on their \link{interaction energy}{interaction energies} $E_i$, as determined by the current magnetisation state.
 		\item Calculate the \xref{switching rate} $\nu_i$ of each magnet using \cref{eq:2:Néel_2}.
@@ -518,8 +517,8 @@ Subsequently, \cref{sec:2:Implementation:Performance} assesses the performance o
 The performance impact of the aforementioned simultaneous sampling of magnets during Metropolis-Hastings sampling is also assessed. \par
 Finally, this chapter ends with a short retrospective on the choices made during the development of this software.
 
-\subsection{Grid}\indexlabel{unit cell}\label{sec:2:Implementation:Grid}
-In \hotspice, an ASI is represented on a tiled \xlabel{rectilinear grid} of unit cells --- where the grid spacing need not be uniform --- with magnets positioned at selected grid points.
+\subsection{Grid}\label{sec:2:Implementation:Grid}
+In \hotspice, an ASI is represented on a tiled \xlabel[tosection]{rectilinear grid} of \xlabel[tosection]{unit cell}s --- where the grid spacing need not be uniform --- with magnets positioned at selected grid points.
 This construction is illustrated in~\cref{fig:2:Unitcells} for a small in-plane kagome ASI.
 
 \vspace{-1em}
@@ -683,7 +682,7 @@ The underlying equation for this one is also very similar to \cref{eq:2:Kernel_d
 It is used in the same way as the kernel $\vc{\mathcal{K}}^{(q)}$ in \cref{eq:2:Kernel_init}.
 
 \subsubsection{Numerical error with truncated kernel}\label{sec:2:Kernels:Error}
-Since the kernel is nearly 4 times larger than the simulation domain, a straightforward performance improvement presents itself: \indexlabel{truncated kernel}{truncating} the \xref{magnetostatic interaction} at a certain distance.
+Since the kernel is nearly 4 times larger than the simulation domain, a straightforward performance improvement presents itself: \indexlabel[tosection]{truncated kernel}{truncating} the \xref{magnetostatic interaction} at a certain distance.
 Due to the underlying grid, the most natural way of achieving this is to reduce the size of the kernel from $(2N_x-1) \times (2N_y-1)$ to a smaller $(2R-1) \times (2R-1)$ central region, with $1 < R < \min(N_x,N_y)$.
 Note that the kernel size has to remain odd for the convolution to still place the switching magnet in the centre. \par
 However, such truncation will result in inaccurate calculation of the interaction energies: whenever a magnet switches, $E_\mathrm{MS}$ of distant magnets will not be updated.
@@ -712,8 +711,7 @@ Previously, \cref{eq:2:Kernel_update} was applied when a magnet switches, where 
 With open boundaries, the truncated kernel presents no issue, but with PBC the cut-out should be applied with care, such that it properly wraps around the edges.
 This wrapping can instead also be achieved by performing a \xlabel{circular convolution} of the truncated kernel with an $N_x \times N_y$ array whose only non-zero element is at the position of the switching magnet.
 
-\subsection{Multi-switching in Metropolis-Hastings} \label{sec:2:MultiSwitch}
-\indexlabel{multi-switching}
+\subsection{Multi-switching in Metropolis-Hastings\indexlabel{multi-switching}} \label{sec:2:MultiSwitch}
 The standard \link{Metropolis-Hastings sampling}{Metropolis-Hastings algorithm} selects a magnet at random and subsequently decides whether or not to switch it.
 Since this algorithm is designed primarily for sampling equilibrium states rather than capturing the temporal evolution of the system, a straightforward performance improvement can be achieved by selecting multiple magnets simultaneously rather than sequentially.
 This allows for better usage of the parallel processing capabilities of the GPU, as the \link{magnetostatic interaction}{magnetostatic energy} can then be updated using a convolution. \\\par
@@ -1084,11 +1082,11 @@ This slow convergence near the critical point is due to a well-known phenomenon 
 }
 % TODO: ? why the discrepancy in the correlation?
 
-\paragraph{Critical slowing down}
+\paragraph{Critical slowing down\indexlabel{critical slowing down}}
 As the correlation length $\xi$ diverges at a second-order \xref{phase transition}, the autocorrelation time $\Theta$ will increase as $L^z$ in finite systems of linear size $L$~\cite{NumericalDynamicalNiedermayer}.
 The \xlabel{dynamical critical exponent} $z$ is typically $\gtrsim 2$ for local dynamics --- \textit{Niedermayer}~\cite{niedermayer1988general} notes that this is intuitively analogous to the problem of a random walk, where $\order{R^2}$ steps are required to traverse a distance $R$.
 The significant rise in the autocorrelation time causes successive Monte Carlo configurations to be highly correlated, resulting in a very slow exploration of the phase space that impedes convergence towards equilibrium~\cite{NumericalDynamicalNiedermayer,CompStatPhys,StatisticalMechanicsAlgorithmsComputations}. \par
-This phenomenon is termed \idx{critical slowing down} in second-order phase transitions --- supercritical slowing down is an analogous phenomenon for discontinuous transitions~\cite{PhD_Reynal}.
+This phenomenon is termed \emph{critical slowing down} in second-order phase transitions --- supercritical slowing down is an analogous phenomenon for discontinuous transitions~\cite{PhD_Reynal}.
 It is particularly problematic for single-spin flip algorithms like \xref{Metropolis-Hastings sampling}, as single-spin flips are no longer physically relevant in this region~\cite{PhD_Reynal}.
 Such local-update Monte Carlo algorithms only change a small portion of the system in each step, resulting in minimal differences between successive states.
 Consequently, even after many MCS, the number of statistically independent configurations remains low, as the large autocorrelation time yields a very low effective number of independent samples $N_\mathrm{eff} = N_\mathrm{MCS}/\Theta$~\cite{niedermayer1988general,BeatCriticalSlowingDown1990}. \par
@@ -1264,7 +1262,7 @@ In OOP systems, it was found that more realistic values for the magnetostatic en
 The influence of these corrections can result in qualitatively different dynamics as compared to a \xref{point dipole model}, as was for instance observed in the kagome lattice.
 A second improvement concerns the calculation of the \xref{effective energy barrier}.
 There, accounting for \link{asymmetric energy barrier}{asymmetric switching channels} proved key to, e.g., correctly reproduce \xref{coercive fields} in pinwheel ASI, provided that the reduced magnetisation during \link{non-coherent magnetisation reversal}{non-coherent reversal processes} was also accounted for.
-While it is possible to obtain an exact solution for the energy barrier in OOP magnets, the assumption of a sinusoidal energy landscape is likely inaccurate due to non-coherent reversal in real OOP nanomagnets. \par
+While it is possible to obtain an exact solution for the energy barrier in OOP magnets, the assumption of a sinusoidal \xref{energy landscape} is likely inaccurate due to non-coherent reversal in real OOP nanomagnets. \par
 Furthermore, two distinct algorithms have been implemented to handle switching events: the \xref{first-switch method} and \xref{Metropolis-Hastings sampling}.
 They are both useful in different circumstances, as the former is best suited to simulate temporal (out-of-equilibrium) dynamics, while the latter can more efficiently explore equilibrium configurations.
 In particular, the MH algorithm can benefit from \link{multi-switching}{multiple simultaneous switching events}, which is justifiable if these switching magnets are all sufficiently distant.
