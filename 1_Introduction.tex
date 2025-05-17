@@ -26,7 +26,7 @@ Several factors that contribute to this bottleneck are often quoted in the conte
 	Relatedly, \xlabel{Dennard scaling} initially allowed the power density of chips to remain roughly constant during this downscaling, but current leakage has inevitably led to increased power dissipation over the past two decades.
 	In an attempt to patch this, multi-core processing has become prevalent, but the high power density still limits the number of cores that can operate simultaneously without overheating. % This results in so-called areas of ``dark silicon'' that are unused at a given instant.
 	Thus, new kinds of energy-efficient hardware need to be explored.
-	\item Conventional computers are built according to the von Neumann architecture, where computation (CPU) is separated from memory (RAM).
+	\item Conventional computers are built according to the \xlabel{von Neumann architecture}, where computation (CPU) is separated from memory (RAM).
 	However, transferring information from memory to the processing unit wastes a lot of time and energy, leading to the infamous \idx{von Neumann bottleneck}~\cite{TaskAdaptivePRC}.
 	The separation between memory and processing is not fundamentally required: biological brains in the natural world exhibit no such divide as they use a vast network of interconnected neurons, yet they are nonetheless capable of learning, processing and retaining information.
 	The field of \idx{in-memory computing} concerns itself with bridging this divide in artificial systems.
@@ -36,7 +36,7 @@ Several factors that contribute to this bottleneck are often quoted in the conte
 \end{itemize}
 These various drawbacks of current implementations have become more noticeable over the past decade, as portrayed in~\cref{fig:1:Ngram}.
 This has led to the advent of \idx{neuromorphic computing} --- a field of research at the intersection of biology, computer science and physics --- which takes inspiration from the brain to develop more efficient hardware for processing complex data in parallel.
-While artificial neural networks are indeed inspired by the brain, their implementation on conventional hardware is typically not considered part of neuromorphic computing, though approaches to implement neural networks on more efficient unconventional hardware are. % rather than applying algorithms on existing transistor-based hardware.
+While \xref{artificial neural networks} are indeed inspired by the brain, their implementation on conventional hardware is typically not considered part of neuromorphic computing, though approaches to implement neural networks on more efficient unconventional hardware are. % rather than applying algorithms on existing transistor-based hardware.
 Note that neuromorphic computing does not seek to replace conventional computing: the latter will always find applications in systems that require absolute precision. % think of physical simulations, the transmission of data, or something as common as rendering an image on a screen.
 Neuromorphic computing, on the other hand, does not seek exact solutions; in the words of Alan Turing, ``if a machine is expected to be infallible then it cannot also be intelligent.''
 %This paradigm shift opens the door to innovative approaches for tackling computational challenges, particularly in areas like real-time sensing, pattern recognition, and prediction.
@@ -52,23 +52,23 @@ Neuromorphic computing, on the other hand, does not seek exact solutions; in the
 }
 \vspace{-1em}
 
-A related concept is \xlabel{material computation}~\cite{NeglectedPillar}, which goes one step further: its goal is to find ways to exploit the inherent computing power present in physical substrates.
+A related concept is \idx{material computation}~\cite{NeglectedPillar}, which goes one step further: its goal is to find ways to exploit the inherent computing power present in physical substrates.
 Whereas classical computing uses a top-down approach where mathematics is imposed onto a physical material --- for instance to construct logic gates --- material computation works in the opposite direction by instead asking what computations a physical object performs naturally~\cite{RC_ASI}.
 By designing materials with specific behaviours, systems can be created that naturally exhibit the desired computational properties, reducing the levels of abstraction that currently exist between physics and computation. \par
-Among the various substrates being explored for material computation, magnetic and spintronic (spin transport electronic~\cite{Spintronics}) hardware are especially appealing~\cite{grollier2020neuromorphic,NeuromorphicSpintronicsProspect,QuantumNeuromorphicOpportunities}.
-Single-domain ferromagnetic nanomagnets, for example, have the ability to store information, respond non-linearly to stimuli~\cite{NeuromorphicSpintronics} and can dissipate very little energy during information processing~\cite{ThermodynamicLimitsComputation,SpintronicsEnergyEfficientComputing}.
+Among the various substrates being explored for material computation, magnetic and \indexlabel[nolabel]{spintronics}spintronic (spin transport electronic~\cite{Spintronics}) hardware are especially appealing~\cite{grollier2020neuromorphic,NeuromorphicSpintronicsProspect,QuantumNeuromorphicOpportunities}.
+\link{single-domain nanomagnet}{Single-domain} \link{ferromagnetism}{ferromagnetic} \link{single-domain nanomagnet}{nanomagnets}, for example, have the ability to store information, respond non-linearly to stimuli~\cite{NeuromorphicSpintronics} and can dissipate very little energy during information processing~\cite{ThermodynamicLimitsComputation,SpintronicsEnergyEfficientComputing}.
 The \link{magnetostatic interaction}{magnetostatic (MS) coupling} within ensembles of nanomagnets provides further advantages, as it can give rise to rich collective behaviour like phase transitions, which the constituent magnets would not exhibit in isolation~\cite{NeuromorphicSpintronicsProspect,RC_ASI}.
 This inspired the European \spinengine project --- within the context of which the work presented in this thesis was performed --- to research how tunable ensembles of nanomagnets could be used for material computation. \par % three types of magnetic reservoirs were considered: magnetic nanorings~\cite{DynamicEmergence_NanomagneticSystem}, in-plane ASI~\cite{RC_ASI}, and perpendicular-anisotropy ASI~\cite{KUR-24}.
 A well-established example of such an ensemble is \xref{artificial spin ice} (ASI): an ordered lattice of bistable $\approx \SI{100}{\nano\metre}$-size nanomagnets where the lattice geometry does not allow all local interactions to be simultaneously satisfied, leading to emergent dynamics~\cite{ASIpyrochlores}.
 The other aforementioned factors have made them a platform of particular interest for scalable and energy-efficient material computation~\cite{PhD_Stromberg}.
-ASI with out-of-plane magnetisation offers particularly convenient electrical interfacing for both input and readout, but its computational capability had yet to be demonstrated. \par % In comparison to in-plane ASI, for which the computational capability had already been demonstrated numerically~\cite{ASI_computation,hon2021numerical}
-This provided the main motivation for this thesis, ``\!\emph{\phdtitle}''.
+ASI with out-of-plane \xref{magnetisation} offers particularly convenient electrical interfacing for both input and readout, but its computational capability had yet to be demonstrated. \par % In comparison to in-plane ASI, for which the computational capability had already been demonstrated numerically~\cite{ASI_computation,hon2021numerical}
+This provided the main motivation for this thesis, ``\!\emph{\phdtitle}'', where we will evaluate the computational capabilities of out-of-plane ASI.
 A more detailed description of ASI follows in~\cref{sec:1:ASI}; first,~\cref{sec:1:RC} introduces the general principles of \xref{reservoir computing}.
 
 \newpage
 \section{Reservoir computing}\label{sec:1:RC}
 % Introduction to RC can take inspiration from: https://arxiv.org/html/2412.13212v1
-At the intersection of neuromorphic computing and material computation lies the paradigm of \idx{reservoir computing}.
+At the intersection of \xref{neuromorphic computing} and \xref{material computation} lies the paradigm of \idx{reservoir computing}.
 To explain the underlying concept, we must first take a step back and have a closer look at the aforementioned artificial neural networks.
 
 \subsection{Origin}
@@ -92,14 +92,14 @@ The existence of cycles has a profound impact, as an RNN may develop self-sustai
 Hence, mathematically speaking, RNNs are dynamical systems while FNNs are functions~\cite{lukovsevivcius2009reservoir}. % REF verbatim
 This enables an RNN to preserve a non-linear transformation of the input history in its internal state, providing dynamical memory and making RNNs especially well-suited for dynamic data processing~\cite{RC_RecentAdvances,ApproximationRNN}.
 However, whereas FNNs can be trained using methods such as \xlabel{backpropagation}~\cite{Backpropagation} or gradient descent, the recurrent connections in RNNs make training very computationally expensive and difficult~\cite{DifficultyTrainingRNN,EvaluatingRestrictedESNs,Moon_2021,RC_SuperconductingElectronics,funahashi1992neural}.
-Some approaches to train RNNs take inspiration from FNN: back-propagation through time (BPTT), for instance, unfolds the recurrent connections in time to obtain an FNN on which backpropagation can be applied~\cite{jaeger2002tutorial}.
+Some approaches to train RNNs take inspiration from FNN: \xlabel{back-propagation through time} (BPTT), for instance, unfolds the recurrent connections in time to obtain a FNN on which backpropagation can be applied~\cite{jaeger2002tutorial}.
 However, this is not so straightforward, leading to issues regarding the calculation of the required gradients and a tendency to get stuck in local minima~\cite{RC_Tensegrity,DifficultyTrainingRNN,D-ESN-Improved}. % Other methods are real-time recurrent learning (RTRL) and extended Kalman filtering (EKE), both explained in jaeger2002tutorial.
 
 \vspace{-1em}
 \xfig{1_Introduction/NeuralNetworks.pdf}{
 	\label{fig:1:NeuralNetworks}
-	Schematic representation of \textbf{(a)} a feed-forward neural network (FNN), \textbf{(b)} a recurrent neural network (RNN) and \textbf{(c)} reservoir computing (RC).
-	In the latter, the reservoir is treated as a black box; it can be of mathematical origin, like a RNN, or a physical system like artificial spin ice (ASI).
+	Schematic representation of \textbf{(a)} a \xref{feed-forward neural network} (FNN), \textbf{(b)} a \xref{recurrent neural network} (RNN) and \textbf{(c)} \xref{reservoir computing} (RC).
+	In the latter, the reservoir is treated as a black box; it can be of mathematical origin, like a RNN, or a physical system like \xref{artificial spin ice} (ASI).
 	Grey connections propagate information from left to right, unless indicated by an arrow.
 	Blue (red) nodes represent input (output), while green nodes constitute the hidden layers of the network.
 }
@@ -107,36 +107,36 @@ However, this is not so straightforward, leading to issues regarding the calcula
 
 \paragraph{Echo state networks and liquid state machines}
 To address the shortcomings of conventional RNN training methods like BPTT, two alternative concepts were independently proposed in the early 2000s, laying the foundation for what would eventually be known as reservoir computing.
-Jaeger~\cite{jaeger2001echo} presented echo state networks (ESNs), while Maass~\etal~\cite{maass_LSM} presented liquid state machines (LSMs)\footnote{
+Jaeger~\cite{jaeger2001echo} presented \xlabel{echo state networks} (ESNs), while Maass~\etal~\cite{maass_LSM} presented \xlabel{liquid state machines} (LSMs)\footnote{
 	Their names reveal some fundamental desirable properties that the random recurrent network should provide.
 	In LSMs, the sparse network of spiking neurons projects inputs into a high-dimensional transient state, akin to waves in a liquid.
-	The ``echo'' of ESNs refers to the fading memory provided by the internal dynamics of a recurrent network, where loops can retain information from past inputs.
+	The ``echo'' of ESNs refers to the \xref{fading memory} provided by the internal dynamics of a recurrent network, where loops can retain information from past inputs.
 }.
 Both are recurrent networks and operate on very similar principles: their main difference lies in their nodes, as LSMs use \xlabel{spiking neurons} while nodes in ESNs use sigmoidal activation functions.
 The crucial property that sets them apart from other training methods is that their underlying recurrent network is randomly initialised and remains unmodified during training~\cite{ReviewESNs,RC_Tensegrity}.
 Instead, only a single \xlabel{linear readout layer} is trained via linear regression to obtain the desired output from this random network~\cite{D-LSM,D-ESN-Improved}.
 This decoupling of internal dynamics from learning is the core insight that underpins both LSMs and ESNs.
-Training ESNs and LSMs is a walk in the park as compared to BPTT, as linear regression is far less computationally demanding and does not require the (sometimes problematic) calculation of gradients~\cite{D-ESN-Improved}. \par
-From these principles, it is but a small step to reservoir computing (RC), which generalises these ideas by treating the internal network as a black box~\cite{RC_unification,D-ESN-Improved,RC_Tensegrity}.
+Training ESNs and LSMs is a walk in the park compared to BPTT, as linear regression is far less computationally demanding and does not require the (sometimes problematic) calculation of gradients~\cite{D-ESN-Improved}. \par
+From these principles, it is but a small step to \xref{reservoir computing} (RC), which generalises these ideas by treating the internal network as a black box~\cite{RC_unification,D-ESN-Improved,RC_Tensegrity}.
 In the next section we will explore the reservoir computing framework in more detail.
 
-\subsection{Reservoir computing}
+\subsection{Reservoir computing}\indexlabel[nolabel]{reservoir computing}
 Reservoir computing is a machine learning framework suitable for temporal processing tasks~\cite{BookReservoirComputing}.
 The concept revolves around a ``reservoir'' --- an unspecified non-linear dynamical system --- that projects the input data into a higher-dimensional space, thereby facilitating the separation of said data by a linear transformation~\cite{appeltant2011information,KUR-24,RC_ASI}. % TODO: use figure like Fig. 2 in ~\cite{appeltant2011information}
 The principle is schematically illustrated in \crefSubFigRef{fig:1:NeuralNetworks}{c}.
-A weighted sum of the components of (a lower-dimensional representation of) the reservoir's state vector (green nodes), then provides the output (red node) of the system as a whole. % REFs for RC, specifically training a readout layer: Dale et al., 2017; Jensen and Tufte, 2017; Sillin et al., 2013
+A weighted sum of the components of (a lower-dimensional representation of) the reservoir's state vector (green nodes) provides the output (red node) of the system as a whole. % REFs for RC, specifically training a readout layer: Dale et al., 2017; Jensen and Tufte, 2017; Sillin et al., 2013
 These weights can be trained with a simple learning algorithm like linear regression in order to produce a desired output~\cite{RC_RecentAdvances, RC_SuperconductingElectronics}.
-Crucially, \textit{the properties of the reservoir itself are not modified during training} --- only the final linear readout layer is~\cite{RC_ASI,DynamicEmergence_NanomagneticSystem}. \par
+Crucially, \textit{the properties of the reservoir itself are not modified during training} --- only the final \xref{linear readout layer} is~\cite{RC_ASI,DynamicEmergence_NanomagneticSystem}. \par
 Since the reservoir acts as a black box, its properties can not be changed to obtain the desired response\footnote{
-	It is possible to adjust a physical reservoir to exhibit the desired properties for a given task~\cite{AdaptiveProgrammableRC,gartside2022reconfigurable}, but this is different from mathematically tuning the weights of the readout layer via a simple procedure like linear regression.
+	It is possible to adjust a physical reservoir to exhibit the desired properties for a given task~\cite{AdaptiveProgrammableRC,gartside2022reconfigurable}, but this is different from mathematically tuning the weights of the \link{linear readout layer}{readout layer} via a simple procedure like linear regression.
 }.
-To solve temporal tasks, a reservoir should be a high-dimensional non-linear system with short-term memory~\cite{NeuromorphicAFMspintronics,RC_RecentAdvances}.
+To solve temporal tasks, a reservoir should be a high-dimensional non-linear system with \indexlabel[nolabel]{fading memory}short-term memory~\cite{NeuromorphicAFMspintronics,RC_RecentAdvances}.
 Reservoirs are therefore not limited to being purely mathematical concepts, as many physical systems naturally possess these properties~\cite{RC_DipoleNanomagnets,RC_PassiveFrustratedNM,RC_ASI,RC_RecentAdvances,NeuromorphicOscillators,VowelRecognition4STO,RC_DiffusiveMemristors,RC_MemristorTemporal,gartside2022reconfigurable}, ranging from a bucket of water~\cite{PatternRecognition_Bucket} to photonic systems~\cite{RC_Photonic} and superconducting electronics~\cite{RC_SuperconductingElectronics} --- see~\cref{sec:1:PhysicalRCplatforms}.
-This is the concept of \idx{physical reservoir computing} (PRC)~\cite{PRC}, which allows the usage of physical systems without further mathematical abstractions --- apart from the linear readout layer at the end~\cite{RC_RecentAdvances}. \par
-While this avoids the many layers of abstraction present in conventional machine learning methods, physical constraints can make it difficult to optimise a physical reservoir~\cite{RC_RecentAdvances}, in contrast to RNNs which have full mathematical freedom.
+This is the concept of \idx{physical reservoir computing} (PRC)~\cite{PRC}, which allows the usage of physical systems without further mathematical abstractions --- apart from the \xref{linear readout layer} at the end~\cite{RC_RecentAdvances}. \par
+While this avoids the many layers of abstraction present in conventional \xref{machine learning} methods, physical constraints can make it difficult to optimise a physical reservoir~\cite{RC_RecentAdvances}, in contrast to RNNs which have full mathematical freedom.
 For instance, when using a physical reservoir to perform a temporal task, the physics of the system are most effectively harnessed when the timescale of system dynamics matches that of incoming data patterns~\cite{KUR-24}, but the timescales of physical phenomena are often hard to control.
 Since physical reservoirs can often be hard to scale, multiple techniques have been devised to improve performance by combining multiple reservoirs together~\cite{EvaluatingRestrictedESNs,RotatingNeuronsRC} or by time multiplexing~\cite{appeltant2011information}.
-Nonetheless, PRC combines many advantages of all the previously discussed concepts: not much data is required for training, which is computationally very cheap due to the single linear readout layer, enabling low energy usage due to the direct usage of a physical substrate for computation.
+Nonetheless, PRC combines many advantages of all the previously discussed concepts: training is computationally very cheap due to the single \xref{linear readout layer}, enabling low energy usage due to the direct usage of a physical substrate for computation.
 The combination of these factors has attracted significant interest to (P)RC.
 
 \paragraph{Reservoir requirements}
@@ -184,7 +184,7 @@ Here, we will use $n=p$ to obtain a square matrix for a more consistent measure.
 Using random sequences ensures that they are maximally distinct, such that the rank of this matrix (i.e., the kernel-quality $K$) is a measure for how distinct the responses obtained from the reservoir can be~\cite{Vidamour_2022}.
 A more efficient alternative method would be to record the response $\vc{x}$ after each input value, as this would also result in maximally distinct input sequences, though this method strays further from the original definition~\cite{RC_HierarchicalNeuroevolution,RCbenchmarksReview1}.
 Hence, a high kernel-quality $K$ indicates that the reservoir exhibits the separation property.
-In the extreme case where $K=n$, any desired output can be implemented by the reservoir in combination with its linear readout layer~\cite{WhatMakesPowerful}.
+In the extreme case where $K=n$, any desired output can be implemented by the reservoir in combination with its \xref{linear readout layer}~\cite{WhatMakesPowerful}.
 
 \paragraph{Generalisation-capability}
 The \xref{kernel-quality} is insufficient to quantify the computational performance of a reservoir~\cite{WhatMakesPowerful,RC_ASI,IL_Masterproef}.
@@ -221,7 +221,7 @@ which represents the mean non-linearity of all readout nodes as a value $\mathrm
 Since a value of 0 indicates a perfectly linear response, higher values of NL are more desirable.
 
 \paragraph{Linear memory capacity}
-The linear \xlabel{memory capacity} can also be calculated through by means of linear estimators, but by working the other way around: an estimator for the past input $s(t - \tau)$ is now trained based on the current readout $\vc{x}(t)$ of the reservoir~\cite{tsunegi2019STOforcedsyncRC,NeuromorphicFewShot}.
+The linear \xlabel{memory capacity} can also be calculated by means of linear estimators, but by working the other way around: an estimator for the past input $s(t - \tau)$ is now trained based on the current readout $\vc{x}(t)$ of the reservoir~\cite{tsunegi2019STOforcedsyncRC,NeuromorphicFewShot}.
 In other words, the estimator
 \begin{equation}
 	\hat{s}(t - \tau) = c_\tau + \sum_{i=1}^{p} w_{i,\tau} x_i(t)
@@ -236,18 +236,18 @@ which lies in the range $[0,k]$ and represents the approximate number of previou
 Note that the memory capacity could be increased arbitrarily high by choosing a high cut-off time $k$.
 However, the memory capacity typically exhibits a plateau beyond a certain value of $k$, before rising dramatically only when $k$ approaches the size of the training set.
 Hence, $k$ should be chosen at this plateau. \par
-Note that this measures short-term memory; long-term memory often refers to the knowledge engrained in the weights of an ANN, i.e., the \xref{linear readout layer} in the case of RC.
+Note that this measures \indexlabel[nolabel]{fading memory}short-term memory; long-term memory often refers to the knowledge engrained in the weights of an ANN, i.e., the \xref{linear readout layer} in the case of RC.
 Furthermore, this only captures the linear memory capacity: the non-linear memory capacity is far more computationally expensive as it requires a summation over polynomials of different degrees~\cite{RCbenchmarksReview1}.
 We therefore limit this discussion to the linear memory capacity.
 
 \paragraph{Parity check}
-Closely related to the memory capacity is the \xlabel{parity check} metric~\cite{hon2021numerical,tsunegi2019STOforcedsyncRC}.
+Closely related to the \xref{memory capacity} is the \xlabel{parity check} metric~\cite{hon2021numerical,tsunegi2019STOforcedsyncRC}.
 This is particularly intended for use with binary input, as it defines the parity of a binary input sequence $s(t)$ as
 \begin{equation}
 	\pi_\tau(t) = \Bigg[\sum_{j = 0}^{\tau} s(t - j) \Bigg] \mathrm{mod}~2 \mathrm{.}
 \end{equation}
 The parity check (PC) is then defined in the same way as the memory capacity in~\cref{eq:1:MC}, except with $\pi_\tau(t)$ instead of $s(t - \tau)$.
-This introduces a form of non-linearity into it, though it still mostly serves as a measure of the memory capacity in binary systems.
+This introduces a form of \xref{non-linearity} into it, though it still mostly serves as a measure of the memory capacity in binary systems.
 
 \subsubsection{Benchmarks} % Memorisation, frequency generation, classification
 In addition to these six metrics, reservoirs are often used to perform specific benchmark tasks in literature.
@@ -262,18 +262,18 @@ While these examples highlight the universal nature of reservoir computing, such
 To allow on-chip integration and achieve low energy consumption, a wide variety of microscopic systems have been exploited as reservoirs~\cite{RC_RecentAdvances}. \par
 Traditional machine learning algorithms, like FNN and RNN, are often implemented on traditional transistor-based hardware.
 However, for RC specifically, simpler electronic devices exist that can potentially save energy and enable faster computation~\cite{RC_RecentAdvances}.
-Memristors are a well-established example: they can store information in their resistance by changing their internal ion distribution, allowing them to act analogously to biological neurons~\cite{MemristorArtificialNeuron,MemristiveNN,RC_DiffusiveMemristors,RC_MemristorTemporal}.
+\indexlabel{memristor}Memristors are a well-established example: they can store information in their resistance by changing their internal ion distribution, allowing them to act analogously to biological neurons~\cite{MemristorArtificialNeuron,MemristiveNN,RC_DiffusiveMemristors,RC_MemristorTemporal}.
 Networks of nanowires are also interesting for PRC, as they can self-assemble into a complex recurrent network with memristive junctions forming at intersections~\cite{RC_NNN}.
 However, memristors are rather slow.
 %A faster reservoir can be made of field-programmable gate arrays (FPGAs), which are especially suitable for integer-valued tasks due to their digital nature~\cite{RC_RapidTimeSeries,BookReservoirComputing}. % Autonomous Boolean logic
 %For instance, FPGAs can efficiently implement cellular automata reservoirs, like elementary rule 90 that exhibits chaotic behaviour and can be implemented solely using XOR gates~\cite{RC_CA}.
-Superconducting materials, on the other hand, offer low dissipation and extremely fast operation ($\gg \SI{}{\giga\hertz}$), with a number of possible architectures, like for instance a Josephson transmission line~\cite{RC_SuperconductingElectronics}. \par % See also: analogue electronic circuits [TaskAdaptivePRC, Ref. 10], ferroelectrics [TaskAdaptivePRC, Ref. 13], VLSI
+Superconducting materials, on the other hand, offer low dissipation and extremely fast operation ($\gg \SI{}{\giga\hertz}$), with a number of possible architectures, like for instance a \xlabel{Josephson transmission line}~\cite{RC_SuperconductingElectronics}. \par % See also: analogue electronic circuits [TaskAdaptivePRC, Ref. 10], ferroelectrics [TaskAdaptivePRC, Ref. 13], VLSI
 Photonic principles have also been exploited to construct reservoirs with very fast operation and low power consumption~\cite{RC_RecentAdvances}.
 They make use of on-chip structures like optical waveguides, amplifiers and delay lines~\cite{RC_RecentAdvances}.
 One option is to use a single non-linear node, and use delay lines to perform time-multiplexing~\cite{appeltant2011information,RC_AllOptical}.
 Another option is to use arrays with non-linear components and delay lines to introduce phase shifts between interconnections, enabling computation through the interference of light~\cite{RC_Photonic,RC_PhotonicSi}. \par
 Mechanical systems can also be used as reservoirs, but are not as fast or efficient as the aforementioned systems.
-However, mechanical systems provide an extreme example of physical reservoir computing, as it has been shown that the body of a tensegrity robot (tensile structures arranged in trusses, consisting of both springs and incompressible bars) can be used for both locomotion and computation~\cite{RC_Tensegrity}.
+However, mechanical systems provide an extreme example of physical reservoir computing, as it has been shown that the body of a \xlabel{tensegrity} robot (tensile structures arranged in trusses, consisting of both springs and incompressible bars) can be used for both locomotion and computation~\cite{RC_Tensegrity}.
 Back to the microscopic scale, vibrational modes in micro-electronic mechanical systems (MEMS) can provide the required non-linearity that a reservoir needs.
 It is also possible to use chemical processes for computation, for example using processes inspired by those in living cells~\cite{NanoscaleRC,ElectrochemicalPRC,RC_Chemical}. \par
 Finally, a wide variety of magnetic and spintronic systems have been proposed for use as physical reservoirs.
@@ -295,7 +295,7 @@ Freely rotatable magnetic moments will therefore prefer a parallel alignment alo
 
 \paragraph{Ferromagnetism}
 Some materials, like a bar magnet, exhibit a spontaneous \idx{magnetisation}: they generate a magnetic field seemingly without any electrical current.
-This magnetisation $\vc{M}$ --- the magnetic moment per unit volume --- arises at the atomic level from two distinct sources: the angular momentum of electrons around the nucleus, and the intrinsic spin of the elementary particles comprising an atom~\cite{coey2010magnetism}.
+This magnetisation $\vc{M}$ --- the \xref{magnetic moment} per unit volume --- arises at the atomic level from two distinct sources: the angular momentum of electrons around the nucleus, and the intrinsic spin of the elementary particles comprising an atom~\cite{coey2010magnetism}.
 The latter is often dominant, and while the magnetic moments of pairs of electrons often cancel out, atoms with unpaired electrons can exhibit a net magnetic moment~\cite{PhD_Leliaert}. % See slide 35 of https://magnetism.eu/esm/2019/slides/simonet-slides1(magnetism_of_atoms).pdf
 However, this does not yet mean that a material composed of such atoms will exhibit a macroscopic magnetic moment like a bar magnet, as the moments of nearby atoms are not necessarily aligned. \par
 A non-vanishing net magnetic moment is the privilege of \textit{ferromagnetic}\indexlabel{ferromagnetism} materials.
@@ -303,8 +303,8 @@ It is only in these materials that the \idx{Heisenberg-Dirac exchange interactio
 This alignment is only possible below a material's \idx{Curie temperature}: at room temperature, \ce{Fe}, \ce{Ni} and \ce{Co} are the only pure elements to be ferromagnetic, though many compounds like \ce{Nd2Fe14B} and \ce{SmCo5} are as well.
 
 \paragraph{Ferromagnetic domains}
-The keyword regarding the exchange interaction is ``nearby'': over longer distances, the magnetisation direction can vary throughout the material as other interactions are also at play.
-Most importantly, the magnetostatic interaction makes it energetically favourable for the magnetisation to curl back on itself. % Minimising stray fields
+The keyword regarding the \link{Heisenberg-Dirac exchange interaction}{exchange interaction} is ``nearby'': over longer distances, the \xref{magnetisation} direction can vary throughout the material as other interactions are also at play.
+Most importantly, the \xref{magnetostatic interaction} makes it energetically favourable for the magnetisation to curl back on itself. % Minimising stray fields
 This competition between the exchange and magnetostatic interaction gives rise to $\SI{}{\micro\metre}$-sized \idx{ferromagnetic domains} with near-uniform magnetisation, separated by domain walls.
 These are the reason why a macroscopic piece of ferromagnetic material often does not exhibit a spontaneous net magnetic moment, as all these domains cancel out when no external field is present~\cite{coey2010magnetism}. \par
 The magnetisation can thus be described as a vector field $\vc{M}(\vc{r})$ with a resolution of $\lesssim \SI{5}{\nano\metre}$, as the exchange interaction dominates over shorter length scales.
@@ -317,15 +317,15 @@ In sufficiently small thin-film ferromagnetic particles (with lateral dimensions
 This results in a \idx{single-domain nanomagnet} with a nearly uniform magnetisation, giving it a magnetic moment $\vc{\mu}$ close to the upper limit of $M_\mathrm{sat}V$~\cite{FRENKEL1930,neel1949theorie}. % Frenkel and Dorfman first conceived the idea of a single-domain particle based on energy considerations.
 When such a nanomagnet exhibits some form of anisotropy, a preferential magnetisation axis will emerge, referred to as the \idx[nolabel]{easy axis}~\cite{nisoli2013colloquium}.
 This has led to nanomagnets being used for memory applications, as the two magnetisation directions along the easy axis can be related to bits `0' and `1'~\cite{MQCA_RoomTemp,NML_Carlton,Gypens_Balanced,Gypens_SelfOrganizing,JM_Masterproef}.
-The magnetisation can switch between these two stable states under the influence of nearby nanomagnets, external magnetic fields, thermal fluctuations, electrical currents and a variety of other phenomena~\cite{SwitchingForced_EnergyEfficient,BrownThermalFluctuations,neel1949theorie}. \par
-One common source of anisotropy is the geometry of a nanomagnet: this \idx[nolabel]{shape anisotropy} arises from the interaction of the magnetisation with its own demagnetising field, resulting in a low-energy state when the magnetisation aligns with the longest axis of the geometry~\cite{MagneticCharge}.
-Anisotropy can also originate from the crystal structure, but this can be suppressed by an appropriate choice of material; for example, permalloy (\ce{Fe20Ni80}) is an alloy specifically designed to exhibit minimal \xlabel{magnetocrystalline anisotropy}.
-Finally, \xlabel{interfacial anisotropy} can occur between the ferromagnetic material and a substrate.
+The magnetisation can switch between these two stable states under the influence of nearby nanomagnets, \xref{external magnetic fields}, thermal fluctuations, electrical currents and a variety of other phenomena~\cite{SwitchingForced_EnergyEfficient,BrownThermalFluctuations,neel1949theorie}. \par
+One common source of anisotropy is the geometry of a nanomagnet: this \idx[nolabel]{shape anisotropy} arises from the interaction of the magnetisation with its own \xlabel[nolabel]{demagnetising field}, resulting in a low-energy state when the magnetisation aligns with the longest axis of the geometry~\cite{MagneticCharge}.
+Anisotropy can also originate from the crystal structure, but this can be suppressed by an appropriate choice of material; for example, \xlabel{permalloy} (\ce{Fe20Ni80}) is an alloy specifically designed to exhibit minimal \xlabel{magnetocrystalline anisotropy}.
+Finally, \xlabel{interfacial anisotropy} can occur between the \link{ferromagnetism}{ferromagnetic} material and a substrate.
 For example, at the interface between \ce{Co} and \ce{Pt}~\cite{PMA_PdCo_PtCo}, a \idx[nolabel]{perpendicular magnetic anisotropy} (PMA) exists that acts in the immediate vicinity of the interface, where the magnetisation then prefers to align perpendicular to said interface.
 
 \paragraph{In-plane and out-of-plane nanomagnets} % Q: is this OK? What to do with the chapter 3 intro? Just remove 3.1.1?
-Two types of nanomagnets are typically distinguished: in-plane (IP) and out-of-plane (OOP) nanomagnets.
-IP nanomagnets can readily be obtained by tailoring the geometry of the ferromagnetic particle: a flat geometry guarantees an in-plane magnetisation direction through the \xref{shape anisotropy}.
+Two types of \link{single-domain nanomagnet}{nanomagnets} are typically distinguished: in-plane (IP) and out-of-plane (OOP) nanomagnets.
+IP nanomagnets can readily be obtained by tailoring the geometry of the \link{ferromagnetism}{ferromagnetic} particle: a flat geometry guarantees an in-plane \xref{magnetisation} direction through the \xref{shape anisotropy}.
 This easy plane can be reduced to an \xref{easy axis} by using an elongated two-dimensional shape, like an ellipse or rectangle.
 OOP magnets are harder to realise using only shape anisotropy, as it is often infeasible to create tall structures on wafers.
 This requires them to use other types of anisotropy to favour a magnetisation direction perpendicular to the substrate, like the aforementioned PMA between specific materials like \ce{Co} and \ce{Pt}.
@@ -337,15 +337,15 @@ One of the main factors that makes magnetic systems attractive candidates for RC
 In particular, for OOP systems --- the main focus of this thesis --- \xref{spin--orbit torque} provides an efficient input method that synergises well with readout via the \xref{anomalous Hall effect}.
 
 \subsubsection{Input}
-In practice, using magnetic fields to switch nanomagnets is not ideal.
+In practice, using magnetic fields to switch \link{single-domain nanomagnet}{nanomagnets} is not ideal.
 External coils are frequency-limited by their inductance, while on-chip striplines can provide more localised fields but remain relatively inefficient.
-Furthermore, if the magnetic fields are not properly confined to the targeted nanomagnets, they may inadvertently disturb other parts of the system.
+Furthermore, if the generated magnetic fields are not properly confined to the targeted nanomagnets, they may inadvertently disturb other parts of the system.
 In contrast, all-electrical methods exist that bypass these issues by directly injecting spins into the magnet, thereby exerting a torque on the magnetisation.
 This offers much faster, more energy-efficient control without requiring strong magnetic fields, making them far better suited for on-chip implementations.
 
 \paragraph{Spin-transfer torque}
-A well-established method for switching nanomagnets is \idx{spin-transfer torque} (STT)~\cite{SlonczewskiSTT}, as has been widely used in, e.g., magnetic random-access memory (STT-MRAM)~\cite{brataas2012current}.
-When an electrical current with a spin polarisation $\vc{\sigma}$ enters a ferromagnetic material, the injected spins will exert a torque $\vc{\tau}_\mathrm{STT} \propto \vc{\mu} \times (\vc{\mu} \times \vc{\sigma})$ on the local magnetisation $\vc{\mu}$, causing it to align with the injected spin polarisation.
+A well-established method for switching \link{single-domain nanomagnet}{nanomagnets} is \idx{spin-transfer torque} (STT)~\cite{SlonczewskiSTT}, as has been widely used in, e.g., magnetic random-access memory (STT-MRAM)~\cite{brataas2012current}.
+When an electrical current with a \xlabel{spin polarisation} $\vc{\sigma}$ enters a \link{ferromagnetism}{ferromagnetic} material, the injected spins will exert a torque $\vc{\tau}_\mathrm{STT} \propto \vc{\mu} \times (\vc{\mu} \times \vc{\sigma})$ on the local \xref{magnetisation} $\vc{\mu}$, causing it to align with the injected spin polarisation.
 Typically, this polarisation is generated by passing a current through a stack of two ferromagnetic layers: the free layer (i.e., the thin-film nanomagnet to be switched) and a fixed layer whose magnetisation is known or controlled by other means.
 When both layers are sufficiently close together for the spin polarisation to survive between them, the STT will promote a known magnetisation direction in the free layer~\cite{SOT_FM_AFM,mumax3tutorial}. % remain coherent?
 In OOP nanomagnets, both layers are therefore often stacked on top of each other, with the current passing vertically through both of them.
@@ -355,25 +355,25 @@ While this is an effective method, such a multilayer structure increases fabrica
 More recently, switching through \idx{spin--orbit torque} (SOT) has attracted attention as an alternative to STT, as it eliminates the need for a second magnetic layer or vertically flowing current~\cite{mumax3tutorial}.
 Instead, it only requires a heavy-metal layer with strong spin--orbit coupling (e.g., \ce{Pt}, \ce{Ta}, \ce{W} \dots) to be adjacent to the ferromagnet~\cite{SOT_Roadmap}.
 Typically, a heterostructure is used where a ferromagnet is patterned on top of a heavy-metal underlayer --- for instance, the OOP magnets considered in~\cref{ch:Applications} are \ce{Co}-\ce{Pt} multilayers~\cite{KUR-24}. % exactly the type of structure that supports SOT.
-When an in-plane electrical current passes through the underlayer, a spin polarisation will accumulate at the interface with the ferromagnet as a result of the bulk spin Hall effect~\cite{SHE} and/or interfacial Rashba-Edelstein effect~\cite{SOT_Rashba}. % RE effect due to symmetry being broken at an interface. The bulk spin Hall effect often provides the dominant damping-like torque, while any interfacial Rashba effect contributes mainly to the field-like term. % SOT does not originate from a single underlying phenomenon, but is an umbrella term for various effects that all relate to spin--orbit coupling and end up generating a torque in a magnetic material.
-These spins, polarised in-plane and perpendicular to the electrical current, can then diffuse into the ferromagnet and exert a torque on its magnetisation~\cite{mumax3tutorial}.
+When an in-plane electrical current passes through the underlayer, a \xref{spin polarisation} will accumulate at the interface with the ferromagnet as a result of the bulk \xlabel{spin Hall effect}~\cite{SHE} and/or interfacial \xlabel{Rashba-Edelstein effect}~\cite{SOT_Rashba}. % RE effect due to symmetry being broken at an interface. The bulk spin Hall effect often provides the dominant damping-like torque, while any interfacial Rashba effect contributes mainly to the field-like term. % SOT does not originate from a single underlying phenomenon, but is an umbrella term for various effects that all relate to spin--orbit coupling and end up generating a torque in a magnetic material.
+These spins, polarised in-plane and perpendicular to the electrical current, can then diffuse into the ferromagnet and exert a torque on its \xref{magnetisation}~\cite{mumax3tutorial}.
 Note that this is indeed distinctly different from STT, where the spin polarisation originates from another magnet and flows straight through the structure~\cite{SOT_Roadmap}. \par
 This torque is often decomposed into two orthogonal components.
-The field-like torque $\vc{\tau}_\mathrm{FL} \propto \vc{\mu} \times \vc{\sigma}$ causes a precession of the magnetic moment $\vc{\mu}$ around the spin polarisation $\vc{\sigma}$.
+The field-like torque $\vc{\tau}_\mathrm{FL} \propto \vc{\mu} \times \vc{\sigma}$ causes a precession of the \xref{magnetic moment} $\vc{\mu}$ around the spin polarisation $\vc{\sigma}$.
 On the other hand, the damping-like component $\vc{\tau}_\mathrm{DL} \propto \vc{\mu} \times (\vc{\mu} \times \vc{\sigma})$ aligns the magnetic moment with the spin polarisation~\cite{SOT_Roadmap,SOT_FM_AFM}.
 The latter is functionally similar to STT, earning it the name Slonczewski-like SOT.
-It has been shown that the field-like SOT can act as a strong transverse effective field, upwards of $\SI{1}{\tesla}$ per $\SI{e8}{\ampere\per\centi\metre\squared}$~\cite{SOT_Rashba}, making it a very efficient method to switch OOP nanomagnets~\cite{vlasov2022optimal,SOTswitchingCoPt,SHE_CurrentInducedSwitching,SpintronicsEnergyEfficientComputing}. \par
+It has been shown that the field-like SOT can act as a strong transverse effective field, upwards of $\SI{1}{\tesla}$ per $\SI{e8}{\ampere\per\centi\metre\squared}$~\cite{SOT_Rashba}, making it a very efficient method to switch OOP \link{single-domain nanomagnet}{nanomagnets}~\cite{vlasov2022optimal,SOTswitchingCoPt,SHE_CurrentInducedSwitching,SpintronicsEnergyEfficientComputing}. \par
 However, SOT alone does not guarantee deterministic switching of an OOP ferromagnetic layer, as the in-plane spin polarisation does not differentiate between the `up' and `down' magnetic states.
 To resolve this, additional symmetry breaking is required, more specifically with respect to the plane formed by the electrical current and the interface normal~\cite{SOT_Roadmap}.
-This can be achieved in a plethora of ways, e.g., by an in-plane magnetic field, an exchange bias layer, a source of OOP spin polarisation, exploitation of crystal symmetries if possible, or geometrical asymmetry in the system~\cite{SOT_firstprinciplesCoPt,SOT_Roadmap}.
+This can be achieved in a plethora of ways, e.g., by an in-plane magnetic field, an \xlabel{exchange bias} layer, a source of OOP spin polarisation, exploitation of crystal symmetries if possible, or geometrical asymmetry in the system~\cite{SOT_firstprinciplesCoPt,SOT_Roadmap}.
 The polarity of switching depends on the direction of the applied current, the material, and the symmetry breaking.
 Hence, when it is known which current direction corresponds to a preferential `up' or `down' magnetisation, electrical control of the magnetisation can be achieved~\cite{SOT_PMAinsulator}.
 
 \subsubsection{Output}
 \paragraph{Anomalous Hall effect}
-Our method of choice to obtain electrical output from ensembles of out-of-plane nanomagnets is to make use of the \idx{anomalous Hall effect} (AHE).
-In the ordinary Hall effect, an electrical current flowing through a conductor (the Hall bar) generates a transverse voltage, since the current generates a magnetic field which exerts a Lorentz force on the electrons.
-When the conductor is a ferromagnet, an additional contribution appears that is proportional to the magnetisation of the material.
+Our method of choice to obtain electrical output from ensembles of out-of-plane \link{single-domain nanomagnet}{nanomagnets} is to make use of the \idx{anomalous Hall effect} (AHE).
+In the ordinary Hall effect, an electrical current flowing through a conductor (the \xlabel{Hall bar}) generates a transverse voltage, since the current generates a magnetic field which exerts a Lorentz force on the electrons.
+When the conductor is a \link{ferromagnetism}{ferromagnet}, an additional contribution appears that is proportional to the \xref{magnetisation} of the material.
 While its exact origin is still a matter of debate, it is thought to originate from spin--orbit coupling: spin-polarised electrons passing through the ferromagnet get scattered, leading to a charge imbalance across the width of the conductor~\cite{AHE_Culcer,AHE}. \par
 Rather than express it as a voltage, the Hall effect is more often described by the transverse resistivity (i.e., the ratio between transverse electric field $E_x$ and longitudinal current density $J_y$) $\rho_{xy} = E_x/J_y = R_0 H_z + R_\mathrm{AHE} M_z$, with the Hall bar in the $xy$-plane~\cite{SHE,AHE}. % TODO: should these symbols be in the symbols list? Especially H vs. B
 The first term captures the ordinary Hall effect, the latter the AHE with $M_z$ the OOP magnetisation component and $R_\mathrm{AHE}$ the anomalous Hall coefficient~\cite{AHE}.
@@ -383,22 +383,22 @@ The readout resolution depends on various factors like $R_\mathrm{AHE}$ and the 
 Since the AHE synergises well with the geometry of OOP nanomagnetic ensembles, it is the method of choice to obtain readout from such reservoirs.
 
 \paragraph{Anisotropic magnetoresistance}
-Another phenomenon that can provide readout is \idx{anisotropic magnetoresistance} (AMR): when an electrical current flows through a ferromagnetic material, the resistance weakly depends on the angle $\theta$ between this current and the magnetisation~\cite{AMR}.
+Another phenomenon that can provide readout is \idx{anisotropic magnetoresistance} (AMR): when an electrical current flows through a \link{ferromagnetism}{ferromagnetic} material, the resistance weakly depends on the angle $\theta$ between this current and the \xref{magnetisation}~\cite{AMR}.
 More specifically, the total resistance $R(\theta) = R_\perp + (R_\parallel - R_\perp) \cos(2\theta)$~\cite{Hu2023}.
 This makes it possible to distinguish between perpendicular and parallel magnetisation states.
 While this is a very accessible resistance measurement-based technique, it has several limitations. \par
 First off, while permalloy exhibits a relatively strong AMR, the absolute effect remains rather small in comparison to the total resistance --- at most a few percent.
 This can make it hard to accurately determine the magnetisation state without the use of lock-in amplifiers~\cite{ArchitecturesNanoringRC,Vidamour2023}.
 Furthermore, due to the $\cos(2 \theta)$-dependence, AMR does not reveal information about the magnetisation direction, only about the local angle between the magnetisation and current.
-It also requires the system to be electrically connected: this makes it an appropriate choice for the ring system in the \spinengine project~\cite{Vidamour2023,ArchitecturesNanoringRC,DynamicEmergence_NanomagneticSystem}, for example, but prevents it from directly being applied to ensembles of nanomagnets.
+It also requires the system to be electrically connected: this makes it an appropriate choice for the ring system in the \spinengine project~\cite{Vidamour2023,ArchitecturesNanoringRC,DynamicEmergence_NanomagneticSystem}, for example, but prevents it from directly being applied to ensembles of \link{single-domain nanomagnet}{nanomagnets}.
 In interconnected ferromagnets, it only provides a limited amount of information for RC as a lot of the system's dynamics are obscured.
 Ensembles of OOP nanomagnets, in particular, would need the current to flow vertically through each magnet, further complicating the system.
 
 \paragraph{Ferromagnetic resonance}
 Another possible method to obtain rich output from a reservoir is \idx{ferromagnetic resonance} (FMR)~\cite{AdaptiveProgrammableRC,gartside2022reconfigurable}.
 This involves applying a microwave field and measuring the absorption as a function of frequency.
-When the frequency matches a resonance of the internal magnetisation dynamics of a nanomagnet, an absorption peak appears.
-The complexity of internal magnetisation dynamics, represented in the frequency domain, can provide a rich and non-linear reservoir output~\cite{AdaptiveProgrammableRC,Gomez-Iriarte_FMR}.
+When the frequency matches a resonance of the internal \xref{magnetisation} dynamics of a \link{single-domain nanomagnet}{nanomagnet}, an absorption peak appears.
+The complexity of internal magnetisation dynamics, represented in the frequency domain, can provide a rich and non-linear \link{reservoir computing}{reservoir} output~\cite{AdaptiveProgrammableRC,Gomez-Iriarte_FMR}.
 However, the peripheral equipment required to perform the technique renders it energy-inefficient and unsuitable for on-chip applications.
 Furthermore, as the wavelengths involved in FMR are on the order of centimetres, it does not provide local information --- though for RC purposes it does not need to, since the output space is rich regardless.
 
@@ -408,15 +408,15 @@ While these can also be seen as ``output'', they are distinct from the aforement
 
 \paragraph{Magnetic force microscopy}
 A relatively common technique is \idx{magnetic force microscopy} (MFM)~\cite{MFM}, which scans a cantilever with a very sharp tip across the sample, similar to atomic force microscopy.
-Whereas the latter uses a non-magnetic tip to measure the sample's texture at an atomic scale, MFM uses a tip coated in ferromagnetic material (e.g., \ce{Co}), giving it a vertical magnetic moment.
+Whereas the latter uses a non-magnetic tip to measure the sample's texture at an atomic scale, MFM uses a tip coated in \link{ferromagnetism}{ferromagnetic} material (e.g., \ce{Co}), giving it a vertical \xref{magnetic moment}.
 This enables a measurement of the out-of-plane\footnote{
 	It is also possible to measure the in-plane magnetisation by using an in-plane magnetised tip, but this complicates the interpretation as this mixes two components of the magnetisation~\cite{MFM_inplane}.
 } magnetic field by scanning the tip at a very low height ($\approx \SI{20}{\nano\metre}$) above the sample~\cite{NML_Carlton,JM_Masterproef}.
 However, this does not only measure the magnetic field, but also the atomic forces that a non-magnetised tip would experience.
 Therefore, a standard atomic force microscopy scan is first performed to obtain the texture profile of the sample, such that a subsequent MFM measurement can keep the magnetic tip at a constant height above the sample, thereby isolating the magnetic field strength from the atomic forces. \par
 The result is a greyscale image, where the brightness indicates the vertical component $\partial B_z/ \partial z$ of the magnetic field gradient close to the sample.
-For example, an IP nanomagnet will appear as a pair of regions with bright and dark contrast, because the divergence (convergence) of the magnetic field at its north (south) pole results in opposite vertical magnetic fields on either end~\cite{NML_Carlton}.
-An MFM image of OOP magnets (\cref{sec:3:MFM}) is easier to interpret, as there is a one-to-one correspondence between $B_z$ and the the magnetisation state. \par
+For example, an IP \link{single-domain nanomagnet}{nanomagnet} will appear as a pair of regions with bright and dark contrast, because the divergence (convergence) of the magnetic field at its north (south) pole results in opposite vertical magnetic fields on either end~\cite{NML_Carlton}.
+An MFM image of OOP magnets (\cref{sec:3:MFM}) is easier to interpret, as there is a one-to-one correspondence between $\partial B_z/ \partial z$ and the the magnetisation state. \par
 MFM is relatively cheap to set up as compared to other magnetic microscopy techniques.
 It can achieve high resolution, typically on the order of $\lesssim \SI{100}{\nano\metre}$, depending on the height and size of the tip~\cite{MFM}.
 However, it is very slow; scanning across a $\SI{}{\micro\metre}$-sized sample can take multiple minutes.
@@ -425,51 +425,51 @@ Care must also be taken that the sample is not affected by the magnetic moment o
 \paragraph{Other magnetic microscopy techniques}
 While MFM is the most commonly available magnetic microscopy technique, X-ray and optical methods are also often used~\cite{DynamicEmergence_NanomagneticSystem}.
 These can provide different information about nanomagnetic systems, as they are directly sensitive to the magnetisation rather than stray fields, making them easier to interpret in systems with in-plane magnetisation.
-X-ray based measurements like photo-electron emission microscopy (PEEM)~\cite{PEEM} and scanning transmission X-ray microscopy (STXM)~\cite{Imaging_MTXM} can make use of the \xlabel{X-ray magnetic circular dichroism} (XMCD) effect to achieve even higher resolution than MFM.
+X-ray based measurements like \xlabel{photo-electron emission microscopy} (PEEM)~\cite{PEEM} and \xlabel{scanning transmission X-ray microscopy} (STXM)~\cite{Imaging_MTXM} can make use of the \xlabel{X-ray magnetic circular dichroism} (XMCD) effect to achieve even higher resolution than MFM.
 However, they require circularly polarised X-rays, which are typically only available at synchrotron radiation facilities.
-Another option is to use optical techniques like the magneto-optical Kerr effect (MOKE)~\cite{KerrFaraday_book}: while these do not require a synchrotron, their resolution is diffraction-limited to several hundred \SI{}{\nano\metre}. \par
-Recently, scanning nitrogen-vacancy (NV) microscopy has emerged as a high-sensitivity scanning-probe technique.
-Like MFM, it uses a cantilever, but with a diamond tip in which one or more NV colour centres are embedded~\cite{NVprospects}.
+Another option is to use optical techniques like the \xlabel{magneto-optical Kerr effect} (MOKE)~\cite{KerrFaraday_book}: while these do not require a synchrotron, their resolution is diffraction-limited to several hundred \SI{}{\nano\metre}. \par
+Recently, scanning \indexlabel{nitrogen-vacancy microscopy}nitrogen-vacancy (NV) microscopy has emerged as a high-sensitivity scanning-probe technique.
+Like \link{magnetic force microscopy}{MFM}, it uses a cantilever, but with a diamond tip in which one or more NV colour centres are embedded~\cite{NVprospects}.
 This enables a precise measurement of the \textit{vector} magnetic field through the shift it induces in the energy levels of the NV centres. % vector field (both strength and direction) --> simplifies interpretation in complex geometries
 This shift can be detected through a decrease in fluorescence of the colour centre when driven by a microwave field that matches the NV resonance~\cite{NVprinciples_QDM}.
 Hence, NV microscopy does not disturb the sample since it is an all-optical technique, with high resolution achievable ($\approx \SI{10}{\nano\metre}$) due to the small size of the NV centre. % REF: qnami white paper
 
 \subsection{Magnetic platforms for reservoir computing}\label{sec:1_RC_magnetic}
-Let us now return to our discussion of physical reservoir platforms from~\cref{sec:1:PhysicalRCplatforms}, where we previously left off at magnetic and spintronic reservoirs.
+Let us now return to our discussion of physical reservoir platforms from~\cref{sec:1:PhysicalRCplatforms}, where we previously left off at magnetic and \indexlabel{spintronics}spintronic reservoirs.
 Such systems are alluring due to their non-linearity and non-volatility (i.e., memory), as well as low-power electrical interfacing through the various methods outlined in the preceding section.
 
 \subsubsection{Overview of spintronic reservoirs}
-Spin-torque nano-oscillators (STOs) are a common example of devices considered as spintronic reservoirs, owing to their small size and high frequency operation~\cite{tsunegi2019STOforcedsyncRC}.
+\indexlabel{spin-torque oscillator}Spin-torque nano-oscillators (STOs) are a common example of devices considered as spintronic reservoirs, owing to their small size and high frequency operation~\cite{tsunegi2019STOforcedsyncRC}.
 They are, in essence, a magnetic tunnel junction (MTJ): a stack of two ferromagnetic layers, one fixed and one free, separated by an insulator.
 When a current tunnels through the stack, the magnetisation of the free layer will rotate due to STT, at a microwave frequency that depends non-linearly on the input current.
-This way, by applying time-multiplexed input, a single STO has successfully been used~\cite{tsunegi2019STOforcedsyncRC} as a single dynamical node to, for instance, perform speech recognition~\cite{STO_RC_Riou2021,NeuromorphicOscillators}.
-Arrays of STOs are also more broadly used in neuromorphic computing to implement traditional neural networks more efficiently in hardware~\cite{VowelRecognition4STO}. \par
-The magnetisation within ferromagnetic thin films can also exhibit a diverse range of magnetic textures, like domain walls, spin waves and skyrmions.
+This way, by applying time-multiplexed input, a single STO has successfully been used~\cite{tsunegi2019STOforcedsyncRC} as a \xref{single dynamical node} to, for instance, perform speech recognition~\cite{STO_RC_Riou2021,NeuromorphicOscillators}.
+Arrays of STOs are also more broadly used in \xref{neuromorphic computing} to implement traditional neural networks more efficiently in hardware~\cite{VowelRecognition4STO}. \par
+The \xref{magnetisation} within \link{ferromagnetism}{ferromagnetic} thin films can also exhibit a diverse range of magnetic textures, like domain walls, spin waves and skyrmions.
 Domain walls~\cite{Venkat_2024} can get stochastically (de)pinned at defects and can mutually interact, which can result in a dynamic equilibrium that is suitable for RC~\cite{DynamicEmergence_NanomagneticSystem}.
 They can even exhibit inertia, and the position of a single domain wall can already encode sufficient information for RC~\cite{RC_DW}.
 Spin waves excited in ferromagnets with low damping (e.g., YIG) may provide complex interference patterns that can also be used in RC~\cite{RC_SpinWaveInterference}, and can also interact with domain walls.
 Skyrmions are non-trivial topological bubble-like features that typically exist at cryogenic temperatures.
 Their position and structure can be affected by currents and spin waves, which the skyrmions can in turn affect back, giving rise to a plethora of options to obtain the required non-linearity and fading memory~\cite{RC_TaskAgnosticMetrics_v2,RC_SkyrmionCrystalSW}. \par
-This thesis concerns itself with ensembles of magnetostatically coupled nanomagnets.
-Due to competing magnetostatic interactions, these ensembles often exhibit collective dynamics like phase transitions and long-range order, which can be exploited for reservoir computing.
+This thesis concerns itself with ensembles of magnetostatically coupled \link{single-domain nanomagnet}{nanomagnets}.
+Due to competing \xref{magnetostatic interactions}, these ensembles often exhibit collective dynamics like phase transitions and long-range order, which can be exploited for \xref{reservoir computing}.
 A disordered arrangement of nanomagnets has, for example, been used to predict boolean functions like those produced by cellular automata~\cite{RC_PassiveFrustratedNM,RC_DipoleNanomagnets}. % OOP
-A class of ensemble of particular interest is artificial spin ice~\cite{RC_ASI}.
+A class of ensemble of particular interest is \xref{artificial spin ice}~\cite{RC_ASI}.
 
 \subsubsection{Artificial spin ice}\label{sec:1:ASI}
-\textit{Artificial spin ice}\indexlabel{artificial spin ice} (ASI) is a type of metamaterial where magnetostatically coupled single-domain (bistable) nanomagnets are arranged on an ordered lattice~\cite{RC_ASI,flatspin}.
-The magnetisation direction of the constituent nanomagnets can switch between two states under the influence of nearby magnets, externally applied magnetic fields, thermal fluctuations, or any of the electronic input methods previously discussed~\cite{CoerciveFieldReversal,BrownThermalFluctuations,SOT_FM_AFM,brataas2012current}. \par
+\textit{Artificial spin ice}\indexlabel{artificial spin ice} (ASI) is a type of metamaterial where magnetostatically coupled \link{single-domain nanomagnet}{single-domain (bistable) nanomagnets} are arranged on an ordered lattice~\cite{RC_ASI,flatspin}.
+The \xref{magnetisation} direction of the constituent nanomagnets can switch between two states under the influence of nearby nanomagnets, \link{external magnetic field}{externally applied magnetic fields}, thermal fluctuations, or any of the electronic input methods \link{sec:1:ASI_IO}{previously discussed}~\cite{CoerciveFieldReversal,BrownThermalFluctuations,SOT_FM_AFM,brataas2012current}. \par
 A defining property of ASI is \idx{frustration}, meaning that the underlying lattice does not allow all local pairwise interactions to be simultaneously satisfied.
-The term ``spin ice'' draws inspiration from water ice, where the oxygen atoms are positioned on a diamond lattice, so each has four nearest neighbours with which it shares a hydrogen bond. % TODO FIG: figure of water ice, then spin ice, then ASI?
-However, each oxygen atom is closely bound to two hydrogen atoms, so the hydrogen atoms in the two other bonds must be more distant, leading to geometrical frustration with a ``two-in, two-out'' ice rule~\cite{nisoli2013colloquium,ZeroPointEntropy,heyderman2013artificial,MagnetizationDynamicsASI}.
-Similar to this, natural spin ices have been found in certain crystal structures like pyrochlores, whose atomic magnetic moments must obey similar ice rules that also lead to frustrated spin configurations~\cite{nisoli2013colloquium}.
-From there, it is only a small leap to ASI, where a 2D lattice of nanomagnets mimics the frustration present in natural spin ices~\cite{heyderman2013artificial}.
+The term \idx{spin ice} draws inspiration from water ice, where the oxygen atoms are positioned on a diamond lattice, so each has four nearest neighbours with which it shares a hydrogen bond. % TODO FIG: figure of water ice, then spin ice, then ASI?
+However, each oxygen atom is closely bound to two hydrogen atoms, so the hydrogen atoms in the two other bonds must be more distant, leading to geometrical frustration with a ``two-in, two-out'' \xlabel{ice rule}~\cite{nisoli2013colloquium,ZeroPointEntropy,heyderman2013artificial,MagnetizationDynamicsASI}.
+Similarly, natural spin ices have been found in certain crystal structures like pyrochlores, whose atomic \xref{magnetic moments} must obey similar ice rules that also lead to frustrated spin configurations~\cite{nisoli2013colloquium}.
+From there, it is only a small leap to ASI, where a 2D lattice of \link{single-domain nanomagnet}{nanomagnets} mimics the frustration present in natural spin ices~\cite{heyderman2013artificial}.
 Frustration can lead to correlations and collective behaviour that the individual elements would not exhibit by themselves, resulting in non-trivial dynamics and complex magnetic orderings~\cite{AdvancesASI,ASI_computation,ApparentFMpinwheel}. \par
 ASI is very attractive in comparison to its natural spin ice counterpart.
-Modern nano-fabrication methods such as electron beam lithography allow any arbitrary geometry to be realised and many other aspects of the system to be engineered, offering enormous freedom to the designer~\cite{AdvancesASI,ASI_computation}.
+Modern nano-fabrication methods such as electron beam \xlabel{lithography} allow any arbitrary geometry to be realised and many other aspects of the system to be engineered, offering enormous freedom to the designer~\cite{AdvancesASI,ASI_computation}.
 Furthermore, the mesoscopic size of ASI (a few hundred nanometers) enables direct observation of its magnetic degrees of freedom through a variety of microscopy techniques and electrical readout methods, in contrast to natural spin ices where imaging individual spins is not feasible~\cite{nisoli2013colloquium,freeman2001advances}.
-The aforementioned electrical input methods also enable precise control over these systems.
-Hence, the controlled, tunable and easily measurable environment offered by ASI has enabled the study of complex phenomena such as phase transitions with ordered domains~\cite{ApparentFMpinwheel,sklenar2019field,MeltingASI,ImagingBridgedKagome,sendetskyi2019continuous,lou2023competing,branford2012emerging} or glass-like behaviour~\cite{wang2006artificial,ZeroPointEntropy}, vertex-based frustration~\cite{morrison2013unhappy,nisoli2018topologytetris} leading to emergent topological structures such as monopoles and Dirac strings~\cite{ObservationMonopoleASI,mengotti2011kagome}, chiral dynamics~\cite{branford2012emerging,EmergentChiralityRatchet}...
-ASI also holds significant potential for computational applications~\cite{heyderman2022spin}, both in conventional logic~\cite{ComputationalLogic_2018,Gypens_Balanced,EngineeringRelaxationComputation} and neuromorphic computing~\cite{ASI_computation,RC_RecentAdvances}. \par
+The aforementioned \link{sec:1:ASI_IO}{electrical input methods} also enable precise control over these systems.
+Hence, the controlled, tunable and easily measurable environment offered by ASI has enabled the study of complex phenomena such as phase transitions with ordered domains~\cite{ApparentFMpinwheel,sklenar2019field,MeltingASI,ImagingBridgedKagome,sendetskyi2019continuous,lou2023competing,branford2012emerging} or glass-like behaviour~\cite{wang2006artificial,ZeroPointEntropy}, vertex-based frustration~\cite{morrison2013unhappy,nisoli2018topologytetris} leading to emergent topological structures such as monopoles and \xref{Dirac strings}~\cite{ObservationMonopoleASI,mengotti2011kagome}, chiral dynamics~\cite{branford2012emerging,EmergentChiralityRatchet}...
+ASI also holds significant potential for computational applications~\cite{heyderman2022spin}, both in conventional logic~\cite{ComputationalLogic_2018,Gypens_Balanced,EngineeringRelaxationComputation} and \xref{neuromorphic computing}~\cite{ASI_computation,RC_RecentAdvances}. \par
 % Q: remove the following paragraph or keep it?
 %The study of ASI has since broadened well beyond the scope of frustrated systems, and now the term is used more broadly for ensembles of nanomagnets exhibiting a wide range of physical phenomena~\cite{ASIPathsForward}.
 %A vast wealth of both periodic and aperiodic arrangements of nanomagnets has been explored throughout the literature, whose behaviour can vary wildly~\cite{nisoli2013colloquium,heyderman2013artificial,AdvancesASI,ASI_Evolutionary_ALife}.
@@ -478,38 +478,38 @@ ASI also holds significant potential for computational applications~\cite{heyder
 %Nanoring ensembles show very promising RC performance, but do not provide straightforward on-chip input and readout methods.
 %For input, rotating external fields were typically used.
 %AMR readout obscures a lot of the system's dynamics and requires the use of lock-in amplifiers, while FMR can provide a higher-dimensional readout in the form of spin-wave spectra~\cite{swindells2024fingerprinting} but requires bulky waveguides. \par % Only provides a single readout value, pretty much
-The reservoir computing potential of IP ASI has been demonstrated numerically~\cite{RC_ASI}, but the experimental application of input and state readout is not straightforward.
-For OOP ASI, efficient input (SOT) and readout (AMR) mechanisms are available, but its RC potential has not yet been demonstrated.
+The \xref{reservoir computing} potential of IP ASI has been demonstrated numerically~\cite{RC_ASI}, but the experimental application of input and readout is not straightforward.
+For OOP ASI, efficient input (\link{spin--orbit torque}{SOT}) and readout (\link{anomalous Hall effect}{AMR}) mechanisms are available, but its RC potential has not yet been demonstrated.
 Therefore, the motivation behind the work presented in this thesis was to fill this knowledge gap, by assessing the viability of reservoir computing with OOP ASI.
 
 \newpage
 \section{Modelling}\label{sec:1:Modelling}
-To determine whether an ASI possesses desirable properties for it to be used as a reservoir, the impact of various system parameters and input methods on reservoir performance must be determined.
+To determine whether an \link{artificial spin ice}{ASI} possesses desirable properties for it to be used as a \link{reservoir computing}{reservoir}, the impact of various system parameters and input methods on reservoir performance must be determined.
 Since an experimental exploration of this vast design space would take prohibitively long, a suitable simulation framework is needed.
 
 \subsection{Micromagnetic simulations}
-The internal magnetisation dynamics of ferromagnetic structures are the result of the interactions between millions of atomic magnetic moments.
+The internal \xref{magnetisation} dynamics of \link{ferromagnetism}{ferromagnetic} structures are the result of the interactions between millions of atomic \xref{magnetic moments}.
 This results in an N-body problem that often has no analytical solution, apart from a select few cases~\cite{PhD_Abert}.
 Hence, virtually all practical situations can only be solved in a numerical manner. \par
-One particularly useful approximation for the simulation of nanomagnets is \idx{micromagnetic theory}.
+One particularly useful approximation for the simulation of \link{single-domain nanomagnets}{nanomagnets} is \idx{micromagnetic theory}.
 It starts from the previously noted observation that, at the scale of the \xlabel{exchange length} $\lambda \sim \SI{5}{\nano\metre}$, the magnetisation within ferromagnets is approximately continuous.
 Hence, micromagnetic theory describes it as a continuous vector field $\vc{M}(\vc{r}) = M_\mathrm{sat} \vc{m}$ with constant norm ($\norm{\vc{m}} = 1$).
 Such a continuum approximation is valuable as it enables the simulation of $\SI{}{\micro\metre}$-size systems in a reasonable amount of time through a finite-difference or finite-element discretisation with cells of size $\leq \lambda$.
 Examples of finite-difference micromagnetic codes include OOMMF~\cite{OOMMF} and the GPU-accelerated \mumax~\cite{mumax3} and \mumaxplus~\cite{MOR-24}.
 Finite-element codes are also available, like Nmag~\cite{Nmag} and magnum.fe~\cite{magnumFE}. \par % Other codes: MagnumNP~\cite{magnumNP} (FD), Boris (FD), tetmag (FE), FeeLLGood (FE)
-The main complication in micromagnetic simulations is the infinite range of the magnetostatic interaction, which must therefore be calculated between all cells in the simulation.
+The main complication in micromagnetic simulations is the infinite range of the \xref{magnetostatic interaction}, which must therefore be calculated between all cells in the simulation.
 This can pose an issue, since the high spatial resolution needed ($\leq \lambda$) can lead to simulations that contain millions of cells.
 Furthermore, the time step must be tiny, as magnetisation dynamics can occur over fractions of picoseconds~\cite{PhD_Leliaert}.
 Therefore, since ASI may contain hundreds of magnets whose switching rate is often orders of magnitude slower, micromagnetic simulations quickly become infeasible~\cite{leo2021chiral}.
-Furthermore, to determine statistically valid RC metrics, many input cycles must be applied --- on the order of 100 for the linear estimator-based metrics --- during which many switches occur~\cite{RC_TaskAgnosticMetrics_v2}.
+Furthermore, to determine statistically valid \link{sec:1:RC_metrics}{RC metrics}, many input cycles must be applied --- on the order of 100 for the \xref{linear estimator-based metrics} --- during which many switches occur~\cite{RC_TaskAgnosticMetrics_v2}.
 To address these limitations, specialised ASI simulation tools have been developed.
 
 \subsection{Macrospin approximation}\label{sec:1:Modelling_macrospin}
-Since the magnetisation of single-domain nanomagnets is often nearly uniform throughout, a \idx{macrospin approximation} can be used where the magnet is represented as a point dipole.
-When a nanomagnet has a single easy axis --- as is typically the case in ASI --- it can be approximated as a single Ising spin.
+Since the magnetisation of \xref{single-domain nanomagnets} is often nearly uniform throughout, a \idx{macrospin approximation} can be used where the magnet is represented as a \link{point dipole model}{point dipole}.
+When a nanomagnet has a single \xref{easy axis} --- as is typically the case in ASI --- it can be approximated as a single Ising spin.
 Using such higher-level approximations greatly reduces the computational cost of simulations.
 This enables the study of collective behaviour in much larger systems and over far longer timescales, as these simulations are limited by the number of switches rather than the elapsed time.
-However, this approach comes at the cost that the internal magnetisation structure of individual nanomagnets is no longer simulated in detail. \par
+However, this approach comes at the cost that the internal \xref{magnetisation} structure of individual nanomagnets is no longer simulated in detail. \par
 One example using such a macrospin approximation is the high-performance \texttt{flatspin} simulator~\cite{flatspin} --- also used in the \spinengine project --- which implements deterministic spin flipping via a generalised \xlabel{Stoner-Wohlfarth model}~\cite{StonerWohlfarth2008}.
 This model revolves around the effective field experienced by each nanomagnet, whose switching is determined by an angle-dependent \xlabel{coercive field} --- it is easier to switch a nanomagnet by applying a field at an oblique angle w.r.t. the easy axis, rather than parallel or perpendicular to it.
 These fields are calculated based on a point dipole approximation.
@@ -517,13 +517,13 @@ This results in deterministic dynamics, unless temperature effects are included 
 Besides deterministic simulations, Monte Carlo methods are also often used to simulate both IP~\cite{Qi2008,Cugliandolo2017,LocalizedFrustratedKagome,Brunn2021,Farhan2013,ApparentFMpinwheel} and OOP~\cite{Chioar2014,PerpendicularMagnetizationASI} ASI. % Qi: kagome NN model, Cugliandolo: square vertex-based model, LocalizedFrustratedKagome: kagome NN model, Brunn: IP square 10NN model, ApparnetFMpinwheel: full MS model, Chioar: square magnetostatic, PerpendicularMagnetizationASI: model G and Z.
 However, these are typically specialized to a select few lattice geometries.
 Early works often accounted only for nearest-neighbour (NN) interactions, whose strength was either arbitrarily set or calculated separately using micromagnetic codes~\cite{Qi2008,PerpendicularMagnetizationASI}. % REFS: 'moller2006artificial': bit broader using dipolar interaction, though seemingly still only for nearest neighbors. 'lou2023competing': dipole model for half-occupation IP Ising. 'sendetskyi2019continuous': dipole model for square ASI. 'EngineeringRelaxationComputation': KMC on dipole model, seemingly for square arrays.
-More recently, the importance of long-range magnetostatic interactions has been emphasized to improve correspondence to experiments~\cite{Chioar2014,Rougemaille2011,Brunn2021}.
+More recently, the importance of long-range \xref{magnetostatic interactions} has been emphasized to improve correspondence to experiments~\cite{Chioar2014,Rougemaille2011,Brunn2021}.
 As such, vertex~\cite{gilbert2014emergent,Saglam2022Tetris,Goryca2021Plasma,MeltingASI} or hybrid NN/vertex charge~\cite{Canals2016,zhang2013crystallites} models have become more prevalent, especially for square-lattice ASI. % 'MeltingASI': 16-vertex ice model, 'gilbert2014emergent': MC sims based on a vertex model and interacting magnetic charges. 'zhang2013crystallites': uses monopoles and NN couplings to model kagome ASI with Metropolis and loop update. 
 Beyond-NN interaction models, including full magnetostatically coupled models~\cite{ApparentFMpinwheel,mengotti2011kagome}, are also used for square-~\cite{Brunn2021,Farhan2013,sklenar2019field} and triangular-based~\cite{Chioar2014,Rougemaille2011,Hofhuis2020} lattices, for example. \par % 'sklenar2019field': 3NN interactions calculated by mumax on quadrupole lattice. 'mengotti2011kagome' use a full dipole model with Ewald summation for PBC.
 Here, we opt to develop our own simulation toolkit: \hotspice~\cite{MAES-24}.
-This was driven by a desire to blend the approach of \texttt{flatspin}~\cite{flatspin} --- a general-purpose GPU-accelerated IP ASI simulator --- with the rather purpose-built Monte Carlo toolkits listed above, to obtain efficient simulation of RC in OOP ASI.
+This was driven by a desire to blend the approach of \texttt{flatspin}~\cite{flatspin} --- a general-purpose GPU-accelerated IP ASI simulator --- with the rather purpose-built Monte Carlo toolkits listed above, to obtain efficient simulation of \link{reservoir computing}{RC} in OOP ASI.
 The result is a versatile Monte Carlo simulator that aims to capture IP and OOP ASI physics with minimal arbitrary parameters (most importantly, the magnets' anisotropy, magnetic moment and temperature) for a variety of lattice configurations.
-System dynamics are determined by the switching probability of each magnet, which is calculated based on the energy barrier separating its two stable states.
+System dynamics are determined by the switching probability of each magnet, which is calculated based on the \link{effective energy barrier}{energy barrier} separating its two stable states.
 Given the importance of considering long-range \xref{magnetostatic interactions} --- particularly for OOP systems --- as highlighted by Chioar~\etal~\cite{Chioar2014}, \hotspice{} explicitly accounts for the magnetostatic interactions between all magnets.
-Various optional model variants have also been implemented to enable a closer match to experiments.
-The details of the \hotspice simulator will be extensively discussed in~\cref{ch:Hotspice}, after which it is used in~\cref{ch:Applications} to explore reservoir computing in OOP ASI.
+Various optional model improvements have also been implemented to enable a closer match to experiments.
+The details of the \hotspice simulator will be extensively discussed in~\cref{ch:Hotspice}, after which it is used in~\cref{ch:Applications} to explore \xref{reservoir computing} in OOP ASI.

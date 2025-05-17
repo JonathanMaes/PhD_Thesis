@@ -80,7 +80,7 @@ By omitting certain magnets from these lattices, several others like the Tetris~
 \newpage
 \section{Energy calculation}\label{sec:2:Energy}
 %The energy of the system is an essential quantity in these Monte Carlo simulations.
-In this section, we will list the various energy contributions used in \hotspice, explain how we may account for the finite size of real nanomagnets within this Ising-like model, and show how the effective energy barrier $\EBeff$ is calculated.
+In this section, we will list the various energy contributions used in \hotspice, explain how we may account for the finite size of real \link{single-domain nanomagnet}{nanomagnets} within this Ising-like model, and show how the \xref{effective energy barrier} $\EBeff$ is calculated.
 
 \subsection{Energy contributions}
 Three \idx{energy contributions} have been implemented\footnote{
@@ -93,7 +93,7 @@ Three \idx{energy contributions} have been implemented\footnote{
 		E_{\mathrm{MS},i,j} = \frac{\mu_0}{4 \pi} \ab(\frac{\vc{\mu}_i \bcdot \vc{\mu}_j}{\abs{\vc{r}_{ij}}^3} - \frac{3(\vc{\mu}_i \bcdot \vc{r}_{ij}) (\vc{\mu}_j \bcdot \vc{r}_{ij})}{\abs{\vc{r}_{ij}}^5}) \mathrm{,}
 	\end{equation}
 	with $\mu_0$ the vacuum permeability and $\vc{r}_{ij} = \vc{r}_j - \vc{r}_i$ the vector connecting the two magnetic dipoles $\vc{\mu}_i$ and $\vc{\mu}_j$. \par
-	This is the main interaction dictating how separate nanomagnets influence each other, causing the typical properties of the various ASI lattices, such as superferromagnetism in pinwheel ASI~\cite{li2018pinwheel}.
+	This is the main interaction dictating how separate nanomagnets influence each other, causing the typical properties of the various ASI lattices, such as \xref{superferromagnetism} in pinwheel ASI~\cite{li2018pinwheel}.
 	Because of its importance, this is the only interaction \hotspice considers by default when an ASI is created.
 	An ASI stores a list of energy contributions: when needed, the user must explicitly add other energy contributions to this list; see \cref{app:API}.
 	This avoids wasting calculations on energies not relevant to the simulation.
@@ -104,7 +104,7 @@ Three \idx{energy contributions} have been implemented\footnote{
 		E_{\mathrm{Z},i} = -\vc{\mu}_i \bcdot \vc{B}_\mathrm{ext} \mathrm{,}
 	\end{equation}
 	where $\vc{B}_\mathrm{ext}$ can be set for each magnet individually. \par
-	This energy contribution provides a means for the outside world to interact with the system, and is therefore indispensable when we will be investigating reservoir computing later on.
+	This energy contribution provides a means for the outside world to interact with the system, and is therefore indispensable when we will be investigating \xref{reservoir computing} later on.
 	Even if input is provided through other means than an external field, this energy contribution can often still be used by considering an effective field instead.
 	
 	\item The \textit{\xlabel{exchange coupling} energy} between nearest neighbours (NNs) $i$ and $j$
@@ -245,7 +245,7 @@ The subscript $i$ will be omitted for the remainder of this section; it is impli
 \label{sec:2:shape_anisotropy}
 An isolated single-domain nanomagnet often exhibits two stable magnetisation states separated by energy barriers.
 In IP ASI, these states usually arise from \textit{shape anisotropy}, which originates from the \xlabel{demagnetising field} of the magnet itself.
-This imposes an additional energy cost when the magnetisation does not point along the preferential \idx{easy axis}, which is usually the longest axis of the magnet's geometry~\cite{PhD_Leliaert}. \par
+This imposes an additional energy cost when the \xref{magnetisation} does not point along the preferential \idx{easy axis}, which is usually the longest axis of the magnet's geometry~\cite{PhD_Leliaert}. \par
 Shape anisotropy is quantified by a \xlabel{uniaxial anisotropy} constant $K_\mathrm{u} = \frac{\mu_0}{2} M_\mathrm{sat}^2 \Delta \mathcal{N}$, with $\Delta \mathcal{N}$ the difference between the demagnetising factors along the IP easy and hard axes of a magnet~\cite{AdvancesASI,VogelFulcherTammannFreezing,andersson2016thermally}. % (when normalised as $\mathcal{N}_x + \mathcal{N}_y + \mathcal{N}_z = 1$)
 These demagnetising factors can be calculated analytically for simple shapes like ellipsoids~\cite{EllipsoidDemag,EllipseDemag}.
 Assuming that switching occurs by \xlabel{coherent rotation}\footnote{
