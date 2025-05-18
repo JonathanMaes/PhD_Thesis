@@ -645,7 +645,7 @@ Note that $\mu_i$ and $\mu_j$ were not included in the \xref{unit cell kernel} t
 This versatility comes at the cost of two additional element-wise multiplications per interaction, which has a non-negligible performance impact as~\cref{eq:2:Kernel_unitcell} is by far the most common operation performed during the simulation of system dynamics. \\\par
 
 \subsubsection{Periodic boundary conditions}\label{sec:2:Kernels:PBC}
-The \xref{rectilinear grid} enables the straightforward implementation of first-order \idx{periodic boundary conditions} (PBC), which account for the eight nearest replicas of the ASI --- two horizontally, two vertically and four diagonally.
+The \xref{rectilinear grid} enables the straightforward implementation of first-order \idx[tosection]{periodic boundary conditions} (PBC), which account for the eight nearest replicas of the ASI --- two horizontally, two vertically and four diagonally.
 An open-boundary kernel $\vc{\mathcal{K}}^{(q)}$ can be transformed into a PBC kernel by just adding eight offset copies of the kernel to itself.
 Specifically, four copies are shifted along the axes by $\pm N_x$ or $\pm N_y$, while the remaining four are shifted diagonally by $(\pm N_x, \pm N_y)$.
 This is illustrated in~\cref{fig:2:Kernel_PBC} for an example of pinwheel ASI. \par
@@ -961,7 +961,7 @@ Beyond this, the sampling rate stagnates, eventually settling at around \SI{150e
 As such, the GPU and CPU are perfectly complimentary, with the GPU now maintaining the advantage for systems as small as $L \gtrapprox 80$.
 
 \subsubsection{RNG}
-Another factor which could affect performance is the choice of random number generator (RNG), since both update algorithms rely on generating random numbers to select the next magnet(s) to switch.
+Another factor which could affect performance is the choice of \xlabel[tosection]{random number generator} (RNG), since both update algorithms rely on generating random numbers to select the next magnet(s) to switch.
 For the \xref{first-switch method}, each switch requires $\order{N}$ random numbers --- one random switching time for each magnet.
 \xref{Metropolis-Hastings sampling}, on the other hand, only requires $\order{1}$ random numbers per switch --- randomly selecting one or multiple magnets and randomly switching them according to their \xref{acceptance probability}.
 Both of these algorithms use exponentially distributed random numbers, which can easily be generated from a uniformly distributed random number $\chi$ by the transformation $-\ln{\chi}$. \par

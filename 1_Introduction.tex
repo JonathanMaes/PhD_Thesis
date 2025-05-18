@@ -1,4 +1,4 @@
-\chapter{Introduction}\label{ch:Introduction} % TODO END: link to index terms
+\chapter{Introduction}\label{ch:Introduction}
 \glijbaantje{It is important to draw wisdom from many different places.\\If we take it from only one place, it becomes rigid and stale.}{Uncle Iroh}
 %\glijbaantje{If a machine is expected to be infallible then it cannot also be intelligent.}{Alan Turing}
 
@@ -72,8 +72,8 @@ At the intersection of \xref{neuromorphic computing} and \xref{material computat
 To explain the underlying concept, we must first take a step back and have a closer look at the aforementioned artificial neural networks.
 
 \subsection{Origin}
-\paragraph{Artificial neural networks}
-The most ubiquitous machine learning models currently in use revolve around \idx{artificial neural networks} (ANNs).
+\paragraph{Artificial neural networks\indexlabel{artificial neural network}}
+The most ubiquitous machine learning models currently in use revolve around \emph{artificial neural networks} (ANNs).
 These were originally inspired by the brain: an ANN consists of a network of non-linear summing nodes (akin to neurons) connected by directed weighted edges (akin to synapses)~\cite{EvaluatingRestrictedESNs,zurada1992introduction,AIsimulateMemoryContinuity}.
 Each node holds a numerical value: during operation, this value is determined based on the weighted sum of all nodes that feed into it.
 This allows activations to propagate through the network~\cite{lukovsevivcius2009reservoir}.
@@ -92,7 +92,7 @@ The existence of cycles has a profound impact, as an RNN may develop self-sustai
 Hence, mathematically speaking, RNNs are dynamical systems while FNNs are functions~\cite{lukovsevivcius2009reservoir}. % REF verbatim
 This enables an RNN to preserve a non-linear transformation of the input history in its internal state, providing dynamical memory and making RNNs especially well-suited for dynamic data processing~\cite{RC_RecentAdvances,ApproximationRNN}.
 However, whereas FNNs can be trained using methods such as \xlabel{backpropagation}~\cite{Backpropagation} or gradient descent, the recurrent connections in RNNs make training very computationally expensive and difficult~\cite{DifficultyTrainingRNN,EvaluatingRestrictedESNs,Moon_2021,RC_SuperconductingElectronics,funahashi1992neural}.
-Some approaches to train RNNs take inspiration from FNN: \xlabel{back-propagation through time} (BPTT), for instance, unfolds the recurrent connections in time to obtain a FNN on which backpropagation can be applied~\cite{jaeger2002tutorial}.
+Some approaches to train RNNs take inspiration from FNN: \xlabel{backpropagation through time} (BPTT), for instance, unfolds the recurrent connections in time to obtain a FNN on which backpropagation can be applied~\cite{jaeger2002tutorial}.
 However, this is not so straightforward, leading to issues regarding the calculation of the required gradients and a tendency to get stuck in local minima~\cite{RC_Tensegrity,DifficultyTrainingRNN,D-ESN-Improved}. % Other methods are real-time recurrent learning (RTRL) and extended Kalman filtering (EKE), both explained in jaeger2002tutorial.
 
 \vspace{-1em}
@@ -107,7 +107,7 @@ However, this is not so straightforward, leading to issues regarding the calcula
 
 \paragraph{Echo state networks and liquid state machines}
 To address the shortcomings of conventional RNN training methods like BPTT, two alternative concepts were independently proposed in the early 2000s, laying the foundation for what would eventually be known as reservoir computing.
-Jaeger~\cite{jaeger2001echo} presented \xlabel{echo state networks} (ESNs), while Maass~\etal~\cite{maass_LSM} presented \xlabel{liquid state machines} (LSMs)\footnote{
+Jaeger~\cite{jaeger2001echo} presented \xlabel{echo state network}s (ESNs), while Maass~\etal~\cite{maass_LSM} presented \xlabel{liquid state machine}s (LSMs)\footnote{
 	Their names reveal some fundamental desirable properties that the random recurrent network should provide.
 	In LSMs, the sparse network of spiking neurons projects inputs into a high-dimensional transient state, akin to waves in a liquid.
 	The ``echo'' of ESNs refers to the \xref{fading memory} provided by the internal dynamics of a recurrent network, where loops can retain information from past inputs.
@@ -122,7 +122,7 @@ In the next section we will explore the reservoir computing framework in more de
 
 \subsection{Reservoir computing\indexlabel{reservoir computing}}
 Reservoir computing is a machine learning framework suitable for temporal processing tasks~\cite{BookReservoirComputing}.
-The concept revolves around a ``reservoir'' --- an unspecified non-linear dynamical system --- that projects the input data into a higher-dimensional space, thereby facilitating the separation of said data by a linear transformation~\cite{appeltant2011information,KUR-24,RC_ASI}. % TODO: use figure like Fig. 2 in ~\cite{appeltant2011information}
+The concept revolves around a ``reservoir'' --- an unspecified non-linear dynamical system --- that projects the input data into a higher-dimensional space, thereby facilitating the separation of said data by a linear transformation~\cite{appeltant2011information,KUR-24,RC_ASI}. % TODO FIG: use figure like Fig. 2 in ~\cite{appeltant2011information}
 The principle is schematically illustrated in \crefSubFigRef{fig:1:NeuralNetworks}{c}.
 A weighted sum of the components of (a lower-dimensional representation of) the reservoir's state vector (green nodes) provides the output (red node) of the system as a whole. % REFs for RC, specifically training a readout layer: Dale et al., 2017; Jensen and Tufte, 2017; Sillin et al., 2013
 These weights can be trained with a simple learning algorithm like linear regression in order to produce a desired output~\cite{RC_RecentAdvances, RC_SuperconductingElectronics}.
@@ -150,7 +150,7 @@ The former benefits from a chaotic regime, while the latter (and fading memory) 
 As such, many physical reservoirs aim to balance on this ``edge of stability'' whenever it is available in the system, to balance between these properties~\cite{appeltant2011information}.
 
 \paragraph{Mathematical description}
-% TODO: add symbols to the figure
+% TODO FIG: add symbols to the figure
 In the reservoir computing paradigm, an input signal $s(t)$ perturbs a reservoir $\mathcal{R}$ --- which can be any physical or abstract non-linear dynamical system --- eliciting a response $\mathcal{R}[s](t)$.
 The full internal state of the reservoir following this perturbation is often unknown, so a $p$-dimensional readout $\vc{x}(t) \in \mathbb{R}^p$ is assumed (i.e., the green nodes in~\cref{fig:1:NeuralNetworks}).
 The final output value\footnote{
@@ -323,7 +323,7 @@ Anisotropy can also originate from the crystal structure, but this can be suppre
 Finally, \xlabel{interfacial anisotropy} can occur between the \link{ferromagnetism}{ferromagnetic} material and a substrate.
 For example, at the interface between \ce{Co} and \ce{Pt}~\cite{PMA_PdCo_PtCo}, a \idx[nolabel]{perpendicular magnetic anisotropy} (PMA) exists that acts in the immediate vicinity of the interface, where the magnetisation then prefers to align perpendicular to said interface.
 
-\paragraph{In-plane and out-of-plane nanomagnets} % Q: is this OK? What to do with the chapter 3 intro? Just remove 3.1.1?
+\paragraph{In-plane and out-of-plane nanomagnets}\phantomsection\label{sec:1:IP_OOP} % Q: is this OK? What to do with the chapter 3 intro? Just remove 3.1.1?
 Two types of \link{single-domain nanomagnet}{nanomagnets} are typically distinguished: in-plane (IP) and out-of-plane (OOP) nanomagnets.
 IP nanomagnets can readily be obtained by tailoring the geometry of the \link{ferromagnetism}{ferromagnetic} particle: a flat geometry guarantees an in-plane \xref{magnetisation} direction through the \xref{shape anisotropy}.
 This easy plane can be reduced to an \xref{easy axis} by using an elongated two-dimensional shape, like an ellipse or rectangle.
@@ -375,7 +375,7 @@ Our method of choice to obtain electrical output from ensembles of out-of-plane 
 In the ordinary Hall effect, an electrical current flowing through a conductor (the \xlabel{Hall bar}) generates a transverse voltage, since the current generates a magnetic field which exerts a Lorentz force on the electrons.
 When the conductor is a \link{ferromagnetism}{ferromagnet}, an additional contribution appears that is proportional to the \xref{magnetisation} of the material.
 While its exact origin is still a matter of debate, it is thought to originate from spin--orbit coupling: spin-polarised electrons passing through the ferromagnet get scattered, leading to a charge imbalance across the width of the conductor~\cite{AHE_Culcer,AHE}. \par
-Rather than express it as a voltage, the Hall effect is more often described by the transverse resistivity (i.e., the ratio between transverse electric field $E_x$ and longitudinal current density $J_y$) $\rho_{xy} = E_x/J_y = R_0 H_z + R_\mathrm{AHE} M_z$, with the Hall bar in the $xy$-plane~\cite{SHE,AHE}. % TODO: should these symbols be in the symbols list? Especially H vs. B
+Rather than express it as a voltage, the Hall effect is more often described by the transverse resistivity (i.e., the ratio between transverse electric field $E_x$ and longitudinal current density $J_y$) $\rho_{xy} = E_x/J_y = R_0 H_z + R_\mathrm{AHE} M_z$, with the Hall bar in the $xy$-plane~\cite{SHE,AHE}.
 The first term captures the ordinary Hall effect, the latter the AHE with $M_z$ the OOP magnetisation component and $R_\mathrm{AHE}$ the anomalous Hall coefficient~\cite{AHE}.
 Hence, the AHE is greatest when the magnetisation is perpendicular to the conductor plane and has opposite sign for opposite magnetisation directions --- good news for the OOP nanomagnets that we focus on.
 This has enabled the usage of AHE for readout in many SOT-MRAM devices, as it can directly be applied in the same heavy-metal/ferromagnet heterostructure as SOT. \par
@@ -425,7 +425,7 @@ Care must also be taken that the sample is not affected by the magnetic moment o
 \paragraph{Other magnetic microscopy techniques}
 While MFM is the most commonly available magnetic microscopy technique, X-ray and optical methods are also often used~\cite{DynamicEmergence_NanomagneticSystem}.
 These can provide different information about nanomagnetic systems, as they are directly sensitive to the magnetisation rather than stray fields, making them easier to interpret in systems with in-plane magnetisation.
-X-ray based measurements like \xlabel{photo-electron emission microscopy} (PEEM)~\cite{PEEM} and \xlabel{scanning transmission X-ray microscopy} (STXM)~\cite{Imaging_MTXM} can make use of the \xlabel{X-ray magnetic circular dichroism} (XMCD) effect to achieve even higher resolution than MFM.
+X-ray based measurements like \xlabel{photo-emission electron microscopy} (PEEM)~\cite{PEEM} and \xlabel{scanning transmission X-ray microscopy} (STXM)~\cite{Imaging_MTXM} can make use of the \xlabel{X-ray magnetic circular dichroism} (XMCD) effect to achieve even higher resolution than MFM.
 However, they require circularly polarised X-rays, which are typically only available at synchrotron radiation facilities.
 Another option is to use optical techniques like the \xlabel{magneto-optical Kerr effect} (MOKE)~\cite{KerrFaraday_book}: while these do not require a synchrotron, their resolution is diffraction-limited to several hundred \SI{}{\nano\metre}. \par
 Recently, scanning \indexlabel{nitrogen-vacancy microscopy}nitrogen-vacancy (NV) microscopy has emerged as a high-sensitivity scanning-probe technique.

@@ -1,4 +1,4 @@
-\chapter{Reservoir computing in out-of-plane artificial spin ice}\label{ch:Applications} % TODO END: link to index terms
+\chapter{Reservoir computing in out-of-plane artificial spin ice}\label{ch:Applications}
 \glijbaantje{If you find that you're spending almost all your time on theory,\\ start turning some attention to practical things; it will improve your theories.\\ If you find that you're spending almost all your time on practice,\\ start turning some attention to theoretical things; it will improve your practice.}{Donald Knuth}
 
 The main factor that motivated our research of OOP ASI for \xref{reservoir computing} (RC) was that this kind of system allows very efficient and relatively simple input and read-out methods to be used.
@@ -203,7 +203,7 @@ The \xref{effective energy barrier} $\EBeff$ of a magnet $i$ can then symbolical
 \end{equation}
 with $\sampi$ a random value from a standard normal distribution and $D_{ij}$ a factor proportional to the \xref{magnetostatic interaction} energy between magnets $i$ and $j$. \\\par
 
-The relaxation process can be tracked by the normalised average magnetisation $\mavg = \abs{\llangle s \rrangle}$ and the local \xref{antiferromagnetic} parameter $\qNN = (1 - \langle s_i s_{i+1} \rangle)/2$.
+The relaxation process can be tracked by the normalised average magnetisation $\mavg = \abs{\llangle s \rrangle}$ and the \indexlabel{local antiferromagnetic parameter}local \xref{antiferromagnetic} parameter $\qNN = (1 - \langle s_i s_{i+1} \rangle)/2$.
 In the uniform state --- where all magnetic moments point `up' --- their values are $\mavg=1$ and $\qNN=0$.
 During relaxation, they transition to $\mavg=0$ and $\qNN=1$, corresponding to a checkerboard ground state.
 Note that, while for a random state $\qNN \approx 0.5$, a value of $\qNN=0.5$ does not necessarily imply a random state. \par
@@ -411,7 +411,7 @@ Therefore, an optimisation method must be used that can find the optimum with a 
 This is an iterative method that starts from an initial guess --- estimated values of $\EEA$ and $\EMC$ can be determined based on the experimentally measured $\mavg(t)$ by using the inverse of~\cref{eq:3:relaxation_fit_ab}.
 It then explores a region in $\EEA \times \EMC \times J$-space by choosing new parameter combinations based on an acquisition function --- here, the upper confidence bound is used.
 While BO may not be the most performant method, as it converges rather slowly and its computational complexity scales with the number of iterations $n$ as $\order{n^3}$, it is sufficient for our purposes.
-More extensive parameter searches may benefit from using other optimisation techniques like the more recently proposed Lipschitz Optimisation (LIPO) algorithm~\cite{LIPO,LIPO_dlib}.
+More extensive parameter searches may benefit from using other optimisation techniques like the more recently proposed Lipschitz Optimisation\phantomsection\label{LIPO} (LIPO) algorithm~\cite{LIPO,LIPO_dlib}.
 
 \subsubsection{Results}
 This fitting procedure was used to determine the energy balance in real ASI with different magnet separations $S_\mathrm{ASI}$.
