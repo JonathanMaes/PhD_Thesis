@@ -31,8 +31,8 @@ Then, the chapter is divided into two main parts, first discussing thermally act
 
 \section{Characteristics of out-of-plane ASI}
 \subsection{Structure of out-of-plane nanomagnets} % Co/Pt multilayer, energy contributions
-\label{sec:3:OOP_nanomagnet_PMA}
-Where in-plane (IP) magnets mostly rely on \xref{shape anisotropy} to create an \xref{easy axis}, out-of-plane (OOP) magnets are realised using \xref{interfacial anisotropy} between the \link{ferromagnetism}{ferromagnetic material} and the substrate.
+\label{sec:3:OOP_nanomagnet_PMA}\indexlabel[nolabel]{single-domain nanomagnet}
+Where in-plane (IP) magnets mostly rely on \xref{shape anisotropy} to create an \xref{easy axis}, out-of-plane (OOP) magnets are realised using \indexlabel[nolabel]{interfacial anisotropy}\xref{interfacial anisotropy} between the \link{ferromagnetism}{ferromagnetic material} and the substrate.
 One example of this is the interface between \ce{Co} and \ce{Pt}, as was used in the experimental OOP ASI fabricated within the context of the \spinengine project.
 This \idx{perpendicular magnetic anisotropy} (PMA) acts in the immediate vicinity of the interface, where the \xref{magnetisation} then prefers to align perpendicular to said interface. \par
 Typically, a number of \ce{Co}-\ce{Pt} interfaces are stacked vertically, with the number of ferromagnetic \ce{Co} layers then controlling the total PMA.
@@ -44,12 +44,12 @@ It must also be noted that the magnetisation of each \ce{Co} layer must point in
 For example, the \xlabel{RKKY interaction}~\cite{RKKY_RK,RKKY_K,RKKY_Y} either promotes a parallel or anti-parallel magnetisation of successive \ce{Co} layers, depending on the precise \ce{Pt} layer thickness.
 Fortunately, the RKKY coupling is likely not dominant in a \ce{Co}-\ce{Pt} stack, as \ce{Pt} nearly satisfies the \xlabel{Stoner criterion}~\cite{PtMagneticOrder}: since the \ce{Pt} is combined with a ferromagnetic material (\ce{Co}), it is thought that this induces a ferromagnetic coupling between \ce{Co} layers regardless --- at least for reasonable \ce{Pt} thicknesses up to a few \SI{}{\nano\metre}~\cite{PerpendicularMagnetizationASI}.
 
-\subsection{ASI ground state}
+\subsection{ASI ground state}\indexlabel[tosection]{checkerboard state}
 The ground state of any system used for RC is crucial, as it dictates which input methods will excite desirable dynamics in the system and which input protocols will be ineffective, particularly for a non-volatile system.
 For most OOP spin ices, the ground state exhibits some form of \xlabel{antiferromagnetic} (AFM) ordering due to the magnetostatic interaction, which always encourages opposite magnetisation between two neighbouring OOP magnets.
 As is the case for any ASI, the ground state is at least twofold degenerate, because all interactions are symmetric under magnetisation reversal. \par
 Depending on the particular lattice upon which the OOP magnets are placed, \xref{frustration} may (e.g., triangle/Cairo; \crefSubFigRef{fig:2:ASIs}{j,l}) or may not (e.g., square/honeycomb; \crefSubFigRef{fig:2:ASIs}{i,k}) be present due to the local AFM ordering.
-If frustration is present, the global ground states of the system are hard to reach as not all local interactions can be satisfied simultaneously.
+If \xlabel[nolabel]{frustration} is present, the global ground states of the system are hard to reach as not all local interactions can be satisfied simultaneously.
 Otherwise, the symmetry of the system imposes exactly two opposite ground states, which may give rise to \textit{domain walls}\indexlabel{domain wall} in the ASI --- not to be confused with domain walls within a magnet. \par % Locally, vertices where magnets meet will have a degenerate ground state, giving rise to mobile domains dictated by frustration.
 For the OOP square-lattice ASI (\crefSubFigRef{fig:2:ASIs}{i}) in particular, which we focus on in this chapter, the ground state adopts an AFM checkerboard pattern of `up' ($\uparrow$) and `down' ($\downarrow$) magnetisation.
 We focus on the square-lattice system because it is the simplest example of a non-frustrated OOP ASI.
@@ -64,7 +64,7 @@ Input can be applied via \xref{spin--orbit torque} (SOT)~\cite{SOT_FM_AFM,SOTswi
 Both of these only require a current to be passed through an underlayer that is electrically connected to the sample, and were explained earlier in the introduction (\cref{sec:1:ASI_IO}).
 % Nonetheless, external fields are often used for input anyway in the lab during the first stages of development, because they are easier to handle than the more complicated methods that would be used in a real device. By the end of the project, Alex had used SOT in his actual devices.
 
-\paragraph{Input by spin--orbit torque}
+\paragraph{Input by \xlabel[nolabel]{spin--orbit torque}}
 In the experimental system, the intent was to apply input data by using SOT~\cite{SOTswitchingCoPt} to switch the OOP magnets.
 Since the model used by \hotspice does not use torques, but is rather based on switching energies, SOT can not directly be modelled as a torque in our simulations.
 However, the desired effect of SOT in our application is deterministic switching of magnets, as can be achieved through in-plane symmetry breaking~\cite{SOT_Roadmap}. % SOT_Roadmap mentions symmetry breaking several times, very useful resource
@@ -73,13 +73,13 @@ This is an approximation to fit SOT into the Ising-like model; the modelled fiel
 The exact form of this relationship is currently irrelevant for our RC purposes, because it only constitutes an additional non-linear transformation on the input which does not fundamentally change the RC performance of the OOP ASI itself.
 % In the case without symmetry breaking, the effect may be modelled as a temporary reduction of the PMA, as in reality a sufficiently strong SOT (applied over multiple $1/\nu_0$) will push the magnetic moment in-plane~\cite{SOT_Roadmap}, after which it falls back randomly (with higher likelihood to the lowest energy state, I suppose). But this approach raises multiple additional questions: is it meaningful to reduce the barrier only slightly?
 
-\paragraph{Readout by anomalous Hall effect}
+\paragraph{Readout by \xlabel[nolabel]{anomalous Hall effect}}
 In our paper~\cite{KUR-24}, \textit{A. Kurenkov} experimentally demonstrated electrical readout of the average magnetisation $\llangle s \rrangle$ using the \xref{anomalous Hall effect}~\cite{AHE}.
 This can therefore be used as a magnetic state readout in the simulations.
 However, reservoir computing benefits from having multiple readout values, so it would for example be desirable to populate a vector of readout values $x_i(t)$ by the average magnetisation of each lattice column $i$. \par % Fig. 6a in paper
 Experimentally\footnote{
 	A discussion about the experimental feasibility of such a grid of local readouts is given in Supplementary Information 7 of our paper~\cite{KUR-24}.
-}, this can be realised by adding more electrodes to the \xref{Hall bar} (i.e., to the conductive layer underneath the ASI through which the AHE is measured).
+}, this can be realised by adding more electrodes to the \indexlabel[nolabel]{Hall bar}\xref{Hall bar} (i.e., to the conductive layer underneath the ASI through which the AHE is measured).
 By probing different pairs of electrodes, inhomogeneities in the current density distribution provide a way to differentiate between magnets, based on their unequal contributions to the Hall resistance.
 By first performing a controlled measurement on known ASI states, where only one magnet has an opposite magnetisation to all others, the contribution of each magnet can be recorded for each pair of electrodes.
 This allows the magnetisation direction of each nanomagnet to be determined later for an unknown ASI state, through a set of linear operations. % that ``peel'' the known contributions off of the measured profile.
@@ -92,7 +92,7 @@ In the context of \xref{reservoir computing}, such a readout approach with multi
 Thermally active OOP ASI is hard to manufacture, because it must strike a delicate balance between several strong energy contributions to end up in an OOP state with a net energy barrier of only several tens of $\kBT$ at most.
 To appreciate this difficulty, let us first take a closer look at the various energy contributions in the system --- ranging from local anisotropy to large-scale interactions --- and their dependence on the geometrical structure of the OOP magnets.
 \begin{enumerate}
-	\item \textbf{Perpendicular magnetic anisotropy}\indexlabel[nolabel]{perpendicular magnetic anisotropy} constitutes the largest contribution to the total OOP anisotropy.
+	\item \textbf{Perpendicular magnetic anisotropy} constitutes the largest contribution to the total OOP anisotropy.
 	Its interfacial origin and characteristics have been discussed earlier in this chapter (see \cref{sec:3:OOP_nanomagnet_PMA}). % Anisot E: \approx\SI{1.1e-16}{\joule}
 	\item \textbf{Shape anisotropy}\indexlabel[nolabel]{shape anisotropy} of each layer due to their \xlabel[nolabel]{demagnetising field}.
 	It is of a similar order of magnitude as the PMA, but of opposite sign, favouring an IP magnetisation rather than OOP.
@@ -240,7 +240,7 @@ Initially, all magnets are in a high-energy state as they all point in the same 
 After a certain amount of time, a first magnet will switch, thereby slightly stabilising all other magnets in the ASI to some degree according to the second term of~\cref{eq:3:OOP_relaxation_EBeff}.
 Whichever magnet randomly switches next will therefore experience a slightly higher \xref{effective energy barrier} $\EBeff$ than before.
 On average, this means that the effective barrier $\max(\EBeff)$ of the most unstable magnets in the system --- those most eager to switch next --- will increase linearly with the amount of switched magnets.
-The \xref{N\'eel-Arrhenius} equation~\eqref{eq:2:Néel} translates this to an exponentially increasing switching time. \\\par
+The \indexlabel[nolabel]{N\'eel-Arrhenius}\xref{N\'eel-Arrhenius} equation~\eqref{eq:2:Néel} translates this to an exponentially increasing switching time. \\\par
 
 \cref{fig:3:OOP_relaxation} also shows that the slope generally becomes less steep for higher coupling $\EMC$.
 Following the previous discussion, we now understand that high \link{magnetostatic coupling}{coupling} results in a greater decrease of $\EBeff$ per switch, and consequently a larger exponential increase in the switching time.
@@ -321,7 +321,7 @@ Therefore, for a longer observation time, a system initially located in the froz
 However, due to the exponential character of the \xref{N\'eel-Arrhenius} law, this shift will be minimal and region~$\mathrm{IV}$ will not grow by much more than $\approx 10 \kBT$ for any reasonable timescale, as compared to~\cref{fig:3:OOP_relaxation_continuous}~\cite{KUR-24}.
 On a similar note, since the size of the ASI only affects the standard deviation on the relaxation traces, these phase diagrams will not be much different for larger lattices.
 
-\subsubsection{Exchange-coupled system}
+\subsubsection{Exchange-coupled system}\indexlabel[nolabel]{exchange coupling}
 The presence of \xref{exchange coupling} in a system affects the relaxation behaviour, resulting in deviations from the usual \link{logarithmic relaxation}{logarithmic ordering} during stage $\circled{1}$.
 This is depicted in~\cref{fig:3:OOP_relaxation_exchange} for a negative (AFM) exchange coupling $J=-8\kBT$ and a \link{net out-of-plane anisotropy}{net OOP anisotropy} $\EEA = 40\kBT$.
 
@@ -457,7 +457,7 @@ Hence, it is likely that \link{non-coherent magnetisation reversal}{non-coherent
 
 The reason for allowing the optimiser to adjust the \xref{exchange coupling} $J$ is now also clear: for $S_\mathrm{ASI} = \SI{20}{\nano\metre}$, the optimal fit yields a clear non-zero $J = 6.5 \kBT$.
 High-$\eta$ guesses are also limited to a very narrow $J$-range (\cref{fig:3:MFM_fitquality}), lending further credibility to the existence of exchange coupling in this system.
-For systems with larger spacing, a near-zero exchange coupling is found.
+For systems with larger spacing, a near-zero \xlabel[nolabel]{exchange coupling} is found.
 This may indicate that manufacturing defects caused incomplete separation of neighbouring nanomagnets in the bottom \ce{Co} layer for the smallest $S_\mathrm{ASI}$, while complete separation was achieved for $S_\mathrm{ASI} \geq \SI{25}{\nano\metre}$.
 Such defects could explain why a better \xref{fit quality} $\eta$ could be achieved for $S_\mathrm{ASI} = \SI{25}{nm}$ and \SI{30}{\nano\metre} than for $S_\mathrm{ASI} = \SI{20}{nm}$. \par
 Both $S_\mathrm{ASI} = \SI{25}{\nano\metre}$ and $\SI{30}{\nano\metre}$ are estimated to have very similar $\EMC \approx 10 \kBT$, which is in line with expectations since the difference between these two spacings is small compared to the magnet diameter $D_\mathrm{NM} = \SI{170}{\nano\metre}$.
@@ -492,7 +492,7 @@ This would also explain why the \link{net out-of-plane anisotropy}{effective ani
 
 \newpage
 \section{Reservoir computing in thermally active out-of-plane ASI}
-\subsection{Concept}
+\subsection{Concept}\indexlabel[nolabel]{reservoir computing}
 In order to use this thermally active OOP ASI as a \link{reservoir computing}{reservoir}, a method must be devised that generates a non-linear response with fading memory.
 One option to achieve this, is to use the transient regime between the AFM ground state and the uniform state: the previously discussed \link{logarithmic relaxation}{spontaneous relaxation} makes the system evolve towards the ground state, while an external stimulus can instead push the system towards the uniform state.
 This allows the usage of analog input (i.e., a continuous range of input values) since the rate at which the system is pushed away from the ground state is determined by the strength of this stimulus.
@@ -831,7 +831,7 @@ Still, manufacturing thermally active ASI remains challenging, as this requires 
 % MSE is not an ideal parameter, should use something that accounts more for the general shape, because plateaus can have equal weight as noise, while they are visually quite different.
 
 \newpage
-\section{Reservoir computing in non-volatile out-of-plane ASI}
+\section{Reservoir computing in non-volatile out-of-plane ASI}\indexlabel[nolabel]{reservoir computing}
 We now turn our attention to non-volatile ASI, to show that an ASI need not be thermally active to use it for reservoir computing.
 When the \link{net out-of-plane anisotropy}{energy barrier} $\EEA$ of a magnet is significantly higher than the thermal energy $\kBT$, the \xref{N\'eel-Arrhenius} switching law implies that it will remain stable over any reasonable timescale in the absence of external perturbations.
 For example, a magnet with $\EEA > 40 \kBT$ will most likely remain stable for multiple years.
@@ -882,7 +882,7 @@ To translate this concept to other ASI lattices, we can say that achieving contr
 Let us now consider the specifics of how this can be achieved in square-lattice OOP ASI.
 %This system is quite different from the IP pinwheel lattice used by Jensen~\etal~\cite{clocking-protocol} and will therefore require a different input method than just applying uniform fields at well-chosen angles.
 
-\paragraph{Distinguishing between the degenerate ground states in OOP ASI}
+\paragraph{Distinguishing between the degenerate ground states in OOP ASI}\indexlabel[nolabel]{antiferromagnetic}
 Since OOP ASI always has a more or less \xref{antiferromagnetic} (AFM) ground state, a uniform \link{external magnetic field}{external field} can never be used for controlled domain wall motion since it does not distinguish between the doubly degenerate domains --- thereby violating the first requirement.
 % If a uniform field were to be used, it would simply cause the magnetisation of low-$\EBeff$ magnets to align with it. Any subsequent input cycle of opposite sign would either be too weak to have any additional effect, or be strong enough for the previously switched magnets to switch back, after which the same process can repeat. Regardless, a uniform field will not obtain the much coveted fading memory, precluding its use for RC in this system.
 %Hence, for an input protocol to induce desirable dynamics in non-volatile ASI, it must be specifically tailored to the lattice geometry. \par
@@ -1113,8 +1113,8 @@ The clocking dynamics are sensitive to the precise input strength, and the prese
 This makes it harder to predict which input strength $B$ will result in the best performance, which can also be different for each metric.
 Therefore, while the optimal field magnitude is predictable to some extent, it is also varied to ensure hitting the ``sweet spot'' for all metrics.
 
-\paragraph{Matrix rank-based metrics}
-Three \xref{matrix rank-based metrics} can be calculated (\cref{sec:1:RC_metrics_KQ}): the \xref{kernel-quality} $K$, \xref{generalisation-capability} $G$ and \xref{computing capacity} $C=K-G$.
+\paragraph{Matrix rank-based metrics}\indexlabel[nolabel]{matrix rank-based metrics}
+Three \xref{matrix rank-based metrics} can be calculated (\cref{sec:1:RC_metrics_KQ}): the \indexlabel[nolabel]{kernel-quality}\xref{kernel-quality} $K$, \indexlabel[nolabel]{generalisation-capability}\xref{generalisation-capability} $G$ and \indexlabel[nolabel]{computing capacity}\xref{computing capacity} $C=K-G$.
 The latter provides a general indication of how suitable a particular system is for reservoir computing.
 \cref{fig:3:Clocking_Sweeps_binary_KQ} shows these metrics for the baseline system over a range of lattice spacings $a$ and field magnitudes $B$.
 Recall that the maximum value of $K$, $G$ and $C$ is the number of \link{linear readout layer}{readout nodes}; here, a $20 \times 20$ ASI with $10 \times 10$ readout nodes --- each representing the average domain type of a $2 \times 2$ magnet cluster --- yields a maximum value of 100 for all three metrics.
@@ -1137,9 +1137,9 @@ The generalisation-capability $G$ is very low for any combination of $a$ and $B$
 Because $C=K-G$ provides an indication of RC performance, a low $G$ is advantageous: it indicates that recent inputs have a far greater impact on the current state of the system than older input cycles.
 In this baseline system, this low generalisation-capability allows the computing capacity $C$ to reach values as high as 80 out of 100.
 
-\paragraph{Linear estimator-based metrics}
+\paragraph{Linear estimator-based metrics}\indexlabel[nolabel]{linear estimator-based metrics}
 Although the \xref{matrix rank-based metrics} provide insight into how the system responds to various input patterns, they are relatively expensive to compute --- requiring as many input sequences as there are readout nodes (here: 100), with each sequence comprising many (here: 100) input values.
-In comparison, \xref{linear estimator-based metrics} such as \xref{non-linearity} and \xref{memory capacity} can be determined using only several hundred random input values, making them considerably more efficient to compute.
+In comparison, \xref{linear estimator-based metrics} such as \indexlabel[nolabel]{non-linearity}\xref{non-linearity} and \indexlabel[nolabel]{memory capacity}\xref{memory capacity} can be determined using only several hundred random input values, making them considerably more efficient to compute.
 Furthermore, while matrix rank-based metrics can serve as useful initial indicators of whether a system can exhibit promising dynamics for RC, they do not guarantee that a system is actually suitable for RC.
 Linear estimator-based metrics are more straightforward to interpret and provide a more accurate indication of a system's suitability for RC.
 For example, the input method with a uniform field --- which was previously dismissed for non-volatile ASI --- achieves a moderate $C \approx 40$, but yields very low values for all linear estimator-based metrics like non-linearity and memory capacity. % Matrix rank-based metrics should rather be seen as indicators of which systems do NOT give decent RC performance.
@@ -1148,7 +1148,7 @@ Therefore, to complement the findings from the previous paragraph, linear estima
 } in~\cref{fig:3:Clocking_Sweeps_binary_TA}. \par
 Note that the non-linearity metric will naturally be lower for binary input than for the scalar input it was designed for.
 The reason for this is that binary input offers only two possible values, making it generally easier to fit a linear model to the input-output relationship.
-Therefore, the \xref{parity check} metric is also shown, as it was specifically designed for binary input. % See ppt 20230207
+Therefore, the \indexlabel[nolabel]{parity check}\xref{parity check} metric is also shown, as it was specifically designed for binary input. % See ppt 20230207
 
 \xfig{3_RC_OOP/Nonvolatile/Sweeps/Clocking_binary_TA_averaged.pdf}{
 	\label{fig:3:Clocking_Sweeps_binary_TA}

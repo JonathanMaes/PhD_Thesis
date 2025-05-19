@@ -1,4 +1,4 @@
-\chapter{Selection algorithms for Metropolis-Hastings multi-sampling}\label{app:Selection_algorithms}\indexlabel{selection algorithm}
+\chapter{Selection algorithms for Metropolis-Hastings multi-sampling}\label{app:Selection_algorithms}\indexlabel{selection algorithm}\indexlabel[nolabel]{Metropolis-Hastings sampling}\indexlabel[nolabel]{multi-switching}
 % TODO: good \glijbaantje{}{} about selection algorithms
 To simultaneously sample multiple magnets during \xref{Metropolis-Hastings sampling}, a selection algorithm is needed that respects the minimal distance requirement.
 Several methods are available to achieve this, whose respective benefits and drawbacks will be explored throughout this appendix. \par
@@ -40,8 +40,8 @@ The distribution is highly isotropic, apart from some discretisation effects due
 In the same vein, \crefSubFigRef{fig:2:MultiSwitch_select_Poisson}{b} shows the (cumulative) probability density of having a nearest neighbour at a certain distance.
 Nearly all nearest neighbours are at a distance $\rmin \leq r \leq 2\rmin$, as expected from Bridson's algorithm.
 The probability density is rather spiky, due to the sampling occurring on a rectilinear grid in \hotspice. \par
-\crefSubFigRef{fig:2:MultiSwitch_select_Poisson}{c} checks that the sampling method does not sample any part of the ASI at a higher rate than another part, which would result in a violation of detailed balance.
-Luckily, this panel is very boring, so detailed balance is still satisfied. \par
+\crefSubFigRef{fig:2:MultiSwitch_select_Poisson}{c} checks that the sampling method does not sample any part of the ASI at a higher rate than another part, which would result in a violation of \xref{detailed balance}.
+Luckily, this panel is very boring, so \xlabel[nolabel]{detailed balance} is still satisfied. \par
 Finally, \crefSubFigRef{fig:2:MultiSwitch_select_Poisson}{d} shows the average spatial Fourier spectrum of a set of sampled points, called a \idx{periodogram}.
 This metric is often used to compare the various methods for generating Poisson disc distributions~\cite{PoissonDiskComparison}.
 An ideal blue noise point set exhibits weak low-frequency energy~\cite{EfficientBlueNoisePointSets}, as is the case here in the centre of the periodogram.

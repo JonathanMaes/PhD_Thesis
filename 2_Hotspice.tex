@@ -69,7 +69,7 @@ The remaining four IP and four OOP lattices are also related: the magnets in the
 By omitting certain magnets from these lattices, several others like the Tetris~\cite{Saglam2022Tetris,nisoli2018topologytetris} and short-island Shakti~\cite{gilbert2014emergent} lattices can be constructed.
 
 \xfig[1.0]{2_Hotspice/ASIs.pdf}{
-	Predefined artificial spin ice (ASI) lattices available in \hotspice.
+	Predefined \xlabel[nolabel]{artificial spin ice} (ASI) lattices available in \hotspice.
 	The unit cell of each lattice is delineated by a central dark grey rectangle.
 	The red indicator defines the lattice parameter $a$.
 	In the Ising approximation, the magnetisation of in-plane magnets (top) aligns along the major axis of the depicted ellipses.
@@ -652,7 +652,7 @@ This is illustrated in~\cref{fig:2:Kernel_PBC} for an example of pinwheel ASI. \
 This construction works because elements near the edge of a kernel represent interactions between distant magnets on opposite sides of the ASI, which are the interactions most affected by PBC.
 Since the middle region of the open-boundary \link{unit cell kernel}{kernel} already stores the interaction between nearby magnets, PBC can be applied by re-using these central values and moving the kernel by $\pm N_x$ and/or $\pm N_y$. \\\par
 
-This approach has the advantage that PBC do not impact performance, as they are baked into the kernel, contrary to the alternative of using a circular convolution.
+This approach has the advantage that PBC do not impact performance, as they are baked into the kernel, contrary to the alternative of using a \xlabel[nolabel]{circular convolution}.
 However, this method is limited to ASI consisting of an integer number of \xref{unit cells} as systems with truncated unit cells along an edge can not properly be tiled.
 Higher-order PBC --- beyond only the 8 nearest copies --- can not be calculated based on an open-boundary kernel since it does not include interactions with such distant magnets.
 Due to the rapid $1/r^3$ decline of the \xref{magnetostatic interaction} over distance, the use for such higher-order PBC would be very limited for 2D systems, and they were therefore not implemented.
@@ -926,7 +926,7 @@ We will take a look at this next.
 The \xref{first-switch method}, used in the preceding discussion about performance, does not implement a \xref{multi-switching} procedure.
 This makes it very inefficient for large systems: for a system of $N$ magnets to significantly change its macrostate, on the order of $N$ switches must occur.
 Even though the time required to perform a single switch with the first-switch method stays roughly constant up to $L<400$, the time per \xref{Monte Carlo sweep} will scale linearly with the number of magnets if each iteration only switches a single magnet.
-The ability to perform \link{multi-switching}{multiple switches} simultaneously during \xref{Metropolis-Hastings sampling} alleviates this problem, allowing for a significantly higher amount of Monte Carlo sweeps per second. \par
+The ability to perform \link{multi-switching}{multiple switches} simultaneously during \indexlabel[nolabel]{Metropolis-Hastings sampling}\xref{Metropolis-Hastings sampling} alleviates this problem, allowing for a significantly higher amount of Monte Carlo sweeps per second. \par
 \cref{fig:2:Performance} shows the performance of the multi-switching algorithm as a function of system size, both for calculation on the CPU (a) and GPU (b).
 
 \vspace{-1em}
@@ -1024,7 +1024,7 @@ Indeed, \hotspice gives the expected total magnetostatic energy $E_{\mathrm{MS},
 \subsection{Non-interacting spin ensemble}
 When an \xref{external magnetic field} of magnitude $B$ is applied to a non-interacting paramagnetic ensemble of Ising spins, the two stable states of each magnet are no longer degenerate.
 Spins pointing toward the field will have an energy $E_1 = -\mu B$, while the opposite state has an energy $E_2 = \mu B$.
-The probabilities $\pi_1$ and $\pi_2$ that a magnet occupies either state then follow directly from the canonical partition function $Z = \exp\ab(\frac{\mu B}{\kBT}) + \exp\ab(\frac{-\mu B}{\kBT})$ as $\pi_i = \frac{1}{Z} \exp\ab(\frac{-E_i}{\kBT})$.
+The probabilities $\pi_1$ and $\pi_2$ that a magnet occupies either state then follow directly from the canonical partition function $Z = \exp\ab(\frac{\mu B}{\kBT}) + \exp\ab(\frac{-\mu B}{\kBT})$ as $\pi_i = \frac{1}{Z} \exp\ab(\frac{-E_i}{\kBT})$.\indexlabel[nolabel]{Boltzmann factor}
 Hence, at thermal equilibrium, the average magnetisation of such a paramagnetic system (in the direction of the magnetic field) follows the relation
 \begin{equation}
 	\frac{\langle M \rangle}{M_0} = \pi_1 - \pi_2 = \tanh\ab(\frac{\mu B}{\kBT}) \mathrm{,}
@@ -1111,7 +1111,7 @@ In terms of \hotspice parameters, we can write
 	\delta = \frac{8 \pi J a^3}{\mu_0 \mu^2} \mathrm{,}
 \end{equation}
 with the magnetic moment $\mu$ constant for all magnets, and $a$ the NN distance in the square lattice.
-Analytical predictions remain possible in this system at zero temperature: for $\delta < 0.85$, the magnetostatic coupling dominates, leading to a \idx{checkerboard state}~\cite{AgingIsingDipolar}.
+Analytical predictions remain possible in this system at zero temperature: for $\delta < 0.85$, the magnetostatic coupling dominates, leading to a \indexlabel[nolabel]{checkerboard state}~\cite{AgingIsingDipolar}.
 As $\delta$ increases, the ever-stronger exchange coupling leads to the formation of ferromagnetic domains, which organise into stripes due to the magnetostatic interaction, with the stripe width determined by $\delta$~\cite{StripedDipolarIsing,FMmonolayer1993}. \par
 The average stripe width is reflected in the \idx{nearest-neighbour correlation} $\langle s_i s_{i+1} \rangle$, as shown in~\cref{fig:2:Verification_dipolar} for a \hotspice simulation.
 The analytical theory is valid at zero temperature, but we are using the \link{Metropolis-Hastings sampling}{Metropolis-Hastings algorithm} which requires non-zero temperature.
@@ -1167,7 +1167,7 @@ Note that hysteresis can not be simulated using \xref{Metropolis-Hastings sampli
 Since a hysteresis only exists because the equilibrium is not reached within the timescale of the observation, Metropolis-Hastings sampling would therefore not capture the experimentally observed hysteresis at all.
 Hence, the \xref{first-switch method} must be used, with an appropriate maximum switching time $t_\mathrm{max}$. 
 
-\subsection{Pinwheel reversal}\label{sec:2:Applications_reversal_Pinwheel}
+\subsection{Pinwheel reversal}\label{sec:2:Applications_reversal_Pinwheel}\indexlabel[nolabel]{asymmetric energy barrier}
 Pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a-b}) can be seen as consisting of two intertwined sublattices whose magnets are perpendicular to each other.
 The ground state of this system consists of \link{superferromagnetism}{superferromagnetic} domains, where all magnets within each sublattice are magnetised in the same direction~\cite{EmergentChiralityRatchet,ApparentFMpinwheel,RC_ASI}.
 This lattice exhibits \idx{hysteresis}: when a strong field drives it towards a uniform state, it will remain in that state after the field is removed since this is a ground state of the system. \par
@@ -1176,7 +1176,7 @@ Notably, when they applied the field at an oblique angle (\ang{30}) to the ASI e
 To accurately reproduce the second reversal step in simulation, the \link{asymmetric energy barrier}{asymmetry in the energy barrier} between clockwise and counter-clockwise switching must be accounted for, due to the near-perpendicular field (\ang{75}) that the second sublattice experiences. \par
 We replicated this experiment using \hotspice for a few values of $\rho=\mu_\perp/\mu_\parallel$ to clearly observe the effect of the asymmetric barrier, resulting in the hysteresis loops shown in~\cref{fig:2:Hysteresis_Pinwheel}.
 When possible, simulation parameters were derived from the experimental configuration: an ASI of $25 \times 25$ unit cells with a NN centre-to-centre distance of \qty{420}{\nano\meter} was used, at room temperature (\qty{300}{\kelvin}).
-The \xref{magnetic moment} and \link{shape anisotropy}{energy barrier} of each magnet can be derived from the geometry of the $470\times170\times\qty{10}{\nano\meter}$ stadium-shaped magnets and the permalloy (\ce{Ni_80 Fe_20}) \xref{saturation magnetisation} $M_\mathrm{sat}=\qty{800}{\kilo\ampere\per\meter}$.
+The \xref{magnetic moment} and \link{shape anisotropy}{energy barrier} of each magnet can be derived from the geometry of the $470\times170\times\qty{10}{\nano\meter}$ stadium-shaped magnets and the \xref{permalloy} \xref{saturation magnetisation} $M_\mathrm{sat}=\qty{800}{\kilo\ampere\per\meter}$.
 This yields a magnetic moment $\mu = M_\mathrm{sat} V = \qty{5.9e-16}{\ampere\meter\squared}$, and a \mumax~\cite{mumax3} simulation reveals that the energy barrier of such magnets is $\approx \qty{60}{\electronvolt}$.
 These values result in a good match with experiment as far as the field magnitude of the first reversal step is concerned.
 The simulations used the \xref{point dipole model}; performing the same simulations with the \xref{dumbbell model} results in a nearly identical hysteresis since changing to the dumbbell model has little effect on pinwheel ASI.
@@ -1197,7 +1197,7 @@ The simulations used the \xref{point dipole model}; performing the same simulati
 \vspace{-1.25em}
 
 In the experiment, the two reversal steps occurred gradually over a range of fields, resembling more of an S-curve rather than a sharp step.
-This is due to a random spread on the \xref{coercive field} of each nanomagnet due to imperfections in lithography~\cite{fraleigh2017characterization}. % REF: 'fraleigh2017characterization' examines this spread in OOP square: they infer the coercive field distribution of the magnets in their system from the width of the hysteresis loop.
+This is due to a random spread on the \xlabel[nolabel]{coercive field} of each nanomagnet due to imperfections in lithography~\cite{fraleigh2017characterization}. % REF: 'fraleigh2017characterization' examines this spread in OOP square: they infer the coercive field distribution of the magnets in their system from the width of the hysteresis loop.
 We modelled this in the simulation by introducing a random Gaussian variation on the energy barrier, with $\sigma(E_\mathrm{B})/\langle E_\mathrm{B} \rangle=\qty{7}{\percent}$ yielding the closest agreement to the experiment.
 Note that the experimental \xref{hysteresis} curve is not symmetric, in contrast to our simulations, which Li~\etal attributed to a small sample movement during their measurement which changed the applied field angle with respect to the array. \par
 As can be noted from the figure, the resulting \xref{hysteresis}, and particularly the \link{external magnetic field}{field} magnitude for the second reversal step, is highly dependent on the choice of $\rho=\mu_\perp/\mu_\parallel$.
@@ -1210,7 +1210,7 @@ A possible explanation for this is that the magnets in the experimental ASI do n
 Indications of non-uniform rotation or domain wall-mediated reversal were previously noticed by Morley~\etal~\cite{VogelFulcherTammannFreezing}.
 
 \subsection{Kagome reversal}
-In-plane kagome ASI (\crefSubFigRef{fig:2:ASIs}{g}) is a typical example of a \link{frustration}{frustrated} system: every vertex is formed by three magnets that must obey the two-in/one-out or two-out/one-in ice rule.
+In-plane kagome ASI (\crefSubFigRef{fig:2:ASIs}{g}) is a typical example of a \link{frustration}{frustrated} system: every vertex is formed by three magnets that must obey the two-in/one-out or two-out/one-in \xref{ice rule}.
 Each magnet has four NN located near its endpoints, making this lattice an interesting testing ground for the \xref{dumbbell model}.
 Both the \xref{point dipole model}~\cite{Chern2011} and dumbbell model~\cite{Moller2009} have been used in previous studies of kagome ASI.
 The point dipole model tends to significantly underestimate the NN interaction, while the dumbbell model increases the \xref{magnetostatic interaction} energy between closely spaced magnets, potentially affecting the dynamics of the system.

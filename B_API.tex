@@ -4,7 +4,7 @@
 
 \hotspice\footnote{
 	\hotspice is an abbreviation of ``hot spin ice'', for temperature plays a central role in the \xref{kinetic Monte Carlo} algorithms used for simulating artificial spin ice.
-} is written as a Python 3.10 package and can perform simulations on either CPU or GPU.
+} is written as a Python 3.10 package and can perform simulations on either \indexlabel[nolabel]{central processing unit}CPU or \indexlabel[nolabel]{graphics processing unit}GPU.
 The optimal \xref{hardware} choice depends on the size of the ASI and the \xref{update algorithm} used.
 By default, \hotspice runs on CPU using the popular NumPy~\cite{NumPy} and SciPy~\cite{SciPy} libraries.
 For GPU-accelerated array manipulation, the CuPy v11.4~\cite{CuPy} library is used, but this is an optional dependency. \par
@@ -24,7 +24,7 @@ By default, an ASI object uses only a \python{DipolarEnergy}.
 When relevant, the user has to explicitly add a \link{Zeeman energy}{\python{ZeemanEnergy}} or \link{exchange coupling}{\python{ExchangeEnergy}} using the \python{add_energy()} method of an ASI object.
 By manually setting the \python{local_interaction} field of an \python{ExchangeEnergy}, longer-range exchange interactions can be applied.
 
-\paragraph{Reservoir computing} % io and experiments modules
+\paragraph{Reservoir computing}\indexlabel[nolabel]{reservoir computing} % io and experiments modules
 The \python{hotspice.io} module provides several basic input and readout routines for ASI, such as encoding data via an external field.
 These routines can readily be used by the \python{hotspice.experiments} module, which includes methods for determining matrix rank-based~\cite{RC_ASI} and linear estimator-based~\cite{RC_TaskAgnosticMetrics_v2} RC metrics.
 While these routines suffice for most applications, we refer advanced users to the recently released \texttt{PRCpy} package~\cite{PRCpy}, which is more broadly applicable for the determination of RC metrics. \par
