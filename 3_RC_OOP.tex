@@ -556,7 +556,7 @@ In conclusion, the strength of the stimulus determines how hard the ASI will be 
 
 \subsection{Analog signal transformation and prediction}
 The transient dynamics of thermally active OOP ASI, as were illustrated in~\cref{fig:3:OOP_relaxation_input}, can be harnessed to perform \xref{reservoir computing}.
-Since this system can respond to analog input signals $s: \mathbb{R} \rightarrow [0, 1]; t \mapsto s(t)$, an alluring test to evaluate the reservoir computing capability of this system is to have it perform a signal transformation or prediction task~\cite{gartside2022reconfigurable,AdaptiveProgrammableRC,RC_NNN,TaskAdaptivePRC}. \par % REF: AvalanchesChaosNNN also does signal transformation, but it is more of a sidenote there.
+Since this system can respond to analog input signals $s: \mathbb{R} \rightarrow [0, 1]; t \mapsto s(t)$, an alluring test to evaluate the reservoir computing capability of this system is to have it perform a signal transformation or prediction task~\cite{gartside2022reconfigurable,NeuromorphicFewShot,RC_NNN,TaskAdaptivePRC}. \par % REF: AvalanchesChaosNNN also does signal transformation, but it is more of a sidenote there.
 Applying a signal $s(t)$ to the reservoir, here in the form of an \link{external magnetic field}{external field} $B_z(t)$, yields a response $\vc{x}(t) \in \mathbb{R}^p$ from the $p$ readout nodes the reservoir provides.
 The goal is to estimate a ``target'' function $y(t) \in [0,1]$ as accurately as possible based on the reservoir's response $\vc{x}(t)$.
 As explained in~\cref{sec:1:RC}, the reservoir computing paradigm includes a \xref{linear readout layer} that converts the response $\vc{x}(t)$ into an output $\hat{y}(t) = \vc{x}^\mathrm{T}(t) \cdot \vc{w}$.
@@ -600,7 +600,6 @@ Throughout the remainder of this section, we will compare the performance of the
 For a consistent comparison, the \xref{linear readout layer} will always be trained on the first 12 periods of the input signal, after which the \link{reservoir computing}{reservoir} performance is evaluated on 8 more periods.
 For signal transformation on periodic signals, as considered here, one period would normally suffice.
 However, since the thermally active ASI reservoir is subject to thermal noise, multiple periods are used to increase robustness against such noise.
-%Simulations of the signal transformation task are based on~\cite{gartside2022reconfigurable,AdaptiveProgrammableRC}, and the same thing is done in~\cite{TaskAdaptivePRC}.
 
 \paragraph{Frequency dependence}
 Consider first the simplest form of OOP square-lattice ASI: a small $11 \times 11$ system without any \xref{property gradient}, using one readout per column.
@@ -754,7 +753,7 @@ The same cut-off at $f_c$ is observed (though not shown in a figure) when the ta
 \subsection{Signal prediction task: chaotic Mackey-Glass oscillator} \label{sec:3:Thermal_Prediction}
 A special kind of ``transformation'' is a signal prediction, where the target function $y(t) = s(t + \Delta t)$ is a transformation of the input signal offset through time.
 Such a prediction task benefits from the \xref{fading memory} property of a \link{reservoir computing}{reservoir} to better infer the future evolution of the signal, while it relies less on a reservoir's \xref{non-linearity}~\cite{TaskAdaptivePRC,NeuromorphicFewShot}.
-The particular signal we will be attempting to predict with the thermally active OOP ASI is the chaotic \xlabel[tosection]{Mackey-Glass oscillator} $\mathrm{MG}(t)$~\cite{MackeyGlass}, as this is a popular benchmark in literature~\cite{RotatingNeuronsRC,AdaptiveProgrammableRC,TaskAdaptivePRC,Moon_2021,JaegerHaasWireless,ArchitecturalMarkovianESN}.
+The particular signal we will be attempting to predict with the thermally active OOP ASI is the chaotic \xlabel[tosection]{Mackey-Glass oscillator} $\mathrm{MG}(t)$~\cite{MackeyGlass}, as this is a popular benchmark in literature~\cite{RotatingNeuronsRC,NeuromorphicFewShot,TaskAdaptivePRC,Moon_2021,JaegerHaasWireless,ArchitecturalMarkovianESN}.
 It can not be written in closed form; instead, it is implicitly defined by the delay-differential equation
 \begin{equation}
 	\label{eq:3:MG}
@@ -782,7 +781,7 @@ Most strikingly, the optimum MSE\footnote{
 	\crefSubFigRef{fig:3:Prediction_MG}{a} uses $\MSE$ rather than $1/\MSE$, as $1/\MSE$ for $h=0$ is much larger than for other $h > 0$.
 	Furthermore, it is most common in literature to use $\MSE$ when reported as a function of the offset $h$.
 } exhibits both a minimum and a maximum as a function of the offset $h$.
-The resulting wave-like appearance of $\MSE(h)$ --- typical for this kind of input signal~\cite{AdaptiveProgrammableRC,ForecastingNeuralODE} --- originates from the definition of $\mathrm{MG}(t)$ as a delay-differential equation~\eqref{eq:3:MG}.
+The resulting wave-like appearance of $\MSE(h)$ --- typical for this kind of input signal~\cite{NeuromorphicFewShot,ForecastingNeuralODE} --- originates from the definition of $\mathrm{MG}(t)$ as a delay-differential equation~\eqref{eq:3:MG}.
 The characteristic delay $\tau$ makes it easier to predict $\mathrm{MG}(t + \tau)$ --- a delay $\tau$ corresponds to $h=1$, which closely aligns with the observed minimum of $\MSE(h)$.
 For larger offsets $h$, more such minima will appear near $h \in \mathbb{N}$, though they quickly become less pronounced since the oscillator is not strictly periodic over $\tau$.
 The performance at $h=0$ presents the limit of what the thermally active ASI \link{reservoir computing}{reservoir} can achieve, due to the stochastic nature of the \link{logarithmic relaxation}{relaxation process} it employs.
@@ -811,7 +810,7 @@ Generally speaking, our thermally active OOP ASI achieves an $\MSE$ of roughly 0
 This performance is on par with several other magnetic reservoirs.
 For instance, with a network of magnetic nanorings, an MSE of $\approx 0.014$ has been reported for the same transformation~\cite{Vidamour2023}.
 Comparable results have been obtained with an artificial spin-vortex ice, which achieves $\MSE \approx 0.019$ for a sine-to-sawtooth transformation and $\MSE \approx 0.01$ for a Mackey-Glass prediction at an offset $k \approx 1.4$~\cite{gartside2022reconfigurable}.
-Furthermore, combining multiple in-plane square and pinwheel ASI reservoirs in series has yielded $\MSE \approx 0.011$ for Mackey-Glass with $k \approx 0.8$ and $\MSE \approx 0.01$ on a sine-to-sawtooth transformation~\cite{AdaptiveProgrammableRC}. \par
+Furthermore, combining multiple in-plane square and pinwheel ASI reservoirs in parallel or in series has been shown to yield $\MSE \approx 0.011$ for Mackey-Glass with $k \approx 0.8$~\cite{NeuromorphicFewShot} and $\MSE \approx 0.01$ on a sine-to-sawtooth transformation~\cite{AdaptiveProgrammableRC}. \par
 Reconfigurable reservoirs can achieve better results as they are able to adapt to the task at hand.
 One example of these is a skyrmion/conical reservoir~\cite{TaskAdaptivePRC}, which obtains a better sine-to-sawtooth transformation ($\MSE \approx \SIrange{e-4}{3e-7}{}$) and Mackey-Glass signal prediction ($\MSE \approx 0.0037$), though only at very low temperature $T = \SI{4}{\kelvin}$.
 Above room temperature, $\MSE \approx 0.018$ was reported for an offset $k \approx 0.25$, closely matching the performance of our ASI reservoir. \par
@@ -1161,7 +1160,7 @@ Systems with stronger \link{magnetostatic interaction}{MS interaction} behave mo
 As envisioned, the \link{AFM clocking protocol}{clocking protocol} indeed enables the system to retain some information from previous inputs: the \xref{memory capacity} reaches values $>2$ over a wide range of the parameter space, while the \xref{parity check} reveals that (on average) the parity of the previous 3 input cycles can be recalled.
 That the parity check reaches higher values than the memory capacity was to be expected, as it is specifically tailored to binary input data whereas memory capacity is more generally applicable to scalar data, though the parity check also includes a notion of \xref{non-linearity}.
 These metrics provide more insight than the \xref{matrix rank-based metrics}, as they can directly be related to the performance of the system for certain tasks --- some tasks mostly rely on \xref{fading memory} while others mostly require non-linearity, and yet others prefer a mix of both. \par
-While $<3$ bits of memory may sound low, it is comparable to the memory capacity and parity check of other magnetic reservoirs~\cite{AdaptiveProgrammableRC,hon2021numerical,tsunegi2019STOforcedsyncRC,Venkat_2024,Vidamour_2022}. % AdaptiveProgrammableRC is similar when using a normal square ASI, but width-modulated and pinwheel ASI perform better.
+While $<3$ bits of memory may sound low, it is comparable to the memory capacity and parity check of other magnetic reservoirs~\cite{NeuromorphicFewShot,hon2021numerical,tsunegi2019STOforcedsyncRC,Venkat_2024,Vidamour_2022}. % NeuromorphicFewShot is similar when using a normal square ASI, but width-modulated and pinwheel ASI perform better.
 Higher performance can be achieved by using general RC architectures like the \xlabel{rotating neurons reservoir}~\cite{RotatingNeuronsRC} or the \xlabel{single dynamical node} paradigm~\cite{appeltant2011information}, as for example used in~\ccite{Venkat_2024,Vidamour2023}.
 %However, here we only consider the performance of the clocked ASI by itself, as these architectures can be applied to any reservoir.
 

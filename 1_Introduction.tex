@@ -128,7 +128,7 @@ A weighted sum of the components of (a lower-dimensional representation of) the 
 These weights can be trained with a simple learning algorithm like linear regression in order to produce a desired output~\cite{RC_RecentAdvances, RC_SuperconductingElectronics}.
 Crucially, \textit{the properties of the reservoir itself are not modified during training} --- only the final \xref{linear readout layer} is~\cite{RC_ASI,DynamicEmergence_NanomagneticSystem}. \par
 Since the reservoir acts as a black box, its properties can not be changed to obtain the desired response\footnote{
-	It is possible to adjust a physical reservoir to exhibit the desired properties for a given task~\cite{AdaptiveProgrammableRC,gartside2022reconfigurable}, but this is different from mathematically tuning the weights of the \link{linear readout layer}{readout layer} via a simple procedure like linear regression.
+	It is possible to adjust a physical reservoir to exhibit the desired properties for a given task~\cite{NeuromorphicFewShot,gartside2022reconfigurable}, but this is different from mathematically tuning the weights of the \link{linear readout layer}{readout layer} via a simple procedure like linear regression.
 }.
 To solve temporal tasks, a reservoir should be a high-dimensional non-linear system with \indexlabel[nolabel]{fading memory}short-term memory~\cite{NeuromorphicAFMspintronics,RC_RecentAdvances}.
 Reservoirs are therefore not limited to being purely mathematical concepts, as many physical systems naturally possess these properties~\cite{RC_DipoleNanomagnets,RC_PassiveFrustratedNM,RC_ASI,RC_RecentAdvances,NeuromorphicOscillators,VowelRecognition4STO,RC_DiffusiveMemristors,RC_MemristorTemporal,gartside2022reconfigurable}, ranging from a bucket of water~\cite{PatternRecognition_Bucket} to photonic systems~\cite{RC_Photonic} and superconducting electronics~\cite{RC_SuperconductingElectronics} --- see~\cref{sec:1:PhysicalRCplatforms}.
@@ -251,7 +251,7 @@ This introduces a form of \xref{non-linearity} into it, though it still mostly s
 
 \subsubsection{Benchmarks} % Memorisation, frequency generation, classification
 In addition to these six metrics, reservoirs are often used to perform specific benchmark tasks in literature.
-Example of these include signal transformation and prediction~\cite{AdaptiveProgrammableRC,jaeger2001echo,JaegerHaasWireless,RC_MemristorTemporal,Sunspots_Shougat,gartside2022reconfigurable,appeltant2011information,Vidamour2023}, or speech and image recognition~\cite{farronato2022reservoir,grollier2020neuromorphic,DynamicEmergence_NanomagneticSystem,Vidamour2023}. % See https://arxiv.org/html/2405.06561v
+Example of these include signal transformation and prediction~\cite{NeuromorphicFewShot,jaeger2001echo,JaegerHaasWireless,RC_MemristorTemporal,Sunspots_Shougat,gartside2022reconfigurable,appeltant2011information,Vidamour2023}, or speech and image recognition~\cite{farronato2022reservoir,grollier2020neuromorphic,DynamicEmergence_NanomagneticSystem,Vidamour2023}. % See https://arxiv.org/html/2405.06561v
 Wringer~\etal~\cite{RCbenchmarksReview1} provide a comprehensive overview of various benchmarks used throughout literature.
 They note that --- while less general than metrics --- benchmarks enable a more concrete comparison of reservoirs, whereas metrics provide a more abstract notion of computational capability.
 
@@ -395,10 +395,10 @@ In interconnected ferromagnets, it only provides a limited amount of information
 Ensembles of OOP nanomagnets, in particular, would need the current to flow vertically through each magnet, further complicating the system.
 
 \paragraph{Ferromagnetic resonance\indexlabel{ferromagnetic resonance}}
-Another possible method to obtain rich output from a reservoir is \emph{ferromagnetic resonance} (FMR)~\cite{AdaptiveProgrammableRC,gartside2022reconfigurable}.
+Another possible method to obtain rich output from a reservoir is \emph{ferromagnetic resonance} (FMR)~\cite{NeuromorphicFewShot,gartside2022reconfigurable}.
 This involves applying a microwave field and measuring the absorption as a function of frequency.
 When the frequency matches a resonance of the internal \xref{magnetisation} dynamics of a \link{single-domain nanomagnet}{nanomagnet}, an absorption peak appears.
-The complexity of internal magnetisation dynamics, represented in the frequency domain, can provide a rich and non-linear \link{reservoir computing}{reservoir} output~\cite{AdaptiveProgrammableRC,Gomez-Iriarte_FMR}.
+The complexity of internal magnetisation dynamics, represented in the frequency domain, can provide a rich and non-linear \link{reservoir computing}{reservoir} output~\cite{NeuromorphicFewShot,Gomez-Iriarte_FMR}.
 However, the peripheral equipment required to perform the technique renders it energy-inefficient and unsuitable for on-chip applications.
 Furthermore, as the wavelengths involved in FMR are on the order of centimetres, it does not provide local information --- though for RC purposes it does not need to, since the output space is rich regardless.
 
