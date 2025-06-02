@@ -1,7 +1,7 @@
 \chapter{Reservoir computing in out-of-plane artificial spin ice}\label{ch:Applications}
 \glijbaantje{If you find that you're spending almost all your time on theory,\\ start turning some attention to practical things; it will improve your theories.\\ If you find that you're spending almost all your time on practice,\\ start turning some attention to theoretical things; it will improve your practice.}{Donald Knuth}
 
-The main factor that motivated our research of OOP ASI for \xref{reservoir computing} (RC) was that this kind of system allows very efficient and relatively simple input and read-out methods to be used.
+The main factor that motivated our research of OOP ASI for \xref{reservoir computing} (RC) was that this kind of system allows very efficient and relatively simple input and readout methods to be used.
 %Early on in the \spinengine project, methods to read the state of OOP ASI had already been demonstrated experimentally on a small scale by ETHZ/PSI.
 However, their potential for RC had yet to be investigated.
 Since \hotspice is well-suited for the simulation of OOP ASI, this presented an appropriate use-case for the software developed in~\cref{ch:Hotspice}. \par % Furthermore, the other simulator developed by the consortium (flatspin) only supports in-plane magnetisation. Furthermore, \hotspice is more accurate for OOP ASI than IP ASI due to the high degree of symmetry in the former.
@@ -41,7 +41,7 @@ Firstly, since the PMA only acts at the interface, it does not increase for thic
 Secondly, in thin layers, the energy associated with in-plane shape anisotropy increases roughly linearly with thickness ($\EB=K_\mathrm{u}V$), so a maximal number of layers for a given amount of ferromagnetic material is preferable for PMA to optimally counteract the in-plane shape anisotropy.
 We will elaborate on the interplay between these energy contributions later in~\cref{sec:3:E_contributions}. \par
 It must also be noted that the magnetisation of each \ce{Co} layer must point in the same direction to obtain a usable magnet, which is not guaranteed.
-For example, the \xlabel{RKKY interaction}~\cite{RKKY_RK,RKKY_K,RKKY_Y} either promotes a parallel or anti-parallel magnetisation of successive \ce{Co} layers, depending on the precise \ce{Pt} layer thickness.
+For example, the \xlabel{RKKY interaction}~\cite{RKKY_RK,RKKY_K,RKKY_Y} either promotes a parallel or antiparallel magnetisation of successive \ce{Co} layers, depending on the precise \ce{Pt} layer thickness.
 Fortunately, the RKKY coupling is likely not dominant in a \ce{Co}-\ce{Pt} stack, as \ce{Pt} nearly satisfies the \xlabel{Stoner criterion}~\cite{PtMagneticOrder}: since the \ce{Pt} is combined with a ferromagnetic material (\ce{Co}), it is thought that this induces a ferromagnetic coupling between \ce{Co} layers regardless --- at least for reasonable \ce{Pt} thicknesses up to a few \SI{}{\nano\metre}~\cite{PerpendicularMagnetizationASI}.
 
 \subsection{ASI ground state}\indexlabel[tosection]{checkerboard state}
@@ -55,7 +55,7 @@ For the OOP square-lattice ASI (\crefSubFigRef{fig:2:ASIs}{i}) in particular, wh
 We focus on the square-lattice system because it is the simplest example of a non-frustrated OOP ASI.
 The results obtained for this system are expected to generalise to most other non-frustrated OOP ASI lattices, as they all exhibit a twofold degenerate AFM ground state.
 The reason for this is that lattices with the same nearest-neighbour (NN) spacing can only differ in their \xref{magnetostatic interaction} between next-nearest neighbours and beyond, which decays rapidly with distance.
-As a result, the ground state is largely determined by NN interactions, which prefer anti-parallel alignment.
+As a result, the ground state is largely determined by NN interactions, which prefer antiparallel alignment.
 Therefore, OOP lattices in which every closed NN loop contains an even number of magnets --- such as the square and honeycomb lattices --- are unlikely to exhibit frustration.
 
 \subsection{Input and readout: experiment to simulation} \label{sec:3:IO_exp_to_sim}
@@ -234,7 +234,7 @@ In other words, the switching process slows down exponentially, with the $i$-th 
 The cause of this is the \xref{magnetostatic interaction}\footnote{
 	Without the \xref{magnetostatic interaction}, the system would simply be a non-interacting ensemble of nanomagnets, which is known to relax to the ground state exponentially.
 	This is the opposite of \xref{logarithmic relaxation}; quantities like $\mavg$ would only show up as straight lines when using a linear time axis and logarithmic y-axis.
-	% Exponential decay would be much easier to work with for temporal input, but having no MS coupling defeats the point of using an ASI for some nonlinearity.
+	% Exponential decay would be much easier to work with for temporal input, but having no MS coupling defeats the point of using an ASI for some non-linearity.
 }.
 Initially, all magnets are in a high-energy state as they all point in the same direction.
 After a certain amount of time, a first magnet will switch, thereby slightly stabilising all other magnets in the ASI to some degree according to the second term of~\cref{eq:3:OOP_relaxation_EBeff}.
@@ -341,7 +341,7 @@ Since a negative \xref{exchange coupling} further stabilises the checkerboard st
 Most strikingly, the relaxation of an exchange-coupled system is clearly separated into plateaus, with stairs appearing at timescales where the relaxation occurs faster.
 This is in stark contrast with the near-perfect \xref{logarithmic relaxation} previously observed in systems without exchange coupling.
 The reason for this is that, contrary to the \link{magnetostatic interaction}{MS interaction}, the exchange coupling only depends on the local configuration of the nearest neighbours of each magnet.
-The amount of local configurations is limited, as each magnet can only have between 0 and 4 parallel or anti-parallel NN.
+The amount of local configurations is limited, as each magnet can only have between 0 and 4 parallel or antiparallel NN.
 Each of these five local configurations corresponds to a certain timescale at which switching is most probable, resulting in only a select few dominant switching timescales.
 Hence, each stair corresponds to magnets which all have a similar mean switching time, so the relaxation of each individual stair occurs exponentially rather than logarithmically.
 However, the overarching logarithmic relaxation is still present, as the different stairs are still separated by many orders of magnitude in time, similar to the logarithmic relaxation of a magnetostatically-coupled system. \\\par
@@ -352,11 +352,11 @@ At the first stair (e.g., $t < \SI{e-6}{\second}$ in panel 1 of~\cref{fig:3:OOP_
 When little to no magnets with 4 parallel NN remain, the relaxation rate temporarily slows down until the local magnetic configuration with the second-highest energy becomes thermally active. \par
 The second stair (e.g., $t < \SI{e-2}{\second}$ in panel 1 of~\cref{fig:3:OOP_relaxation_exchange}) is caused by magnets at the boundary of the ASI.
 Their available energy levels are distinct from those of bulk magnets, since magnets at the boundary only have 3 NN: for them, $E_\mathrm{exch} \in \{\pm 3J, \pm J\}$, as compared to $E_\mathrm{exch} \in \{\pm 4J, \pm 2J, 0\}$ for bulk magnets.
-Therefore, they are the next magnets to switch, as they initially only have 3 parallel NN but no stabilising anti-parallel NN, so $E_\mathrm{exch} = 3J$.
-This is then followed by the bulk magnets with 3 parallel but 1 anti-parallel NN ($E_\mathrm{exch} = 2J$), until all magnets have at most 2 parallel NN at the end of the third stair (e.g., $t < \SI{10}{\second}$ in panel 1 of~\cref{fig:3:OOP_relaxation_exchange}).
+Therefore, they are the next magnets to switch, as they initially only have 3 parallel NN but no stabilising antiparallel NN, so $E_\mathrm{exch} = 3J$.
+This is then followed by the bulk magnets with 3 parallel but 1 antiparallel NN ($E_\mathrm{exch} = 2J$), until all magnets have at most 2 parallel NN at the end of the third stair (e.g., $t < \SI{10}{\second}$ in panel 1 of~\cref{fig:3:OOP_relaxation_exchange}).
 As the system size increases, the height of the second stair --- which is caused by the switching of boundary magnets --- shrinks and becomes increasingly obscured by the surrounding stairs. \par
 From then on, further relaxation towards the perfect checkerboard state can only be achieved in the same way as for systems without \xref{exchange coupling}: domain walls must perform a random walk to move out of the ASI.
-The only difference in an exchange-coupled ASI is that this random walk will occur more slowly, because the exchange coupling further stabilises domain wall magnets (by $\Delta \EBeff = 2J$) since they have 3 anti-parallel and 1 parallel NN. \par
+The only difference in an exchange-coupled ASI is that this random walk will occur more slowly, because the exchange coupling further stabilises domain wall magnets (by $\Delta \EBeff = 2J$) since they have 3 antiparallel and 1 parallel NN. \par
 When the absolute value of the exchange coupling is small, as in \cref{fig:3:OOP_relaxation_exchange} with $J=-8\kBT$, separate stairs will blend together to some extent as the tails of their \xlabel{exponential relaxation} overlap.
 This effect becomes more pronounced in the presence of \xref{magnetostatic interactions}, which increase the variation in the interactions between magnets --- for instance leading to some magnets with 3 parallel NN randomly switching even before all magnets with 4 parallel NN have done so.
 Hence, the clarity of the stairs and plateaus is determined by the balance between exchange coupling and magnetostatic interactions when $J/\kBT$ is sufficiently high.
@@ -366,7 +366,7 @@ When magnetostatic interactions dominate over the exchange coupling, the stairs 
 The state of an OOP ASI is defined by the \link{net out-of-plane anisotropy}{net OOP anisotropy} $\EEA$, \xref{magnetostatic coupling} $\EMC$ and elapsed time $t$.
 Increasing $\EMC$ causes the relaxation to occur over a broader range of timescales.
 Meanwhile, $\EEA$ controls the absolute timescale of the relaxation, but has no effect on how many timescales it spans.
-For \xref{reservoir computing} purposes, a sufficiently low $\EEA$ and $\EMC$ are required --- but not too low, to maintain OOP anisotropy and a ground-state checkerboard ordering, respectively.
+For \xref{reservoir computing} purposes, a sufficiently low $\EEA$ and $\EMC$ are required --- but not too low, to maintain OOP anisotropy and a ground state checkerboard ordering, respectively.
 Therefore, practical applications exploiting systems with specific dynamics will require careful adjustment of the lattice and nanomagnet dimensions~\cite{KUR-24}.
 
 \subsection{Fitting MFM images}\label{sec:3:MFM}
@@ -383,7 +383,7 @@ The knowledge of these quantities at different moments in time can then be used 
 Any fitting procedure requires an appropriate metric $\eta$ to determine the quality of the fit.
 For this, we will use the random distribution of both $\mavg$ and $\qNN$ at the times of measurement $t_i$, as previously seen in~\cref{fig:3:OOP_relaxation}.
 These distributions are each characterised by a mean and standard deviation, which can be determined from repeated simulations --- typically, 200 relaxations are used. % We embrace the Monte Carlo nature of \hotspice.
-Therefore, each experimental data-point lies some amount of standard deviations away from the mean of this simulated distribution.
+Therefore, each experimental data point lies some amount of standard deviations away from the mean of this simulated distribution.
 Assuming a normal distribution\footnote{
 	Since the random relaxation is governed by the \xref{N\'eel-Arrhenius} equation~\eqref{eq:2:Néel}, the distribution of quantities bounded in the range $[0,1]$ --- like $\mavg$ and $\qNN$ --- will be similar to a binomial distribution.
 	For sufficiently large systems (here: $N > 100$), this can be well approximated by a normal distribution~\cite{DeMoivreLaplaceTheorem}.
@@ -901,12 +901,12 @@ Since it applies a global stimulus, it still violates the second requirement of 
 The fact that the AFM input can selectively influence domain walls is crucial, though, as it enables us to avoid saturation by introducing one last change to this input strategy.
 
 % In this regard, the AFM input method is not fundamentally different from the uniform input strategy we previously dismissed. Both simply provide each magnet with a preferential orientation, with only high-anisotropy magnets refusing to switch. Given this similarity, one might be inclined to consider them mathematically equivalent when paired with their respective readout methods. However, while both methods ultimately lead to saturation and are therefore unsuitable for RC, they differ in how they affect the microstate of the system when the magnetostatic interaction is appreciable. \par Compared to the AFM input method, a uniform field must be far stronger to have any effect, as it has to switch all magnets to the highest-energy state where all magnets have the same magnetisation direction. While the AFM input method also just pulls magnets in a certain direction, it differs in that it pulls the ASI to one of the ground states. This allows it to achieve saturation already with a far weaker input, since it only needs to affect domain wall magnets which have just $\leq 3$ oppositely magnetized NN and are therefore stable with $\EBeff \propto \EEA + 2\EMC$, as compared to $\EEA + 4\EMC$ for bulk magnets. It is therefore far easier to propagate a domain wall through the system to switch the ASI to the opposite ground state, as compared to pulling the system away from this near-equilibrium state to a uniform state. \par Hence, the effect of both global input methods on the ASI is fundamentally different, even though they both achieve saturation near-instantaneously which precludes their usage for RC.
-% Summary of the previous comment: Both the AFM input method and the uniform input impose a preferred magnetisation direction, leading to saturation and making them unsuitable for RC. However, they differ in how they interact with the system when magnetostatic interactions are significant. A uniform input requires a much stronger field to overcome the stability of bulk magnets, which have four anti-parallel NN. In contrast, the AFM input naturally drives the system toward one of its ground states and requires a weaker stimulus, as it primarily affects domain wall magnets which have fewer oppositely magnetised NN and are therefore easier to switch.
+% Summary of the previous comment: Both the AFM input method and the uniform input impose a preferred magnetisation direction, leading to saturation and making them unsuitable for RC. However, they differ in how they interact with the system when magnetostatic interactions are significant. A uniform input requires a much stronger field to overcome the stability of bulk magnets, which have four antiparallel NN. In contrast, the AFM input naturally drives the system toward one of its ground states and requires a weaker stimulus, as it primarily affects domain wall magnets which have fewer oppositely magnetised NN and are therefore easier to switch.
 
 \paragraph{Avoiding avalanches with a clocking protocol\indexlabel{AFM clocking protocol}}
-\link{avalanches}{Avalanches} can be avoided by instead applying two sub-steps for each applied input value.
+\link{avalanches}{Avalanches} can be avoided by instead applying two substeps for each applied input value.
 As illustrated in~\cref{fig:3:Clocking_protocol}, the magnets are divided into two groups, akin to the black and white squares on a checkerboard.
-In the first sub-step, the AFM stimulus is only applied to the first group, while the second sub-step only addresses the second group of magnets.
+In the first substep, the AFM stimulus is only applied to the first group, while the second substep only addresses the second group of magnets.
 The strength and/or sign of the stimulus is determined by the input value.
 We refer to this method as the \emph{AFM clocking protocol}.
 This way, since only half of the magnets are stimulated simultaneously, the other half is prevented from switching at the same time --- provided their \link{net out-of-plane anisotropy}{anisotropy} $\EEA$ is sufficiently high compared to the \link{magnetostatic coupling}{NN MS coupling }$\EMC$.
@@ -926,20 +926,20 @@ Hence, by combining an appropriate choice of input strength with the \link{AFM c
 	Illustration of the \xref{AFM clocking protocol} for controlled \xref{domain wall} movement in square-lattice OOP ASI.
 	The symbols $\bigodot$ and $\bigotimes$ respectively indicate that the external stimulus is such, that the magnet at that location would prefer an `up' or `down' \xref{magnetisation}.
 	This example shows a $5 \times 5$ lattice, but the concept is analogous for other lattice sizes.
-	Each input cycle consists of two sub-steps that each affect a different set of magnets, arranged in a checkerboard pattern: as such, only half of the magnets are stimulated at once.
+	Each input cycle consists of two substeps that each affect a different set of magnets, arranged in a checkerboard pattern: as such, only half of the magnets are stimulated at once.
 	Input cycle $A$ (associated with bit 0) and input cycle $B$ (bit 1) apply opposite stimuli.
 }
 
 To use this clocking protocol for RC, input values must be mapped to a certain magnitude of the input stimulus.
 Since we intend to use of the stepwise growth (or shrinking) of domains over only one lattice unit at a time, it is most convenient to apply this two-step input protocol to binary input data.
 Therefore, two cycles $A$ and $B$ are defined, associated with input bits `0' and `1', respectively. \par
-Both cycles consist of two sub-steps, as illustrated in~\cref{fig:3:Clocking_protocol}.
-Using the analogy of black and white squares on the checkerboard, the first sub-step of cycle $A$ causes magnets on black squares to prefer an `up' magnetisation, while the other magnets remain unaffected.
-The stimulus is then removed, after which the second sub-step causes magnets on white squares to prefer a `down' magnetisation without affecting magnets on black squares.
+Both cycles consist of two substeps, as illustrated in~\cref{fig:3:Clocking_protocol}.
+Using the analogy of black and white squares on the checkerboard, the first substep of cycle $A$ causes magnets on black squares to prefer an `up' magnetisation, while the other magnets remain unaffected.
+The stimulus is then removed, after which the second substep causes magnets on white squares to prefer a `down' magnetisation without affecting magnets on black squares.
 These preferential magnetisation directions are illustrated in~\cref{fig:3:Clocking_protocol} by the symbols $\bigodot$ and $\bigotimes$.
 Cycle $B$ is identical but promotes the opposite magnetisation direction for each magnet, in order to grow domains of the opposite type as compared to cycle $A$. \\\par
 This clocking protocol, coupled with this definition of the input, readily provides basic \link{fading memory}{memory} in the system, as the previous few input bits become encoded in the size and location of the domains.
-Since it relies on deterministic switching, the duration over which the sub-steps are applied is irrelevant\footnote{
+Since it relies on deterministic switching, the duration over which the substeps are applied is irrelevant\footnote{
 	As time is irrelevant to non-volatile ASI, all simulations use a default duration of \SI{1}{\second} per input cycle.
 }. \par
 %While this clocking protocol is likely not the only viable input method for non-volatile OOP ASI, we can at least say with certainty that simply applying a global uniform or AFM field would not yield any useful dynamics for RC.
