@@ -616,7 +616,7 @@ Denoting the grid index of the switching $\kappa$-site magnet as $(x,y)$ and usi
 \end{equation}
 containing the change in magnetostatic energy $\Delta E_\mathrm{MS}$ for each grid point, which can then simply be added to the current values of $E_\mathrm{MS}$. \par
 The kernel is also used to initialise the magnetostatic energy $\left. E_\mathrm{MS} \right|_{t=0}$ of each magnet at the start of the simulation.
-This is done by performing a convolution ($*$) rather than a pointwise multiplication:
+This is done by performing a convolution (denoted by $*$) rather than a pointwise multiplication:
 \begin{equation}
 	\label{eq:2:Kernel_init}
 	\left. \vc{E_\mathrm{MS}} \right|_{t=0} = \sum_\kappa \vc{I_\kappa} \odot \vc{\bigmu} \odot \vc{S} \odot \ab((\vc{\bigmu} \odot \vc{S}) * \vc{\mathcal{K}}^{(\kappa)}) \mathrm{,}
@@ -683,7 +683,7 @@ It is used in the same way as the kernel $\vc{\mathcal{K}}^{(\kappa)}$ in \cref{
 
 \subsubsection{Numerical error with truncated kernel}\label{sec:2:Kernels:Error}
 Since the kernel is nearly 4 times larger than the simulation domain, a straightforward performance improvement presents itself: \indexlabel[tosection]{truncated kernel}{truncating} the \xref{magnetostatic interaction} at a certain distance.
-Due to the underlying grid, the most natural way of achieving this is to reduce the size of the kernel from $(2N_x-1) \times (2N_y-1)$ to a smaller $(2R-1) \times (2R-1)$ central region, with $1 < R < \min(N_x,N_y)$.
+Due to the underlying grid, the most natural way of achieving this is to reduce the size of the kernel from $(2N_x-1) \times (2N_y-1)$ to a smaller $(2\widetilde{R}-1) \times (2\widetilde{R}-1)$ central region, with $1 < \widetilde{R} < \min(N_x,N_y)$.
 Note that the kernel size has to remain odd for the convolution to still place the switching magnet in the centre. \par
 However, such truncation will result in inaccurate calculation of the interaction energies: whenever a magnet switches, $E_\mathrm{MS}$ of distant magnets will not be updated.
 As an increasing number of magnets switch, this error will accumulate, as shown in \cref{fig:2:Kernel_cutoff} for the particular case of a pinwheel ASI where the original $199 \times 199$ kernel was truncated to a size of $41 \times 41$.
