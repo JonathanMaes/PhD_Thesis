@@ -381,8 +381,8 @@ where a halved attempt frequency $\nu_0/2$ was assigned to either switching chan
 
 \paragraph{Attempt frequency\indexlabel{attempt frequency}}
 An estimate of $\nu_0$ for coherent magnetisation reversal can be obtained from the limit $\EB \rightarrow 0$, where the \xref{switching rate} $\nu$ should approach the \xlabel{gyromagnetic precession frequency} of the magnetisation of a nanomagnet.
-This is reported to be on the order of \qtyrange{e9}{e10}{\hertz}~\cite{BrownThermalFluctuations,bean1959superparamagnetism}.
-As $\EB \rightarrow 0$, \cref{eq:2:Néel} implies that $\nu \rightarrow \nu_0$, so we use $\nu_0=\qty{e10}{\hertz}$~\cite{JM_Masterproef}. \par % Each oscillation is an attempt to leave this energy minimum.
+This is reported to be on the order of \SIrange{e9}{e10}{\hertz}~\cite{BrownThermalFluctuations,bean1959superparamagnetism}.
+As $\EB \rightarrow 0$, \cref{eq:2:Néel} implies that $\nu \rightarrow \nu_0$, so we use $\nu_0=\SI{e10}{\hertz}$~\cite{JM_Masterproef}. \par % Each oscillation is an attempt to leave this energy minimum.
 If necessary, a more precise value for $\nu_0$ can be obtained from experiments.
 However, an order-of-magnitude estimate often suffices because any small (i.e., $\sim \kBT$) change of $\EB$ will translate to an exponential change of the switching rate.
 As discussed in~\cref{sec:2:E_B_eff}, our approximations of $\EBeff$ are imperfect, thus rendering an accurate value of $\nu_0$ irrelevant.
@@ -1175,9 +1175,9 @@ Li~\etal~\cite{li2018pinwheel} performed an experimental study to observe the re
 Notably, when they applied the field at an oblique angle (\ang{30}) to the ASI edges, the reversal occurred in two distinct steps: the sublattice which was more aligned with the field (\ang{15} to the easy axis) reversed first, followed by the second sublattice (for which the field was at \ang{75}).
 To accurately reproduce the second reversal step in simulation, the \link{asymmetric energy barrier}{asymmetry in the energy barrier} between clockwise and counter-clockwise switching must be accounted for, due to the near-perpendicular field (\ang{75}) that the second sublattice experiences. \par
 We replicated this experiment using \hotspice for a few values of $\rho=\mu_\perp/\mu_\parallel$ to clearly observe the effect of the asymmetric barrier, resulting in the hysteresis loops shown in~\cref{fig:2:Hysteresis_Pinwheel}.
-When possible, simulation parameters were derived from the experimental configuration: an ASI of $25 \times 25$ unit cells with a NN centre-to-centre distance of \qty{420}{\nano\meter} was used, at room temperature (\qty{300}{\kelvin}).
-The \xref{magnetic moment} and \link{shape anisotropy}{energy barrier} of each magnet can be derived from the geometry of the $470\times170\times\qty{10}{\nano\meter}$ stadium-shaped magnets and the \xref{permalloy} \xref{saturation magnetisation} $M_\mathrm{sat}=\qty{800}{\kilo\ampere\per\meter}$.
-This yields a magnetic moment $\mu = M_\mathrm{sat} V = \qty{5.9e-16}{\ampere\meter\squared}$, and a \mumax~\cite{mumax3} simulation reveals that the energy barrier of such magnets is $\approx \qty{60}{\electronvolt}$.
+When possible, simulation parameters were derived from the experimental configuration: an ASI of $25 \times 25$ unit cells with a NN centre-to-centre distance of \SI{420}{\nano\meter} was used, at room temperature (\SI{300}{\kelvin}).
+The \xref{magnetic moment} and \link{shape anisotropy}{energy barrier} of each magnet can be derived from the geometry of the $470\times170\times\SI{10}{\nano\meter}$ stadium-shaped magnets and the \xref{permalloy} \xref{saturation magnetisation} $M_\mathrm{sat}=\SI{800}{\kilo\ampere\per\meter}$.
+This yields a magnetic moment $\mu = M_\mathrm{sat} V = \SI{5.9e-16}{\ampere\meter\squared}$, and a \mumax~\cite{mumax3} simulation reveals that the energy barrier of such magnets is $\approx \SI{60}{\electronvolt}$.
 These values result in a good match with experiment as far as the field magnitude of the first reversal step is concerned.
 The simulations used the \xref{point dipole model}; performing the same simulations with the \xref{dumbbell model} results in a nearly identical hysteresis since changing to the dumbbell model has little effect on pinwheel ASI.
 
@@ -1198,10 +1198,10 @@ The simulations used the \xref{point dipole model}; performing the same simulati
 
 In the experiment, the two reversal steps occurred gradually over a range of fields, resembling more of an S-curve rather than a sharp step.
 This is due to a random spread on the \xlabel[nolabel]{coercive field} of each nanomagnet due to imperfections in lithography~\cite{fraleigh2017characterization}. % REF: 'fraleigh2017characterization' examines this spread in OOP square: they infer the coercive field distribution of the magnets in their system from the width of the hysteresis loop.
-We modelled this in the simulation by introducing a random Gaussian variation on the energy barrier, with $\sigma(E_\mathrm{B})/\langle E_\mathrm{B} \rangle=\qty{7}{\percent}$ yielding the closest agreement to the experiment.
+We modelled this in the simulation by introducing a random Gaussian variation on the energy barrier, with $\sigma(E_\mathrm{B})/\langle E_\mathrm{B} \rangle=\SI{7}{\percent}$ yielding the closest agreement to the experiment.
 Note that the experimental \xref{hysteresis} curve is not symmetric, in contrast to our simulations, which Li~\etal attributed to a small sample movement during their measurement which changed the applied field angle with respect to the array. \par
 As can be noted from the figure, the resulting \xref{hysteresis}, and particularly the \link{external magnetic field}{field} magnitude for the second reversal step, is highly dependent on the choice of $\rho=\mu_\perp/\mu_\parallel$.
-When the \link{asymmetric energy barrier}{asymmetry of the energy barrier} is neglected (i.e., $\rho=0$, equivalent to using the \xref{mean-barrier model}), the field magnitude required for the second step is significantly overestimated, as seen in the blue curve of~\crefSubFigRef{fig:2:Hysteresis_Pinwheel}{a} ($\approx\qty{60}{\milli\tesla}$ vs. experiment $\approx\qty{25}{\milli\tesla}$).
+When the \link{asymmetric energy barrier}{asymmetry of the energy barrier} is neglected (i.e., $\rho=0$, equivalent to using the \xref{mean-barrier model}), the field magnitude required for the second step is significantly overestimated, as seen in the blue curve of~\crefSubFigRef{fig:2:Hysteresis_Pinwheel}{a} ($\approx\SI{60}{\milli\tesla}$ vs. experiment $\approx\SI{25}{\milli\tesla}$).
 Increasing $\rho$ reduces the field magnitude at which the second step occurs, but has little effect on the first step.
 This is understandable, since the first step corresponds to magnets that are nearly aligned (\ang{15}) with the external field, so the asymmetry between the two switching channels is not as pronounced for them.
 When $\rho \gtrapprox 0.6$, the second step disappears entirely, with the reversal instead occurring by domain nucleation at the edges of the ASI, as illustrated in \crefSubFigRef{fig:2:Hysteresis_Pinwheel}{e}. \par

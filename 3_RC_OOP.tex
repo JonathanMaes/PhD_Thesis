@@ -940,7 +940,7 @@ These preferential magnetisation directions are illustrated in~\cref{fig:3:Clock
 Cycle $B$ is identical but promotes the opposite magnetisation direction for each magnet, in order to grow domains of the opposite type as compared to cycle $A$. \\\par
 This clocking protocol, coupled with this definition of the input, readily provides basic \link{fading memory}{memory} in the system, as the previous few input bits become encoded in the size and location of the domains.
 Since it relies on deterministic switching, the duration over which the sub-steps are applied is irrelevant\footnote{
-	As time is irrelevant to non-volatile ASI, all simulations use a default duration of \qty{1}{\second} per input cycle.
+	As time is irrelevant to non-volatile ASI, all simulations use a default duration of \SI{1}{\second} per input cycle.
 }. \par
 %While this clocking protocol is likely not the only viable input method for non-volatile OOP ASI, we can at least say with certainty that simply applying a global uniform or AFM field would not yield any useful dynamics for RC.
 In the remainder of this section, we will illustrate the behaviour of the clocking protocol and show that it yields desirable dynamics for \xref{reservoir computing}.
@@ -984,7 +984,7 @@ Since we start from one ground state, an alternative interpretation for the whit
 	The \link{finite dipole model}{finite size} of magnets was accounted for with $D_\mathrm{NM} = \SI{170}{\nano\metre}$ and $S_\mathrm{ASI} = \SI{200}{\nano\metre}$.
 	System parameters were chosen such that $\EMC = 40 \kBT$ and $\EEA = 200 \kBT$, without defects ($\sigma(\EEA) = 0$).
 	All magnets are initially magnetised in one of the \xref{antiferromagnetic} ground states (white).
-	The \link{external magnetic field}{magnetic field} used in the clocking cycles has a magnitude $B_\mathrm{ext} = \qty{3.78}{\milli\tesla}$.
+	The \link{external magnetic field}{magnetic field} used in the clocking cycles has a magnitude $B_\mathrm{ext} = \SI{3.78}{\milli\tesla}$.
 }
 
 The figure clearly shows the stepwise growth of domains following the application of each individual clocking cycle.
@@ -1017,7 +1017,7 @@ To more clearly illustrate this phenomenon,~\cref{fig:3:Clocking_massive_seeded}
 	All magnets are initially magnetised in one of the \xref{antiferromagnetic} ground states (white), apart from one magnet at the centre which started in the opposite state (black).
 	The \link{finite dipole model}{finite size} of magnets was accounted for with $D_\mathrm{NM} = \SI{170}{\nano\metre}$ and $S_\mathrm{ASI} = \SI{200}{\nano\metre}$.
 	System parameters were chosen to result in $\EMC = 40 \kBT$ and $\EEA = 200 \kBT$, without defects ($\sigma(\EEA) = 0$).
-	The \link{external magnetic field}{magnetic field} used in the clocking cycles has a magnitude $B_\mathrm{ext} = \qty{3.78}{\milli\tesla}$.
+	The \link{external magnetic field}{magnetic field} used in the clocking cycles has a magnitude $B_\mathrm{ext} = \SI{3.78}{\milli\tesla}$.
 }
 \vspace{-1em}
 
@@ -1051,7 +1051,7 @@ This can be observed in~\cref{fig:3:Clocking_clearly_EBstd5} for an example with
 	The \link{finite dipole model}{finite size} of magnets was accounted for with $D_\mathrm{NM} = \SI{170}{\nano\metre}$ and $S_\mathrm{ASI} = \SI{200}{\nano\metre}$.
 	System parameters were chosen to result in $\EMC = 200 \kBT$ and $\EEA = 100 \kBT$, with $\sigma(\EEA)/\EEA = \SI{5}{\percent}$.
 	All magnets are initially magnetised in one of the \xref{antiferromagnetic} ground states (white).
-	The \link{external magnetic field}{magnetic field} used in the clocking cycles has a magnitude $B_\mathrm{ext} = \qty{5.5}{\milli\tesla}$.
+	The \link{external magnetic field}{magnetic field} used in the clocking cycles has a magnitude $B_\mathrm{ext} = \SI{5.5}{\milli\tesla}$.
 }
 
 Leaking can be mitigated by using a rather weak input, but this can make it impossible to switch some high-barrier magnets, rendering them frozen in their initial state.
@@ -1082,8 +1082,8 @@ Indeed, nucleation occurs in the bulk of the latter because the disorder $\sigma
 	All magnets are initially magnetised in one of the \xref{antiferromagnetic} ground states (white).
 	The \link{finite dipole model}{finite size} of magnets was accounted for with $D_\mathrm{NM} = \SI{170}{\nano\metre}$ and $S_\mathrm{ASI} = \SI{200}{\nano\metre}$.
 	System parameters were chosen to result in $\EEA = 200 \kBT$, with $\sigma(\EEA)/\EEA = \SI{5}{\percent}$.
-	\textbf{(a)} System with high \xref{magnetostatic coupling} $\EMC = 400 \kBT$, requiring an input magnitude $B_\mathrm{ext} = \qty{11.2}{\milli\tesla}$ for controlled domain wall movement.
-	\textbf{(b)} System with low MS interaction $\EMC = 40 \kBT$ and $B_\mathrm{ext} = \qty{3.78}{\milli\tesla}$.
+	\textbf{(a)} System with high \xref{magnetostatic coupling} $\EMC = 400 \kBT$, requiring an input magnitude $B_\mathrm{ext} = \SI{11.2}{\milli\tesla}$ for controlled domain wall movement.
+	\textbf{(b)} System with low MS interaction $\EMC = 40 \kBT$ and $B_\mathrm{ext} = \SI{3.78}{\milli\tesla}$.
 }
 \vspace{-1em}
 
