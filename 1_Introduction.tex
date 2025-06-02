@@ -168,11 +168,11 @@ The optimal weights can then directly be calculated as
 which minimises $\norm{\vc{y} - \hat{\vc{y}}}^2 = \norm{\vc{y} - \vc{X}\vc{w}}^2$~\cite{RC_NNN}.
 These optimal weights then remain fixed, and the performance of the reservoir can be evaluated by feeding it the test set --- a previously unknown, yet similar data set as the training set.
 
-\subsection{Metrics} \label{sec:1:RC_metrics}
+\subsection{Metrics}\label{sec:1:RC_metrics}
 To compare different physical reservoirs or identify optimal system parameters, metrics are needed that can provide a consistent evaluation of how suitable a given physical system is to be used as a reservoir.
 In this respect, two types of metrics are often used: those calculated based on the ranks of matrices, and those calculated through linear estimators.
 
-\subsubsection{Matrix rank-based metrics}\indexlabel[tosection]{matrix rank-based metrics} \label{sec:1:RC_metrics_KQ}
+\subsubsection{Matrix rank-based metrics}\label{sec:1:RC_metrics_KQ}\indexlabel[tosection]{matrix rank-based metrics}
 Legenstein and Maass~\cite{WhatMakesPowerful} proposed three metrics, based on the readout vector $\vc{x}(t)$ of the reservoir.
 By periodically sampling this $p$-dimensional vector at $n$ moments in time, an $n \times p$ matrix $\vc{X}$ can be constructed whose rows are these vectors at different moments in time.
 Depending on the choice of input sequence, the rank of this matrix gives information about certain properties of the system~\cite{RC_ASI}.
@@ -280,7 +280,7 @@ Finally, a wide variety of \link{spintronics}{magnetic and spintronic} systems h
 Since this thesis focuses on nanomagnetic systems, it is warranted to first explain the physical principles of nanomagnetism before continuing this discussion in~\cref{sec:1_RC_magnetic}.
 
 \newpage
-\section{Nanomagnetism} \label{sec:1:Nanomagnetism}
+\section{Nanomagnetism}\label{sec:1:Nanomagnetism}
 \subsection{Physics of nanomagnets}
 This thesis focuses on the usage of magnetic systems as reservoirs.
 Generally, magnetism and magnetic fields originate from the movement of electric charges.
@@ -455,7 +455,7 @@ Due to competing \xref{magnetostatic interactions}, these ensembles often exhibi
 A disordered arrangement of nanomagnets has, for example, been used to predict boolean functions like those produced by cellular automata~\cite{RC_PassiveFrustratedNM,RC_DipoleNanomagnets}. % OOP
 A class of ensemble of particular interest is \xref{artificial spin ice}~\cite{RC_ASI}.
 
-\subsubsection{Artificial spin ice}\indexlabel[tosection]{artificial spin ice}\label{sec:1:ASI}
+\subsubsection{Artificial spin ice}\label{sec:1:ASI}\indexlabel[tosection]{artificial spin ice}
 \textit{Artificial spin ice} (ASI) is a type of metamaterial where magnetostatically coupled \link{single-domain nanomagnet}{single-domain (bistable) nanomagnets} are arranged on an ordered lattice~\cite{RC_ASI,flatspin}.
 The \xref{magnetisation} direction of the constituent nanomagnets can switch between two states under the influence of nearby nanomagnets, \link{external magnetic field}{externally applied magnetic fields}, thermal fluctuations, or any of the electronic input methods \link{sec:1:ASI_IO}{previously discussed}~\cite{CoerciveFieldReversal,BrownThermalFluctuations,SOT_FM_AFM,brataas2012current}. \par
 A defining property of ASI is \idx{frustration}, meaning that the underlying lattice does not allow all local pairwise interactions to be simultaneously satisfied.

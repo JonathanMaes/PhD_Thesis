@@ -69,12 +69,12 @@ The remaining four IP and four OOP lattices are also related: the magnets in the
 By omitting certain magnets from these lattices, several others like the Tetris~\cite{Saglam2022Tetris,nisoli2018topologytetris} and short-island Shakti~\cite{gilbert2014emergent} lattices can be constructed.
 
 \xfig[1.0]{2_Hotspice/ASIs.pdf}{
+	\label{fig:2:ASIs}
 	Predefined \xlabel[nolabel]{artificial spin ice} (ASI) lattices available in \hotspice.
 	The unit cell of each lattice is delineated by a central dark grey rectangle.
 	The red indicator defines the lattice parameter $a$.
 	In the Ising approximation, the magnetisation of in-plane magnets (top) aligns along the major axis of the depicted ellipses.
 	Out-of-plane magnets (bottom) are illustrated as circles.
-	\label{fig:2:ASIs}
 }
 
 \newpage
@@ -170,7 +170,7 @@ Therefore, \hotspice assumes the magnets in an ASI to be round (OOP ASI) or elli
 Although IP magnets are typically more stadium-shaped~\cite{EmergentChiralityRatchet,clocking-protocol}, the moment of inertia for an ellipse does not differ by much --- if necessary, an appropriate value of $l$ and $w$ can account for this.
 %While this correction can be applied to both IP and OOP magnetic dipoles, it is most effective for OOP systems, as can be seen in~\cref{fig:2:MS_distance}.
 
-\subsubsection{Dumbbell model\indexlabel{dumbbell model}}\label{sec:2:Dumbbell}
+\subsubsection{Dumbbell model}\label{sec:2:Dumbbell}\indexlabel[tosection]{dumbbell model}
 Instead of representing a magnet as a \link{point dipole model}{point dipole}, one may instead choose to represent it as a pair of opposite \xlabel[tosection]{magnetic charge}s~\cite{MagneticMonopoles2008,MagneticMonopoleDynamics}.
 This introduces a new parameter $d$: the effective distance between the north and south poles of a magnet, with respective positions $\vc{r_N}_i = \vc{r}_i + s_i\frac{d_i}{2}\vc{u}_i$ and $\vc{r_S}_i = \vc{r}_i - s_i\frac{d_i}{2}\vc{u}_i$.
 An appropriate choice of $d_i$ (slightly smaller than the physical length $l$ of the nanomagnet~\cite{DDG_Masterproef}) allows this \emph{dumbbell model} to emulate the spatial extent of a real nanomagnet. \par
@@ -182,10 +182,11 @@ The interaction energy between two magnetic charges $q$ and $q'$ can be derived 
 \end{equation}
 The magnetostatic interaction energy between two nanomagnets is then the sum of their four mutual magnetic charge interactions, finally resulting in
 \begin{equation}
-	E_{\mathrm{MS},i,j} = \frac{\mu_0 \mu_i \mu_j}{4\pi d_i d_j} \Bigg(\frac{1}{\abs{\mathbf{r_N}_i - \mathbf{r_N}_j}} + \frac{1}{\abs{\mathbf{r_S}_i - \mathbf{r_S}_j}}\\ - \frac{1}{\abs{\mathbf{r_N}_i - \mathbf{r_S}_j}} - \frac{1}{\abs{\mathbf{r_S}_i - \mathbf{r_N}_j}}\Bigg) \mathrm{.} \label{eq:2:E_MS_mono}
+	\label{eq:2:E_MS_mono}
+	E_{\mathrm{MS},i,j} = \frac{\mu_0 \mu_i \mu_j}{4\pi d_i d_j} \Bigg(\frac{1}{\abs{\mathbf{r_N}_i - \mathbf{r_N}_j}} + \frac{1}{\abs{\mathbf{r_S}_i - \mathbf{r_S}_j}}\\ - \frac{1}{\abs{\mathbf{r_N}_i - \mathbf{r_S}_j}} - \frac{1}{\abs{\mathbf{r_S}_i - \mathbf{r_N}_j}}\Bigg) \mathrm{.}
 \end{equation}
 The minus sign in the equation appears because north and south poles have opposite charge.
-\hotspice is limited to a single value of $d$ for all magnets, due to the structure of the kernels used to calculate the magnetostatic interaction, which will be discussed in~\cref{sec:2:Kernels}.
+\hotspice is limited to a single value of $d$ for all magnets, due to the structure of the kernels used to calculate the magnetostatic interaction, which will be discussed in~\cref{sec:2:Kernels:Structure}.
 
 \subsubsection{Comparison}
 To assess whether these two corrections constitute an improvement to the resulting \link{magnetostatic interaction}{magnetostatic energy}, we must quantify their impact by comparing them against a known solution.
@@ -194,10 +195,10 @@ While this solution is not exact, as \mumax uses a \xlabel{finite-difference} (F
 \cref{fig:2:MS_distance} compares the original \link{point dipole model}{point dipole approximation} and the two corrections (``\link{finite dipole model}{finite dipole}'' and ``\link{dumbbell model}{dumbbell}'') against the solution obtained with \mumax.
 
 \xfig[1.0]{2_Hotspice/MS_distance.pdf}{
+	\label{fig:2:MS_distance}
 	Magnitude of the magnetostatic interaction between two magnets as a function of their normalised centre-to-centre distance, for the three \hotspice{} calculation methods (\link{point dipole model}{point dipole}, \link{finite dipole model}{second-order correction for dipoles}, and \link{dumbbell model}{dumbbell}) compared to a \link{micromagnetic theory}{micromagnetic} \mumax calculation assuming uniform magnetisation.
 	OOP magnets are assumed to be circular with diameter $2r$, IP magnets are ellipses with length $l$ and width $w=4l/11$.
 	Positions of north and south \xref{magnetic charges} used in the dumbbell model are shown as red {\color{red}$\odot$} and blue {\color{blue}$\odot$} dots and are a distance $d=0.9l$ apart.
-	\label{fig:2:MS_distance}
 }
 
 The figure shows 3 typical arrangements of neighbouring magnets in an ASI: two circular OOP magnets and two elliptical IP neighbours aligned along their \link{easy axis}{easy} and hard axes.
@@ -230,6 +231,7 @@ All of them make use of the switching energy $\Delta E$ between the current and 
 The subscript $i$ will be omitted for the remainder of this section; it is implied that the following discussion and equations apply to each magnet individually.
 
 \xfig[1.0]{2_Hotspice/EB_meanbarrier.pdf}{
+	\label{fig:2:EB_meanbarrier}
 	Mean-barrier approximation (\ref{eq:2:EB_meanbarrier_original}, \textcolor{lightblue}{blue}) and its conditional form (\ref{eq:2:EB_meanbarrier_cases}, \textcolor{lightred}{red}) compared to the exact energy barrier (\ref{eq:2:EB_exact}, \textcolor{mplgrey}{grey}).
 	Due to the limited information available to a \xref{mean-barrier model} (only $\EB$ and $\Delta E$), the exact solution assumes a sinusoidal shape anisotropy and a uniform \xref{external magnetic field} along the \xref{easy axis}.
 	\textbf{(a)} Effective energy barrier $\EBeff$ as function of \xref{switching energy} $\Delta E$ for these approximations.
@@ -237,12 +239,10 @@ The subscript $i$ will be omitted for the remainder of this section; it is impli
 	The energy landscapes without and with shape anisotropy are shown as dotted black and solid grey lines, respectively.
 	An open circle indicates the halfway point between both stable states, while a star is put at the top of the exact energy barrier.
 	On each landscape, the height of the barrier in the different approximations is indicated by a dotted horizontal line, indicating how they use different values on the energy landscape for their estimate.
-	\label{fig:2:EB_meanbarrier}
 }
 \vspace{-1em}
 
-\subsubsection{Intrinsic barrier due to \xlabel{shape anisotropy}}
-\label{sec:2:shape_anisotropy}
+\subsubsection{Intrinsic barrier due to \xlabel{shape anisotropy}}\label{sec:2:shape_anisotropy}
 An isolated single-domain nanomagnet often exhibits two stable magnetisation states separated by energy barriers.
 In IP ASI, these states usually arise from \textit{shape anisotropy}, which originates from the \xlabel{demagnetising field} of the magnet itself.
 This imposes an additional energy cost when the \xref{magnetisation} does not point along the preferential \idx{easy axis}, which is usually the longest axis of the magnet's geometry~\cite{PhD_Leliaert}. \par
@@ -282,7 +282,7 @@ This way, $\Delta E$ serves as the barrier when the original energy barrier disa
 This adjustment is shown in red in~\cref{fig:2:EB_meanbarrier}: it is closer to the exact solution except for $-4 \EB < \Delta E < -2 \EB$.
 Notwithstanding that the original mean-barrier approximation~\eqref{eq:2:EB_meanbarrier_original} lies closer to the exact solution in this range, we choose not to use it as this lies outside its valid range of $\abs{\Delta E} < 2 \EB$.
 
-\subsubsection{Asymmetric barrier}\indexlabel[tosection]{asymmetric energy barrier}\label{sec:2:E_B_asymm}
+\subsubsection{Asymmetric barrier}\label{sec:2:E_B_asymm}\indexlabel[tosection]{asymmetric energy barrier}
 The simple \xref{mean-barrier model} is insufficient for many IP ASI lattices.
 In real nanomagnets, reversal by \xref{coherent rotation} can occur via two pathways; clockwise ($\clockwise$) or counter-clockwise ($\counterclockwise$) rotation of the magnetisation.
 In an asymmetrical environment --- when the \xref{effective field} has a non-zero component perpendicular to the \xref{easy axis} --- one of these two rotation directions will be preferred~\cite{leo2021chiral,DirectionalEnergyBarrier}.
@@ -365,16 +365,16 @@ The former is more suitable for simulating the temporal evolution of the system,
 \subsection{First-switch method: temporal evolution}
 \idx{N\'eel relaxation theory}~\cite{neel1949theorie} states that, for an isolated nanomagnet, the \xlabel{switching rate} $\nu$ is given by the \xlabel{N\'eel-Arrhenius} equation % TODO: better called the Néel-Brown-Arrhenius law?
 \begin{equation}
-	\nu = \nu_0 \exp\ab(-\frac{\EB}{\kBT}) \mathrm{,}
 	\label{eq:2:Néel}
+	\nu = \nu_0 \exp\ab(-\frac{\EB}{\kBT}) \mathrm{,}
 \end{equation}
 with $\kBT$ the thermal energy and $\nu_0$ the so-called \xref{attempt frequency}.
 For mutually interacting magnets, $\EB$ can be replaced by the \xref{effective energy barrier} $\EBeff$ in \cref{eq:2:Néel}. \par
 In the general case where the energy barriers for clockwise and counter-clockwise rotation during switching differ, these two switching channels ($\circlearrowright$ and $\circlearrowleft$) will separately follow~\cref{eq:2:Néel}, so their switching frequencies must be combined.
 This yields the total switching rate as presented by Koraltan~\etal~\cite{DirectionalEnergyBarrier},
 \begin{equation}
-	\nu = \nu_\circlearrowleft + \nu_\circlearrowright = \frac{\nu_0}{2} \ab[\exp\ab(-\frac{\EBeffLeft}{\kBT}) + \exp\ab(-\frac{\EBeffRight}{\kBT})] \mathrm{,}
 	\label{eq:2:Néel_2}
+	\nu = \nu_\circlearrowleft + \nu_\circlearrowright = \frac{\nu_0}{2} \ab[\exp\ab(-\frac{\EBeffLeft}{\kBT}) + \exp\ab(-\frac{\EBeffRight}{\kBT})] \mathrm{,}
 \end{equation}
 where a halved attempt frequency $\nu_0/2$ was assigned to either switching channel such that~\cref{eq:2:Néel_2} reduces to~\cref{eq:2:Néel} in the case of $\EBeffLeft=\EBeffRight$~\cite{leo2021chiral}.
 % Note that it does not matter which barrier corresponds to clockwise or counter-clockwise rotation; only the height of both barriers matters when determining the switching rate of a magnet.
@@ -421,7 +421,7 @@ In the realm of rejection-free KMC, two commonly used algorithms are the very si
 Though Gillespie also discusses the first-switch method, these two algorithms differ slightly from~\cref{alg:2:FirstSwitchSingle}, yet all yield identical results.
 Their different strategies for calculating random switching times and selecting the next switch are discussed by \textit{Gibson and Bruck}~\cite{GibsonBruck}, alongside an optimised algorithm.
 
-\subsection{Metropolis-Hastings: sampling equilibrium states} \label{sec:2:Dynamics_MH}
+\subsection{Metropolis-Hastings: sampling equilibrium states}\label{sec:2:Dynamics_MH}
 \idx{Metropolis-Hastings sampling} is a rejection-based KMC method designed to sample the state space at thermal equilibrium, where the probability of each state appearing is proportional to their \xlabel{Boltzmann factor} $\exp(-E/\kBT)$~\cite{IntroductionMC,kyimba2006comparisonIsingAlgorithms}.
 Hence, in contrast to the \xref{first-switch method}, Metropolis-Hastings sampling is not intended to accurately model the system's transient dynamics.
 Instead, it is more suitable for examining equilibrium statistical properties of ASI, e.g., the average magnetisation, heat capacity, correlations...~\cite{ApparentFMpinwheel} \par
@@ -447,8 +447,8 @@ In particular, the Metropolis-Hastings algorithm repeats the steps outlined in~\
 		\item \textit{Optional}:
 		Increment the elapsed time $t$ by
 		\begin{equation}
-			\Delta t = -\frac{\exp\ab(\EBeff\big/\kBT\ab) \ln{\chi}}{N \nu} \mathrm{,}
 			\label{eq:Metropolis_time}
+			\Delta t = -\frac{\exp\ab(\EBeff\big/\kBT\ab) \ln{\chi}}{N \nu} \mathrm{,}
 		\end{equation}
 		with $N$ the number of magnets in the system and $\chi$ a uniformly distributed random variable in the half-open interval $(0,1]$~\cite{PhysicalTimeKMC}. % Q: which \EBeff to use in the asymmetric barrier case? Hotspice uses the smallest barrier. Can also use an exponentially weighted average like in the first-switch method (\exp(x) = \frac{1}{\exp(-a) + exp(-b)}).
 	\end{enumerate}
@@ -503,7 +503,7 @@ For a broader overview of Monte Carlo methods, we refer to Ref.~\cite{Introducti
 
 \newpage
 \section{Implementation}\label{sec:2:Implementation}
-Now that the physical principles underlying the simulator have been extensively discussed, we turn our attention to its software implementation. \par
+Now that the physical principles underlying the simulator have been extensively discussed, we turn our attention to its software implementation.
 The introductory \cref{sec:2:Implementation:Grid} provides a brief motivation for our choice to implement the ASI on a rectilinear grid.
 One of its main benefits is the existence of unit cells, which enables efficient \textit{kernels} for computing the \xref{magnetostatic interaction}. \par
 These kernels are discussed in detail in~\cref{sec:2:Kernels}, which consists of four subsections.
@@ -515,7 +515,7 @@ After this, \cref{sec:2:MultiSwitch} explores one particular performance-enhanci
 In this context, a lower bound is derived for the minimum separation between simultaneously sampled magnets. \par
 Subsequently, \cref{sec:2:Implementation:Performance} assesses the performance of \hotspice for both CPU and GPU calculations, considering the various kernels proposed in~\cref{sec:2:Kernels:Structure}.
 The performance impact of the aforementioned simultaneous sampling of magnets during Metropolis-Hastings sampling is also assessed. \par
-Finally, this chapter ends with a short retrospective on the choices made during the development of this software.
+Finally, this section ends with a short retrospective on the choices made during the development of this software.
 
 \subsection{Grid}\label{sec:2:Implementation:Grid}
 In \hotspice, an ASI is represented on a tiled \xlabel[tosection]{rectilinear grid} of \xlabel[tosection]{unit cell}s --- where the grid spacing need not be uniform --- with magnets positioned at selected grid points.
@@ -545,7 +545,7 @@ Although non-rectilinear unit cells with fewer magnets can be identified for som
 Pre-calculated ``kernels'' are used to efficiently update the \xref{magnetostatic interaction} after each switch. 
 While these kernels have to be calculated before the simulation starts, and therefore increase the initialisation time, the reduced runtime when simulating \link{sec:2:Dynamics}{dynamics} more than makes up for this.
 
-\subsubsection{Magnetostatic interaction kernel}\label{sec:2:Kernels:Structure}
+\subsubsection{Structure and usage of unit cell kernels}\label{sec:2:Kernels:Structure}
 For each magnet $i$, a kernel $\vc{k}^{(i)}$ stores the magnitude of the magnetostatic interaction between itself and all other magnets.
 By calculating these values beforehand, when the ASI is created, the magnetostatic interaction energy between magnets $i$ and $j$ can readily be calculated as
 \begin{equation}
@@ -671,7 +671,7 @@ Due to the rapid $1/r^3$ decline of the \xref{magnetostatic interaction} over di
 \vspace{-1em}
 
 \subsubsection{Hard-axis magnetostatic kernel}\label{sec:2:Kernels:Perp}
-If the simulation accounts for the \xref{asymmetric energy barrier}, as detailed in \cref{sec:2:E_B_eff}, then two additional kernels are needed for each site in the unit cell. \par
+If the simulation accounts for the \xref{asymmetric energy barrier}, as detailed in~\cref{sec:2:E_B_asymm}, then two additional kernels are needed for each site in the unit cell. \par
 The first is calculated for a situation where the central magnet maintains its usual orientation while all other magnets are rotated counter-clockwise by \ang{90}.
 This kernel will be used whenever a magnet switches, to update the \link{hard-axis interaction energy}{hard-axis magnetostatic energy} $\left. E_{\mathrm{MS}} \right|_{\perp}$ of all other magnets.
 The underlying equation is very similar to \cref{eq:2:Kernel_detailed}, but with $u_x^{(\kappa)} \rightarrow -u_y^{(\kappa)}$ and $u_y^{(\kappa)} \rightarrow u_x^{(\kappa)}$ substituted.
@@ -711,7 +711,7 @@ Previously, \cref{eq:2:Kernel_update} was applied when a magnet switches, where 
 With open boundaries, the truncated kernel presents no issue, but with PBC the cut-out should be applied with care, such that it properly wraps around the edges.
 This wrapping can instead also be achieved by performing a \xlabel{circular convolution} of the truncated kernel with an $N_x \times N_y$ array whose only non-zero element is at the position of the switching magnet.
 
-\subsection{Multi-switching in Metropolis-Hastings\indexlabel{multi-switching}} \label{sec:2:MultiSwitch}
+\subsection{Multi-switching in Metropolis-Hastings\indexlabel{multi-switching}}\label{sec:2:MultiSwitch}
 The standard \link{Metropolis-Hastings sampling}{Metropolis-Hastings algorithm} selects a magnet at random and subsequently decides whether or not to switch it.
 Since this algorithm is designed primarily for sampling equilibrium states rather than capturing the temporal evolution of the system, a straightforward performance improvement can be achieved by selecting multiple magnets simultaneously rather than sequentially.
 This allows for better usage of the parallel processing capabilities of the GPU, as the \link{magnetostatic interaction}{magnetostatic energy} can then be updated using a convolution. \\\par
@@ -734,8 +734,8 @@ We will now derive an inequality for the minimal distance $\rmin$ as a function 
 \begin{inequality}
 	The minimal distance $\rmin$ between magnets 1 and 2, such that the \xref{acceptance probability} $P(\Delta E)$ of one of them can not change by more than $0 < Q \leq 1$ when the other switches, is upper bounded by
 	\begin{equation}
-		r_{12} \geq \sqrt[3]{\frac{2 \mu_0 \, \max(\mu^2)}{\pi Q} \cdot \, \underset{\Delta E}{\max} \abs{\frac{\partial P}{\partial \Delta E}}} \triangleq \rmin \mathrm{.}
 		\label{eq:2:MultiSwitch_inequality}
+		r_{12} \geq \sqrt[3]{\frac{2 \mu_0 \, \max(\mu^2)}{\pi Q} \cdot \, \underset{\Delta E}{\max} \abs{\frac{\partial P}{\partial \Delta E}}} \triangleq \rmin \mathrm{.}
 	\end{equation}
 \end{inequality}
 
@@ -757,8 +757,8 @@ We will now derive an inequality for the minimal distance $\rmin$ as a function 
 	We therefore want to determine the minimal distance between magnets 1 and 2 such that $\abs{\Delta P_2} \leq Q$. \par
 	For any function $P(\Delta E)$, we can move this constraint from $\Delta P_2$ to the more manageable quantity $\Delta E^{(f)} - \Delta E^{(i)}$ by writing the upper bound
 	\begin{equation}
-		\abs{\Delta P} \leq \abs{\Delta E^{(f)} - \Delta E^{(i)}} \cdot \, \underset{\Delta E}{\max} \abs{\frac{\partial P}{\partial \Delta E}} \leq Q \mathrm{.}
 		\label{eq:2:MultiSwitch_proof_leq_Q}
+		\abs{\Delta P} \leq \abs{\Delta E^{(f)} - \Delta E^{(i)}} \cdot \, \underset{\Delta E}{\max} \abs{\frac{\partial P}{\partial \Delta E}} \leq Q \mathrm{.}
 	\end{equation}
 	The only long-range interaction present in the systems under consideration here is the \xref{magnetostatic interaction} given by \eqref{eq:2:E_MS}, repeated here for convenience,
 	\begin{equation*}
@@ -767,8 +767,8 @@ We will now derive an inequality for the minimal distance $\rmin$ as a function 
 	We do not consider any \link{sec:2:finite}{finite-size corrections}, since their long-range effects are negligible and any reasonable value of $Q$ will result in a value $\rmin$ far larger than the magnet size.
 	The magnetostatic energy in the \link{point dipole model}{point-dipole approximation} is bounded by
 	\begin{equation}
-		\abs{E_{\mathrm{MS},1,2}} \leq \frac{\mu_0 \abs{\vc{\mu}_1} \abs{\vc{\mu}_2}}{2 \pi r_{12}^3} \mathrm{,}
 		\label{eq:2:MultiSwitch_proof_EMS_leq}
+		\abs{E_{\mathrm{MS},1,2}} \leq \frac{\mu_0 \abs{\vc{\mu}_1} \abs{\vc{\mu}_2}}{2 \pi r_{12}^3} \mathrm{,}
 	\end{equation}
 	with this extremum being achieved for two dipoles $\vc{\mu}_1$ and $\vc{\mu}_2$ aligned in the same direction along their common axis $\vc{r}_{12}$.
 	From the symmetry of the magnetostatic interaction, % and considering the states in~\cref{fig:2:MultiSwitch_proof}, 
@@ -830,7 +830,7 @@ To enable GPU-based calculations, we opted to use the \python{CuPy}~\cite{CuPy} 
 \python{CuPy} provides GPU-accelerated array manipulation using a similar API as \python{NumPy}, which makes it a drop-in replacement for most --- but not all --- array operations.
 While a pure CUDA implementation could provide further performance optimisations, this has not been necessary at present as \python{CuPy} is sufficiently performant for the topics discussed in this thesis.
 
-\paragraph{Hardware}\label{sec:2:hardware}\label{hardware}
+\paragraph{Hardware}\label{hardware}
 The following benchmarks, like all other simulations throughout this thesis, were performed on an NVIDIA GeForce RTX 3080 Mobile GPU and/or an 11th Gen Intel\textregistered{} Core\texttrademark{} i7-11800H @ 2.30GHz (both released in 2021).
 The reported simulation times serve an illustrative purpose: absolute values may vary significantly across different hardware, though the overall trends and relative performance should remain similar. \par
 
@@ -838,7 +838,7 @@ The reported simulation times serve an illustrative purpose: absolute values may
 The performance of the different magnetostatic kernel implementations is compared in Tables~\ref{tab:2:perf_init} and~\ref{tab:2:perf_switch}, whose rows are generally ordered by performance.
 The first table shows the initialisation time, while the second table shows the time it takes to perform 5000 switches using the \xref{first-switch method}, taking into account the \xref{magnetostatic interaction} between all magnets.
 During initialisation, the magnetostatic kernel is constructed, after which the starting energy $E_i$ of all magnets is calculated.
-Only the last 3 rows use the \link{unit cell kernel}{magnetostatic kernel} $\vc{\mathcal{K}}^{(\kappa)}$ from~\cref{sec:2:Kernels}; the previous rows use the less efficient kernels considered earlier in that section.
+Only the last 3 rows use the \link{unit cell kernel}{magnetostatic kernel} $\vc{\mathcal{K}}^{(\kappa)}$ from~\cref{sec:2:Kernels:Structure}; the previous rows use the less efficient kernels considered earlier in that section.
 CPU and GPU performance is compared at the start and end of the tables. \\\par
 
 % Q: should we use L or N=L²? I would prefer L because at some point we talk about 2D indexation, so L makes it clearer that we have a 2D system.
@@ -865,6 +865,7 @@ CPU and GPU performance is compared at the start and end of the tables. \\\par
 	\end{tabular}
 }
 
+\vspace{-1em}
 \xtable[tab:2:perf_switch]{
 	\textbf{Time for 5000 switches} using the \xref{first-switch method}, for various simulation sizes $L$ (i.e., $L \times L = N$ magnets).
 		`Mem' indicates that the simulation required more memory than available on our benchmark system ($>\SI{8}{\giga\byte}$), while `?' indicates a prohibitively long simulation time ($\gtrsim \SI{1000}{\second}$).
@@ -887,7 +888,7 @@ CPU and GPU performance is compared at the start and end of the tables. \\\par
 	\end{tabular}
 } % Other options besides "optimised implementation": "current implementation", "production version", "improved version"?
 
-The first two rows \textit{``Pairwise kernel''} in the tables use the na\"ive kernels $\vc{k}^{(i)}$ (or, equivalently, $\vc{K}^{(i)}$) that were described at the start of \cref{sec:2:Kernels} and used in \cref{eq:2:Kernel_k}.
+The first two rows \textit{``Pairwise kernel''} in the tables use the na\"ive kernels $\vc{k}^{(i)}$ (or, equivalently, $\vc{K}^{(i)}$) that were described at the start of~\cref{sec:2:Kernels:Structure} and used in \cref{eq:2:Kernel_k}.
 These store the interactions between each magnet $i$ and all other magnets, resulting in many duplicated values.
 All these kernels --- one for each magnet $i$ --- are arranged into a big $N \times N$ matrix $\vc{D}$ storing the \xref{magnetostatic interaction} between each pair of magnets.
 This allows easy calculation of $E_\mathrm{MS}$ for each magnet by a single matrix product $\vc{D}\vc{s}$ with the column vector $\vc{s}=\{s_i\}$.
@@ -906,7 +907,7 @@ However, the initialisation for larger systems now takes a long time, because wi
 Still, in all situations it is beneficial not to use the pairwise kernels $\vc{k}^{(i)}$. \\\par
 
 To reduce the initialisation time, two improvements had to be combined.
-First, a \xref{unit cell kernel} as described earlier in~\cref{sec:2:Kernels} had to be implemented, which requires far less memory by using the periodic nature of most ASI to only store interactions for a single \xref{unit cell}.
+First, a \xref{unit cell kernel} as described earlier in~\cref{sec:2:Kernels:Structure} had to be implemented, which requires far less memory by using the periodic nature of most ASI to only store interactions for a single \xref{unit cell}.
 This is used in the fourth row \textit{``Unit cell kernel''}, but does not yield a significant improvement on its own aside from enabling simulations of systems larger than $1000 \times 1000$ magnets. \par
 Secondly, however, this new kernel enables the usage of a convolution to initialise the magnetostatic interaction energy $E_\mathrm{MS}$, rather than the sequential sum used before.
 This is what the final two rows \textit{``Optimised implementation''} use, where we once again compare CPU and GPU as this is the most performant version overall.
@@ -931,9 +932,9 @@ The ability to perform \link{multi-switching}{multiple switches} simultaneously 
 
 \vspace{-1em}
 \xfigsnocap[0.47]{2_Hotspice/Performance_CPU.pdf}{2_Hotspice/Performance_GPU.pdf}{
+	\label{fig:2:Performance}
 	Performance of OOP square ASI as a function of system size, on \textbf{(a)} CPU and \textbf{(b)} GPU.
 	The Metropolis-Hastings algorithm was used with \xref{multi-switching} $Q=0.05$, lattice spacing $a = \SI{1}{\micro\metre}$, temperature $T = \SI{100}{\kelvin}$ and energy barrier $\EB = 0$.
-	\label{fig:2:Performance}
 } % Q: Performance for IP ASI might be worse. Add a Pinwheel figure as well?
 
 The multi-switching algorithm selects a certain number of magnets per second, as depicted by the blue curve: these are candidates for switching.
@@ -1002,7 +1003,7 @@ This could particularly enhance GPU performance for small systems using the firs
 Although this would require extensive changes to the core of \hotspice, it can be a useful consideration when developing future software.
 
 \newpage % For consistent formatting
-\section{Verification} \label{sec:2:Verification}
+\section{Verification}\label{sec:2:Verification}
 A simulator is useless if it does not provide correct results.
 Therefore, we must now verify the correct implementation of \hotspice.
 To this end, we will simulate several systems of increasing complexity for which analytical solutions are available.
@@ -1038,8 +1039,7 @@ with $M = \sum_i \mu_i s_i$ the total magnetic moment of the system and $M_0 = \
 	\newline\newline\newline % Newlines center the caption w.r.t. plot
 }
 
-\subsection{Exchange-coupled Ising system}
-\label{sec:2:Verification_OOP_Exchange}
+\subsection{Exchange-coupled Ising system}\label{sec:2:Verification_OOP_Exchange}
 The 2D square-lattice \link{exchange coupling}{exchange-coupled} Ising model is one of the few exactly solvable systems in statistical physics~\cite{ExactlySolvedModelsStatMech}.
 An analytical solution is known for the temperature-dependence of its average magnetisation
 \begin{equation}
@@ -1145,10 +1145,10 @@ We used the same lattice compression as described in~\ccite{AFM-FM-transition-Pi
 For the dipole model, the transition occurs at $\approx \ang{35}$ as expected, while the dumbbell model (here with $d = \SI{220}{\nano\metre}$) indeed transitions at a larger rotation angle.
 
 \xfig[0.6]{2_Hotspice/Verification/Pinwheel_angle.pdf}{
+	\label{fig:2:Pinwheel_angle}
 	Fraction of vertices with net zero magnetisation at equilibrium, as square ASI (left) transitions to pinwheel ASI (right) by rotating individual magnets.
 	The theoretical transition angle $\alpha_c \approx \ang{35.3}$ for the dipole model is indicated by the vertical dotted line.
 	The dumbbell model uses a charge-to-charge distance $d = \SI{220}{\nano\metre}$.
-	\label{fig:2:Pinwheel_angle}
 }
 
 The transition in the dumbbell model seems less abrupt: a stable intermediate state exists at $\alpha=\ang{40}$ with significant random variation between samples, as indicated by the error bar. % A significant error bar is often indicative of a phase transition

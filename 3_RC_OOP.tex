@@ -30,8 +30,7 @@ Then, the chapter is divided into two main parts, first discussing thermally act
 \end{adjustwidth}
 
 \section{Characteristics of out-of-plane ASI}
-\subsection{Structure of out-of-plane nanomagnets} % Co/Pt multilayer, energy contributions
-\label{sec:3:OOP_nanomagnet_PMA}\indexlabel[nolabel]{single-domain nanomagnet}
+\subsection{Structure of out-of-plane nanomagnets}\label{sec:3:OOP_nanomagnet_PMA}\indexlabel[nolabel]{single-domain nanomagnet} % Co/Pt multilayer, energy contributions
 Where in-plane (IP) magnets mostly rely on \xref{shape anisotropy} to create an \xref{easy axis}, out-of-plane (OOP) magnets are realised using \indexlabel[nolabel]{interfacial anisotropy}\xref{interfacial anisotropy} between the \link{ferromagnetism}{ferromagnetic material} and the substrate.
 One example of this is the interface between \ce{Co} and \ce{Pt}, as was used in the experimental OOP ASI fabricated within the context of the \spinengine project.
 This \idx{perpendicular magnetic anisotropy} (PMA) acts in the immediate vicinity of the interface, where the \xref{magnetisation} then prefers to align perpendicular to said interface. \par
@@ -58,7 +57,7 @@ The reason for this is that lattices with the same nearest-neighbour (NN) spacin
 As a result, the ground state is largely determined by NN interactions, which prefer antiparallel alignment.
 Therefore, OOP lattices in which every closed NN loop contains an even number of magnets --- such as the square and honeycomb lattices --- are unlikely to exhibit frustration.
 
-\subsection{Input and readout: experiment to simulation} \label{sec:3:IO_exp_to_sim}
+\subsection{Input and readout: experiment to simulation}\label{sec:3:IO_exp_to_sim}
 The main allure of OOP ASI for RC stems from the existence of efficient all-electrical input and readout mechanisms for such OOP magnets.
 Input can be applied via \xref{spin--orbit torque} (SOT)~\cite{SOT_FM_AFM,SOTswitchingCoPt}, while the system can be read out using the \xref{anomalous Hall effect} (AHE)~\cite{AHE}.
 Both of these only require a current to be passed through an underlayer that is electrically connected to the sample, and were explained earlier in the introduction (\cref{sec:1:ASI_IO}).
@@ -69,7 +68,7 @@ In the experimental system, the intent was to apply input data by using SOT~\cit
 Since the model used by \hotspice does not use torques, but is rather based on switching energies, SOT can not directly be modelled as a torque in our simulations.
 However, the desired effect of SOT in our application is deterministic switching of magnets, as can be achieved through in-plane symmetry breaking~\cite{SOT_Roadmap}. % SOT_Roadmap mentions symmetry breaking several times, very useful resource
 Indeed, SOT in the presence of broken symmetry results in a preferential magnetisation direction, which can be modelled in \hotspice as an additional \xref{external magnetic field} $B_z$.
-This is an approximation to fit SOT into the Ising-like model; the modelled field $B_z$ is not necessarily related to the field-like SOT~\cite{SOT_firstprinciplesCoPt}, though a non-linear relationship between the SOT current density and the modelled field $B_z$ will exist.
+This is an approximation to fit SOT into the Ising-like model; the modelled field $B_z$ is not necessarily related to the \link{spin--orbit torque}{field-like SOT}~\cite{SOT_firstprinciplesCoPt}, though a non-linear relationship between the SOT current density and the modelled field $B_z$ will exist.
 The exact form of this relationship is currently irrelevant for our RC purposes, because it only constitutes an additional non-linear transformation on the input which does not fundamentally change the RC performance of the OOP ASI itself.
 % In the case without symmetry breaking, the effect may be modelled as a temporary reduction of the PMA, as in reality a sufficiently strong SOT (applied over multiple $1/\nu_0$) will push the magnetic moment in-plane~\cite{SOT_Roadmap}, after which it falls back randomly (with higher likelihood to the lowest energy state, I suppose). But this approach raises multiple additional questions: is it meaningful to reduce the barrier only slightly?
 
@@ -88,12 +87,12 @@ In the context of \xref{reservoir computing}, such a readout approach with multi
 %In larger systems, probing a pair of electrodes still provides local information about the average magnetisation of one column or a set of nearby columns, which is what we will use as our readout in simulation.
 
 \section{Thermally active out-of-plane ASI}
-\subsection{Energy contributions} \label{sec:3:E_contributions}
+\subsection{Energy contributions}\label{sec:3:E_contributions}
 Thermally active OOP ASI is hard to manufacture, because it must strike a delicate balance between several strong energy contributions to end up in an OOP state with a net energy barrier of only several tens of $\kBT$ at most.
 To appreciate this difficulty, let us first take a closer look at the various energy contributions in the system --- ranging from local anisotropy to large-scale interactions --- and their dependence on the geometrical structure of the OOP magnets.
 \begin{enumerate}
 	\item \textbf{Perpendicular magnetic anisotropy} constitutes the largest contribution to the total OOP anisotropy.
-	Its interfacial origin and characteristics have been discussed earlier in this chapter (see \cref{sec:3:OOP_nanomagnet_PMA}). % Anisot E: \approx\SI{1.1e-16}{\joule}
+	Its interfacial origin and characteristics have been discussed earlier in this chapter (see~\cref{sec:3:OOP_nanomagnet_PMA}). % Anisot E: \approx\SI{1.1e-16}{\joule}
 	\item \textbf{Shape anisotropy}\indexlabel[nolabel]{shape anisotropy} of each layer due to their \xlabel[nolabel]{demagnetising field}.
 	It is of a similar order of magnitude as the PMA, but of opposite sign, favouring an IP magnetisation rather than OOP.
 	This contribution was also discussed earlier, see~\cref{sec:2:shape_anisotropy}~and~\ref{sec:3:OOP_nanomagnet_PMA}. % Demag E: \approx\SI{-1.6e-16}{\joule}
@@ -110,11 +109,7 @@ To appreciate this difficulty, let us first take a closer look at the various en
 For a system to exhibit spontaneous switching, the first three of these contributions --- which together constitute the \idx{net out-of-plane anisotropy} --- should mostly cancel out, to the level where their combined influence is of the same order of magnitude as the inter-magnet \xref{magnetostatic interaction}, which is usually at least an order of magnitude weaker than the other contributions separately.
 As we will see in~\cref{sec:3:relaxation}, achieving spontaneous thermal ordering to the ground state may require even finer control.
 
-\paragraph{Magnet geometry}
-\label{sec:3:OOP_geometry}
-% The geometry of nanomagnets in an OOP ASI is shown schematically in~\cref{fig:3:OOP_geometry}.
-% TODO FIG: make own figure of nanomagnets?
-
+\paragraph{Magnet geometry}\label{sec:3:OOP_geometry}
 The magnets considered here are cylindrical with a diameter $D_\mathrm{NM}$ and consist of $n_{\ce{Co}}$ layers of \ce{Co} with a thickness $t_{\ce{Co}}$, separated and surrounded by \ce{Pt} layers of thickness $t_{\ce{Pt}}$.
 They are placed in an ASI where the lateral spacing between magnets is $S_\mathrm{ASI}$ --- resulting in a lattice parameter $a=D_\mathrm{NM}+S_\mathrm{ASI}$ in a square lattice. \par
 These five geometrical parameters have a profound effect on the balance between the aforementioned energy contributions, as summarised in~\cref{tab:3:interactions_geometry}.
@@ -180,8 +175,7 @@ The edge-to-edge spacing between neighbouring magnets is $S_\mathrm{ASI}=\SI{30}
 The saturation magnetisation $M_\mathrm{sat}$ is thickness-dependent~\cite{CoFilmPropertiesCVD}, with a value of $M_\mathrm{sat}=\SI{1063}{\kilo\ampere\per\metre}$ reported for thicknesses in the \SI{}{\nano\metre} range~\cite{Msat_Co}.
 In simulation, the magnetic moment is then $\mu = \SI{2.36e-16}{\ampere\metre\squared}$ for each magnet, with a lattice spacing $a \approx \SI{200}{\nano\metre}$. % Q: is this paragraph OK like this? Put elsewhere? What was the comment?
 
-\subsection{Relaxation characteristics}
-\label{sec:3:relaxation}
+\subsection{Relaxation characteristics}\label{sec:3:relaxation}
 To better guide our design of thermally active ASI for RC, it is essential to familiarise ourselves with its spontaneous relaxation process.
 In this section, we numerically investigate this process with \hotspice by initialising an OOP ASI in a uniform ($\uparrow$) state and subsequently observing its decay towards the checkerboard ground state over a certain timespan.
 In the Ising-like model used by \hotspice, two essential system parameters remain, denoted as
@@ -499,7 +493,7 @@ This allows the usage of analog input (i.e., a continuous range of input values)
 The relaxation towards the ground state, on the other hand, is governed by parameters intrinsic to the ASI itself, like the \link{net out-of-plane anisotropy}{OOP anisotropy} $\EEA$ and \link{magnetostatic coupling}{MS coupling} $\EMC$.
 
 \paragraph{Input}
-Practically, such an input method can be realised through \xref{spin--orbit torque} (SOT) in the presence of a symmetry-breaking in-plane field, as discussed earlier in~\cref{sec:3:IO_exp_to_sim}.
+Practically, such an input method can be realised through \xref{spin--orbit torque} (SOT) in the presence of a symmetry-breaking in-plane field, as discussed earlier in~\cref{sec:1:ASI_IO}~and~\ref{sec:3:IO_exp_to_sim}.
 Applying the SOT current then pushes the ASI closer to a uniform state, while removing the current lets it gradually relax to the AFM ground state.
 Here, the OOP \link{external magnetic field}{magnetic field} $B_z(t)$ that models the SOT in \hotspice was scaled between $B_0$ (minimum) and $B_1$ (maximum).
 Hence, an input $0 \leq x \leq 1$ is encoded by a field of magnitude $B_z = B_0 + x (B_1 - B_0)$, such that $B_0 \leq B_z \leq B_1$.
@@ -516,7 +510,6 @@ Here, this will be accomplished by gradually increasing the \link{net out-of-pla
 Hence, by using the average magnetisation of individual columns of magnets as the readout values, greater variation can be obtained since each column is unique (while the magnets within a column are all identical).
 Vice versa, all rows of magnets in this square-lattice ASI are identical (while the magnets within a row are all different).
 Averaging over multiple columns or enlarging the system is expected to be beneficial, as this reduces thermal noise in the output since each readout value then becomes the average of more magnets.
-% TODO FIG: schematic as in fig. 6a to illustrate column-wise readout?
 
 \subsection{Influence of input on dynamics}\indexlabel[tosection]{leaky integrator}
 Since we intend to use the spontaneous relaxation of thermally active OOP ASI for reservoir computing, it is desirable to maximally use the available range of intermediate states, meaning the relaxation process should not span too many timescales.
@@ -750,7 +743,7 @@ The quality of the double-period sine quickly deteriorates above $f_c$, as the s
 It is no coincidence that this value is similar to the timescale at which $\mavg \approx 0$ in panel 8 of~\cref{fig:3:OOP_relaxation}, which shows the \link{logarithmic relaxation}{relaxation} in the absence of external stimuli for this system.
 The same cut-off at $f_c$ is observed (though not shown in a figure) when the target function is a square wave.
 
-\subsection{Signal prediction task: chaotic Mackey-Glass oscillator} \label{sec:3:Thermal_Prediction}
+\subsection{Signal prediction task: chaotic Mackey-Glass oscillator}\label{sec:3:Thermal_Prediction}
 A special kind of ``transformation'' is a signal prediction, where the target function $y(t) = s(t + \Delta t)$ is a transformation of the input signal offset through time.
 Such a prediction task benefits from the \xref{fading memory} property of a \link{reservoir computing}{reservoir} to better infer the future evolution of the signal, while it relies less on a reservoir's \xref{non-linearity}~\cite{TaskAdaptivePRC,NeuromorphicFewShot}.
 The particular signal we will be attempting to predict with the thermally active OOP ASI is the chaotic \xlabel[tosection]{Mackey-Glass oscillator} $\mathrm{MG}(t)$~\cite{MackeyGlass}, as this is a popular benchmark in literature~\cite{RotatingNeuronsRC,NeuromorphicFewShot,TaskAdaptivePRC,Moon_2021,JaegerHaasWireless,ArchitecturalMarkovianESN}.
@@ -1206,8 +1199,7 @@ The severity of these defects has no substantial impact on these two metrics; th
 The optimal \link{external magnetic field}{field} range always remains centred around the same value, but broadens as the disorder increases.
 This is a consequence of the greater spread of \xref{effective energy barriers} throughout the ASI due to the increased disorder, widening the range of field strengths at which any of the magnets can switch.
 
-\subsubsection{Alternative input encoding}
-\label{sec:3:clocking_input_encoding}
+\subsubsection{Alternative input encoding}\label{sec:3:clocking_input_encoding}
 The \link{AFM clocking protocol}{clocking protocol} naturally lends itself to binary input\footnote{
 	Generally speaking, a clocking protocol lends itself to as many possible input values as there are degenerate ground states in the system.
 	In OOP ASI, this results in binary input (2 values).
