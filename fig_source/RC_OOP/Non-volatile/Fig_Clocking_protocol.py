@@ -38,7 +38,7 @@ def main_plot():
         ax.arrow(x_center_bit - pad*.4, y0+w/2, pad*.8, 0, head_width=0.4*pad, head_length=0.3*pad, width=0.2*pad, fc="black", ec="None", length_includes_head=True)
         for step in range(2):
             x_center_step = x_center_bit + (w/2 + pad/2)*(2*step-1)
-            ax.text(x_center_step, y0+w+pad/2, f"{'Second' if step else 'First'}\nsub-step", ha="center", va="baseline", fontdict=dict(fontsize=thesis_utils.fs_large))
+            ax.text(x_center_step, y0+w+pad/2, f"{'Second' if step else 'First'}\nsubstep", ha="center", va="baseline", fontdict=dict(fontsize=thesis_utils.fs_large))
             x0 = x_center_step - w/2
             plot_input_fields(ax, x0, y0, w, step=step, bit=bit)
     draw_line(ax, 0.5, 0, 0.5, y0 + w + 2*pad, lw=3)
