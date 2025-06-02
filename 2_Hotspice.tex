@@ -562,14 +562,14 @@ If no magnet was placed at index $(a,b)$ on the grid, then $\vc{K}^{(i)}_{ab} = 
 
 However, storing such a kernel for all magnets $i$ would require storing $\order{N^2}$ values in memory. % Furthermmore, many values would be zero, though the same (but less extreme) can be said of the unit cell kernel. Note: small \vc{k} has no zeros if a lookup table is used to assign an index to each magnet.
 By leveraging \link{unit cell}{unit cells}, this storage requirement can be reduced to $\order{N}$.
-Each occupied grid point in the unit cell is assigned a unique index $q = 1,\dots,\widetilde{N}$, with $\widetilde{N}$ the number of magnets in a single unit cell. % TODO: maybe use \kappa instead of q? But it appears a lot in the following text.
-Hence, each magnet in the ASI is associated with a specific value of $q$. \par
-This way, all magnets with the same value of $q$ share the same layout of surrounding magnets\footnote{
+Each occupied grid point in the unit cell is assigned a unique index $\kappa = 1,\dots,\widetilde{N}$, with $\widetilde{N}$ the number of magnets in a single unit cell.
+Hence, each magnet in the ASI is associated with a specific value of $\kappa$. \par
+This way, all magnets with the same value of $\kappa$ share the same layout of surrounding magnets\footnote{
 	In some ASIs, it is possible that different sites inside a single unit cell also experience the same surrounding layout.
 	This can be used to further improve memory usage (but not performance) by only storing unique kernels.
 	This was not implemented as this constitutes only a minor improvement; for the lattices in~\cref{fig:2:ASIs}, this would at best half the number of kernels.
 }, apart from a different cut-off at the border in case of open boundary conditions.
-Therefore, if two magnets occupy equivalent positions $q$ in the unit cell --- say, $i$ at index $(x,y)$ on the grid and $j$ at $(x+\Delta x, y+\Delta y)$ --- then
+Therefore, if two magnets occupy equivalent positions $\kappa$ in the unit cell --- say, $i$ at index $(x,y)$ on the grid and $j$ at $(x+\Delta x, y+\Delta y)$ --- then
 \begin{equation}
 	\label{eq:2:Kernel_equivalence}
 	\vc{K}^{(i)}_{ab} = \vc{K}^{(j)}_{a+\Delta x,b+\Delta y} \quad \mathrm{,} \quad \forall a,b:
@@ -582,11 +582,11 @@ Therefore, if two magnets occupy equivalent positions $q$ in the unit cell --- s
 	\end{cases} \quad\mathrm{.}
 \end{equation}
 In other words, their kernels are identical apart from an offset by $(\Delta x, \Delta y)$, at least in the area that remains inside the kernel after this offset.
-Due to this equivalence, and the fact that $- N_x < \Delta x < N_x$ and $- N_y < \Delta y < N_y$, all possible interactions that a magnet at site $q$ can experience can be stored in a single $(2N_x-1) \times (2N_y-1)$ matrix $\vc{\mathcal{K}}^{(q)}_{ab}$, a \idx{unit cell kernel}.
+Due to this equivalence, and the fact that $- N_x < \Delta x < N_x$ and $- N_y < \Delta y < N_y$, all possible interactions that a magnet at site $\kappa$ can experience can be stored in a single $(2N_x-1) \times (2N_y-1)$ matrix $\vc{\mathcal{K}}^{(\kappa)}_{ab}$, a \idx{unit cell kernel}.
 
 \xfig[1.0]{2_Hotspice/Kernel_IP_Pinwheel.pdf}{
 	\label{fig:2:Kernel_IP_Pinwheel}
-	Two examples showing the kernels $\vc{\mathcal{K}}^{(q)}$ shifting with respect to the ASI grid for element-wise multiplication when a magnet switches.
+	Two examples showing the kernels $\vc{\mathcal{K}}^{(\kappa)}$ shifting with respect to the ASI grid for element-wise multiplication when a magnet switches.
 	\textbf{Left}: the ASI itself, with thin dotted lines showing individual cells in the \link{rectilinear grid}{simulation grid} while thick solid lines delineate unit cell boundaries.
 	Letters indicate the index of a magnet within its unit cell.
 	\textbf{Right}: each site in the unit cell corresponds to a kernel.
@@ -597,56 +597,56 @@ Due to this equivalence, and the fact that $- N_x < \Delta x < N_x$ and $- N_y <
 
 \cref{fig:2:Kernel_IP_Pinwheel} shows the structure of such unit cell kernels $\vc{\mathcal{K}}$ to clarify the interpretation of how they store the magnetostatic interaction strength between a particular magnet and any other magnet in the system.
 This is most easily illustrated by an example.
-Consider the blue magnet in the $5 \times 5$ pinwheel lattice on the left side of the figure, which occupies position $q=\mathrm{A}$ in the unit cell.
+Consider the blue magnet in the $5 \times 5$ pinwheel lattice on the left side of the figure, which occupies position $\kappa=\mathrm{A}$ in the unit cell.
 The corresponding $9 \times 9$ kernel $\vc{\mathcal{K}}^\mathrm{(A)}$ is shown schematically, also in blue.
 It stores the magnetostatic interactions in such a way that, when the ASI grid is shifted onto the kernel to put the blue magnet at the centre of the kernel, the interaction strength of the blue magnet with any other magnet in the ASI is stored in the kernel elements where those other magnets end up.
 So, in the figure, these are the elements in kernel A shown to contain a grey magnet\footnote{
 	The exact values stored at these elements are omitted as they are irrelevant to illustrate the concept. See \cref{fig:2:Kernel_PBC} for an example of the particular values stored in kernel A for a larger $16 \times 16$ lattice.
 }. \par
-The concept is illustrated a second time, now for the red magnet in the pinwheel ASI, which instead occupies position $q=\mathrm{B}$ in the \xref{unit cell} and therefore uses a different kernel; the red kernel $\vc{\mathcal{K}}^\mathrm{(B)}$.
+The concept is illustrated a second time, now for the red magnet in the pinwheel ASI, which instead occupies position $\kappa=\mathrm{B}$ in the \xref{unit cell} and therefore uses a different kernel; the red kernel $\vc{\mathcal{K}}^\mathrm{(B)}$.
 Note that this structure easily allows a cut-off radius for the magnetostatic interaction to be imposed by setting the relevant kernel values to zero. \\\par
 
 This construction can be used to efficiently update the \link{magnetostatic interaction}{magnetostatic energy} $E_\mathrm{MS}$ of all magnets whenever a magnet switches.
 \link{rectilinear grid}{Recall} that the grid stores the state $s_i$ of all magnets in a matrix $\vc{S}$ and the size of their magnetic moment $\mu_i$ in $\vc{\bigmu}$.
-When a magnet at unit cell index $q$ switches, the change of magnetostatic energy for all other magnets can be calculated by shifting $\vc{S}$ in the same way as the ASI was shifted in \cref{fig:2:Kernel_IP_Pinwheel}, and performing a pointwise multiplication --- the \idx{Hadamard product}, denoted by $\odot$ --- with the respective elements of the kernel $\vc{\mathcal{K}}^{(q)}$.
-Denoting the grid index of the switching $q$-site magnet as $(x,y)$ and using the states $\vc{S}$ after the switch, this yields a new matrix
+When a magnet at unit cell index $\kappa$ switches, the change of magnetostatic energy for all other magnets can be calculated by shifting $\vc{S}$ in the same way as the ASI was shifted in \cref{fig:2:Kernel_IP_Pinwheel}, and performing a pointwise multiplication --- the \idx{Hadamard product}, denoted by $\odot$ --- with the respective elements of the kernel $\vc{\mathcal{K}}^{(\kappa)}$.
+Denoting the grid index of the switching $\kappa$-site magnet as $(x,y)$ and using the states $\vc{S}$ after the switch, this yields a new matrix
 \begin{equation}
 	\label{eq:2:Kernel_update}
-	\Delta \vc{E_\mathrm{MS}} = 2\mu_{xy} s_{xy}\vc{\bigmu} \odot \vc{S} \odot \ab(\vc{\mathcal{K}}^{(q)}_{ab})_{\substack{N_x < a + x \leq 2N_x \\ N_y < a + y \leq 2N_y}} \quad\mathrm{,}
+	\Delta \vc{E_\mathrm{MS}} = 2\mu_{xy} s_{xy}\vc{\bigmu} \odot \vc{S} \odot \ab(\vc{\mathcal{K}}^{(\kappa)}_{ab})_{\substack{N_x < a + x \leq 2N_x \\ N_y < a + y \leq 2N_y}} \quad\mathrm{,}
 \end{equation}
 containing the change in magnetostatic energy $\Delta E_\mathrm{MS}$ for each grid point, which can then simply be added to the current values of $E_\mathrm{MS}$. \par
 The kernel is also used to initialise the magnetostatic energy $\left. E_\mathrm{MS} \right|_{t=0}$ of each magnet at the start of the simulation.
 This is done by performing a convolution ($*$) rather than a pointwise multiplication:
 \begin{equation}
 	\label{eq:2:Kernel_init}
-	\left. \vc{E_\mathrm{MS}} \right|_{t=0} = \sum_q \vc{Q_q} \odot \vc{\bigmu} \odot \vc{S} \odot \ab((\vc{\bigmu} \odot \vc{S}) * \vc{\mathcal{K}}^{(q)}) \mathrm{,}
+	\left. \vc{E_\mathrm{MS}} \right|_{t=0} = \sum_\kappa \vc{I_\kappa} \odot \vc{\bigmu} \odot \vc{S} \odot \ab((\vc{\bigmu} \odot \vc{S}) * \vc{\mathcal{K}}^{(\kappa)}) \mathrm{,}
 \end{equation}
-where only the central $N_x \times N_y$ area of the convolution is calculated and the matrix $\vc{Q_q}$ contains 1 at sites with unit cell index $q$, otherwise 0.
+where only the central $N_x \times N_y$ area of the convolution is calculated and the matrix $\vc{I_\kappa}$ contains 1 at sites with unit cell index $\kappa$, otherwise 0.
 Such a convolution can be calculated very efficiently using the \xlabel{fast Fourier transform}. \\\par
 
 The exact values stored in the kernel depend on whether any \link{sec:2:finite}{finite-size corrections} to the magnetostatic interaction were used and whether the ASI is of the IP or OOP type.
 For example, an IP kernel using the \link{point dipole model}{point dipole approximation} contains elements
 \begin{equation}
 	\label{eq:2:Kernel_detailed}
-	\vc{\mathcal{K}}^{(q)}_{ab} = \frac{\mu_0}{4 \pi} \frac{
-		u_x^{(q)} u_x^{(ab)} \ab(1 - 3 \ab(\Delta x)^2) + u_y^{(q)} u_y^{(ab)} \ab(1 - 3 \ab(\Delta y)^2) - 3\Delta x \Delta y \ab(u_x^{(q)} u_y^{(ab)} + u_x^{(ab)} u_y^{(q)})
+	\vc{\mathcal{K}}^{(\kappa)}_{ab} = \frac{\mu_0}{4 \pi} \frac{
+		u_x^{(\kappa)} u_x^{(ab)} \ab(1 - 3 \ab(\Delta x)^2) + u_y^{(\kappa)} u_y^{(ab)} \ab(1 - 3 \ab(\Delta y)^2) - 3\Delta x \Delta y \ab(u_x^{(\kappa)} u_y^{(ab)} + u_x^{(ab)} u_y^{(\kappa)})
 	}{
 		\sqrt{\ab(\ab(\Delta x)^2 + \ab(\Delta y)^2)^5}
 	} \mathrm{,}
 \end{equation}
-with $\Delta x$ and $\Delta y$ the x- and y-distance between the central magnet $(q)$ and a magnet at position $(ab)$ in the kernel (if a magnet exists at the corresponding point in the ASI grid) and $\vc{u}^{(i)}$ a unit vector along the \xref{easy axis} of magnet $i$. \par
+with $\Delta x$ and $\Delta y$ the x- and y-distance between the central magnet $(\kappa)$ and a magnet at position $(ab)$ in the kernel (if a magnet exists at the corresponding point in the ASI grid) and $\vc{u}^{(i)}$ a unit vector along the \xref{easy axis} of magnet $i$. \par
 With this form for the kernel, the \xref{magnetostatic interaction} between a magnet $i$ at grid-index $(v,w)$ and another magnet $j$ at index $(v+x, w+y)$ can be calculated as
 \begin{equation}
 	\label{eq:2:Kernel_unitcell}
-	E_{\mathrm{MS},i,j} = (s_i \mu_i) (s_j \mu_j) \vc{\mathcal{K}}^{(q_i)}_{N_x+x, N_y+y} = (s_i \mu_i) (s_j \mu_j) \vc{\mathcal{K}}^{(q_j)}_{N_x-x, N_y-y} \quad \mathrm{,}
+	E_{\mathrm{MS},i,j} = (s_i \mu_i) (s_j \mu_j) \vc{\mathcal{K}}^{(\kappa_i)}_{N_x+x, N_y+y} = (s_i \mu_i) (s_j \mu_j) \vc{\mathcal{K}}^{(\kappa_j)}_{N_x-x, N_y-y} \quad \mathrm{,}
 \end{equation}
-if the indexation of $\vc{\mathcal{K}}^{(q)}$ starts at $(1,1)$.
-Note that $\mu_i$ and $\mu_j$ were not included in the \xref{unit cell kernel} to allow magnets in different unit cells but with the same unit cell index $q$ to have a different magnetic moment $\mu$.
+if the indexation of $\vc{\mathcal{K}}^{(\kappa)}$ starts at $(1,1)$.
+Note that $\mu_i$ and $\mu_j$ were not included in the \xref{unit cell kernel} to allow magnets in different unit cells but with the same unit cell index $\kappa$ to have a different magnetic moment $\mu$.
 This versatility comes at the cost of two additional element-wise multiplications per interaction, which has a non-negligible performance impact as~\cref{eq:2:Kernel_unitcell} is by far the most common operation performed during the simulation of system dynamics. \\\par
 
 \subsubsection{Periodic boundary conditions}\label{sec:2:Kernels:PBC}
 The \xref{rectilinear grid} enables the straightforward implementation of first-order \idx[tosection]{periodic boundary conditions} (PBC), which account for the eight nearest replicas of the ASI --- two horizontally, two vertically and four diagonally.
-An open-boundary kernel $\vc{\mathcal{K}}^{(q)}$ can be transformed into a PBC kernel by just adding eight offset copies of the kernel to itself.
+An open-boundary kernel $\vc{\mathcal{K}}^{(\kappa)}$ can be transformed into a PBC kernel by just adding eight offset copies of the kernel to itself.
 Specifically, four copies are shifted along the axes by $\pm N_x$ or $\pm N_y$, while the remaining four are shifted diagonally by $(\pm N_x, \pm N_y)$.
 This is illustrated in~\cref{fig:2:Kernel_PBC} for an example of pinwheel ASI. \par
 This construction works because elements near the edge of a kernel represent interactions between distant magnets on opposite sides of the ASI, which are the interactions most affected by PBC.
@@ -674,12 +674,12 @@ Due to the rapid $1/r^3$ decline of the \xref{magnetostatic interaction} over di
 If the simulation accounts for the \xref{asymmetric energy barrier}, as detailed in \cref{sec:2:E_B_eff}, then two additional kernels are needed for each site in the unit cell. \par
 The first is calculated for a situation where the central magnet maintains its usual orientation while all other magnets are rotated counter-clockwise by \ang{90}.
 This kernel will be used whenever a magnet switches, to update the \link{hard-axis interaction energy}{hard-axis magnetostatic energy} $\left. E_{\mathrm{MS}} \right|_{\perp}$ of all other magnets.
-The underlying equation is very similar to \cref{eq:2:Kernel_detailed}, but with $u_x^{(q)} \rightarrow -u_y^{(q)}$ and $u_y^{(q)} \rightarrow u_x^{(q)}$ substituted.
-It is used in the same way as the kernel $\vc{\mathcal{K}}^{(q)}$ in \cref{eq:2:Kernel_update}. \par
+The underlying equation is very similar to \cref{eq:2:Kernel_detailed}, but with $u_x^{(\kappa)} \rightarrow -u_y^{(\kappa)}$ and $u_y^{(\kappa)} \rightarrow u_x^{(\kappa)}$ substituted.
+It is used in the same way as the kernel $\vc{\mathcal{K}}^{(\kappa)}$ in \cref{eq:2:Kernel_update}. \par
 The second additional kernel is the opposite of the first one; the central magnet is rotated \ang{90} counter-clockwise while all other magnets maintain their usual orientation.
 This kernel is needed only once, to calculate the initial value of $\left. E_{\mathrm{MS}} \right|_{\perp}$ for all magnets.
 The underlying equation for this one is also very similar to \cref{eq:2:Kernel_detailed}, but now with $u_x^{(ab)} \rightarrow -u_y^{(ab)}$ and $u_y^{(ab)} \rightarrow u_x^{(ab)}$ substituted.
-It is used in the same way as the kernel $\vc{\mathcal{K}}^{(q)}$ in \cref{eq:2:Kernel_init}.
+It is used in the same way as the kernel $\vc{\mathcal{K}}^{(\kappa)}$ in \cref{eq:2:Kernel_init}.
 
 \subsubsection{Numerical error with truncated kernel}\label{sec:2:Kernels:Error}
 Since the kernel is nearly 4 times larger than the simulation domain, a straightforward performance improvement presents itself: \indexlabel[tosection]{truncated kernel}{truncating} the \xref{magnetostatic interaction} at a certain distance.
@@ -838,7 +838,7 @@ The reported simulation times serve an illustrative purpose: absolute values may
 The performance of the different magnetostatic kernel implementations is compared in Tables~\ref{tab:2:perf_init} and~\ref{tab:2:perf_switch}, whose rows are generally ordered by performance.
 The first table shows the initialisation time, while the second table shows the time it takes to perform 5000 switches using the \xref{first-switch method}, taking into account the \xref{magnetostatic interaction} between all magnets.
 During initialisation, the magnetostatic kernel is constructed, after which the starting energy $E_i$ of all magnets is calculated.
-Only the last 3 rows use the \link{unit cell kernel}{magnetostatic kernel} $\vc{\mathcal{K}}^{(q)}$ from~\cref{sec:2:Kernels}; the previous rows use the less efficient kernels considered earlier in that section.
+Only the last 3 rows use the \link{unit cell kernel}{magnetostatic kernel} $\vc{\mathcal{K}}^{(\kappa)}$ from~\cref{sec:2:Kernels}; the previous rows use the less efficient kernels considered earlier in that section.
 CPU and GPU performance is compared at the start and end of the tables. \\\par
 
 % Q: should we use L or N=L²? I would prefer L because at some point we talk about 2D indexation, so L makes it clearer that we have a 2D system.
