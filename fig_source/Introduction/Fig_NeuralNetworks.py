@@ -9,11 +9,16 @@ import hotspice
 import thesis_utils
 
 
+input_color = 'C0'
+hidden_color = 'C2'
+output_color = 'C1'
+
+
 def draw_neural_network(ax: plt.Axes,
                         layer_sizes: list[int],
-                        input_color: str = 'blue',
-                        output_color: str = 'red',
-                        hidden_color: str = 'lightgreen',
+                        input_color: str = input_color,
+                        hidden_color: str = hidden_color,
+                        output_color: str = output_color,
                         edge_color: str = 'gray',
                         circle_radius: float = 0.03):
     """
@@ -93,9 +98,9 @@ def draw_recurrent_network(ax: plt.Axes,
                            input_size,
                            hidden_size,
                            output_size,
-                           input_color='blue',
-                           hidden_color='lightgreen',
-                           output_color='red',
+                           input_color=input_color,
+                           hidden_color=hidden_color,
+                           output_color=output_color,
                            edge_color='gray',
                            circle_radius=0.03,
                            connect_k=2,
@@ -245,9 +250,9 @@ def draw_reservoir(ax: plt.Axes,
                    output_size: int,
                    box_color: str = 'black',
                    text_color: str = 'white',
-                   input_color: str = 'blue',
-                   hidden_color: str = 'lightgreen',
-                   output_color: str = 'red',
+                   input_color: str = input_color,
+                   hidden_color: str = hidden_color,
+                   output_color: str = output_color,
                    circle_radius: float = 0.03,
                    decorate_r: float = None, # Distance between decorative dots. Default <circle_radius>, don't decorate if False.
     ):
@@ -318,13 +323,22 @@ def draw_reservoir(ax: plt.Axes,
             ax.add_patch(Circle(dot, decorate_r/2, facecolor=text_color,
                                 edgecolor='none', alpha=0.17, zorder=2))
 
-    # Text
+    # Text in box
     ax.text(x0 + width / 2, y0 + height - 0.02, 'RNN?', color=text_color,
             ha='center', va='top', fontsize=thesis_utils.fs_small)
     ax.text(x0 + width / 2, y0 + height / 2, 'Reservoir', color=text_color,
             ha='center', va='center', fontsize=plt.rcParams['axes.titlesize'], fontweight='bold')
     ax.text(x0 + width / 2, y0 + 0.02, 'ASI?', color=text_color,
             ha='center', va='bottom', fontsize=thesis_utils.fs_small)
+    
+    # Mathematical symbols
+    plt.rcParams['text.usetex'] = True
+    symbol_kwargs = dict(ha='center', va='baseline', fontsize=thesis_utils.fs_large + 2)
+    ax.text(0, 0, r"$\mathbf{s}(t)$", color=input_color, **symbol_kwargs)
+    ax.text(x0 + width / 2, 0, r"$\mathcal{R}$", color=box_color, **symbol_kwargs)
+    ax.text(layer_x, 0, r"$\mathbf{x}(t)$", color=hidden_color, **symbol_kwargs)
+    ax.text(1, 0.2, r"$y(t)$", color=output_color, **symbol_kwargs)
+    plt.rcParams['text.usetex'] = False
 
     # Axis formatting
     pad = circle_radius * 2

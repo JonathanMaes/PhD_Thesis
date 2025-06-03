@@ -84,7 +84,7 @@ For many real-world tasks, the form of the desired function is unknown, so heuri
 How exactly this training is done, depends on the structure of the ANN.
 Typically, a major distinction is made between \xlabel{feed-forward neural network}s (FNNs) and \xlabel{recurrent neural network}s (RNNs)~\cite{ApproximationRNN}. \par
 In a FNN, the nodes are grouped in layers, with connections between all the nodes of two successive layers.
-This is schematically illustrated in~\crefSubFigRef{fig:1:NeuralNetworks}{a}: from the blue input node(s) on the left, information propagates to the right through the grey weighted connections, into the green hidden layers, finally yielding one or multiple output values at the red node(s)~\cite{zurada1992introduction}.
+This is schematically illustrated in~\crefSubFigRef{fig:1:NeuralNetworks}{a}: from the blue input node(s) on the left, information propagates to the right through the grey weighted connections, into the orange hidden layers, finally yielding one or multiple output values at the red node(s)~\cite{zurada1992introduction}.
 FNNs are mainly used for static data processing, such as image classification\footnote{Visual tasks are typically performed using convolutional neural networks --- a particular type of FNN that extracts features from images.}~\cite{ApproximationRNN}.
 While~\crefSubFigRef{fig:1:NeuralNetworks}{a} shows a small network of 9 nodes inside 2 hidden layers, many real-world tasks require far larger networks with millions or even billions of weights~\cite{ImageNet,BLOOM_CarbonFootprint_176Bparam,GPT-J-6B}. \par
 RNNs are conceptually similar to FNNs, with the important distinction that their connection topology possesses cycles, either in a structured or unstructured manner~\cite{lukovsevivcius2009reservoir,Hopfield1982}.
@@ -101,7 +101,7 @@ However, this is not so straightforward, leading to issues regarding the calcula
 	Schematic representation of \textbf{(a)} a \xref{feed-forward neural network} (FNN), \textbf{(b)} a \xref{recurrent neural network} (RNN) and \textbf{(c)} \xref{reservoir computing} (RC).
 	In the latter, the reservoir is treated as a black box; it can be of mathematical origin, like a RNN, or a physical system like \xref{artificial spin ice} (ASI).
 	Grey connections propagate information from left to right, unless indicated by an arrow.
-	Blue (red) nodes represent input (output), while green nodes constitute the hidden layers of the network.
+	Blue (red) nodes represent input (output), while orange nodes constitute the hidden layers of the network.
 }
 \vspace{-1em}
 
@@ -122,9 +122,9 @@ In the next section we will explore the reservoir computing framework in more de
 
 \subsection{Reservoir computing\indexlabel{reservoir computing}}
 Reservoir computing is a machine learning framework suitable for temporal processing tasks~\cite{BookReservoirComputing}.
-The concept revolves around a ``reservoir'' --- an unspecified non-linear dynamical system --- that projects the input data into a higher-dimensional space, thereby facilitating the separation of said data by a linear transformation~\cite{appeltant2011information,KUR-24,RC_ASI}. % TODO FIG: use figure like Fig. 2 in ~\cite{appeltant2011information}
+The concept revolves around a ``reservoir'' --- an unspecified non-linear dynamical system --- that projects the input data into a higher-dimensional space, thereby facilitating the separation of said data by a linear transformation~\cite{appeltant2011information,KUR-24,RC_ASI}.
 The principle is schematically illustrated in \crefSubFigRef{fig:1:NeuralNetworks}{c}.
-A weighted sum of the components of (a lower-dimensional representation of) the reservoir's state vector (green nodes) provides the output (red node) of the system as a whole. % REFs for RC, specifically training a readout layer: Dale et al., 2017; Jensen and Tufte, 2017; Sillin et al., 2013
+A weighted sum of the components of (a lower-dimensional representation of) the reservoir's state vector (orange nodes) provides the output (red node) of the system as a whole. % REFs for RC, specifically training a readout layer: Dale et al., 2017; Jensen and Tufte, 2017; Sillin et al., 2013
 These weights can be trained with a simple learning algorithm like linear regression in order to produce a desired output~\cite{RC_RecentAdvances, RC_SuperconductingElectronics}.
 Crucially, \textit{the properties of the reservoir itself are not modified during training} --- only the final \xref{linear readout layer} is~\cite{RC_ASI,DynamicEmergence_NanomagneticSystem}. \par
 Since the reservoir acts as a black box, its properties can not be changed to obtain the desired response\footnote{
@@ -150,9 +150,8 @@ The former benefits from a chaotic regime, while the latter (and fading memory) 
 As such, many physical reservoirs aim to balance on this ``edge of stability'' whenever it is available in the system, to balance between these properties~\cite{appeltant2011information}.
 
 \paragraph{Mathematical description}
-% TODO FIG: add symbols to the figure
 In the reservoir computing paradigm, an input signal $s(t)$ perturbs a reservoir $\mathcal{R}$ --- which can be any physical or abstract non-linear dynamical system --- eliciting a response $\mathcal{R}[s](t)$.
-The full internal state of the reservoir following this perturbation is often unknown, so a $p$-dimensional readout $\vc{x}(t) \in \mathbb{R}^p$ is assumed (i.e., the green nodes in~\cref{fig:1:NeuralNetworks}).
+The full internal state of the reservoir following this perturbation is often unknown, so a $p$-dimensional readout $\vc{x}(t) \in \mathbb{R}^p$ is assumed (i.e., the orange nodes in~\cref{fig:1:NeuralNetworks}).
 The final output value\footnote{
 	A one-dimensional output is assumed here, but this is not a fundamental restriction: multiple sets of weights can be trained independently if multiple outputs are desired.
 } $\hat{y}(t)$ of the system is then obtained by a weighted sum $\hat{y}(t) = \vc{x}^\mathrm{T}(t) \cdot \vc{w}$ of the components of the readout vector $\vc{x}(t)$.
