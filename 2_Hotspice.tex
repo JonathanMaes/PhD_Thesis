@@ -363,7 +363,7 @@ These techniques go by many names --- here, we shall refer to them as the \emph{
 The former is more suitable for simulating the temporal evolution of the system, while the latter can be used to sample the equilibrium distribution of the state space.
 
 \subsection{First-switch method: temporal evolution}
-\idx{N\'eel relaxation theory}~\cite{neel1949theorie} states that, for an isolated nanomagnet, the \xlabel{switching rate} $\nu$ is given by the \xlabel{N\'eel-Arrhenius} equation % TODO: better called the Néel-Brown-Arrhenius law?
+\idx{N\'eel relaxation theory}~\cite{neel1949theorie} states that, for an isolated nanomagnet, the \xlabel{switching rate} $\nu$ is given by the \xlabel{N\'eel-Arrhenius} equation
 \begin{equation}
 	\label{eq:2:Néel}
 	\nu = \nu_0 \exp\ab(-\frac{\EB}{\kBT}) \mathrm{,}
@@ -1091,15 +1091,14 @@ It is particularly problematic for single-spin flip algorithms like \xref{Metrop
 Such local-update Monte Carlo algorithms only change a small portion of the system in each step, resulting in minimal differences between successive states.
 Consequently, even after many MCS, the number of statistically independent configurations remains low, as the large autocorrelation time yields a very low effective number of independent samples $N_\mathrm{eff} = N_\mathrm{MCS}/\Theta$~\cite{niedermayer1988general,BeatCriticalSlowingDown1990}. \par
 
-While CSD is to some extent an inherent property of the physical system --- physical quantities like $\xi$ and $\Theta$ diverge near the \xref{phase transition} --- the choice of simulation algorithm also has a significant impact~\cite{PhD_Reynal}.
-By employing algorithms that make abstraction of the time variable, we need not be limited by the divergent autocorrelation time. % TODO: fully address Jonathan's comment on this
-Because CSD originates from long-range correlations, the \link{Metropolis-Hastings sampling}{Metropolis-Hastings algorithm} exacerbates the issue due to its single-spin flip nature.
-Other algorithms have been devised that alleviate CSD by non-local spin updates, thereby acting on collective modes~\cite{BeatCriticalSlowingDown1990}.
+While CSD is, to some extent, an inherent property of the physical system --- physical quantities like $\xi$ and $\Theta$ diverge near the \xref{phase transition} --- the choice of simulation algorithm also has a significant impact~\cite{PhD_Reynal}.
+For example, since CSD originates from long-range correlations, the single-spin-flip nature of the \link{Metropolis-Hastings sampling}{Metropolis-Hastings algorithm} exacerbates the issue posed by the divergent correlation length $\xi$.
+Other algorithms have been devised that alleviate CSD through non-local spin updates, allowing them to act on collective modes~\cite{BeatCriticalSlowingDown1990}.
 Among these are the group of \idx{cluster algorithms} --- first the \idx{Swendsen-Wang}~\cite{SwendsenWang} and later the \idx{Niedermayer}~\cite{niedermayer1988general} and \idx{Wolff}~\cite{Wolff} algorithms --- which construct clusters of magnets and flip all magnets in the cluster simultaneously~\cite{CompStatPhys}. % Also multi-grid Monte Carlo~\cite{edwards1991multi}
 This generates more distinct states and, if the clusters are constructed correctly, reduces the autocorrelation time.
 The clusters are constructed by starting from a `seed' magnet and adding its neighbours to the cluster with a certain probability.
 For these cluster algorithms, the dynamical critical exponent $z \approx 0$ in the 2D \link{exchange coupling}{exchange-coupled} Ising system~\cite{NumericalDynamicalNiedermayer}, as compared to $z\approx2.17$ with the Metropolis-Hastings algorithm~\cite{DynamicExponentMetropolis}.
-However, in a system with long-range interactions, like the \xref{magnetostatic interaction}, all magnets are ``neighbours'', and generating an appropriate cluster becomes nontrivial.
+However, in a system with long-range interactions, like the \xref{magnetostatic interaction}, all magnets are ``neighbours'', and generating an appropriate cluster becomes non-trivial.
 While methods exist to generate clusters in systems with long-range interactions~\cite{MC_spinLongRange}, they are not easily applied to the variety of systems that \hotspice supports.
 Since CSD will not pose significant issues in this thesis, the Wolff algorithm has been implemented only for \link{exchange coupling}{exchange-coupled} systems in \hotspice.
 

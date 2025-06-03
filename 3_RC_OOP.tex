@@ -549,7 +549,8 @@ In conclusion, the strength of the stimulus determines how hard the ASI will be 
 
 \subsection{Analog signal transformation and prediction}
 The transient dynamics of thermally active OOP ASI, as were illustrated in~\cref{fig:3:OOP_relaxation_input}, can be harnessed to perform \xref{reservoir computing}.
-Since this system can respond to analog input signals $s: \mathbb{R} \rightarrow [0, 1]; t \mapsto s(t)$, an alluring test to evaluate the reservoir computing capability of this system is to have it perform a signal transformation or prediction task~\cite{gartside2022reconfigurable,NeuromorphicFewShot,RC_NNN,TaskAdaptivePRC}. \par % REF: AvalanchesChaosNNN also does signal transformation, but it is more of a sidenote there.
+While we first attempted to evaluate reservoir performance using \xref{linear estimator-based metrics}, these proved largely uninformative as the \xref{logarithmic relaxation} results in a high non-linearity and low memory capacity overall.
+However, since this system can respond to analog input signals $s: \mathbb{R} \rightarrow [0, 1]; t \mapsto s(t)$, a signal transformation or prediction task forms an alluring test to nonetheless demonstrate and evaluate its reservoir computing capability~\cite{gartside2022reconfigurable,NeuromorphicFewShot,RC_NNN,TaskAdaptivePRC}. \par % REF: AvalanchesChaosNNN also does signal transformation, but it is more of a sidenote there.
 Applying a signal $s(t)$ to the reservoir, here in the form of an \link{external magnetic field}{external field} $B_z(t)$, yields a response $\vc{x}(t) \in \mathbb{R}^p$ from the $p$ readout nodes the reservoir provides.
 The goal is to estimate a ``target'' function $y(t) \in [0,1]$ as accurately as possible based on the reservoir's response $\vc{x}(t)$.
 As explained in~\cref{sec:1:RC}, the reservoir computing paradigm includes a \xref{linear readout layer} that converts the response $\vc{x}(t)$ into an output $\hat{y}(t) = \vc{x}^\mathrm{T}(t) \cdot \vc{w}$.
@@ -723,7 +724,6 @@ Contrary to the single-column readout, the performance is now equal between the 
 \vspace{-1em}
 
 \paragraph{Double-frequency transformation}
-% TODO: address JLeliaert's comment about determining linear estimator-based metrics
 With an ASI that can perform a decent sine-to-sawtooth transformation, other transformations can be targeted without changing the ASI --- provided the input is applied with an appropriate strength and frequency.
 Only the weights $\vc{w}$ of the \link{linear readout layer}{readout layer} have to be adjusted to reflect this new target.
 For example,~\cref{fig:3:Transformation_freq-magn_SINESQ} shows results for a double-frequency sine wave as target function.
