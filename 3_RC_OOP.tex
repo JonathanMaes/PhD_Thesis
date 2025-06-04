@@ -92,17 +92,17 @@ Thermally active OOP ASI is hard to manufacture, because it must strike a delica
 To appreciate this difficulty, let us first take a closer look at the various energy contributions in the system --- ranging from local anisotropy to large-scale interactions --- and their dependence on the geometrical structure of the OOP magnets.
 \begin{enumerate}
 	\item \textbf{Perpendicular magnetic anisotropy} constitutes the largest contribution to the total OOP anisotropy.
-	Its interfacial origin and characteristics have been discussed earlier in this chapter (see~\cref{sec:3:OOP_nanomagnet_PMA}). % Anisot E: \approx\SI{1.1e-16}{\joule}
+	Its interfacial origin and characteristics have been discussed earlier in this chapter (see~\cref{sec:3:OOP_nanomagnet_PMA}). % Anisot E: \approx\SI{110}{\atto\joule}
 	\item \textbf{Shape anisotropy}\indexlabel[nolabel]{shape anisotropy} of each layer due to their \xlabel[nolabel]{demagnetising field}.
 	It is of a similar order of magnitude as the PMA, but of opposite sign, favouring an IP magnetisation rather than OOP.
-	This contribution was also discussed earlier, see~\cref{sec:2:shape_anisotropy}~and~\ref{sec:3:OOP_nanomagnet_PMA}. % Demag E: \approx\SI{-1.6e-16}{\joule}
+	This contribution was also discussed earlier, see~\cref{sec:2:shape_anisotropy}~and~\ref{sec:3:OOP_nanomagnet_PMA}. % Demag E: \approx\SI{-160}{\atto\joule}
 	\item \textbf{Inter-layer \xlabel[nolabel]{magnetostatic interaction}}.
 	The separate ferromagnetic layers within a single stack also interact, as they can all be considered as separate vertically stacked magnets.
 	This vertical stacking provides an additional contribution to the OOP anisotropy because, in general, the magnetisation of separate magnets prefers to point along the axis connecting those magnets.
 	One can think of this effect as being similar to the shape anisotropy, but on the scale of separate layers rather than individual atomic magnetic moments.
-	This contribution aids the PMA in stabilising the OOP anisotropy, counteracting the \xref{demagnetising field}, but is smaller in magnitude. % Cross MS E: \approx\SI{0.5e-16}{\joule}
+	This contribution aids the PMA in stabilising the OOP anisotropy, counteracting the \xref{demagnetising field}, but is smaller in magnitude. % Cross MS E: \approx\SI{50}{\atto\joule}
 	\item \textbf{Inter-magnet magnetostatic interaction} is the only contribution --- besides external input --- that distinguishes between the $\uparrow$ and $\downarrow$ magnetisation states.
-	All aforementioned energy contributions are internal to individual OOP magnets, making the \xref{magnetostatic interaction} the sole reason for the AFM ground state of OOP ASI. % E_MS: \lesssim\SI{1.1e-17}{\joule}
+	All aforementioned energy contributions are internal to individual OOP magnets, making the \xref{magnetostatic interaction} the sole reason for the AFM ground state of OOP ASI. % E_MS: \lesssim\SI{11}{\atto\joule}
 	\item \textbf{External stimuli} that provide input to the system, like SOT.
 	In simulations, an \xref{external magnetic field} is used as a proxy to model SOT, leading to a Zeeman energy contribution.
 \end{enumerate}
@@ -173,7 +173,7 @@ In the simulations presented hereafter, parameters will be used that are based o
 More precisely, each nanomagnet consisted of $n_{\ce{Co}}=7$ ferromagnetic layers of $D_\mathrm{NM}=\SI{170}{\nano\metre}$ diameter and $t_{\ce{Co}} \approx \SI{1.45}{\nano\metre}$ thickness, with $t_{\ce{Pt}} \approx \SI{0.8}{\nano\metre}$ spacing layers in between.
 The edge-to-edge spacing between neighbouring magnets is $S_\mathrm{ASI}=\SI{30}{\nano\metre}$, unless specified otherwise.
 The saturation magnetisation $M_\mathrm{sat}$ is thickness-dependent~\cite{CoFilmPropertiesCVD}, with a value of $M_\mathrm{sat}=\SI{1063}{\kilo\ampere\per\metre}$ reported for thicknesses in the \SI{}{\nano\metre} range~\cite{Msat_Co}.
-In simulation, the magnetic moment is then $\mu = \SI{2.36e-16}{\ampere\metre\squared}$ for each magnet, with a lattice spacing $a \approx \SI{200}{\nano\metre}$. % Q: is this paragraph OK like this? Put elsewhere? What was the comment?
+In simulation, the magnetic moment is then $\mu = \SI{0.236}{\femto\ampere\metre\squared}$ for each magnet, with a lattice spacing $a \approx \SI{200}{\nano\metre}$. % Q: is this paragraph OK like this? Put elsewhere? What was the comment?
 
 \subsection{Relaxation characteristics}\label{sec:3:relaxation}
 To better guide our design of thermally active ASI for RC, it is essential to familiarise ourselves with its spontaneous relaxation process.
@@ -366,7 +366,7 @@ Therefore, practical applications exploiting systems with specific dynamics will
 \subsection{Fitting MFM images}\label{sec:3:MFM}
 Based only on the magnet geometry --- determined by the various geometrical parameters discussed earlier in~\cref{sec:3:OOP_geometry} --- it is hard to predict the \link{net out-of-plane anisotropy}{net OOP anisotropy} $\EEA$ and \xref{magnetostatic coupling} $\EMC$ of a manufactured ASI.
 For typical nanomagnet dimensions (7 layers of $t_{\ce{Co}} \approx \SI{1.45}{\nano\metre}$ with $D_\mathrm{NM} \approx \SI{170}{\nano\metre}$), some of the aforementioned energy contributions are on the order of several $1000 \kBT$, as we discuss in more detail in~\ccite[Supp. 4]{KUR-24}. % --- especially PMA and shape anisotropy, which have opposite sign and therefore mostly cancel out.
-Due to manufacturing defects, the discrepancy between theoretical estimates of these energy contributions and their real magnitudes can easily exceed $100 \kBT$. % Theoretically, $\EEA$ of an isolated magnet (as manufactured by Alex and observed to be part of a thermally relaxing OOP ASI) is $\approx\SI{-3.6e-18}{\joule} = \SI{-22.5}{\electronvolt} = -871\kBT$ which is far too large to get thermal switching. Furthermore, it is negative, implying an IP magnetisation. This discrepancy between Mathematica and reality could be due to non-coherent reversal, lowering the real energy barrier.
+Due to manufacturing defects, the discrepancy between theoretical estimates of these energy contributions and their real magnitudes can easily exceed $100 \kBT$. % Theoretically, $\EEA$ of an isolated magnet (as manufactured by Alex and observed to be part of a thermally relaxing OOP ASI) is $\approx\SI{-3.6}{\atto\joule} = \SI{-22.5}{\electronvolt} = -871\kBT$ which is far too large to get thermal switching. Furthermore, it is negative, implying an IP magnetisation. This discrepancy between Mathematica and reality could be due to non-coherent reversal, lowering the real energy barrier.
 However, we just saw that $\EEA$ and $\EMC$ must not exceed several tens of $\kBT$ if a system is to spontaneously reach the checkerboard ground state.
 It is therefore inappropriate to calculate $\EEA$ and $\EMC$ theoretically --- they must be empirically determined from manufactured ASI. \\\par
 For this reason, \textit{A. Kurenkov} manufactured several $11 \times 11$ OOP square-lattice ASIs, initialised them in the `up' state by a \SI{0.9}{\tesla} OOP field and measured their state using \link{magnetic force microscopy}{MFM}\indexlabel[nolabel]{magnetic force microscopy} at different time intervals since initialisation.
@@ -453,7 +453,7 @@ The reason for allowing the optimiser to adjust the \xref{exchange coupling} $J$
 High-$\eta$ guesses are also limited to a very narrow $J$-range (\cref{fig:3:MFM_fitquality}), lending further credibility to the existence of exchange coupling in this system.
 For systems with larger spacing, a near-zero \xlabel[nolabel]{exchange coupling} is found.
 This may indicate that manufacturing defects caused incomplete separation of neighbouring nanomagnets in the bottom \ce{Co} layer for the smallest $S_\mathrm{ASI}$, while complete separation was achieved for $S_\mathrm{ASI} \geq \SI{25}{\nano\metre}$.
-Such defects could explain why a better \xref{fit quality} $\eta$ could be achieved for $S_\mathrm{ASI} = \SI{25}{nm}$ and \SI{30}{\nano\metre} than for $S_\mathrm{ASI} = \SI{20}{nm}$. \par
+Such defects could explain why a better \xref{fit quality} $\eta$ could be achieved for $S_\mathrm{ASI} = \SI{25}{\nano\metre}$ and \SI{30}{\nano\metre} than for $S_\mathrm{ASI} = \SI{20}{\nano\metre}$. \par
 Both $S_\mathrm{ASI} = \SI{25}{\nano\metre}$ and $\SI{30}{\nano\metre}$ are estimated to have very similar $\EMC \approx 10 \kBT$, which is in line with expectations since the difference between these two spacings is small compared to the magnet diameter $D_\mathrm{NM} = \SI{170}{\nano\metre}$.
 For the interconnected system ($S_\mathrm{ASI} = \SI{20}{\nano\metre}$), the fitted \link{magnetostatic coupling}{MS coupling} $\EMC$ is also much larger, because it is hard to distinguish between exchange coupling and MS coupling.
 The only difference between these couplings is that the MS coupling extends further out, but since its strength decreases rapidly with distance its main effect is similar to that of the exchange coupling.
@@ -1095,7 +1095,7 @@ The ASI we consider here as our baseline system contains magnets with a very lar
 	For reference, $\SI{110}{\electronvolt} \approx 4255\kBT$ at room temperature.
 	The values for $\EEA$ and $\EMC$ used here are not expressed as multiples of $\kBT$, because the initial research on non-volatile ASI was conducted before the practice of scaling these parameters by $\kBT$ was adopted.
 	For this reason, $\EEA$ is provided in \SI{}{\electronvolt} and the metrics will be presented as a function of the lattice parameter $a$ rather than the \xref{magnetostatic coupling} $\EMC$.
-} $\EEA = \SI{110}{\electronvolt} \pm \SI{5}{\percent}$ and the same \xref{magnetic moment} as the thermally active ASI ($\mu = \SI{2.5e-16}{\ampere\metre\squared}$), which was based on magnets with a diameter $D_\mathrm{NM} = \SI{170}{\nano\metre}$.
+} $\EEA = \SI{110}{\electronvolt} \pm \SI{5}{\percent}$ and the same \xref{magnetic moment} as the thermally active ASI ($\mu = \SI{0.25}{\femto\ampere\metre\squared}$), which was based on magnets with a diameter $D_\mathrm{NM} = \SI{170}{\nano\metre}$.
 As these parameters are kept constant, the \link{magnetostatic coupling}{MS coupling} $\EMC$ only depends on the lattice parameter $a$.
 To avoid an unintentionally interconnected ASI as previously encountered in~\cref{sec:3:MFM}, a lower limit $a > D_\mathrm{NM} + \SI{25}{\nano\metre} = \SI{195}{\nano\metre}$ is imposed. \par
 The high anisotropy guarantees a weakly-coupled system with a high $\sigma(\EEA)/\EMC$-ratio, which we previously suggested to be the most promising regime for RC.
@@ -1117,7 +1117,7 @@ Recall that the maximum value of $K$, $G$ and $C$ is the number of \link{linear 
 	\label{fig:3:Clocking_Sweeps_binary_KQ}
 	\link{kernel-quality}{Kernel-quality} $K$, \xref{generalisation-capability} $G$ and \xref{computing capacity} $C$ of a $20 \times 20$ OOP square-lattice ASI with $\EEA = \SI{110}{\electronvolt} \pm \SI{5}{\percent}$.
 	Beyond the displayed range of lattice constants $a$ and input field magnitudes $B$, the metrics decrease.
-	The corresponding \xref{magnetostatic coupling} $\EMC$ ranges from $146\kBT$ (at $a=\SI{220}{\nano\metre}$) to $88\kBT$ (at $a=\SI{260}{\nano\metre}$), as the \xref{magnetic moment} of each magnet is $\mu = \SI{2.5e-16}{\ampere\metre\squared}$.
+	The corresponding \xref{magnetostatic coupling} $\EMC$ ranges from $146\kBT$ (at $a=\SI{220}{\nano\metre}$) to $88\kBT$ (at $a=\SI{260}{\nano\metre}$), as the \xref{magnetic moment} of each magnet is $\mu = \SI{0.25}{\femto\ampere\metre\squared}$.
 	As readout, the average domain type of each $2 \times 2$ set of magnets is used, totalling 100 readout values.
 	Hence, the highest possible value of $K$, $G$ and $C$ is 100.
 }
@@ -1145,7 +1145,7 @@ Therefore, the \indexlabel[nolabel]{parity check}\xref{parity check} metric is a
 
 \xfig{3_RC_OOP/Nonvolatile/Sweeps/Clocking_binary_TA_averaged.pdf}{
 	\label{fig:3:Clocking_Sweeps_binary_TA}
-	\link{linear estimator-based metrics}{Linear estimator-based metrics} for the same input, readout and system parameters as in~\cref{fig:3:Clocking_Sweeps_binary_KQ} ($20 \times 20$ OOP square-lattice ASI with $10 \times 10 = 100$ \link{linear readout layer}{readout nodes}, $\EEA = \SI{110}{\electronvolt} \pm \SI{5}{\percent}$, $\mu = \SI{2.5e-16}{\ampere\metre\squared}$), over the same range of lattice spacings $a$ and input magnitudes $B$.
+	\link{linear estimator-based metrics}{Linear estimator-based metrics} for the same input, readout and system parameters as in~\cref{fig:3:Clocking_Sweeps_binary_KQ} ($20 \times 20$ OOP square-lattice ASI with $10 \times 10 = 100$ \link{linear readout layer}{readout nodes}, $\EEA = \SI{110}{\electronvolt} \pm \SI{5}{\percent}$, $\mu = \SI{0.25}{\femto\ampere\metre\squared}$), over the same range of lattice spacings $a$ and input magnitudes $B$.
 	The \xref{non-linearity} is bounded in the range $[0,1]$, while the other two metrics have no upper limit.
 }
 
@@ -1178,7 +1178,7 @@ Furthermore, while a region with near-unity \xref{non-linearity} now exists, the
 
 \xfig{3_RC_OOP/Nonvolatile/Sweeps/Sweep20230124100320.pdf}{
 	\label{fig:3:Clocking_Sweeps_binary_TA_EBstd0}
-	\link{linear estimator-based metrics}{Linear estimator-based metrics} for a defect-free system ($\sigma(\EEA) = 0$) with otherwise the same input, readout and system parameters as in~\cref{fig:3:Clocking_Sweeps_binary_TA} ($20 \times 20$ OOP square-lattice ASI with $10 \times 10 = 100$ readout nodes, $\EEA = \SI{110}{\electronvolt}$, $\mu = \SI{2.5e-16}{\ampere\metre\squared}$), over the same range of lattice spacings $a$ and input magnitudes $B$.
+	\link{linear estimator-based metrics}{Linear estimator-based metrics} for a defect-free system ($\sigma(\EEA) = 0$) with otherwise the same input, readout and system parameters as in~\cref{fig:3:Clocking_Sweeps_binary_TA} ($20 \times 20$ OOP square-lattice ASI with $10 \times 10 = 100$ readout nodes, $\EEA = \SI{110}{\electronvolt}$, $\mu = \SI{0.25}{\femto\ampere\metre\squared}$), over the same range of lattice spacings $a$ and input magnitudes $B$.
 	The \xref{non-linearity} is bounded in the range $[0,1]$, while the \xref{memory capacity} and \xref{parity check} have no upper limit.
 }
 
@@ -1187,7 +1187,7 @@ To assess this,~\cref{fig:3:Clocking_Sweeps_binary_TA_EBstd} shows \xref{linear 
 
 \xfig{3_RC_OOP/Nonvolatile/Sweeps/Sweep20250327111551.pdf}{
 	\label{fig:3:Clocking_Sweeps_binary_TA_EBstd}
-	\link{linear estimator-based metrics}{Linear estimator-based metrics} as a function of disorder $\sigma(\EEA)/\EEA$ with otherwise the same input, readout and system parameters as in~\cref{fig:3:Clocking_Sweeps_binary_TA} ($20 \times 20$ OOP square-lattice ASI with $10 \times 10 = 100$ \link{linear readout layer}{readout nodes}, $\EEA = \SI{110}{\electronvolt}$, $\mu = \SI{2.5e-16}{\ampere\metre\squared}$), over the same range of input magnitudes $B$, with $a=\SI{230}{\nano\metre}$ kept constant.
+	\link{linear estimator-based metrics}{Linear estimator-based metrics} as a function of disorder $\sigma(\EEA)/\EEA$ with otherwise the same input, readout and system parameters as in~\cref{fig:3:Clocking_Sweeps_binary_TA} ($20 \times 20$ OOP square-lattice ASI with $10 \times 10 = 100$ \link{linear readout layer}{readout nodes}, $\EEA = \SI{110}{\electronvolt}$, $\mu = \SI{0.25}{\femto\ampere\metre\squared}$), over the same range of input magnitudes $B$, with $a=\SI{230}{\nano\metre}$ kept constant.
 	The \xref{non-linearity} is bounded in the range $[0,1]$, while the \xref{memory capacity} and \xref{parity check} have no upper limit.
 }
 
