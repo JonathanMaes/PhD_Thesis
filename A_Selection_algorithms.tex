@@ -52,7 +52,7 @@ While a parallel version of this algorithm exists~\cite{PoissonDiskParallel}, it
 If this can be implemented, the number of sequential operations could be reduced from $\order{N}$ to $\order{\log(N)}$, with $N$ the number of samples, making Poisson disk sampling a viable strategy.
 
 \section{Restricted stratified jittered grid}
-To improve performance, we can use a restricted ``\xlabel{stratified jittered grid}'' (SJG) selection algorithm.
+To improve performance, we can use a restricted ``\xlabel[tosection]{stratified jittered grid}'' (SJG) selection algorithm.
 Normal SJG sampling divides the domain into strata --- typically squares --- and selects a random point in each \xlabel{stratum}~\cite{ProgressiveMultiJittered}.
 Since this procedure does not guarantee a minimal distance between samples, a restricted SJG is used instead, where samples are only taken from the centre area of each square-shaped stratum, as discussed and illustrated in~\ccite{SamplingPolyominoes}. \par % Fig. 3b in SamplingPolyominoes is restricted SJG
 To apply this in \hotspice, the simulation is divided into square subregions of $R_x \times R_y$ grid cells, with $R_x$ and $R_y$ chosen such that each subregion has a physical size of at least $\rmin \times \rmin$.

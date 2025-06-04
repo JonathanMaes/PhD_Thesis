@@ -22,6 +22,7 @@ def get_performance(mm: hotspice.Magnets, t_min: float = 1, n_min: int = 1, verb
         hotspice.utils.free_gpu_memory()
     else:
         gc.collect()
+    mm.reset_stats()
     i, t0 = -1, time.perf_counter()
     while (i := i + 1) < n_min or time.perf_counter() - t0 < t_min: # Do this for at least `n_min` iterations and `t_min` seconds
         mm.update()
@@ -74,12 +75,12 @@ def plot(data_dir=None):
     
     ## We need two axes, because Matplotlib does not natively support broken axes.
     thesis_utils.init_style()
-    fig = plt.figure(figsize=(thesis_utils.page_width/2, 3.7))
+    fig = plt.figure(figsize=(thesis_utils.page_width/2, 3.1))
     ax1 = fig.add_subplot(111)
     ax2 = ax1.twiny()
     ax1.plot(N, data['attempts/s'], label="Samples / sec")
-    ax1.plot(N, data['switches/s'], label="Switches / sec")
-    ax1.plot(N, data['MCsteps/s'], label="MC sweeps / sec", color="k")
+    ax1.plot(N, data['MCsteps/s'], label="MC sweeps / sec")
+    # ax1.plot(N, data['switches/s'], label="Switches / sec")
     ax1.set_title(PU, pad=10)
     thesis_utils.label_ax(ax1, int(GPU), offset=(-0.15, 0.225))
     ax1.set_xlim([N.min(), N.max()])
@@ -97,7 +98,7 @@ def plot(data_dir=None):
     
     if not GPU: ax2.legend(*ax1.get_legend_handles_labels(), loc="lower left")
     fig.tight_layout()
-    fig.subplots_adjust(top=0.8)
+    fig.subplots_adjust(top=0.78, bottom=0.15)
     hotspice.utils.save_results(figures={f'Performance_{PU}': fig}, outdir=data_dir, copy_script=False)
 
 
