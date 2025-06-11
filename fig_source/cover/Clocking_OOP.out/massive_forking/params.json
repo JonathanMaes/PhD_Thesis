@@ -1,0 +1,18 @@
+{
+	"magnitude": 0.00378,
+	"E_MC_ratio": 40,
+	"E_EA_ratio": 200,
+	"E_B_std": 0.0,
+	"vacancy_fraction": 0.0,
+	"vacancies": 0,
+	"a": 2e-07,
+	"d": 1.7e-07,
+	"T": 300.0,
+	"PBC": false,
+	"scheme": "NEEL",
+	"size": 141,
+	"moment": 2.365080479043996e-16,
+	"N": 13,
+	"ASI_type": "OOP_Square",
+	"repeats": 6
+}
