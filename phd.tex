@@ -5,7 +5,6 @@
 \usepackage[small,bf,centerlast]{caption}[=v1] % Customise appearance of fig/table captions
 \usepackage[Sonny]{fncychap} % Styles for chapter headers: Bjarne, Bjornstrup, Conny, Glenn, Lenny, Rejne and Sonny
 \usepackage[T1]{fontenc} % Improved font encoding for better output, especially for accented characters
-\usepackage[text=6.125in,centering,vmargin=2.62cm,includeheadfoot]{geometry} % Set page margins
 \usepackage[final]{graphicx} % Handles inclusion of images
 \usepackage[UTF8]{inputenc} % Support for Latin-1 encoding (UTF-8 is generally preferred)\\
 \usepackage[version=4]{mhchem} % Chemistry and isotopes with \ce{} (other option: 'chemformula' \ch{})
@@ -27,6 +26,7 @@
 \usepackage{color} % Basic color support (often superseded by "xcolor")
 \usepackage{enumitem}
 \usepackage{float} % Provides option [H] to floats
+\usepackage{geometry} % Set page margins
 \usepackage[backref=none]{hyperref} % Creates hyperlinks and metadata in PDFs. Set backref=page to add back-references in bibliography.
 \usepackage{ifthen} % If/then/else
 \usepackage{listings} % Formats code snippets for programming examples
@@ -58,6 +58,15 @@
 %%%% PACKAGES THAT MUST BE LOADED AFTER OTHERS
 \usepackage[all]{hypcap} % [Requires "hyperref"] Ensures links to figures focus on the image, not the caption
 \usepackage[capitalise]{cleveref} % [Requires "hyperref"] Intelligent cross-referencing
+
+%%%% SET PAGE MARGINS
+\makeatletter
+\if@twoside%
+	\geometry{text=6.125in,inner=3.5cm,vmargin=2.62cm,includeheadfoot}%
+\else%
+	\geometry{text=6.125in,centering,vmargin=2.62cm,includeheadfoot}%
+\fi%
+\makeatother
 
 %%%% CREATE CUSTOM COMMANDS
 \input{commands}
@@ -191,7 +200,9 @@
 \frontmatter
 \newcommand{\jonathan}{\leftmark}
 
+\newgeometry{text=6.125in,centering,includeheadfoot,vmargin=2.63cm}
 \input{phdtitlepage}
+\restoregeometry
 \input{phdtitlepageback}
 \input{phdacknowledgements}
 
@@ -248,5 +259,18 @@
 \input{abbrev}\cleardoublepage
 \printindex\cleardoublepage
 \input{publications}
+
+% Finish with an empty (double)page for the backcover
+\makeatletter
+\if@twoside%
+	\newpage
+	\thispagestyle{empty}
+	\null
+	\newpage
+	\thispagestyle{empty}
+	\cleardoublepage
+	\thispagestyle{empty}
+\fi%
+\makeatother
 
 \end{document}
