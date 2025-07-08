@@ -40,7 +40,7 @@ In single-domain IP nanomagnets, the magnetisation prefers to align along the fi
 Either way, it is natural to use an Ising-like approximation for simulating such single-domain nanomagnets.
 The easy axis, position $\vc{r}_i$ and size of the magnetic moment\footnote{
 	\label{fn:2:moment_integral}
-	The size of the magnetic moment $\mu_i$ corresponds to the total ground state magnetic moment $\abs{\int_{\Omega_i} \vc{M}(\vc{r})d\vc{r}}$, with $\Omega_i$ the geometry of magnet $i$ and $\vc{M}(\vc{r})$ its magnetisation in the twofold degenerate ground state.
+	The size of the magnetic moment $\mu_i$ corresponds to the total ground state magnetic moment $\norm{\int_{\Omega_i} \vc{M}(\vc{r})d\vc{r}}$, with $\Omega_i$ the geometry of magnet $i$ and $\vc{M}(\vc{r})$ its magnetisation in the twofold degenerate ground state.
 	Due to edge relaxation effects, this is slightly smaller than $M_\mathrm{sat} V_i$, where $M_\mathrm{sat}$ is the material's saturation magnetisation.
 } $\mu_i$ of each magnet $i$ are fixed and they are only allowed to switch between the `up' ($\uparrow$, $s_i=1$) and `down' ($\downarrow$, $s_i=-1$) magnetisation states along the easy axis.
 Thus, the total magnetic moment vector $\vc{\mu}_i$ of magnet $i$ can be expressed as
@@ -90,7 +90,7 @@ Three \idx{energy contributions} have been implemented\footnote{
 	\item The \emph{\xlabel{magnetostatic interaction} energy} between magnets $i$ and $j$
 	\begin{equation}
 		\label{eq:2:E_MS}
-		E_{\mathrm{MS},i,j} = \frac{\mu_0}{4 \pi} \ab(\frac{\vc{\mu}_i \bcdot \vc{\mu}_j}{\abs{\vc{r}_{ij}}^3} - \frac{3(\vc{\mu}_i \bcdot \vc{r}_{ij}) (\vc{\mu}_j \bcdot \vc{r}_{ij})}{\abs{\vc{r}_{ij}}^5}) \mathrm{,}
+		E_{\mathrm{MS},i,j} = \frac{\mu_0}{4 \pi} \ab(\frac{\vc{\mu}_i \bcdot \vc{\mu}_j}{\norm{\vc{r}_{ij}}^3} - \frac{3(\vc{\mu}_i \bcdot \vc{r}_{ij}) (\vc{\mu}_j \bcdot \vc{r}_{ij})}{\norm{\vc{r}_{ij}}^5}) \mathrm{,}
 	\end{equation}
 	with $\mu_0$ the vacuum permeability and $\vc{r}_{ij} = \vc{r}_j - \vc{r}_i$ the vector connecting the two magnetic dipoles $\vc{\mu}_i$ and $\vc{\mu}_j$. \par
 	This is the main interaction dictating how separate nanomagnets influence each other, causing the typical properties of the various ASI lattices, such as \xref{superferromagnetism} in pinwheel ASI~\cite{li2018pinwheel}.
@@ -155,13 +155,13 @@ where $E_{\mathrm{MS},i,j}^\mathrm{(0)}$ is the original \link{point dipole mode
 The second-order correction can be written as
 \begin{equation}
 	\label{eq:2:E_MS_order2}
-	E_{\mathrm{MS},i,j}^\mathrm{(2)} = \frac{\mu_0}{4\pi} \frac{3\mathcal{I}_{ij}}{2} \Bigg[3\frac{\vc{\mu}_i^\mathrm{OOP} \bcdot \vc{\mu}_j^\mathrm{OOP}}{\abs{\vc{r}_{ij}}^5} + \frac{\vc{\mu}_i^\mathrm{IP} \bcdot \vc{\mu}_j^\mathrm{IP}}{\abs{\vc{r}_{ij}}^5} -5\frac{(\vc{\mu}_i^\mathrm{IP} \bcdot \vc{r}_{ij}) (\vc{\mu}_j^\mathrm{IP} \bcdot \vc{r}_{ij})}{\abs{\vc{r}_{ij}}^7} \Bigg] \mathrm{,}
+	E_{\mathrm{MS},i,j}^\mathrm{(2)} = \frac{\mu_0}{4\pi} \frac{3\mathcal{I}_{ij}}{2} \Bigg[3\frac{\vc{\mu}_i^\mathrm{OOP} \bcdot \vc{\mu}_j^\mathrm{OOP}}{\norm{\vc{r}_{ij}}^5} + \frac{\vc{\mu}_i^\mathrm{IP} \bcdot \vc{\mu}_j^\mathrm{IP}}{\norm{\vc{r}_{ij}}^5} -5\frac{(\vc{\mu}_i^\mathrm{IP} \bcdot \vc{r}_{ij}) (\vc{\mu}_j^\mathrm{IP} \bcdot \vc{r}_{ij})}{\norm{\vc{r}_{ij}}^7} \Bigg] \mathrm{,}
 \end{equation}
 where $\vc{\mu}_i$ was split into its IP and OOP components, conveniently leading to separate IP and OOP terms as implemented in the two types of ASI in \hotspice. \par
 The particular shape of the nanomagnets is encapsulated in the single scalar $\mathcal{I}_{ij} = (\mathcal{I}_i + \mathcal{I}_j)/2$.
 These $\mathcal{I}$ are calculated similar to a moment of inertia:
 \begin{equation}
-	\mathcal{I}_i = \int_{\Omega_i} \abs{\vc{r} - \ab(\int_{\Omega_i} \vc{r} d\vc{r})}^2 d\vc{r} \mathrm{,}
+	\mathcal{I}_i = \int_{\Omega_i} \norm{\vc{r} - \ab(\int_{\Omega_i} \vc{r} d\vc{r})}^2 d\vc{r} \mathrm{,}
 \end{equation}
 with $\Omega_i$ the geometry of magnet $i$.
 We assume all magnets have the same shape, such that $\mathcal{I}_{ij} = \mathcal{I}_i = \mathcal{I}_j$.
@@ -178,12 +178,12 @@ The north and south poles are assigned the magnetic charges $+q_i$ and $-q_i$, r
 This choice yields the same effective dipole moment at long distance.
 The interaction energy between two magnetic charges $q$ and $q'$ can be derived from the magnetic version of Coulomb's law~\cite{ForceMagneticDipole} as
 \begin{equation}
-	E = -\int_\infty^{\vc{r}} \frac{\mu_0}{\num{4}\pi}\frac{qq'}{\abs{\vc{r}}^3} \vc{r} \cdot d\vc{r} = \frac{\mu_0}{\num{4}\pi} \frac{qq'}{\abs{\vc{r}}} \mathrm{.}
+	E = -\int_\infty^{\vc{r}} \frac{\mu_0}{\num{4}\pi}\frac{qq'}{\norm{\vc{r}}^3} \vc{r} \cdot d\vc{r} = \frac{\mu_0}{\num{4}\pi} \frac{qq'}{\norm{\vc{r}}} \mathrm{.}
 \end{equation}
 The magnetostatic interaction energy between two nanomagnets is then the sum of their four mutual magnetic charge interactions, finally resulting in
 \begin{equation}
 	\label{eq:2:E_MS_mono}
-	E_{\mathrm{MS},i,j} = \frac{\mu_0 \mu_i \mu_j}{4\pi d_i d_j} \Bigg(\frac{1}{\abs{\mathbf{r_N}_i - \mathbf{r_N}_j}} + \frac{1}{\abs{\mathbf{r_S}_i - \mathbf{r_S}_j}}\\ - \frac{1}{\abs{\mathbf{r_N}_i - \mathbf{r_S}_j}} - \frac{1}{\abs{\mathbf{r_S}_i - \mathbf{r_N}_j}}\Bigg) \mathrm{.}
+	E_{\mathrm{MS},i,j} = \frac{\mu_0 \mu_i \mu_j}{4\pi d_i d_j} \Bigg(\frac{1}{\norm{\mathbf{r_N}_i - \mathbf{r_N}_j}} + \frac{1}{\norm{\mathbf{r_S}_i - \mathbf{r_S}_j}}\\ - \frac{1}{\norm{\mathbf{r_N}_i - \mathbf{r_S}_j}} - \frac{1}{\norm{\mathbf{r_S}_i - \mathbf{r_N}_j}}\Bigg) \mathrm{.}
 \end{equation}
 The minus sign in the equation appears because north and south poles have opposite charge.
 \hotspice is limited to a single value of $d$ for all magnets, due to the structure of the kernels used to calculate the magnetostatic interaction, which will be discussed in~\cref{sec:2:Kernels:Structure}.
@@ -762,27 +762,27 @@ We will now derive an inequality for the minimal distance $\rmin$ as a function 
 	\end{equation}
 	The only long-range interaction present in the systems under consideration here is the \xref{magnetostatic interaction} given by \eqref{eq:2:E_MS}, repeated here for convenience,
 	\begin{equation*}
-		E_{\mathrm{MS},1,2} = \frac{\mu_0}{4 \pi} \ab(\frac{\vc{\mu}_1 \bcdot \vc{\mu}_2}{\abs{\vc{r}_{12}}^3} - \frac{3(\vc{\mu}_1 \bcdot \vc{r}_{12}) (\vc{\mu}_2 \bcdot \vc{r}_{12})}{\abs{\vc{r}_{12}}^5}) \mathrm{.}  \tag{\ref*{eq:2:E_MS}}
+		E_{\mathrm{MS},1,2} = \frac{\mu_0}{4 \pi} \ab(\frac{\vc{\mu}_1 \bcdot \vc{\mu}_2}{\norm{\vc{r}_{12}}^3} - \frac{3(\vc{\mu}_1 \bcdot \vc{r}_{12}) (\vc{\mu}_2 \bcdot \vc{r}_{12})}{\norm{\vc{r}_{12}}^5}) \mathrm{.}  \tag{\ref*{eq:2:E_MS}}
 	\end{equation*}
 	We do not consider any \link{sec:2:finite}{finite-size corrections}, since their long-range effects are negligible and any reasonable value of $Q$ will result in a value $\rmin$ far larger than the magnet size.
 	The magnetostatic energy in the \link{point dipole model}{point-dipole approximation} is bounded by
 	\begin{equation}
 		\label{eq:2:MultiSwitch_proof_EMS_leq}
-		\abs{E_{\mathrm{MS},1,2}} \leq \frac{\mu_0 \abs{\vc{\mu}_1} \abs{\vc{\mu}_2}}{2 \pi r_{12}^3} \mathrm{,}
+		\abs{E_{\mathrm{MS},1,2}} \leq \frac{\mu_0 \norm{\vc{\mu}_1} \norm{\vc{\mu}_2}}{2 \pi r_{12}^3} \mathrm{,}
 	\end{equation}
 	with this extremum being achieved for two dipoles $\vc{\mu}_1$ and $\vc{\mu}_2$ aligned in the same direction along their common axis $\vc{r}_{12}$.
 	From the symmetry of the magnetostatic interaction, % and considering the states in~\cref{fig:2:MultiSwitch_proof}, 
 	the unknown term in~\cref{eq:2:MultiSwitch_proof_leq_Q} can be expanded as 
 	\begin{align*}
 		\abs{\Delta E^{(f)} - \Delta E^{(i)}} &= \abs{-\cancel{2 \sum_{k=3}^N E_{\mathrm{MS},2,k}^{(f)}} -2 E_{\mathrm{MS},2,1}^{(f)} +\cancel{2 \sum_{k=3}^N E_{\mathrm{MS},2,k}^{(i)}} +2 E_{\mathrm{MS},2,1}^{(i)}} \\
-		&= 2\abs{E_{\mathrm{MS},2,1}^{(i)} - E_{\mathrm{MS},2,1}^{(f)}} = 4 \abs{E_{\mathrm{MS},2,1}^{(i)}} \numeq{\ref{eq:2:MultiSwitch_proof_EMS_leq}}{\leq} \frac{2 \mu_0 \abs{\vc{\mu}_1} \abs{\vc{\mu}_2}}{\pi r_{12}^3} \mathrm{,}
+		&= 2\abs{E_{\mathrm{MS},2,1}^{(i)} - E_{\mathrm{MS},2,1}^{(f)}} = 4 \abs{E_{\mathrm{MS},2,1}^{(i)}} \numeq{\ref{eq:2:MultiSwitch_proof_EMS_leq}}{\leq} \frac{2 \mu_0 \norm{\vc{\mu}_1} \norm{\vc{\mu}_2}}{\pi r_{12}^3} \mathrm{,}
 	\end{align*}
 	since only magnet 1 is different between the initial and final states, hence $E_{\mathrm{MS},2,1}^{(f)} = - E_{\mathrm{MS},2,1}^{(i)}$.
 	Combining this with \eqref{eq:2:MultiSwitch_proof_leq_Q} gives the sufficient condition
 	\begin{equation}
-		\frac{2 \mu_0 \abs{\vc{\mu}_1} \abs{\vc{\mu}_2}}{\pi r_{12}^3} \cdot \, \underset{\Delta E}{\max} \abs{\frac{\partial P}{\partial \Delta E}} \leq Q \mathrm{.}
+		\frac{2 \mu_0 \norm{\vc{\mu}_1} \norm{\vc{\mu}_2}}{\pi r_{12}^3} \cdot \, \underset{\Delta E}{\max} \abs{\frac{\partial P}{\partial \Delta E}} \leq Q \mathrm{.}
 	\end{equation}
-	To get a single value for $\rmin$ that is valid throughout the ASI, replacing $\abs{\vc{\mu}_1} \abs{\vc{\mu}_2}$ by $\max(\mu^2)$ finally yields the expected expression for $\rmin$:
+	To get a single value for $\rmin$ that is valid throughout the ASI, replacing $\norm{\vc{\mu}_1} \norm{\vc{\mu}_2}$ by $\max(\mu^2)$ finally yields the expected expression for $\rmin$:
 	\begin{equation*}
 		r_{12} \geq \sqrt[3]{\frac{2 \mu_0 \, \max(\mu^2)}{\pi Q} \cdot \, \underset{\Delta E}{\max} \abs{\frac{\partial P}{\partial \Delta E}}} \triangleq \rmin \mathrm{.} \tag{\ref*{eq:2:MultiSwitch_inequality}}
 	\end{equation*}
