@@ -54,7 +54,7 @@ However, interactions with other magnets or \xref{external magnetic fields} modi
 Each magnet can have a unique \xref{magnetic moment} size $\mu_i$, temperature $T_i$ and energy barrier $E_{\mathrm{B},i}$.
 This enables, for instance, modelling some of the disorder due to \link{lithography}{lithographic} variations by assigning a different shape anisotropy to each magnet, typically sampled from a Gaussian distribution with mean $\EB$ and standard deviation $\sigma(\EB)$~\cite{DisorderGroundStateASI}. \\\par
 
-Due to the periodic nature of many ASI, \hotspice chooses to perform the simulation on a rectilinear grid as this allows efficient matrix and array manipulations, as well as straightforward implementation of both open and \xref{periodic boundary conditions} (PBC).
+Due to the periodic nature of many ASIs, \hotspice chooses to perform the simulation on a rectilinear grid as this allows efficient matrix and array manipulations, as well as straightforward implementation of both open and \xref{periodic boundary conditions} (PBC).
 Each grid point may or may not contain a magnet, and the magnets must either all be of the IP type, or all OOP.
 The benefits and details of this approach will be elaborated on in~\cref{sec:2:Implementation}.
 Even though this implementation does not allow complete freedom in the placement of magnets, many popular ASI lattices can be constructed in this manner.
@@ -907,8 +907,8 @@ However, the initialisation for larger systems now takes a long time, because wi
 Still, in all situations it is beneficial not to use the pairwise kernels $\vc{k}^{(i)}$. \\\par
 
 To reduce the initialisation time, two improvements had to be combined.
-First, a \xref{unit cell kernel} as described earlier in~\cref{sec:2:Kernels:Structure} had to be implemented, which requires far less memory by using the periodic nature of most ASI to only store interactions for a single \xref{unit cell}.
-This is used in the fourth row \textit{``Unit cell kernel''}, but does not yield a significant improvement on its own aside from enabling simulations of systems larger than $1000 \times 1000$ magnets. \par
+First, a \xref{unit cell kernel} as described earlier in~\cref{sec:2:Kernels:Structure} had to be implemented, which requires far less memory by using the periodic nature of most ASIs to only store interactions for a single \xref{unit cell}.
+This is used in the fourth row \textit{``Unit cell kernel''}, but does not yield a significant improvement on its own aside from enabling simulations of systems larger than $1000 \times 1000$ magnets.
 Secondly, however, this new kernel enables the usage of a convolution to initialise the magnetostatic interaction energy $E_\mathrm{MS}$, rather than the sequential sum used before.
 This is what the final two rows \textit{``Optimised implementation''} use, where we once again compare CPU and GPU as this is the most performant version overall.
 Another minor optimisation was to use 2D indexation (rather than a flat index $i = N_x y + x$ which did not synergise well with the convolution), yielding another \SI{15}{\percent} performance increase. \\\par

@@ -77,7 +77,7 @@ The most ubiquitous machine learning models currently in use revolve around \emp
 These were originally inspired by the brain: an ANN consists of a network of non-linear summing nodes (akin to neurons) connected by directed weighted edges (akin to synapses)~\cite{EvaluatingRestrictedESNs,zurada1992introduction,AIsimulateMemoryContinuity}.
 Each node holds a numerical value: during operation, this value is determined based on the weighted sum of all nodes that feed into it.
 This allows activations to propagate through the network~\cite{lukovsevivcius2009reservoir}.
-To prevent these values from accumulating without limit, they are typically bounded to the range $[0,1]$ by applying an \xlabel{activation function} to the weighted sum --- typically a sigmoid, like the logistic map $e^x/(1+e^x)$ or hyperbolic tangent~\cite{SurveyUniversalApproximation}.
+To prevent these values from accumulating without limit, they are typically bounded to the range $[0,1]$ by applying an \xlabel{activation function} to the weighted sum --- usually a sigmoid, like the logistic map $e^x/(1+e^x)$ or hyperbolic tangent~\cite{SurveyUniversalApproximation}.
 A node that uses such an activation function is referred to as an \idx{artificial neuron}.
 The non-linearity introduced by the activation function is what enables ANNs to approximate any arbitrary function, allowing them to adequately separate, group and otherwise process input data~\cite{ApproximationFNN,SurveyUniversalApproximation,funahashi1992neural}.
 For many real-world tasks, the form of the desired function is unknown, so heuristics are used to ``train'' the weights of all edges based on a given dataset~\cite{EvaluatingRestrictedESNs}.
@@ -250,7 +250,7 @@ This introduces a form of \xref{non-linearity} into it, though it still mostly s
 
 \subsubsection{Benchmarks} % Memorisation, frequency generation, classification
 In addition to these six metrics, reservoirs are often used to perform specific benchmark tasks in literature.
-Example of these include signal transformation and prediction~\cite{NeuromorphicFewShot,jaeger2001echo,JaegerHaasWireless,RC_MemristorTemporal,Sunspots_Shougat,gartside2022reconfigurable,appeltant2011information,Vidamour2023}, or speech and image recognition~\cite{farronato2022reservoir,grollier2020neuromorphic,DynamicEmergence_NanomagneticSystem,Vidamour2023}. % See https://arxiv.org/html/2405.06561v
+Examples of these include signal transformation and prediction~\cite{NeuromorphicFewShot,jaeger2001echo,JaegerHaasWireless,RC_MemristorTemporal,Sunspots_Shougat,gartside2022reconfigurable,appeltant2011information,Vidamour2023}, or speech and image recognition~\cite{farronato2022reservoir,grollier2020neuromorphic,DynamicEmergence_NanomagneticSystem,Vidamour2023}. % See https://arxiv.org/html/2405.06561v
 Wringer~\etal~\cite{RCbenchmarksReview1} provide a comprehensive overview of various benchmarks used throughout literature.
 They note that --- while less general than metrics --- benchmarks enable a more concrete comparison of reservoirs, whereas metrics provide a more abstract notion of computational capability.
 
@@ -266,7 +266,7 @@ Networks of nanowires are also interesting for PRC, as they can self-assemble in
 However, memristors are rather slow.
 %A faster reservoir can be made of field-programmable gate arrays (FPGAs), which are especially suitable for integer-valued tasks due to their digital nature~\cite{RC_RapidTimeSeries,BookReservoirComputing}. % Autonomous Boolean logic
 %For instance, FPGAs can efficiently implement cellular automata reservoirs, like elementary rule 90 that exhibits chaotic behaviour and can be implemented solely using XOR gates~\cite{RC_CA}.
-Superconducting materials, on the other hand, offer low dissipation and extremely fast operation ($\gg \SI{}{\giga\hertz}$), with a number of possible architectures, like for instance a \xlabel{Josephson transmission line}~\cite{RC_SuperconductingElectronics}. \par % See also: analogue electronic circuits [TaskAdaptivePRC, Ref. 10], ferroelectrics [TaskAdaptivePRC, Ref. 13], VLSI
+Superconducting materials, on the other hand, offer low dissipation and extremely fast operation ($\gg \SI{}{\giga\hertz}$), with a number of possible architectures, for instance a \xlabel{Josephson transmission line}~\cite{RC_SuperconductingElectronics}. \par % See also: analogue electronic circuits [TaskAdaptivePRC, Ref. 10], ferroelectrics [TaskAdaptivePRC, Ref. 13], VLSI
 Photonic principles have also been exploited to construct reservoirs with very fast operation and low power consumption~\cite{RC_RecentAdvances}.
 They make use of on-chip structures like optical waveguides, amplifiers and delay lines~\cite{RC_RecentAdvances}.
 One option is to use a single non-linear node, and use delay lines to perform time-multiplexing~\cite{appeltant2011information,RC_AllOptical}.
@@ -274,7 +274,7 @@ Another option is to use arrays with non-linear components and delay lines to in
 Mechanical systems can also be used as reservoirs, but are not as fast or efficient as the aforementioned systems.
 However, mechanical systems provide an extreme example of physical reservoir computing, as it has been shown that the body of a \xlabel{tensegrity} robot (tensile structures arranged in trusses, consisting of both springs and incompressible bars) can be used for both locomotion and computation~\cite{RC_Tensegrity}.
 Back to the microscopic scale, vibrational modes in micro-electronic mechanical systems (MEMS) can provide the required non-linearity that a reservoir needs.
-It is also possible to use chemical processes for computation, for example using processes inspired by those in living cells~\cite{NanoscaleRC,ElectrochemicalPRC,RC_Chemical}. \par
+It is also possible to use chemical processes for computation, for example inspired by those in living cells~\cite{NanoscaleRC,ElectrochemicalPRC,RC_Chemical}. \par
 Finally, a wide variety of \link{spintronics}{magnetic and spintronic} systems have been proposed for use as physical reservoirs.
 Since this thesis focuses on nanomagnetic systems, it is warranted to first explain the physical principles of nanomagnetism before continuing this discussion in~\cref{sec:1_RC_magnetic}.
 
@@ -415,7 +415,7 @@ However, this does not only measure the magnetic field, but also the atomic forc
 Therefore, a standard atomic force microscopy scan is first performed to obtain the texture profile of the sample, such that a subsequent MFM measurement can keep the magnetic tip at a constant height above the sample, thereby isolating the magnetic field strength from the atomic forces. \par
 The result is a greyscale image, where the brightness indicates the vertical component $\partial B_z/ \partial z$ of the magnetic field gradient close to the sample.
 For example, an IP \link{single-domain nanomagnet}{nanomagnet} will appear as a pair of regions with bright and dark contrast, because the divergence (convergence) of the magnetic field at its north (south) pole results in opposite vertical magnetic fields on either end~\cite{NML_Carlton}.
-An MFM image of OOP magnets (\cref{sec:3:MFM}) is easier to interpret, as there is a one-to-one correspondence between $\partial B_z/ \partial z$ and the the magnetisation state. \par
+An MFM image of OOP magnets (\cref{sec:3:MFM}) is easier to interpret, as there is a one-to-one correspondence between $\partial B_z/ \partial z$ and the magnetisation state. \par
 MFM is relatively cheap to set up as compared to other magnetic microscopy techniques.
 It can achieve high resolution, typically on the order of $\lesssim \SI{100}{\nano\metre}$, depending on the height and size of the tip~\cite{MFM}.
 However, it is very slow; scanning across a $\SI{}{\micro\metre}$-sized sample can take multiple minutes.
@@ -444,11 +444,11 @@ When a current tunnels through the stack, the magnetisation of the free layer wi
 This way, by applying time-multiplexed input, a single STO has successfully been used~\cite{tsunegi2019STOforcedsyncRC} as a \xref{single dynamical node} to, for instance, perform speech recognition~\cite{STO_RC_Riou2021,NeuromorphicOscillators}.
 Arrays of STOs are also more broadly used in \xref{neuromorphic computing} to implement traditional neural networks more efficiently in hardware~\cite{VowelRecognition4STO}. \par
 The \xref{magnetisation} within \link{ferromagnetism}{ferromagnetic} thin films can also exhibit a diverse range of magnetic textures, like domain walls, spin waves and skyrmions.
-Domain walls~\cite{Venkat_2024} can get stochastically (de)pinned at defects and can mutually interact, which can result in a dynamic equilibrium that is suitable for RC~\cite{DynamicEmergence_NanomagneticSystem}.
-They can even exhibit inertia, and the position of a single domain wall can already encode sufficient information for RC~\cite{RC_DW}.
-Spin waves excited in ferromagnets with low damping (e.g., YIG) may provide complex interference patterns that can also be used in RC~\cite{RC_SpinWaveInterference}, and can also interact with domain walls.
+Domain walls~\cite{Venkat_2024} may get stochastically (de)pinned at defects and mutually interact, which can result in a dynamic equilibrium that is suitable for RC~\cite{DynamicEmergence_NanomagneticSystem}.
+They may even exhibit inertia, and the position of a single domain wall already encodes sufficient information for RC~\cite{RC_DW}.
+Spin waves excited in ferromagnets with low damping (e.g., YIG) may interact with domain walls and provide complex interference patterns that can also be used in RC~\cite{RC_SpinWaveInterference}.
 Skyrmions are non-trivial topological bubble-like features that typically exist at cryogenic temperatures.
-Their position and structure can be affected by currents and spin waves, which the skyrmions can in turn affect back, giving rise to a plethora of options to obtain the required non-linearity and fading memory~\cite{RC_TaskAgnosticMetrics_v2,RC_SkyrmionCrystalSW}. \par
+Their position and structure is affected by currents and spin waves, which the skyrmions may in turn affect back, giving rise to a plethora of options to obtain the required non-linearity and fading memory~\cite{RC_TaskAgnosticMetrics_v2,RC_SkyrmionCrystalSW}. \par
 This thesis concerns itself with ensembles of magnetostatically coupled \link{single-domain nanomagnet}{nanomagnets}.
 Due to competing \xref{magnetostatic interactions}, these ensembles often exhibit collective dynamics like phase transitions and long-range order, which can be exploited for \xref{reservoir computing}.
 A disordered arrangement of nanomagnets has, for example, been used to predict boolean functions like those produced by cellular automata~\cite{RC_PassiveFrustratedNM,RC_DipoleNanomagnets}. % OOP
@@ -484,7 +484,7 @@ Therefore, the motivation behind the work presented in this thesis was to fill t
 \newpage
 \section{Modelling}\label{sec:1:Modelling}
 To determine whether an \link{artificial spin ice}{ASI} possesses desirable properties for it to be used as a \link{reservoir computing}{reservoir}, the impact of various system parameters and input methods on reservoir performance must be determined.
-Since an experimental exploration of this vast design space would take prohibitively long, a suitable simulation framework is needed.
+Since an experimental exploration of this vast design space would take a prohibitively long time, a suitable simulation framework is needed.
 
 \subsection{Micromagnetic simulations}
 The internal \xref{magnetisation} dynamics of \link{ferromagnetism}{ferromagnetic} structures are the result of the interactions between millions of atomic \xref{magnetic moments}.
@@ -518,7 +518,7 @@ However, these are typically specialized to a select few lattice geometries.
 Early works often accounted only for nearest-neighbour (NN) interactions, whose strength was either arbitrarily set or calculated separately using micromagnetic codes~\cite{Qi2008,PerpendicularMagnetizationASI}. % REFS: 'moller2006artificial': bit broader using dipolar interaction, though seemingly still only for nearest neighbors. 'lou2023competing': dipole model for half-occupation IP Ising. 'sendetskyi2019continuous': dipole model for square ASI. 'EngineeringRelaxationComputation': KMC on dipole model, seemingly for square arrays.
 More recently, the importance of long-range \xref{magnetostatic interactions} has been emphasized to improve correspondence to experiments~\cite{Chioar2014,Rougemaille2011,Brunn2021}.
 As such, vertex~\cite{gilbert2014emergent,Saglam2022Tetris,Goryca2021Plasma,MeltingASI} or hybrid NN/vertex charge~\cite{Canals2016,zhang2013crystallites} models have become more prevalent, especially for square-lattice ASI. % 'MeltingASI': 16-vertex ice model, 'gilbert2014emergent': MC sims based on a vertex model and interacting magnetic charges. 'zhang2013crystallites': uses monopoles and NN couplings to model kagome ASI with Metropolis and loop update. 
-Beyond-NN interaction models, including full magnetostatically coupled models~\cite{ApparentFMpinwheel,mengotti2011kagome}, are also used for square-~\cite{Brunn2021,Farhan2013,sklenar2019field} and triangular-based~\cite{Chioar2014,Rougemaille2011,Hofhuis2020} lattices, for example. \par % 'sklenar2019field': 3NN interactions calculated by mumax on quadrupole lattice. 'mengotti2011kagome' use a full dipole model with Ewald summation for PBC.
+Beyond-NN interaction models, including full magnetostatically coupled models~\cite{ApparentFMpinwheel,mengotti2011kagome}, are also used to simulate square-~\cite{Brunn2021,Farhan2013,sklenar2019field} and triangular-based~\cite{Chioar2014,Rougemaille2011,Hofhuis2020} lattices, for example. \par % 'sklenar2019field': 3NN interactions calculated by mumax on quadrupole lattice. 'mengotti2011kagome' use a full dipole model with Ewald summation for PBC.
 Here, we opt to develop our own simulation toolkit: \hotspice~\cite{MAES-24}.
 This was driven by a desire to blend the approach of \texttt{flatspin}~\cite{flatspin} --- a general-purpose GPU-accelerated IP ASI simulator --- with the rather purpose-built Monte Carlo toolkits listed above, to obtain efficient simulation of \link{reservoir computing}{RC} in OOP ASI.
 The result is a versatile Monte Carlo simulator that aims to capture IP and OOP ASI physics with minimal arbitrary parameters (most importantly, the magnets' anisotropy, magnetic moment and temperature) for a variety of lattice configurations.
