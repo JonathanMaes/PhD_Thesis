@@ -505,7 +505,7 @@ For a broader overview of Monte Carlo methods, we refer to Ref.~\cite{Introducti
 \section{Implementation}\label{sec:2:Implementation}
 Now that the physical principles underlying the simulator have been extensively discussed, we turn our attention to its software implementation.
 The introductory \cref{sec:2:Implementation:Grid} provides a brief motivation for our choice to implement the ASI on a rectilinear grid.
-One of its main benefits is the existence of unit cells, which enables efficient \textit{kernels} for computing the \xref{magnetostatic interaction}. \par
+One of its main benefits is the existence of unit cells, which enable efficient \textit{kernels} for computing the \xref{magnetostatic interaction}. \par
 These kernels are discussed in detail in~\cref{sec:2:Kernels}, which consists of four subsections.
 First, \cref{sec:2:Kernels:Structure} explains their internal structure and how exactly they are used to calculate and update the magnetostatic interaction.
 \cref{sec:2:Kernels:PBC} then explains how these kernels facilitate the implementation of \xref{periodic boundary conditions}.

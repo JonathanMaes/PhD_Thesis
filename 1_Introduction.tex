@@ -120,7 +120,7 @@ Training ESNs and LSMs is a walk in the park compared to BPTT, as linear regress
 From these principles, it is but a small step to \xref{reservoir computing} (RC), which generalises these ideas by treating the internal network as a black box~\cite{RC_unification,D-ESN-Improved,RC_Tensegrity}.
 In the next section we will explore the reservoir computing framework in more detail.
 
-\subsection{Reservoir computing\indexlabel{reservoir computing}}
+\subsection{Reservoir computing framework\indexlabel{reservoir computing}}
 Reservoir computing is a machine learning framework suitable for temporal processing tasks~\cite{BookReservoirComputing}.
 The concept revolves around a ``reservoir'' --- an unspecified non-linear dynamical system --- that projects the input data into a higher-dimensional space, thereby facilitating the separation of said data by a linear transformation~\cite{appeltant2011information,KUR-24,RC_ASI}.
 The principle is schematically illustrated in \crefSubFigRef{fig:1:NeuralNetworks}{c}.
@@ -263,12 +263,14 @@ Traditional machine learning algorithms, like FNN and RNN, are often implemented
 However, for RC specifically, simpler electronic devices exist that can potentially save energy and enable faster computation~\cite{RC_RecentAdvances}.
 \indexlabel{memristor}Memristors are a well-established example: they can store information in their resistance by changing their internal ion distribution, allowing them to act analogously to biological neurons~\cite{MemristorArtificialNeuron,MemristiveNN,RC_DiffusiveMemristors,RC_MemristorTemporal}.
 Networks of nanowires are also interesting for PRC, as they can self-assemble into a complex recurrent network with memristive junctions forming at intersections~\cite{RC_NNN}.
-However, memristors are rather slow.
+However, most current implementations of memristors are rather slow.
 %A faster reservoir can be made of field-programmable gate arrays (FPGAs), which are especially suitable for integer-valued tasks due to their digital nature~\cite{RC_RapidTimeSeries,BookReservoirComputing}. % Autonomous Boolean logic
 %For instance, FPGAs can efficiently implement cellular automata reservoirs, like elementary rule 90 that exhibits chaotic behaviour and can be implemented solely using XOR gates~\cite{RC_CA}.
-Superconducting materials, on the other hand, offer low dissipation and extremely fast operation ($\gg \SI{}{\giga\hertz}$), with a number of possible architectures, for instance a \xlabel{Josephson transmission line}~\cite{RC_SuperconductingElectronics}. \par % See also: analogue electronic circuits [TaskAdaptivePRC, Ref. 10], ferroelectrics [TaskAdaptivePRC, Ref. 13], VLSI
-Photonic principles have also been exploited to construct reservoirs with very fast operation and low power consumption~\cite{RC_RecentAdvances}.
-They make use of on-chip structures like optical waveguides, amplifiers and delay lines~\cite{RC_RecentAdvances}.
+Superconducting materials, on the other hand, offer extremely fast operation ($\gg \SI{}{\giga\hertz}$ --- though typically limited by readout electronics) and low dissipation, but require cryogenic temperatures.
+They can be employed in a variety of architectures, for instance as a \xlabel{Josephson transmission line}~\cite{RC_SuperconductingElectronics}. \par % See also: analogue electronic circuits [TaskAdaptivePRC, Ref. 10], ferroelectrics [TaskAdaptivePRC, Ref. 13], VLSI
+Photonic principles have also been exploited to construct reservoirs with very fast operation~\cite{RC_RecentAdvances}.
+They make use of on-chip structures like optical waveguides, amplifiers and delay lines, but miniaturisation is limited by the optical wavelengths and the use of active elements to counter losses can raise power consumption~\cite{RC_RecentAdvances}.
+Two main approaches are commonly used for photonic reservoirs.
 One option is to use a single non-linear node, and use delay lines to perform time-multiplexing~\cite{appeltant2011information,RC_AllOptical}.
 Another option is to use arrays with non-linear components and delay lines to introduce phase shifts between interconnections, enabling computation through the interference of light~\cite{RC_Photonic,RC_PhotonicSi}. \par
 Mechanical systems can also be used as reservoirs, but are not as fast or efficient as the aforementioned systems.
@@ -319,12 +321,12 @@ This has led to nanomagnets being used for memory applications, as the two magne
 The magnetisation can switch between these two stable states under the influence of nearby nanomagnets, \xref{external magnetic fields}, thermal fluctuations, electrical currents and a variety of other phenomena~\cite{SwitchingForced_EnergyEfficient,BrownThermalFluctuations,neel1949theorie}. \par
 One common source of anisotropy is the geometry of a nanomagnet: this \idx[nolabel]{shape anisotropy} arises from the interaction of the magnetisation with its own \xlabel[nolabel]{demagnetising field}, resulting in a low-energy state when the magnetisation aligns with the longest axis of the geometry~\cite{MagneticCharge}.
 Anisotropy can also originate from the crystal structure, but this can be suppressed by an appropriate choice of material; for example, \xlabel{permalloy} (\ce{Fe20Ni80}) is an alloy specifically designed to exhibit minimal \xlabel{magnetocrystalline anisotropy}.
-Finally, \xlabel{interfacial anisotropy} can occur between the \link{ferromagnetism}{ferromagnetic} material and a substrate.
-For example, at the interface between \ce{Co} and \ce{Pt}~\cite{PMA_PdCo_PtCo}, a \idx[nolabel]{perpendicular magnetic anisotropy} (PMA) exists that acts in the immediate vicinity of the interface, where the magnetisation then prefers to align perpendicular to said interface.
+Finally, \xlabel{interfacial anisotropy} can occur at the interface between a \link{ferromagnetism}{ferromagnet} and an adjacent material.
+For example, between \ce{Co} and \ce{Pt}~\cite{PMA_PdCo_PtCo}, a \idx[nolabel]{perpendicular magnetic anisotropy} (PMA) exists that acts in the immediate vicinity of the interface, where the magnetisation then prefers to align perpendicular to said interface.
 
 \paragraph{In-plane and out-of-plane nanomagnets}\phantomsection\label{sec:1:IP_OOP} % Q: is this OK? What to do with the chapter 3 intro? Just remove 3.1.1?
 Two types of \link{single-domain nanomagnet}{nanomagnets} are typically distinguished: in-plane (IP) and out-of-plane (OOP) nanomagnets.
-IP nanomagnets can readily be obtained by tailoring the geometry of the \link{ferromagnetism}{ferromagnetic} particle: a flat geometry guarantees an in-plane \xref{magnetisation} direction through the \xref{shape anisotropy}.
+IP nanomagnets can readily be obtained by tailoring the geometry of the \link{ferromagnetism}{ferromagnetic} particle: a flat geometry encourages an in-plane \xref{magnetisation} direction through the \xref{shape anisotropy}.
 This easy plane can be reduced to an \xref{easy axis} by using an elongated two-dimensional shape, like an ellipse or rectangle.
 OOP magnets are harder to realise using only shape anisotropy, as it is often infeasible to create tall structures on wafers.
 This requires them to use other types of anisotropy to favour a magnetisation direction perpendicular to the substrate, like the aforementioned PMA between specific materials like \ce{Co} and \ce{Pt}.
@@ -383,7 +385,7 @@ Since the AHE synergises well with the geometry of OOP nanomagnetic ensembles, i
 
 \paragraph{Anisotropic magnetoresistance\indexlabel{anisotropic magnetoresistance}}
 Another phenomenon that can provide readout is \emph{anisotropic magnetoresistance} (AMR): when an electrical current flows through a \link{ferromagnetism}{ferromagnetic} material, the resistance weakly depends on the angle $\theta$ between this current and the \xref{magnetisation}~\cite{AMR}.
-More specifically, the total resistance $R(\theta) = R_\perp + (R_\parallel - R_\perp) \cos(2\theta)$~\cite{Hu2023}.
+More specifically, the total resistance is given as $R(\theta) = R_\perp + (R_\parallel - R_\perp) \cos(2\theta)$~\cite{Hu2023}.
 This makes it possible to distinguish between perpendicular and parallel magnetisation states.
 While this is a very accessible resistance measurement-based technique, it has several limitations. \par
 First off, while permalloy exhibits a relatively strong AMR, the absolute effect remains rather small in comparison to the total resistance --- at most a few percent.
@@ -407,12 +409,12 @@ While these can also be seen as ``output'', they are distinct from the aforement
 
 \paragraph{Magnetic force microscopy\indexlabel{magnetic force microscopy}}
 A relatively common technique is \emph{magnetic force microscopy} (MFM)~\cite{MFM}, which scans a cantilever with a very sharp tip across the sample, similar to atomic force microscopy.
-Whereas the latter uses a non-magnetic tip to measure the sample's texture at an atomic scale, MFM uses a tip coated in \link{ferromagnetism}{ferromagnetic} material (e.g., \ce{Co}), giving it a vertical \xref{magnetic moment}.
-This enables a measurement of the out-of-plane\footnote{
+Whereas the latter uses a non-magnetic tip to measure the sample's texture at the atomic scale, MFM uses a tip coated in \link{ferromagnetism}{ferromagnetic} material (e.g., \ce{Co}), giving it a vertical \xref{magnetic moment} to measure the local out-of-plane\footnote{
 	It is also possible to measure the in-plane magnetisation by using an in-plane magnetised tip, but this complicates the interpretation as this mixes two components of the magnetisation~\cite{MFM_inplane}.
-} magnetic field by scanning the tip at a very low height ($\approx \SI{20}{\nano\metre}$) above the sample~\cite{NML_Carlton,JM_Masterproef}.
-However, this does not only measure the magnetic field, but also the atomic forces that a non-magnetised tip would experience.
-Therefore, a standard atomic force microscopy scan is first performed to obtain the texture profile of the sample, such that a subsequent MFM measurement can keep the magnetic tip at a constant height above the sample, thereby isolating the magnetic field strength from the atomic forces. \par
+} magnetic field~\cite{NML_Carlton,JM_Masterproef}.
+However, directly scanning the tip at a very low height would not only measure the magnetic field of the sample, but also the atomic forces sensed by a non-magnetised tip.
+Since van der Waals forces decay far more rapidly with distance ($1/r^6$) than magnetic forces ($1/r^2$), the texture profile of the sample can first be obtained by scanning only a few $\SI{}{\nano\metre}$ above the surface, like in standard atomic force microscopy.
+This information can then be used in a subsequent scan to keep the tip at a constant, higher elevation ($\approx \SI{20}{\nano\metre}$) above the sample, where the contribution of van der Waals forces is negligible, thereby isolating the magnetic signal. \par
 The result is a greyscale image, where the brightness indicates the vertical component $\partial B_z/ \partial z$ of the magnetic field gradient close to the sample.
 For example, an IP \link{single-domain nanomagnet}{nanomagnet} will appear as a pair of regions with bright and dark contrast, because the divergence (convergence) of the magnetic field at its north (south) pole results in opposite vertical magnetic fields on either end~\cite{NML_Carlton}.
 An MFM image of OOP magnets (\cref{sec:3:MFM}) is easier to interpret, as there is a one-to-one correspondence between $\partial B_z/ \partial z$ and the magnetisation state. \par
@@ -424,7 +426,8 @@ Care must also be taken that the sample is not affected by the magnetic moment o
 \paragraph{Other magnetic microscopy techniques}
 While MFM is the most commonly available magnetic microscopy technique, X-ray and optical methods are also often used~\cite{DynamicEmergence_NanomagneticSystem}.
 These can provide different information about nanomagnetic systems, as they are directly sensitive to the magnetisation rather than stray fields, making them easier to interpret in systems with in-plane magnetisation.
-X-ray based measurements like \xlabel{photo-emission electron microscopy} (PEEM)~\cite{PEEM} and \xlabel{scanning transmission X-ray microscopy} (STXM)~\cite{Imaging_MTXM} can make use of the \xlabel{X-ray magnetic circular dichroism} (XMCD) effect to achieve even higher resolution than MFM.
+X-ray based measurements like \xlabel{photo-emission electron microscopy} (PEEM)~\cite{PEEM} and \xlabel{scanning transmission X-ray microscopy} (STXM)~\cite{Imaging_MTXM} make use of the \xlabel{X-ray magnetic circular dichroism} (XMCD) effect.
+Owing to the short wavelength of X-rays, these techniques can achieve even higher resolution than MFM.
 However, they require circularly polarised X-rays, which are typically only available at synchrotron radiation facilities.
 Another option is to use optical techniques like the \xlabel{magneto-optical Kerr effect} (MOKE)~\cite{KerrFaraday_book}: while these do not require a synchrotron, their resolution is diffraction-limited to several hundred \SI{}{\nano\metre}. \par
 Recently, scanning \indexlabel{nitrogen-vacancy microscopy}nitrogen-vacancy (NV) microscopy has emerged as a high-sensitivity scanning-probe technique.
