@@ -6,6 +6,23 @@ To this end, the \hotspice simulator was developed, as introduced in~\cref{sec:1
 In this chapter, we discuss its underlying model and several model improvements that have been implemented, and assess their accuracy in simulating the behaviour of ASI.
 These improvements differ in their choice of Monte Carlo spin-flip algorithm and their calculation of the \xref{magnetostatic interactions} and \xref{effective energy barriers}.
 
+\vspace*{\fill}
+\begin{center}
+	\centering\rule{0.5\linewidth}{0.4pt}
+\end{center}
+\vspace{-1.5em}
+\begin{center}
+	The \hotspice simulator discussed in this chapter\\
+	is open-source and available on \href{https://github.com/bvwaeyen/Hotspice}{GitHub}.
+\end{center}
+\vspace{-2.2em}
+\begin{center}
+	\centering\rule{0.5\linewidth}{0.4pt}
+\end{center}
+\vspace*{\fill}
+
+\newpage
+\vspace*{\fill}
 \begin{adjustwidth}{2em}{2em}
 	\vspace{0em}
 	\begin{center}
@@ -23,16 +40,28 @@ These improvements differ in their choice of Monte Carlo spin-flip algorithm and
 			\newblock \emph{Computer Physics Communications}, page 109643, 2025.
 		\end{itemize}
 	\end{adjustwidth}
+	\vspace{1em}
+	\begin{adjustwidth}{0.15\linewidth}{0.15\linewidth}
+		\textbf{Author contributions} ---
+		\underline{J.M.} carried out the majority of the research and wrote the manuscript with input from all authors.
+		D.D.G. contributed the dumbbell model and kagome reversal example, while I.L. contributed the pinwheel clocking example.
+		% The collaboration with A.H. in \cite{KUR-24} informed practical design choices for the software.
+		B.V.W. and J.L. supervised the project.	\par
+		
+		\vspace{1em}
+		\textbf{Software contributions} ---
+		B.V.W. conceived the \hotspice project and provided the original prototype script, which \underline{J.M.} substantially expanded and developed into the full simulator presented in the paper.
+		The dumbbell model was implemented by D.D.G. \par
+		
+		\vspace{1em}
+		\textbf{This chapter} expands upon all aspects of the paper unrelated to reservoir computing, particularly the software implementation of \hotspice, which is detailed in \cref{sec:2:Implementation}.
+	\end{adjustwidth}
 	\vspace{-0.5em}
 	\begin{center}
 		\centering\rule{0.7\linewidth}{0.4pt}
 	\end{center}
-	\vspace{-1em}
-	\begin{center}
-		The \hotspice simulator discussed in this chapter\\
-		is open-source and available on \href{https://github.com/bvwaeyen/Hotspice}{GitHub}.
-	\end{center}
 \end{adjustwidth}
+\vspace*{\fill}
 
 \newpage
 \section{Artificial spin ice model}\indexlabel[tosection]{point dipole model}

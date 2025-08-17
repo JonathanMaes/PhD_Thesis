@@ -10,6 +10,8 @@ It will be shown that RC is indeed possible in such systems by using an appropri
 This chapter starts with a discussion of the basic properties of OOP ASIs and the motivation for researching them.
 Then, the chapter is divided into two main parts, first discussing thermally active ASI, followed by non-volatile ASI.
 
+\newpage
+\vspace*{\fill}
 \begin{adjustwidth}{2em}{2em} % TODO END: update once published.
 	\vspace{0em}
 	\begin{center}
@@ -27,8 +29,23 @@ Then, the chapter is divided into two main parts, first discussing thermally act
 			\newblock \emph{ArXiV}, arXiv:\penalty0 2408.12182, 2024.
 		\end{itemize}
 	\end{adjustwidth}
+	\vspace{1em}
+	\begin{adjustwidth}{0.15\linewidth}{0.15\linewidth}
+		\textbf{Author contributions} ---
+		A.K., L.J.H. and A.H. conceived the project. A.K. fabricated the samples, designed and performed the experiments with support from A.H. and A.P. Analysis and interpretation of the data was done by \underline{J.M.}, A.K. and G.M.M. with support from all authors. \underline{J.M.} and B.V.W. performed the Monte Carlo simulations and fitting of the experimental data. A.K. performed the Mathematica calculations and COMSOL simulations. A.K. and \underline{J.M.} wrote the manuscript with input from all authors. \par
+		\vspace{1em}
+		\textbf{This chapter} expands upon all aspects of the paper related to research performed by J.M.
+		Note that \cref{sec:3:Nonvolatile} in this thesis is not part of the paper~\cite{KUR-24}, but was very briefly presented at the end of the \hotspice paper~\cite{MAES-24}.
+	\end{adjustwidth}
+	
+	\vspace{-0.5em}
+	\begin{center}
+		\centering\rule{0.7\linewidth}{0.4pt}
+	\end{center}
 \end{adjustwidth}
+\vspace*{\fill}
 
+\newpage
 \section{Characteristics of out-of-plane ASI}
 \subsection{Structure of out-of-plane nanomagnets}\label{sec:3:OOP_nanomagnet_PMA}\indexlabel[nolabel]{single-domain nanomagnet} % Co/Pt multilayer, energy contributions
 Where in-plane (IP) magnets mostly rely on \xref{shape anisotropy} to create an \xref{easy axis}, out-of-plane (OOP) magnets are realised using \indexlabel[nolabel]{interfacial anisotropy}\xref{interfacial anisotropy} between the \link{ferromagnetism}{ferromagnetic material} and the substrate.
@@ -824,7 +841,7 @@ Still, manufacturing thermally active ASI remains challenging, as this requires 
 % MSE is not an ideal parameter, should use something that accounts more for the general shape, because plateaus can have equal weight as noise, while they are visually quite different.
 
 \newpage
-\section{Reservoir computing in non-volatile out-of-plane ASI}\indexlabel[nolabel]{reservoir computing}
+\section{Reservoir computing in non-volatile out-of-plane ASI}\indexlabel[nolabel]{reservoir computing}\label{sec:3:Nonvolatile}
 We now turn our attention to non-volatile ASI, to show that an ASI need not be thermally active to use it for reservoir computing.
 When the \link{net out-of-plane anisotropy}{energy barrier} $\EEA$ of a magnet is significantly higher than the thermal energy $\kBT$, the \xref{N\'eel-Arrhenius} switching law implies that it will remain stable over any reasonable timescale in the absence of external perturbations.
 For example, a magnet with $\EEA > 40 \kBT$ will most likely remain stable for multiple years.
