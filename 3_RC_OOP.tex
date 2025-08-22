@@ -83,11 +83,11 @@ Both of these only require a current to be passed through an underlayer that is 
 
 \paragraph{Input by \xlabel[nolabel]{spin--orbit torque}}
 In the experimental system, the intent was to apply input data by using SOT~\cite{SOTswitchingCoPt} to switch the OOP magnets.
-Since the model used by \hotspice does not use torques, but is rather based on switching energies, SOT can not directly be modelled as a torque in our simulations.
+Since the model used by \hotspice does not use torques, but is rather based on switching energies, SOT can not directly be included as a torque in our simulations.
 However, the desired effect of SOT in our application is deterministic switching of magnets, as can be achieved through in-plane symmetry breaking~\cite{SOT_Roadmap}. % SOT_Roadmap mentions symmetry breaking several times, very useful resource
-Indeed, SOT in the presence of broken symmetry results in a preferential magnetisation direction, which can be modelled in \hotspice as an additional \xref{external magnetic field} $B_z$.
-This is an approximation to fit SOT into the Ising-like model; the modelled field $B_z$ is not necessarily related to the \link{spin--orbit torque}{field-like SOT}~\cite{SOT_firstprinciplesCoPt}, though a non-linear relationship between the SOT current density and the modelled field $B_z$ will exist.
-The exact form of this relationship is currently irrelevant for our RC purposes, because it only constitutes an additional non-linear transformation on the input which does not fundamentally change the RC performance of the OOP ASI itself.
+Indeed, SOT in the presence of broken symmetry results in a preferential magnetisation direction: in \hotspice, we will model this preference for one of the two magnetisation states using an additional \xref{external magnetic field} $B_z$.
+Note that this field is not intended to model the \link{spin--orbit torque}{field-like SOT}~\cite{SOT_firstprinciplesCoPt}: it is merely an approximation to capture the overall effect of SOT within the confines of the two-state Ising-like model.
+A non-linear relationship between the SOT current density and the modelled field $B_z$ may exist, but the exact form of this relationship is currently irrelevant for our RC purposes: it only constitutes an additional non-linear transformation on the input, which does not fundamentally change the RC performance of the OOP ASI itself.
 % In the case without symmetry breaking, the effect may be modelled as a temporary reduction of the PMA, as in reality a sufficiently strong SOT (applied over multiple $1/\nu_0$) will push the magnetic moment in-plane~\cite{SOT_Roadmap}, after which it falls back randomly (with higher likelihood to the lowest energy state, I suppose). But this approach raises multiple additional questions: is it meaningful to reduce the barrier only slightly?
 
 \paragraph{Readout by \xlabel[nolabel]{anomalous Hall effect}}
@@ -132,7 +132,7 @@ The magnets considered here are cylindrical with a diameter $D_\mathrm{NM}$ and 
 They are placed in an ASI where the lateral spacing between magnets is $S_\mathrm{ASI}$ --- resulting in a lattice parameter $a=D_\mathrm{NM}+S_\mathrm{ASI}$ in a square lattice. \par
 These five geometrical parameters have a profound effect on the balance between the aforementioned energy contributions, as summarised in~\cref{tab:3:interactions_geometry}.
 The polynomial dependence of some of these relations makes the system quite hard to control: a slight manufacturing difference can yield a vastly different net OOP anisotropy, possibly inhibiting the spontaneous formation of a checkerboard ground state.
-Note that the \xref{magnetostatic interactions} depend on the square of the ferromagnetic volume $V=n_{\ce{Co}} t_{\ce{Co}} D_\mathrm{NM}^2$.
+Note that the \xref{magnetostatic interactions} depend on the square of the ferromagnetic volume $V \propto n_{\ce{Co}} t_{\ce{Co}} D_\mathrm{NM}^2$.
 
 \xtable[tab:3:interactions_geometry]{
 	Dependence of the energy components present in OOP ASI on the geometrical parameters.
@@ -339,8 +339,8 @@ This is depicted in~\cref{fig:3:OOP_relaxation_exchange} for a negative (AFM) ex
 
 \xfig{3_RC_OOP/OOP_relaxation_exchange.pdf}{
 	\label{fig:3:OOP_relaxation_exchange}
-	Dependence of the ordering timescale on the nearest-neighbour magnetostatic coupling $\EMC$ in an $11 \times 11$ exchange-coupled OOP square-lattice ASI.
-	The NN \xref{exchange coupling} is $J=-8\kBT$ and the \link{net out-of-plane anisotropy}{net OOP anisotropy} is $\EEA = 40\kBT$.
+	Dependence of the ordering timescale on the nearest-neighbour magnetostatic coupling $\EMC$ in an $11 \times 11$ exchange-coupled OOP square-lattice ASI with a \link{net out-of-plane anisotropy}{net OOP anisotropy} $\EEA = 40\kBT$.
+	A negative NN \xref{exchange coupling} $J=-8\kBT$ was used; a positive exchange would discourage the system from approaching the checkerboard ground state.
 	The ASI is initialised in a uniform magnetic state with all spins pointing `up' and is released at $t = 0$, after which the ASI relaxes to lower energies.
 	Blue traces show the absolute value of the normalised average magnetisation $\mavg$ while orange traces represent the local antiferromagnetic parameter $\qNN$.
 	Each trace shows the mean (central line), standard deviation (central shaded area), and 1st/99th percentile (outer shaded area) of 200 repeated relaxations with randomly sampled $\EEA$ profiles.
@@ -452,6 +452,7 @@ These combinations of $\EEA$ and $\EMC$ have also been indicated in~\cref{fig:3:
 	Black magnets remain in the initial magnetic state while white magnets have switched.
 	Yellow circles indicate magnets that have switched between the two observations.
 	\textbf{(b)} Evolution of normalised average magnetisation $\mavg$ and local antiferromagnetic parameters $\qNN$, $\qNN[2]$, $\qNN[3]$, for systems with the best fit parameters as listed in the top right corner of each panel.
+	The reported uncertainties represent the weighted standard deviations of the respective distributions in~\cref{fig:3:MFM_fitquality}.
 	Each trace shows the average of 200 simulated relaxations (central line) and their standard deviation (shaded area).
 }
 
@@ -640,7 +641,7 @@ Since the $\MSE$ metric considers a square wave a better fit to a sawtooth than 
 }{
 	\label{fig:3:Transformation_freq-magn_baseline}
 	Monte Carlo simulations of a sine-to-sawtooth signal transformation performed by a thermally active $11 \times 11$ OOP square-lattice ASI \link{reservoir computing}{reservoir}.
-	The top panel shows the inverse \xref{mean squared error} $1/\MSE$ as a function of the input \link{external magnetic field}{magnetic field} frequency $f$ and amplitude $B_1$, with constant $B_0 = \SI{-0.35}{\milli\tesla}$, averaged over 5 runs with random $\sigma(\EEA)/\EEA=\SI{5}{\percent}$ defects.
+	The top panel shows the inverse \xref{mean squared error} $1/\MSE$ as a function of the input \link{external magnetic field}{magnetic field} frequency $f$ and amplitude $B_1$, with constant $B_0 = \SI{-0.35}{\milli\tesla}$ (as derived from~\cref{fig:3:Transformation_magn-magnmin}), averaged over 5 runs with random $\sigma(\EEA)/\EEA=\SI{5}{\percent}$ defects.
 	Higher (lower) values in yellow (purple) indicate better (worse) performance.
 	The black contours indicate $1/\MSE \sim 30$, encompassing regions where the reservoir outperforms a linear transformation of the original input signal.
 	In the top panel, several points are indicated with Roman numerals, corresponding to the bottom panels which show a temporal view of the transformation.

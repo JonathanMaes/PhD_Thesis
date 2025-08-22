@@ -123,8 +123,8 @@ def compare_exp_sim(exp_data: dict, E_EA: float = 65, E_MC: float = 10, J: float
         fbs: list[plt.PolyCollection] = []
         for d in ds:
             mean, std, perc_low, perc_high = mean_std(X, times, d["var"])
-            lns.append(ax.plot(X, mean, label=d["label"], color=d["color"])[0])
-            fbs.append(ax.fill_between(X, mean - std, mean + std, color=d["color"], edgecolor="none", alpha=0.5))
+            lns.append(ax.plot(X, mean, label=d["label"], color=d["color"], zorder=3)[0])
+            fbs.append(ax.fill_between(X, mean - std, mean + std, color=d["color"], edgecolor="none", alpha=0.5, zorder=3))
             # ax.fill_between(X, perc_low, perc_high, color=d["color"], edgecolor="none", alpha=0.5)
 
         # Format axes
@@ -133,7 +133,7 @@ def compare_exp_sim(exp_data: dict, E_EA: float = 65, E_MC: float = 10, J: float
             for axis in ['x', 'y']: ax.tick_params(axis=axis, labelsize=fontsize_ticks)
             for axis in ['top','bottom','left','right']: ax.spines[axis].set_linewidth(linewidths)
         ax.tick_params(width=linewidths)
-        ax.set_xlim(xmin=1e-1, xmax=1e11)
+        ax.set_xlim(xmin=5e-1, xmax=5e11)
         ax.set_ylim([0,1])
         ax.set_xticks([1, 1e3, 1e6, 1e9])
         ax.set_yticks([0, .5, 1])

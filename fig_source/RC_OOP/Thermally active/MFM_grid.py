@@ -13,16 +13,17 @@ import thesis_utils
 from relaxation_BO import compare_exp_sim, get_exp_data
 
 
-def SASI_to_params(S_ASI):
+def SASI_to_data(S_ASI):
     file = Path(__file__).parent / Path(r"relaxation_BO.out\finite_magnets-simple_barrier") / f"{S_ASI:.0f}nm" / "data.pkl"
     with open(file, "rb") as datafile:
-        return pickle.load(datafile)['best_guess']['params']
+        return pickle.load(datafile)
 
 def color_ax(ax: plt.Axes, color):
     for spine in ax.spines.values():
         spine.set_edgecolor(color)
         spine.set_linewidth(3)
         spine.set_capstyle('round')
+        spine.set_zorder(10)
     ax.tick_params(axis='both', which='major', length=6, width=2, color=color)
     ax.tick_params(axis='both', which='minor', length=3, width=.5, color=color)
 
@@ -86,13 +87,26 @@ def plot():
         ## Row 3: fitted relaxation traces
         ax3: plt.Axes = axes[2,col]
         msr = 170/(170 + S_ASI)
-        data = SASI_to_params(S_ASI)
-        EEA, EMC, J = data['E_EA'], data['E_MC'], data['J']
+        data = SASI_to_data(S_ASI)
+        best_params = data['best_guess']['params']
+        EEA, EMC, J = best_params['E_EA'], best_params['E_MC'], best_params['J']
         traces = compare_exp_sim(get_exp_data(S_ASI), EEA, EMC, J, n_avg=200, magnet_size_ratio=msr, plot=True, ax=ax3)
-
-        textstr = '\n'.join([r'$%s=%.1f k_\mathrm{B}T$' % (s,p) for s,p in {r'E_\mathrm{EA}': EEA, r'E_\mathrm{MC}': EMC, 'J': J}.items()])
-        ax3.text(0.97, 0.97, textstr, transform=ax3.transAxes, fontsize="medium", color=color,
-                va='top', ha='right', bbox=dict(boxstyle='round', pad=.2, facecolor='#F2F2F2', edgecolor='none', alpha=0.7))
+        
+        def get_weighted_std(param_name, max_as_mean: bool = False):
+            param_values = np.asarray([iteration['params'][param_name] for iteration in data['all_iterations']])
+            weights = np.asarray([10**iteration['target'] for iteration in data['all_iterations']])
+            weighted_mean = param_values[np.argmax(weights)] if max_as_mean else np.sum(weights*param_values)/np.sum(weights)
+            return np.sqrt(np.sum(weights*(param_values - weighted_mean)**2)/((weights.size - 1)/weights.size*np.sum(weights)))
+        
+        d = {
+            r'E_\mathrm{EA}': (EEA, get_weighted_std('E_EA')),
+            r'E_\mathrm{MC}': (EMC, get_weighted_std('E_MC')),
+            'J': (J, get_weighted_std('J'))
+        }
+        textstr = '\n'.join([r'$%s=(%.1f\!\pm\!%.1f) k_\mathrm{B}T$' % (s,m,std) for s,(m,std) in d.items()])
+        for fg in [True, False]: # Draw background (bg: grey box) and foreground (fg: text) separately, such that bg does not obscure data but text does
+            ax3.text(0.97, 0.97, textstr, transform=ax3.transAxes, fontsize="medium", color=color, alpha=int(fg),
+                     va='top', ha='right', bbox=dict(boxstyle='round', pad=.2, facecolor='#F2F2F2', edgecolor='none', alpha=0.7*(1-fg)), zorder=4 if fg else 2)
         ax3.xaxis.set_minor_locator(LogLocator(numticks=999, subs=(.1, .2, .3, .4, .5, .6, .7, .8, .9, .99)))
         plt.setp(ax3.get_xminorticklabels(), visible=False)
 

@@ -412,13 +412,12 @@ where a halved attempt frequency $\nu_0/2$ was assigned to either switching chan
 An estimate of $\nu_0$ for coherent magnetisation reversal can be obtained from the limit $\EB \rightarrow 0$, where the \xref{switching rate} $\nu$ should approach the \xlabel{gyromagnetic precession frequency} of the magnetisation of a nanomagnet.
 This is reported to be on the order of \SIrange{e9}{e10}{\hertz}~\cite{BrownThermalFluctuations,bean1959superparamagnetism}.
 As $\EB \rightarrow 0$, \cref{eq:2:Néel} implies that $\nu \rightarrow \nu_0$, so we use $\nu_0=\SI{e10}{\hertz}$~\cite{JM_Masterproef}. \par % Each oscillation is an attempt to leave this energy minimum.
-If necessary, a more precise value for $\nu_0$ can be obtained from experiments.
-However, an order-of-magnitude estimate often suffices because any small (i.e., $\sim \kBT$) change of $\EB$ will translate to an exponential change of the switching rate.
-As discussed in~\cref{sec:2:E_B_eff}, our approximations of $\EBeff$ are imperfect, thus rendering an accurate value of $\nu_0$ irrelevant.
-Furthermore, $\nu_0$ only affects the absolute value of the elapsed time, not the switching order, so its overall importance to the simulation is limited.
-It must also be noted that the attempt frequency can significantly depend on other system parameters like temperature~\cite{AttemptFreqTemperature}. \par % Ref says: ``When this energy barrier is the result of a collective statistical behavior of many constituents, it may contain an intrinsic temperature dependence which has to be carefully taken into account, in particular when the prefactor is interpreted in terms of an attempt frequency.''
-The values for $\nu_0$ on the order of \SI{e10}{\hertz} are valid for reversal by \xref{coherent rotation}, as was already assumed during the calculation of the \link{effective energy barrier}{effective barriers}.
-For other reversal processes (e.g., domain wall-mediated reversal), the attempt frequency could be many orders of magnitude faster because its interpretation as a rotation frequency then no longer holds~\cite{ArrheniusPrefactor}. % Another ref: 45 in leo2021chiral
+An order-of-magnitude estimate often suffices, since any small (i.e., $\sim \kBT$) error on $\EBeff$ yields an exponential change of the switching rate.
+Furthermore, $\nu_0$ only affects the elapsed time, not the switching order, so its impact on the simulation is limited.
+If necessary, a more precise value for $\nu_0$ can be obtained from experiments. \par
+It must be noted that values of $\nu_0$ on the order of \SI{e10}{\hertz} are mostly valid for reversal by \xref{coherent rotation}, as was already assumed during the calculation of the \link{effective energy barrier}{effective barriers}.
+For other reversal processes (e.g., domain wall-mediated reversal), entropic contributions can cause the attempt frequency to differ by many orders of magnitude, since its interpretation as a rotation frequency then no longer applies~\cite{ArrheniusPrefactor,RetentionTimeMeyerNeldel}.
+In such cases, $\nu_0$ can also exhibit a significant dependence on other factors like temperature or the energy barrier itself~\cite{AttemptFreqTemperature,RetentionTimeMeyerNeldel}. % AttemptFreqTemperature says: ``When this energy barrier is the result of a collective statistical behavior of many constituents, it may contain an intrinsic temperature dependence which has to be carefully taken into account, in particular when the prefactor is interpreted in terms of an attempt frequency.''
 
 \paragraph{Algorithm}
 Knowledge of the \xref{switching rate} $\nu$ can be used to construct a rejection-free kinetic Monte Carlo method, first presented by \textit{Gillespie}~\cite{gillespie1976general}, referred to as the ``first-switch'' method.
@@ -1093,13 +1092,14 @@ Furthermore, an analytical solution is available for the nearest-neighbour corre
 with $\mathrm{K}$ the complete elliptic integral of the first kind and $\zeta=\sinh^{-2}(2J/\kBT)$~\cite{Correlations2DIsing}. \\\par
 
 The result of a \hotspice simulation of this Ising system is shown in \cref{fig:2:Verification_exchange}, as calculated for an $800 \times 800$ lattice at various temperatures $T$.
+Simulations were performed using different amounts of \link{Monte Carlo sweep}{Monte Carlo sweeps (MCS)} (i.e., the amount of attempted switches divided by the number of magnets $N$) per temperature step.
 Maximal \xref{multi-switching} ($Q=+\infty$) during \xref{Metropolis-Hastings sampling} was used to verify that --- at least for systems with such short-range coupling --- this sort of extreme multi-switching still converges to the correct solution.
 Since the theoretical curves for $\langle M \rangle / M_0$ and $\langle s_i s_{i+1} \rangle$ are monotonically decreasing, the final state from the previous temperature step was retained as the starting point for the next step.
 This preserves progress already made towards equilibrium and avoids the disruption that resetting to the uniform state would cause~\cite{MCinStatPhys}. \par
 The \hotspice result corresponds well to the theoretical predictions of~\cref{eq:2:Verification_exchange_M} and~\cref{eq:2:Verification_exchange_corr}, both below $T_\mathrm{c}$ and in the high-temperature limit.
 The average magnetisation $\langle M \rangle / M_0$ follows the theoretical curve more closely than the NN correlation $\langle s_i s_{i+1} \rangle$.
 However, just above $T_\mathrm{c}$, the average magnetisation $\langle M \rangle / M_0$ evolves only slowly towards the expected value.
-Increasing the number of MCS per temperature step brings the system closer to (the theoretical) equilibrium and reduces the temperature range above $T_\mathrm{c}$ where the simulated system is not at equilibrium.
+Increasing the number of \link{Monte Carlo sweep}{MCS} per temperature step brings the system closer to (the theoretical) equilibrium and reduces the temperature range above $T_\mathrm{c}$ where the simulated system is not at equilibrium.
 However, this yields diminishing returns, as every additional Monte Carlo step converges more slowly towards the equilibrium.
 This slow convergence near the critical point is due to a well-known phenomenon known as ``\xref{critical slowing down}''.
 
@@ -1107,7 +1107,7 @@ This slow convergence near the critical point is due to a well-known phenomenon 
 	\label{fig:2:Verification_exchange}
 	\textbf{(a)} Average magnetisation and \textbf{(b)} nearest-neighbour (NN) correlation as a function of temperature.
 	Markers show the \hotspice result for an $800 \times 800$ OOP square-lattice \link{exchange coupling}{exchange-coupled} Ising system using \xref{Metropolis-Hastings sampling} with maximal \xref{multi-switching}.
-	The simulation was performed 3 times for different amounts of MCS, which is the number of \link{Monte Carlo sweep}{Monte Carlo steps per magnet} per temperature step --- i.e., the amount of attempted switches divided by the number of magnets $N$.
+	The simulation was performed 3 times for different amounts of \link{Monte Carlo sweep}{MCS}, which is the number of \link{Monte Carlo sweep}{Monte Carlo steps per magnet} per temperature step --- i.e., the amount of attempted switches divided by the number of magnets $N$.
 	Discrepancies due to \xref{critical slowing down} above $T_c$ improve with increasing MCS.
 }
 % TODO: ? why the discrepancy in the correlation?
@@ -1130,6 +1130,7 @@ The clusters are constructed by starting from a `seed' magnet and adding its nei
 For these cluster algorithms, the dynamical critical exponent $z \approx 0$ in the 2D \link{exchange coupling}{exchange-coupled} Ising system~\cite{NumericalDynamicalNiedermayer}, as compared to $z\approx2.17$ with the Metropolis-Hastings algorithm~\cite{DynamicExponentMetropolis}.
 However, in a system with long-range interactions, like the \xref{magnetostatic interaction}, all magnets are ``neighbours'', and generating an appropriate cluster becomes non-trivial.
 While methods exist to generate clusters in systems with long-range interactions~\cite{MC_spinLongRange}, they are not easily applied to the variety of systems that \hotspice supports.
+For some lattices, though, specific algorithms are available that serve a similar purpose: a notable example of this are the ``loop move'' algorithms for IP square and kagome ASI, which suppress CSD and allow the ground state of these lattices to be reached~\cite{LoopMoves,ChargeOrderingKagome}.
 Since CSD will not pose significant issues in this thesis, the Wolff algorithm has been implemented only for \link{exchange coupling}{exchange-coupled} systems in \hotspice.
 
 \subsection{Exchange- and magnetostatically-coupled Ising system}
@@ -1140,7 +1141,7 @@ In terms of \hotspice parameters, we can write
 	\delta = \frac{8 \pi J a^3}{\mu_0 \mu^2} \mathrm{,}
 \end{equation}
 with the magnetic moment $\mu$ constant for all magnets, and $a$ the NN distance in the square lattice.
-Analytical predictions remain possible in this system at zero temperature: for $\delta < 0.85$, the magnetostatic coupling dominates, leading to a \indexlabel[nolabel]{checkerboard state}~\cite{AgingIsingDipolar}.
+Analytical predictions remain possible in this system at zero temperature: for $\delta < 0.85$, the magnetostatic coupling dominates, leading to a \xlabel[nolabel]{checkerboard state}~\cite{AgingIsingDipolar}.
 As $\delta$ increases, the ever-stronger exchange coupling leads to the formation of ferromagnetic domains, which organise into stripes due to the magnetostatic interaction, with the stripe width determined by $\delta$~\cite{StripedDipolarIsing,FMmonolayer1993}. \par
 The average stripe width is reflected in the \idx{nearest-neighbour correlation} $\langle s_i s_{i+1} \rangle$, as shown in~\cref{fig:2:Verification_dipolar} for a \hotspice simulation.
 The analytical theory is valid at zero temperature, but we are using the \link{Metropolis-Hastings sampling}{Metropolis-Hastings algorithm} which requires non-zero temperature.
@@ -1244,7 +1245,7 @@ Each magnet has four NN located near its endpoints, making this lattice an inter
 Both the \xref{point dipole model}~\cite{Chern2011} and dumbbell model~\cite{Moller2009} have been used in previous studies of kagome ASI.
 The point dipole model tends to significantly underestimate the NN interaction, while the dumbbell model increases the \xref{magnetostatic interaction} energy between closely spaced magnets, potentially affecting the dynamics of the system.
 We therefore expect the dumbbell model to provide a more accurate simulation of the kagome lattice than the point dipole model~\cite{flatspin,mengotti2011kagome}. \par
-To illustrate this, we used \hotspice to reproduce the reversal process of kagome ASI as observed by Mengotti~\etal~\cite{mengotti2011kagome}
+To illustrate this, we used \hotspice to reproduce the reversal process of kagome ASI as observed by Mengotti~\etal~\cite{mengotti2011kagome}.
 They studied the hysteresis loop using \indexlabel[nolabel]{X-ray magnetic circular dichroism}\link{X-ray magnetic circular dichroism}{XMCD} to image the evolution of the system's microstate during a gradual increase of the \link{external magnetic field}{external field}.
 We simulated a kagome ASI consisting of 173 magnets whose \link{shape anisotropy}{energy barrier} $\EB = \SI{120}{\electronvolt} \pm \SI{5}{\percent}$.
 Kagome ASI contains 3 sublattices of magnets with different orientations: an increasing magnetic field $\vc{B}_\mathrm{ext}$ was parallel to the \xref{easy axis} of one of them, with a slight \ang{-3.6} offset to break the symmetry between the two other sublattices that are slanted with respect to the field.
@@ -1278,7 +1279,7 @@ This highlights the importance of accounting for the finite size of magnets to o
 	Comparison between the \link{dumbbell model}{dumbbell} and \link{point dipole model}{point dipole} models at different external field magnitudes $B$.
 	Note that the critical field $B_C$ differs between the models:  $B_C = \SI{26.7}{\milli\tesla}$ for the dumbbell model and $B_C = \SI{23.9}{\milli\tesla}$ for the point dipole model.
 	The NN centre-to-centre distance is \SI{500}{\nano\metre}, with a length $d=\SI{470}{\nano\metre}$ for the dumbbell model.
-	The magnets have a \xref{magnetic moment} $\mu=\SI{1.1}{\femto\ampere\metre\squared}$, and an \link{shape anisotropy}{energy barrier} $\EB = \SI{120}{\electronvolt} \pm \SI{5}{\percent}$.
+	The magnets have a \xref{magnetic moment} $\mu=\SI{1.1}{\femto\ampere\metre\squared}$, \link{shape anisotropy}{energy barrier} $\EB = \SI{120}{\electronvolt} \pm \SI{5}{\percent}$ and use the \xref{mean-barrier model} ($\rho=0$).
 	Arrows represent the magnetic moment of the magnets, and the blue and red points ({\color{blue}{$\bullet$}} and {\color{red}{$\bullet$}}) represent the net change in charge of a vertex.
 }
 
