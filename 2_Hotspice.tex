@@ -1147,12 +1147,14 @@ The average stripe width is reflected in the \idx{nearest-neighbour correlation}
 The analytical theory is valid at zero temperature, but we are using the \link{Metropolis-Hastings sampling}{Metropolis-Hastings algorithm} which requires non-zero temperature.
 Hence, we will use a sufficiently low temperature ($T \ll E_\mathrm{MS}$; here, $T=\SI{50}{\kelvin}$) for this simulation. % E_MS in this situation is around 200kB.
 
+\vspace{-1.5em}
 \xfig{2_Hotspice/Verification/OOP_Dipolar.pdf}{
 	\label{fig:2:Verification_dipolar}
 	\link{nearest-neighbour correlation}{Nearest-neighbour (NN) correlation} in an \link{exchange coupling}{exchange-coupled} system with long-range \xref{magnetostatic interactions} included, as a function of relative NN magnetostatic/exchange coupling $\delta$.
 	Transitions occur at $\delta=0.85$ and 2.65, indicated by dotted lines.
 	Insets show the magnetisation state with growing \xlabel{stripe domains}: white corresponds to spin `up', black to `down'.
 }
+\vspace{-0.75em}
 
 Consistent with the theoretical predictions of~\ccite{StripedDipolarIsing}, for $\delta < 0.85$ a \xref{checkerboard state} exists with $\langle s_i s_{i+1} \rangle = -1$.
 In the range $0.85 < \delta < 2.65$, \xref{stripe domains} with a width of 1 row are preferred, leading to $\langle s_i s_{i+1} \rangle = 0$.
@@ -1174,12 +1176,14 @@ To quantify this transition, we measure the fraction of vertices with net zero m
 We used the same lattice compression as described in~\ccite{AFM-FM-transition-Pinwheel}, making our lattice spacing $a=\SI{240}{\nano\metre} / \sin(\ang{45}+\alpha)$ angle-dependent: it varies from \SI{340}{\nano\metre} at $\alpha=\ang{0}$ to \SI{240}{\nano\metre} at $\alpha=\ang{45}$. 
 For the dipole model, the transition occurs at $\approx \ang{35}$ as expected, while the dumbbell model (here with $d = \SI{220}{\nano\metre}$) indeed transitions at a larger rotation angle.
 
+\vspace{-1em}
 \xfig[0.6]{2_Hotspice/Verification/Pinwheel_angle.pdf}{
 	\label{fig:2:Pinwheel_angle}
 	Fraction of vertices with net zero magnetisation at equilibrium, as square ASI (left) transitions to pinwheel ASI (right) by rotating individual magnets.
 	The theoretical transition angle $\alpha_c \approx \ang{35.3}$ for the dipole model is indicated by the vertical dotted line.
 	The dumbbell model uses a charge-to-charge distance $d = \SI{220}{\nano\metre}$.
 }
+\vspace{-0.5em}
 
 The transition in the dumbbell model seems less abrupt: a stable intermediate state exists at $\alpha=\ang{40}$ with significant random variation between samples, as indicated by the error bar. % A significant error bar is often indicative of a phase transition
 A gradual transition has also been observed experimentally, though the reported range of angles $\alpha$ between which this occurs is often broader and both smaller~\cite{ProbingAFM-PMtransition} and larger~\cite{AFM-FM-transition-Pinwheel} rotation angles than $\ang{40}$ have been reported.
@@ -1275,9 +1279,9 @@ This highlights the importance of accounting for the finite size of magnets to o
 \vspace{-1.25em}
 \xfig{2_Hotspice/Hysteresis_Kagome.pdf}{
 	\label{fig:2:kagome_reversal}
-	Reversal of a kagome ASI under an \xref{external magnetic field} applied at \ang{-93.6} relative to the horizontal axis.
-	Comparison between the \link{dumbbell model}{dumbbell} and \link{point dipole model}{point dipole} models at different external field magnitudes $B$.
-	Note that the critical field $B_C$ differs between the models:  $B_C = \SI{26.7}{\milli\tesla}$ for the dumbbell model and $B_C = \SI{23.9}{\milli\tesla}$ for the point dipole model.
+	Reversal of kagome ASI under an \xref{external magnetic field} applied at \ang{-93.6} relative to the horizontal axis.
+	The \link{dumbbell model}{dumbbell} and \link{point dipole model}{point dipole} models are compared at different external field magnitudes $B$.
+	The critical field $B_C$ is \SI{26.7}{\milli\tesla} for the dumbbell model, but only \SI{23.9}{\milli\tesla} for the point dipole model.
 	The NN centre-to-centre distance is \SI{500}{\nano\metre}, with a length $d=\SI{470}{\nano\metre}$ for the dumbbell model.
 	The magnets have a \xref{magnetic moment} $\mu=\SI{1.1}{\femto\ampere\metre\squared}$, \link{shape anisotropy}{energy barrier} $\EB = \SI{120}{\electronvolt} \pm \SI{5}{\percent}$ and use the \xref{mean-barrier model} ($\rho=0$).
 	Arrows represent the magnetic moment of the magnets, and the blue and red points ({\color{blue}{$\bullet$}} and {\color{red}{$\bullet$}}) represent the net change in charge of a vertex.

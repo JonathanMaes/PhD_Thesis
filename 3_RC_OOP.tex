@@ -355,9 +355,8 @@ This is in stark contrast with the near-perfect \xref{logarithmic relaxation} pr
 The reason for this is that, contrary to the \link{magnetostatic interaction}{MS interaction}, the exchange coupling only depends on the local configuration of the nearest neighbours of each magnet.
 The amount of local configurations is limited, as each magnet can only have between 0 and 4 parallel or antiparallel NN.
 Each of these five local configurations corresponds to a certain timescale at which switching is most probable, resulting in only a select few dominant switching timescales.
-Hence, each stair corresponds to magnets which all have a similar mean switching time, so the relaxation of each individual stair occurs exponentially rather than logarithmically.
-However, the overarching logarithmic relaxation is still present, as the different stairs are still separated by many orders of magnitude in time, similar to the logarithmic relaxation of a magnetostatically-coupled system. \\\par
-
+Hence, each stair is caused by magnets which all have a similar mean switching time, so the relaxation at each stair occurs exponentially rather than logarithmically.
+Still, the overarching logarithmic relaxation remains present: the stairs are separated by many orders of magnitude in time, similar to the logarithmic relaxation of a magnetostatically-coupled system. \par
 In all panels of~\cref{fig:3:OOP_relaxation_exchange}, the ASI starts in the uniform state where all magnets in the bulk have 4 parallel NN.
 Hence, they all have an equal exchange energy $E_{\mathrm{exch},i} = 4J, \forall i$, leading to similar mean switching times.
 At the first stair (e.g., $t < \SI{e-6}{\second}$ in panel 1 of~\cref{fig:3:OOP_relaxation_exchange}), these magnets will randomly switch, thereby nucleating checkerboard domains.
@@ -455,6 +454,7 @@ These combinations of $\EEA$ and $\EMC$ have also been indicated in~\cref{fig:3:
 	The reported uncertainties represent the weighted standard deviations of the respective distributions in~\cref{fig:3:MFM_fitquality}.
 	Each trace shows the average of 200 simulated relaxations (central line) and their standard deviation (shaded area).
 }
+\vspace{-0.5em}
 
 However, one should not blindly trust the optimal parameter combination that BO provides: it is possible that a fit of similar quality could be obtained for different $\EEA$, $\EMC$ or $J$.
 For this reason, \cref{fig:3:MFM_fitquality} is also provided, which shows the \xref{fit quality} $\eta$ for all guesses made by the optimiser, as a function of these three parameters.
