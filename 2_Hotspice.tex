@@ -164,12 +164,12 @@ This is called the \idx{switching energy}, and we will see in the next few secti
 It is therefore very advantageous that the switching energy is so cheap to compute. \par
 When the simulation is initialised, the energy contributions are calculated for all magnets.
 Each magnet therefore stores a value in memory for each of the terms in \cref{eq:2:E}.
-Whenever a magnet switches, the energies of all magnets it interacts with are updated appropriately, which constitutes a major part of the calculation effort required for every step in the simulation.
+Whenever a magnet switches, the energies of all magnets it interacts with are updated accordingly, which constitutes a major part of the calculation effort required for every step in the simulation.
 
 \subsection{Finite-size corrections to the magnetostatic energy}\label{sec:2:finite}
 \cref{eq:2:E_MS,eq:2:E_Z,eq:2:E_exch} approximate each nanomagnet as a \link{point dipole model}{point dipole}, but real nanomagnets have a finite spatial extent.
 If one assumes a uniform magnetisation throughout each nanomagnet, then this finite size does not affect the \xref{Zeeman energy}, nor the \link{exchange coupling}{exchange energy} which can capture any shape-related effects by an appropriate choice of the exchange coupling $J$.
-The Zeeman energy could even account for a deviation from uniform magnetisation near the edge of a magnet, which occurs in reality but which we will neglect in the following, by an appropriate choice of $\vc{B}_\mathrm{ext}$. \par
+By an appropriate choice of $\vc{B}_\mathrm{ext}$, the Zeeman energy could even account for a deviation from uniform magnetisation near the edge of a magnet, as occurs in reality, but which will be neglected in the following. \par
 The \xref{magnetostatic interaction}, however, depends on the relative position, orientation, and shape of all magnets.
 This may result in inadequate simulation of closely spaced ASI where the true magnetostatic coupling can be significantly stronger than predicted by a point dipole approximation.
 Therefore, two (mutually exclusive) improvements have been implemented in \hotspice, which rescale the magnetostatic interaction energy between magnets.
