@@ -245,7 +245,7 @@ which lies in the range $[0,k]$ and represents the approximate number of previou
 Note that the memory capacity could be increased arbitrarily high by choosing a high cut-off time $k$.
 However, the memory capacity typically exhibits a plateau beyond a certain value of $k$, before rising dramatically only when $k$ approaches the size of the training set.
 Hence, $k$ should be chosen at this plateau. \par
-Note that this measures \indexlabel[nolabel]{fading memory}short-term memory; long-term memory often refers to the knowledge engrained in the weights of an ANN, i.e., the \xref{linear readout layer} in the case of RC.
+This metric measures \indexlabel[nolabel]{fading memory}short-term memory; long-term memory often refers to the knowledge engrained in the weights of an ANN, i.e., the \xref{linear readout layer} in the case of RC.
 Furthermore, this only captures the linear memory capacity: the non-linear memory capacity is far more computationally expensive as it requires a summation over polynomials of different degrees~\cite{RCbenchmarksReview1}.
 We therefore limit this discussion to the linear memory capacity.
 
