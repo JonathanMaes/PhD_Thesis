@@ -65,7 +65,7 @@ While the presented approaches complement each other in some ways, they both hav
 
 Generally, OOP ASI presents less design freedom than IP ASI, as the \xref{easy axis} of each \link{single-domain nanomagnet}{magnet} is always vertical.
 We therefore only considered the square lattice, as an example of a lattice without nearest-neighbour \xref{frustration}.
-It can be interesting to consider whether frustrated OOP lattices (e.g., kagome, honeycomb\dots) might exhibit more chaotic dynamics --- though the reservoir protocols used here would likely yield very similar results regardless of the precise lattice used because all OOP lattices have a more or less \link{antiferromagnetic}{AFM} ground state.
+It can be interesting to consider whether frustrated OOP lattices (e.g., triangle, Cairo\dots) might exhibit more chaotic dynamics --- though the reservoir protocols used here would likely yield very similar results regardless of the precise lattice used because all OOP lattices have a more or less \link{antiferromagnetic}{AFM} ground state.
 As such, it may be more worthwhile to explore other approaches that introduce spatial variations, akin to the \xref{property gradient}, like uneven current distributions or local input. \\\par
 
 While a \link{AFM clocking protocol}{clocking scheme} in non-volatile ASI enables \link{stepwise domain wall motion}{controlled dynamics}, it is limited to discrete input and requires intricate manufacturing of conduction pathways.
@@ -73,12 +73,28 @@ However, analog data is more prevalent in nature and allows a higher information
 A few approaches were proposed to combine the clocking scheme with analog input, but were ultimately dismissed for not yielding the rich dynamics we require.
 Thermally active ASI, on the other hand, can readily act as a \xref{leaky integrator} of analog input. \par
 Manufacturing both non-volatile and thermally active ASI reservoirs is not so straightforward, but both for different reasons.
-Non-volatile ASI requires intricate layouts of conduction pathways for input, which must avoid electrical conflicts with the readout method, whereas for thermally active ASI a full conductive underlayer is sufficient to use it as a reservoir.
+Non-volatile ASI requires more intricate layouts of current lines for input, which must avoid electrical conflicts with the readout method, whereas for thermally active ASI a full conductive underlayer is sufficient to use it as a reservoir.
 Conversely, thermally active nanomagnets pose greater fabrication challenges, as precise control over the \xref{effective energy barrier} is required --- on the order of tens of $\kBT$. \par
 In this regard, it is important to note that we have encountered indications of \link{non-coherent magnetisation reversal}{non-coherent reversal} in both IP (\cref{sec:2:Applications_reversal_Pinwheel}) and OOP (\cref{sec:3:MFM}) ASI, in the form of a lower energy barrier than would be expected for \link{coherent rotation}{coherent reversal}.
 For the OOP magnets, it is therefore unclear whether downscaling would aid to achieve the required level of control over the effective energy barrier.
 A better understanding of the reversal process may be achieved through \link{micromagnetic theory}{micromagnetic simulations}.
 Overall, the experimental aspect of these approaches requires further consideration. \\\par
+
+Regarding the broader perspective of \xref{physical reservoir computing} (PRC), many physical systems fulfil the theoretical requirements of a reservoir and can therefore act as universal function approximators, but their practical use remains limited.
+%Various factors contribute to the difficulty of applying PRC in real-world scenarios.
+Unlike software reservoirs, physical reservoirs must obey physical principles, which restricts their tunability and complicates scaling.
+This was also apparent in OOP ASI, where enlarging the system did not yield proportional gains in performance.
+We also encountered the trade-off between memory and non-linearity: reconfigurable reservoirs provide an interesting avenue in this regard, as they can dynamically balance this trade-off depending on the task at hand.
+For instance, the non-volatile OOP ASI could do this by changing the input magnitude. \par
+Nonetheless, physical reservoirs often suffer from limited memory capacity, as past excitations are gradually overwritten by new input.
+Pre-processing of the raw input data into a more digestible form is therefore often required to excite desirable dynamics in the physical substrate.
+A typical example of this is speech recognition, where a frequency spectrum of the spoken word provides a more digestible input than the time-domain audio signal, which ultimately benefits the reservoir performance as it eases the memory requirements.
+It would be beneficial if such pre-processing could also be realised physically rather than in software.
+It is also possible to enhance performance by embedding the reservoir into higher-level paradigms such as the single dynamical node~\cite{appeltant2011information} or rotating neurons reservoir~\cite{RotatingNeuronsRC}, though at the cost of reintroducing abstractions into the architecture. \par
+I believe the recent review by Yan~\etal{}~\cite{ChallengesFutureRC} paints a realistic picture of the future role of PRC.
+Physical reservoirs will not replace conventional computers, nor should they.
+Instead, both systems can complement one another, with PRC being employed at the edge to provide early low-power processing of incoming data inside a larger architecture.
+PRC is part of the more general idea to use the inherent processing power of physical systems when possible --- a concept which certainly has its merit but can be hard to reconcile with current computing architectures. \\\par
 
 In conclusion, while OOP ASI is alluring for its ease of electrical interfacing, the aforementioned factors complicate its usage as a \link{physical reservoir computing}{physical reservoir}.
 Nonetheless, we succeeded in using it as such, with a performance on par with other types of reservoirs described in literature.
@@ -87,6 +103,4 @@ Following this numerical exploration of the RC potential of OOP ASI, a lithograp
 
 % Furthermore, for the functionality they enable, they take up a non-negligible amount of space on-chip as compared to traditional computer architectures, as the magnets have a size on the order of $\SI{100}{\nano\metre}$ (it is indeed possible to make the magnets smaller, as a high magnetostatic coupling is not required in thermally active ASI, but controlling the OOP anisotropy might be hard), a space in which typically one transistor can be implemented including peripherals like current lines, though one could argue that (thermally active) ASI can react to analog input signals whereas representing floating-point values would require a large number of transistors.
 
-%Performance of thermally active ASI was assessed through specific tasks, while non-volatile ASI was assessed through more general metrics (matrix-rank metrics and linear estimator-based metrics).
-%The relation between linear estimator-based metrics and the specific tasks that a reservoir will be good at is clearer than for the matrix-rank metrics, making it more interesting to use linear estimator-based metrics in future research.
-%It was, for example, found that decent values of the computing capacity $C$ do not necessarily translate to significantly non-zero memory capacity or non-linearity.
+%It was found that decent values of the computing capacity $C$ do not necessarily translate to significantly non-zero memory capacity or non-linearity.
