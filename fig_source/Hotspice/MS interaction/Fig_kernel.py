@@ -14,7 +14,7 @@ alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 def main_plot():
     thesis_utils.init_style()
     
-    figsize = (thesis_utils.page_width, 2.6)
+    figsize = (thesis_utils.page_width, 2.2)
     figparams = [
         dict(n=5,  lw=1, ASI_type=hotspice.ASI.IP_Pinwheel, colors = {(1,2): 'C0', (4,3): 'C1'}),
         dict(n=15, lw=1, ASI_type=hotspice.ASI.IP_Cairo,    colors = {(1,2): 'C0', (4,6): 'C1'}),
@@ -133,7 +133,7 @@ def draw_magnet(ax: plt.Axes, x, y, l, angle=0, color=None, round: bool = False,
     ax.add_artist(patches.Ellipse((x, y), l, w, angle=angle/np.pi*180, color=color, alpha=0.9, linewidth=0))
     if unitcell_index is not None:
         magnet_size = l*ax.get_figure().get_figwidth() # Length in inches
-        ax.text(x, y, f"{alphabet[unitcell_index]:s}", ha="center", va="center_baseline", fontsize=magnet_size*40)
+        ax.text(x, y, f"{alphabet[unitcell_index]:s}", ha="center", va="center_baseline", fontsize=magnet_size*50)
 
 def draw_line(ax: plt.Axes, x1, y1, x2, y2, color='k', lw=1, style="-"):
     ax.add_artist(lines.Line2D([x1, x2], [y1, y2], color=color, linewidth=lw, linestyle=style, solid_capstyle='projecting'))
