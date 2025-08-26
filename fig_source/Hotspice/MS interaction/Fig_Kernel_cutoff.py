@@ -100,9 +100,9 @@ def plot(data_dir=None):
     
     ## Initialise plot
     thesis_utils.init_style()
-    fig = plt.figure(figsize=(thesis_utils.page_width, 3.6))
+    fig = plt.figure(figsize=(thesis_utils.page_width, 3.2))
     ratio = 2
-    gs = fig.add_gridspec(2, 5, width_ratios=[ratio, ratio+1, .5, ratio+1, 1], height_ratios=[1,1], hspace=.8, wspace=0.1)
+    gs = fig.add_gridspec(2, 5, width_ratios=[ratio, ratio+1, .5, ratio+1, 1], height_ratios=[1,1], hspace=.9, wspace=0.1)
     
     cmap = colormaps.get_cmap('viridis')
     vmin = min(E_recalculated.min(), E_incremented.min())
@@ -115,13 +115,13 @@ def plot(data_dir=None):
     ## PLOT 1: THE EXACT ENERGY PROFILE
     ax1: plt.Axes = fig.add_subplot(gs[1,0])
     im1 = ax1.imshow(E_recalculated, vmin=vmin, vmax=vmax, origin='lower', cmap=cmap)
-    ax1.set_title(r"Exact $E_\mathrm{MS}$" + f"\n({original_size} kernel)", fontsize=11)
+    ax1.set_title(r"Exact $E_\mathrm{MS}$" + f"\n({original_size} kernel)", fontsize=10)
     no_ticks(ax1)
 
     ## PLOT 2: THE TRUNCATED ENERGY PROFILE
     ax2: plt.Axes = fig.add_subplot(gs[1,1])
     im2 = ax2.imshow(E_incremented, vmin=vmin, vmax=vmax, origin='lower', cmap=cmap)
-    ax2.set_title(f"Approximation" + f"\n({cutoff_size} kernel)", fontsize=11)
+    ax2.set_title(f"Approximation" + f"\n({cutoff_size} kernel)", fontsize=10)
     no_ticks(ax2)
 
     ## PLOT 3: THE ABSOLUTE DIFFERENCE
@@ -130,7 +130,7 @@ def plot(data_dir=None):
     c3 = plt.colorbar(im3)
     c3.ax.set_ylabel(f"Magnetostatic\ninteraction\nenergy [{unit}]", rotation=270, fontsize=10)
     c3.ax.get_yaxis().labelpad = 35
-    ax3.set_title(r"Absolute error $|E_\mathrm{err}|$", fontsize=11)
+    ax3.set_title(r"Absolute error $|E_\mathrm{err}|$", fontsize=10)
     no_ticks(ax3)
 
     ## PLOT 4: THE TIME-DEPENDENCE
@@ -139,18 +139,19 @@ def plot(data_dir=None):
     ax4.plot(switches, absdiff_avg/scale*100, color='C0', label=r"$\langle\!\langle |E_\mathrm{err}| \rangle\!\rangle \,\left/\, \langle\!\langle |E_\mathrm{MS}| \rangle\!\rangle \right.$")
     ax4.plot(switches, absdiff_max/scale*100, color='C1', label=r"$\mathrm{max}\left(|E_\mathrm{err}|\right) \,\left/\, \langle\!\langle |E_\mathrm{MS}| \rangle\!\rangle \right.$")
     ax4.set_xscale('log')
+    ax4.yaxis.set_major_locator(plt.MaxNLocator(4))
     ax4.set_xlim([1, np.max(switches)])
     ax4.set_ylim([0, ax4.get_ylim()[1]])
-    ax4.set_xlabel("Switches")
-    ax4.set_ylabel(f"Relative error [%]")
+    ax4.set_xlabel("Switches", labelpad=0)
+    ax4.set_ylabel(f"Relative error [%]     ")
     ax4.set_title(f"{original_size} kernel truncated to {cutoff_size}", pad=10)
     ax4.legend()
-    thesis_utils.label_ax(ax4, 0, offset=(-0.085, 0.15))
-    thesis_utils.label_ax(ax4, 1, offset=(-0.085, -1.6)) # Put (b) on ax4 to have same x-coordinate as (a)
+    thesis_utils.label_ax(ax4, 0, offset=(-0.1, 0.15))
+    thesis_utils.label_ax(ax4, 1, offset=(-0.1, -1.65)) # Put (b) on ax4 to have same x-coordinate as (a)
 
     ## LAYOUT PLOT AND SAVE
     fig.tight_layout()
-    fig.subplots_adjust(left=0.08, right=0.99, bottom=0.02, top=0.9)
+    fig.subplots_adjust(left=0.09, right=0.99, bottom=0.02, top=0.9)
     
     ## POSITION EXACT-APPROX COLORBAR
     pad = 0.01

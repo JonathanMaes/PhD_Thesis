@@ -729,7 +729,6 @@ After a certain amount of switches, however, the error is observed to stagnate.
 The reason for this is that, whenever a magnet switches back, the error introduced by its original switch gets cancelled, leaving only some residual \xlabel{floating-point error} in its wake.
 This also explains why the plateau starts after $\approx N$ switches ($N=5000$ magnets in the figure): at that point, each magnet will have switched once on average and will begin randomly switching back.
 
-\vspace{-1em}
 \xfig[1.0]{2_Hotspice/Kernel_cutoff.pdf}{
 	\label{fig:2:Kernel_cutoff}
 	Accumulation of error in the \link{magnetostatic interaction}{magnetostatic energy} $E_\mathrm{MS}$ for a simulation of $100 \times 100$ pinwheel ASI, when using a truncated $41 \times 41$ kernel instead of the usual $199 \times 199$ kernel.
@@ -738,12 +737,12 @@ This also explains why the plateau starts after $\approx N$ switches ($N=5000$ m
 	\textbf{(b)} Final situation at the right edge of panel (a), i.e., after $\approx \SI{5e6}{}$ random switches.
 	The absolute error $\abs{E_\mathrm{err}}$ is the absolute difference between the simulations with (``Approximation'') and without (``Exact $E_\mathrm{MS}$'') a truncated kernel.
 }
-\vspace{-1em}
 
 The error is highly dependent on the situation and size of the truncated kernel.
 The closer to equilibrium the system is initialised, the smaller the error will be while the simulation explores this equilibrium.
 For example, for the particular situation in~\cref{fig:2:Kernel_cutoff} --- a pinwheel ASI at high temperature starting in the uniform state --- the absolute error $\abs{E_\mathrm{err}}$ for a $41 \times 41$ truncated kernel is on average a little over \SI{5}{\percent} of the mean exact magnetostatic energy $\llangle \abs{E_\mathrm{MS}} \rrangle$ across the ASI (blue curve).
-For some magnets, though, the relative error exceeds \SI{15}{\percent} (red curve). \par
+For some magnets, though, the relative error exceeds \SI{15}{\percent} (red curve). \\\par
+
 Note that PBC require extra attention when the magnetostatic kernel is truncated, as this procedure cuts off the eight offset kernel images.
 Previously, \cref{eq:2:Kernel_update} was applied when a magnet switches, where the kernel was cut-out appropriately to the size of the ASI to allow a \link{Hadamard product}{pointwise multiplication}.
 With open boundaries, the truncated kernel presents no issue, but with PBC the cut-out should be applied with care, such that it properly wraps around the edges.
