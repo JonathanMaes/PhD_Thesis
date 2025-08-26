@@ -222,7 +222,7 @@ def plot():
                 x1 = axes[0,x].get_position().x0
                 y1 = (ax1.get_position().y0 + ax1.get_position().y1)/2
                 y2 = (ax2.get_position().y0 + ax2.get_position().y1)/2
-                arrow_kwargs = dict(arrowstyle='-|>', mutation_scale=14, linewidth=2, shrinkA=1, shrinkB=0, color='k')
+                arrow_kwargs = dict(arrowstyle='-|>', mutation_scale=12, linewidth=1.5, shrinkA=1, shrinkB=0, color='k')
                 fig.patches.append(FancyArrowPatch((x0, y1), (x1, y1), transform=fig.transFigure, **arrow_kwargs))
                 fig.patches.append(FancyArrowPatch((x0, y2), (x1, y2), transform=fig.transFigure, **arrow_kwargs))
     
