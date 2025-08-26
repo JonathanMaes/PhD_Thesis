@@ -117,9 +117,9 @@ def inset_ax(ax: plt.Axes, ASI_type: Types, fig: plt.Figure = None):
         if x1 == x2: ha, va = "left" if opposite_side else "right", "center" # Special case: vertical line
         text_offset = transforms.offset_copy(inset_ax.transData, x=[text_pad, 0, -text_pad][::(-1 if opposite_side else 1)][ln_slope],
                                              y=text_pad*(1 if opposite_side else -1)*(va != "center"), units="points", fig=fig)
-        inset_ax.text(x=np.mean((x1, x2)), y=np.mean((y1, y2)), s=text, color=color, ha=ha, va=va, transform=text_offset, fontsize=thesis_utils.fs_large+1)
+        inset_ax.text(x=np.mean((x1, x2)), y=np.mean((y1, y2)), s=text, color=color, ha=ha, va=va, transform=text_offset, fontsize=thesis_utils.fs_large)
 
-    r, padding = 0.19, 0.05
+    r, padding = 0.21, 0.07
     d = 0.9
     wl_ratio = 4/11 # w/l ratio for ellipses
     colors = "gray", "gray" # "blue", "red"
@@ -150,14 +150,14 @@ def inset_ax(ax: plt.Axes, ASI_type: Types, fig: plt.Figure = None):
             draw_charge(x1 + d*rx, y, r*0.15, color="red")
             draw_charge(x2 - d*rx, y, r*0.15, color="blue")
             draw_charge(x2 + d*rx, y, r*0.15, color="red")
-            annotate_distance("$d=0.9l$", x2 - d*rx, y, x2 + d*rx, y, opposite_side=True, text_pad=12, color="C2")
+            annotate_distance("$d=0.9l$", x2 - d*rx, y, x2 + d*rx, y, opposite_side=True, text_pad=10, color="C2")
         case Types.IP_ANTIPARALLEL:
             draw_charge(x1, y - d*ry, r*0.15, color="red")
             draw_charge(x1, y + d*ry, r*0.15, color="blue")
             draw_charge(x2, y - d*ry, r*0.15, color="blue")
             draw_charge(x2, y + d*ry, r*0.15, color="red")
             # annotate_distance("$d=0.9l$", x2 - d*rx, y, x2 + d*rx, y, opposite_side=True, text_pad=6)
-    annotate_distance(text, x1 - rx, y, x1 + rx, y, opposite_side=True, text_pad=12 if ASI_type == Types.IP_PARALLEL else 3, endlines=True)
+    annotate_distance(text, x1 - rx, y, x1 + rx, y, opposite_side=True, text_pad=10 if ASI_type == Types.IP_PARALLEL else 3, endlines=True)
             
 
 def show_MS_distance_fig():
@@ -173,7 +173,7 @@ def show_MS_distance_fig():
     titles = {Types.OOP: "OOP", Types.IP_PARALLEL: r"IP $\rightarrow\rightarrow$", Types.IP_ANTIPARALLEL: r"IP $\uparrow\downarrow$"}
     
     thesis_utils.init_style()
-    fig, axes = plt.subplots(1, len(data), figsize=(thesis_utils.page_width, 2.7))
+    fig, axes = plt.subplots(1, len(data), figsize=(thesis_utils.page_width, 2.5))
     for i, (ASI_type, data_i) in enumerate(data.items()):
         ax: plt.Axes = axes[i]
         scale_y = 1e20
@@ -199,10 +199,10 @@ def show_MS_distance_fig():
         ax.set_ylim(bottom=0, top=5)
         inset_ax(ax, ASI_type=ASI_type)
     # fig.supxlabel("Normalised center-to-center distance", fontsize=10, x=0.52) # "Normalised" means that distance was divided by the distance at which the magnets barely touch.
-    leg = fig.legend(*ax.get_legend_handles_labels(), ncol=4, loc="upper center")
-    thesis_utils.move_legend(leg, ax, dx=0.04, dy=0.1)
+    leg = fig.legend(*ax.get_legend_handles_labels(), ncol=4, loc="upper center", columnspacing=1.2, handletextpad=0.4)
+    thesis_utils.move_legend(leg, ax, dx=0.08, dy=0.1)
     fig.tight_layout()
-    fig.subplots_adjust(top=0.82, bottom=0.18, left=0.065, right=0.99)
+    fig.subplots_adjust(top=0.82, bottom=0.18, left=0.08, right=0.99, wspace=0.1)
     hotspice.utils.save_results(data=data, figures={"MS_distance": fig}, timestamped=False)
 
 

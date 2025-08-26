@@ -186,7 +186,7 @@ The second-order correction can be written as
 	\label{eq:2:E_MS_order2}
 	E_{\mathrm{MS},i,j}^\mathrm{(2)} = \frac{\mu_0}{4\pi} \frac{3\mathcal{I}_{ij}}{2} \Bigg[3\frac{\vc{\mu}_i^\mathrm{OOP} \bcdot \vc{\mu}_j^\mathrm{OOP}}{\norm{\vc{r}_{ij}}^5} + \frac{\vc{\mu}_i^\mathrm{IP} \bcdot \vc{\mu}_j^\mathrm{IP}}{\norm{\vc{r}_{ij}}^5} -5\frac{(\vc{\mu}_i^\mathrm{IP} \bcdot \vc{r}_{ij}) (\vc{\mu}_j^\mathrm{IP} \bcdot \vc{r}_{ij})}{\norm{\vc{r}_{ij}}^7} \Bigg] \mathrm{,}
 \end{equation}
-where $\vc{\mu}_i$ was split into its IP and OOP components, conveniently leading to separate IP and OOP terms as implemented in the two types of ASI in \hotspice. \par
+where $\vc{\mu}_i$ was split into its IP and OOP components, conveniently leading to separate IP and OOP terms as implemented in the two types of ASI in \hotspice.
 The particular shape of the nanomagnets is encapsulated in the single scalar $\mathcal{I}_{ij} = (\mathcal{I}_i + \mathcal{I}_j)/2$.
 These $\mathcal{I}$ are calculated similar to a moment of inertia:
 \begin{equation}
@@ -223,6 +223,7 @@ For this, we use the \link{micromagnetic theory}{micromagnetic simulation} packa
 While this solution is not exact, as \mumax uses a \xlabel{finite-difference} (FD) discretisation, the result will approach the true value for sufficiently small FD cell sizes.
 \cref{fig:2:MS_distance} compares the original \link{point dipole model}{point dipole approximation} and the two corrections (``\link{finite dipole model}{finite dipole}'' and ``\link{dumbbell model}{dumbbell}'') against the solution obtained with \mumax.
 
+\vspace{-1.5em}
 \xfig[1.0]{2_Hotspice/MS_distance.pdf}{
 	\label{fig:2:MS_distance}
 	Magnitude of the magnetostatic interaction between two magnets as a function of their normalised centre-to-centre distance, for the three \hotspice{} calculation methods (\link{point dipole model}{point dipole}, \link{finite dipole model}{second-order correction for dipoles}, and \link{dumbbell model}{dumbbell}) compared to a \link{micromagnetic theory}{micromagnetic} \mumax calculation assuming uniform magnetisation.
