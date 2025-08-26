@@ -214,15 +214,15 @@ class Hysteresis:
         if labels is None: labels = [None]*len(hystereses)
         if labels_snapshots is None: labels_snapshots = labels
         markers = np.resize(['o', 's', 'D', 'P', 'X', 'p', '*', '^'], n) # Circle, square, diamond, plus, cross, pentagon, star, triangle up (and repeat enough times)
-        markersize_panel_a = 5
-        markersize_panel_b = 8
+        markersize_panel_a = 4
+        markersize_panel_b = 7
         markevery_panel_a, markevery_panel_b = markersize_panel_a/200, markersize_panel_b/100
         max_thresholds = max(len(data.threshold_indices) for data in hystereses)
         if SHOW_SNAPSHOTS is None: SHOW_SNAPSHOTS = n == 1
         if _vertical is None: _vertical = n == 1 # Whether the line plots are above the snapshot plots (True), or next to them (False). Also affects layout of snapshot plot subgrid.
         
         if _vertical:
-            fig_width, fig_height = thesis_utils.page_width, 3.3 # (7, 5.5) for (3x9) snapshot plots works well
+            fig_width, fig_height = thesis_utils.page_width, 2.7 # (7, 5.5) for (3x9) snapshot plots works well
             if SHOW_SNAPSHOTS: fig_height += fig_width/(max_thresholds+1)*len(hystereses)
         else:
             fig_width, fig_height = 10, 4
@@ -243,12 +243,12 @@ class Hysteresis:
         ax1 = fig.add_subplot(gs_sub_hysteresis[0]) # Normal hysteresis plot of parallel component
         ax1.grid(color='grey', linestyle=':')
         ax1.set_xlabel(f"External field magnitude [{H_SIprefix}T]")
-        ax1.set_ylabel(r"Magnetization $M_{\parallel}/M_\mathrm{\parallel,sat}$")
+        ax1.set_ylabel(r"Magnetization $M_{\parallel}/M_\mathrm{\parallel,sat}$    ")
         ax1.axhline(0, linestyle="--", color='k', linewidth=1)
         ax1.axvline(0, linestyle="--", color='k', linewidth=1)
         ax1.minorticks_on()
         ax1.yaxis.set_tick_params(which='minor', bottom=False)
-        label_ax(ax1, 0, offset=(-0.28,0))
+        label_ax(ax1, 0, offset=(-0.37,0.05))
         # POLAR PLOT
         ax2 = fig.add_subplot(gs_sub_hysteresis[1], projection='polar') # Polar plot
         ax2.set_rticks([0.2, 0.4, 0.6, 0.8, 1])  # Less radial ticks
@@ -260,7 +260,7 @@ class Hysteresis:
         if FIELD_POLAR_ZERO:
             ax2.set_xticklabels(["Field ↑"] + ax2.get_xticklabels()[1:]) # Theta ticks are 'xticks'
         ax2.grid(True)
-        label_ax(ax2, 1, offset=(-0.2,0))
+        label_ax(ax2, 1, offset=(-0.25,0.05))
         
         ## Original data
         if original_data is not None: # original_data is assumed to be a csv file of format "x,y" with x in mT.
@@ -316,11 +316,12 @@ class Hysteresis:
                         # ax2.axvline(x=np.deg2rad(data.H_angle) + i*np.pi, ymin=0, ymax=1, color='black' if all_same_angle else color, lw=2, linestyle='--', zorder=0.75)
             
         if all(is_monotonic): ax1.set_xlim(left=0)
+        legend_kwargs = dict(borderaxespad=0.2, handlelength=1.0, handletextpad=0.4, fontsize=thesis_utils.fs_small)
         if any(labels):
             # ax1.legend(title=legend_title, loc="lower right")
-            ax1.legend(title=None, loc="lower right", borderaxespad=0.3, handlelength=1.0)
+            ax1.legend(title=None, loc="lower right", **legend_kwargs)
         if not all(is_monotonic):
-            leg2 = ax2.legend(frameon=True, markerfirst=False, loc='lower center', bbox_to_anchor=(0.5, 0.53), borderaxespad=0.3, handlelength=1.0)
+            leg2 = ax2.legend(frameon=True, markerfirst=False, loc='lower center', bbox_to_anchor=(0.5, 0.53), **legend_kwargs)
             for handle in leg2.legend_handles:
                 if n > 1: handle.set_color('black')
         
