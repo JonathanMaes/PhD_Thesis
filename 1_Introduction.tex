@@ -105,7 +105,6 @@ However, whereas FNNs can be trained using methods such as \xlabel{backpropagati
 Some approaches to train RNNs take inspiration from FNN: \xlabel{backpropagation through time} (BPTT), for instance, unfolds the recurrent connections in time to obtain a FNN on which backpropagation can be applied~\cite{jaeger2002tutorial}.
 However, this is not so straightforward, leading to issues regarding the calculation of the required gradients and a tendency to get stuck in local minima~\cite{RC_Tensegrity,DifficultyTrainingRNN,D-ESN-Improved}. % Other methods are real-time recurrent learning (RTRL) and extended Kalman filtering (EKE), both explained in jaeger2002tutorial.
 
-\vspace{-1em}
 \xfig{1_Introduction/NeuralNetworks.pdf}{
 	\label{fig:1:NeuralNetworks}
 	Schematic representation of \textbf{(a)} a \xref{feed-forward neural network} (FNN), \textbf{(b)} a \xref{recurrent neural network} (RNN) and \textbf{(c)} \xref{reservoir computing} (RC).
@@ -113,7 +112,6 @@ However, this is not so straightforward, leading to issues regarding the calcula
 	Grey connections propagate information from left to right, unless indicated by an arrow.
 	Blue (red) nodes represent input (output), while orange nodes constitute the hidden layers of the network.
 }
-\vspace{-1em}
 
 \paragraph{Echo state networks and liquid state machines}
 To address the shortcomings of conventional RNN training methods like BPTT, two alternative concepts were independently proposed in the early 2000s, laying the foundation for what would eventually be known as reservoir computing.
