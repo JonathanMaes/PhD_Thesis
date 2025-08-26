@@ -894,11 +894,11 @@ CPU and GPU performance is compared at the start and end of the tables. \\\par
 		\hline
 		GPU | \makecell{No kernel} & 1.0$\,$s & 3.4$\,$s & 7.6$\,$s & 14.5$\,$s & 91.6$\,$s & ? \\
 		\hline
-		GPU | \makecell{Unit cell kernel (see \S\ref{sec:2:Kernels})} & 2.4$\,$s & 4.6$\,$s & 9.7$\,$s & 16.3$\,$s & 66.2$\,$s & 730.4$\,$s \\
+		GPU | \makecell{Unit cell kernel} & 2.4$\,$s & 4.6$\,$s & 9.7$\,$s & 16.3$\,$s & 66.2$\,$s & 730.4$\,$s \\ % (see \S\ref{sec:2:Kernels})
 		\hline \hline
-		GPU | \makecell{Optimised implementation\\(convolution initialisation)} & 1.0$\,$s & 1.0$\,$s & 1.0$\,$s & 1.0$\,$s & 1.6$\,$s & 23.9$\,$s \\
+		GPU $\bigg|$ \makecell{Optimised\\\small{(convolution init.)}} & 1.0$\,$s & 1.0$\,$s & 1.0$\,$s & 1.0$\,$s & 1.6$\,$s & 23.9$\,$s \\
 		\hline
-		CPU | \makecell{Optimised implementation\\(convolution initialisation)} & 14$\,$ms & 0.2$\,$s & 1.0$\,$s & 3.2$\,$s & 53.1$\,$s & ? \\
+		CPU $\bigg|$ \makecell{Optimised\\\small{(convolution init.)}} & 14$\,$ms & 0.2$\,$s & 1.0$\,$s & 3.2$\,$s & 53.1$\,$s & ? \\
 		\hline
 	\end{tabular}
 }
@@ -917,11 +917,11 @@ CPU and GPU performance is compared at the start and end of the tables. \\\par
 		\hline
 		GPU | \makecell{No kernel} & 7.1$\,$s & 7.2$\,$s & 8.2$\,$s & 9.0$\,$s & 13.0$\,$s & ? \\
 		\hline
-		GPU | \makecell{Unit cell kernel (see \S\ref{sec:2:Kernels})} & 7.8$\,$s & 7.9$\,$s & 8.3$\,$s & 8.9$\,$s & 11.8$\,$s & 36.9$\,$s \\
+		GPU | \makecell{Unit cell kernel} & 7.8$\,$s & 7.9$\,$s & 8.3$\,$s & 8.9$\,$s & 11.8$\,$s & 36.9$\,$s \\
 		\hline \hline
-		GPU | \makecell{Optimised implementation\\(2D indexation)} & 6.8$\,$s & 7.0$\,$s & 7.2$\,$s & 7.6$\,$s & 10.2$\,$s & 35.9$\,$s \\
+		GPU $\bigg|$ \makecell{Optimised\\\small{(2D indexation)}} & 6.8$\,$s & 7.0$\,$s & 7.2$\,$s & 7.6$\,$s & 10.2$\,$s & 35.9$\,$s \\
 		\hline
-		CPU | \makecell{Optimised implementation\\(2D indexation)} & 0.56$\,$s & 1.3$\,$s & 2.5$\,$s & 4.3$\,$s & 41$\,$s & ? \\
+		CPU $\bigg|$ \makecell{Optimised\\\small{(2D indexation)}} & 0.56$\,$s & 1.3$\,$s & 2.5$\,$s & 4.3$\,$s & 41$\,$s & ? \\
 		\hline
 	\end{tabular}
 } % Other options besides "optimised implementation": "current implementation", "production version", "improved version"?
