@@ -250,16 +250,10 @@ In conclusion, the dumbbell model is preferred for IP systems, while the second-
 
 \subsection{Effective energy barrier}\label{sec:2:E_B_eff}
 To properly simulate ASI dynamics and hysteresis, knowledge of the \idx[tosection]{effective energy barrier} $\EBeff$, which separates the two magnetisation states of each magnet, is crucial.
-Recall that this quantity is distinct from the \xref{shape anisotropy} $\EB$: the effective energy barrier $\EBeff$ is a modification of $\EB$ caused by the interaction with other magnets. \par
-This is illustrated in~\crefSubFigRef{fig:2:EB_meanbarrier}{a}, where \indexlabel{energy landscape}energy landscapes are shown for various values of the \xref{switching energy} $\Delta E$.
-The energy landscape for $\Delta E = 0$ reveals the shape anisotropy $\EB$ while slanted energy landscapes for $\Delta E \neq 0$ show how $\EBeff$ is affected by these interactions.
-The figure shows that $\EBeff$ can be calculated at various levels of accuracy, which may yield different switching rates or even a different switching order~\cite{leo2021chiral}. \par
-In this section, we will explore some of these approximations for $\EBeff$.
-All of them make use of the switching energy $\Delta E$ between the current and opposite state of a magnet, since this is cheap to compute\footnote{
-	Recall that the terms in \cref{eq:2:E} simply change sign when the magnetisation $\vc{\mu}$ of a magnet is reversed.
-} as $\Delta E = -2 E$.
-The subscript $i$ will be omitted for the remainder of this section; it is implied that the following discussion and equations apply to each magnet individually.
+Recall that this quantity is distinct from the \xref{shape anisotropy} $\EB$: the effective energy barrier $\EBeff$ is a modification of $\EB$ caused by the interaction with other magnets. 
+This is illustrated in~\crefSubFigRef{fig:2:EB_meanbarrier}{a}, where \indexlabel{energy landscape}energy landscapes are shown for various values of the \xref{switching energy} $\Delta E$. \par
 
+\vspace{-1em}
 \xfig[1.0]{2_Hotspice/EB_meanbarrier.pdf}{
 	\label{fig:2:EB_meanbarrier}
 	Mean-barrier approximation (\ref{eq:2:EB_meanbarrier_original}, \textcolor{lightblue}{blue}) and its conditional form (\ref{eq:2:EB_meanbarrier_cases}, \textcolor{lightred}{red}) compared to the exact energy barrier (\ref{eq:2:EB_exact}, \textcolor{mplgrey}{grey}).
@@ -271,6 +265,14 @@ The subscript $i$ will be omitted for the remainder of this section; it is impli
 	On each landscape, the height of the barrier in the different approximations is indicated by a dotted horizontal line, indicating how they use different values on the energy landscape for their estimate.
 }
 \vspace{-1em}
+
+The energy landscape for $\Delta E = 0$ reveals the shape anisotropy $\EB$ while slanted energy landscapes for $\Delta E \neq 0$ show how $\EBeff$ is affected by these interactions.
+The figure shows that $\EBeff$ can be calculated at various levels of accuracy, which may yield different switching rates or even a different switching order~\cite{leo2021chiral}. \par
+In this section, we will explore some of these approximations for $\EBeff$.
+All of them make use of the switching energy $\Delta E$ between the current and opposite state of a magnet, since this is cheap to compute\footnote{
+	Recall that the terms in \cref{eq:2:E} simply change sign when the magnetisation $\vc{\mu}$ of a magnet is reversed.
+} as $\Delta E = -2 E$.
+The subscript $i$ will be omitted for the remainder of this section; it is implied that the following discussion and equations apply to each magnet individually.
 
 \subsubsection{Intrinsic barrier due to \xlabel{shape anisotropy}}\label{sec:2:shape_anisotropy}
 An isolated single-domain nanomagnet often exhibits two stable magnetisation states separated by energy barriers.

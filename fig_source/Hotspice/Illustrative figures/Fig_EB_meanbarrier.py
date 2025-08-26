@@ -40,7 +40,7 @@ def E_landscape_base(delta_E=0, thetas=thetas): #! `thetas` in degrees! (bad des
 def plot_EB_meanbarrier(N: int = 5): # N: number of bottom plots
     ## Create plot
     thesis_utils.init_style()
-    figsize = (thesis_utils.page_width, 3)
+    figsize = (thesis_utils.page_width, 2.8)
     fig = plt.figure(figsize=figsize)
     N_sidepanel_cols = int(np.ceil(N/2))
     gs = fig.add_gridspec(4, N_sidepanel_cols+2, width_ratios=[1]*N_sidepanel_cols + [1, N_sidepanel_cols*0.8], wspace=0)
@@ -60,13 +60,13 @@ def plot_EB_meanbarrier(N: int = 5): # N: number of bottom plots
     ax1.plot(delta_E_range, exact, color=col_exact, label=r"Exact")
     # ax1.plot(delta_E_range, E_B*(delta_E_range/E_B/4+1)**2, color=col_exact, label=r"Exact $\widetilde{E_\mathrm{B}}$")
     ax1.set_xlabel(r"Switching energy $\Delta E/E_\mathrm{B}$")
-    ax1.legend()
+    ax1.legend(fontsize=thesis_utils.fs_small)
     plt.rc('text', usetex=True)
     ax1.set_ylabel(r'Effective energy barrier $\widetilde{E_\mathrm{B}}/E_\mathrm{B}$') # Need to usetex=True for proper widetilde
     plt.rc('text', usetex=False)
     ax1.set_xlim(*lim)
     ax1.set_ylim(*lim)
-    thesis_utils.label_ax(ax1, 1, offset=(-0.24, 0.02))
+    thesis_utils.label_ax(ax1, 1, offset=(-0.3, 0.02))
     
     ## PANEL A: Subplots
     for i in range(N):
@@ -76,7 +76,7 @@ def plot_EB_meanbarrier(N: int = 5): # N: number of bottom plots
         col = N_sidepanel_cols - abs(N_sidepanel_cols - i - 1)
         ax = fig.add_subplot(gs[row:row+2,col-1:col])
         plot_subplot(ax, delta_E = delta_E, title_bottom=row > 1)
-        if i == N-1: thesis_utils.label_ax(ax, 0, offset=(-0.24, 0.04))
+        if i == N-1: thesis_utils.label_ax(ax, 0, offset=(-0.3, 0.04))
     
     ## Draw the arrow
     L = (2*N_sidepanel_cols+.5)
@@ -97,7 +97,7 @@ def plot_EB_meanbarrier(N: int = 5): # N: number of bottom plots
 
     ## Adjust layout to avoid overlapping elements
     fig.tight_layout()
-    fig.subplots_adjust(top=0.9, left=0.05, right=0.98, bottom=0.15)
+    fig.subplots_adjust(top=0.92, left=0.05, right=0.98, bottom=0.16)
 
     ## Save
     hotspice.utils.save_results(figures={"EB_meanbarrier": fig}, timestamped=False)
@@ -160,8 +160,8 @@ def plot_subplot(ax: plt.Axes, delta_E: float = 0, title_bottom: bool = False):
     lowest_point_frac = (lowest_point - ymin)/(ymax - ymin)
     highest_point_frac = (highest_point - ymin)/(ymax - ymin)
     y_title = lowest_point_frac - pad if title_bottom else highest_point_frac + pad
-    num = f"{delta_E:.2g}"
-    ax.set_title(r"$\Delta E = " + num + (r"E_\mathrm{B}$" if num != "0" else "$"), y=y_title, pad=-4)
+    num = f"{delta_E:.2g}" if delta_E >= 0 else f"\!-\!{-delta_E:.2g}"
+    ax.set_title(r"$\Delta E \!=\! " + num + (r"E_\mathrm{B}$" if num != "0" else "$"), y=y_title, pad=-4)
 
 
 if __name__ == "__main__":
