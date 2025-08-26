@@ -18,7 +18,7 @@ def plot_kernel_PBC(L: int = 16):
 
     ## Create plot
     thesis_utils.init_style()
-    figsize = (thesis_utils.page_width, 3)
+    figsize = (thesis_utils.page_width, 2.6)
     fig, axes = plt.subplots(nrows=1, ncols=2, squeeze=False, figsize=figsize)
     fig.suptitle(r"Unit cell kernel $\boldsymbol{\mathcal{K}}^\mathrm{(A)}$, with", x=0.47)
     imshow_kwargs = dict(

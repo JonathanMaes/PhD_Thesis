@@ -687,7 +687,19 @@ An open-boundary kernel $\vc{\mathcal{K}}^{(\kappa)}$ can be transformed into a 
 Specifically, four copies are shifted along the axes by $\pm N_x$ or $\pm N_y$, while the remaining four are shifted diagonally by $(\pm N_x, \pm N_y)$.
 This is illustrated in~\cref{fig:2:Kernel_PBC} for an example of pinwheel ASI. \par
 This construction works because elements near the edge of a kernel represent interactions between distant magnets on opposite sides of the ASI, which are the interactions most affected by PBC.
-Since the middle region of the open-boundary \link{unit cell kernel}{kernel} already stores the interaction between nearby magnets, PBC can be applied by re-using these central values and moving the kernel by $\pm N_x$ and/or $\pm N_y$. \\\par
+Since the middle region of the open-boundary \link{unit cell kernel}{kernel} already stores the interaction between nearby magnets, PBC can be applied by re-using these central values and moving the kernel by $\pm N_x$ and/or $\pm N_y$.
+
+\vspace{-1.5em}
+\xfig[1.0]{2_Hotspice/Kernel_PBC.pdf}{
+	\label{fig:2:Kernel_PBC}
+	\indexlabel{open boundary conditions}
+	Comparison of the \xref{magnetostatic interaction} \link{unit cell kernel}{kernel} $\vc{\mathcal{K}}^\mathrm{(A)}$ for open (left) and periodic (right) boundary conditions, for a $16 \times 16$ pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a}) using the \link{point dipole model}{point dipole approximation}.
+	For this ASI size, the 8 copies for PBC are offset by $\pm 16$ grid cells along each axis, resulting in the 8 repetitions visible in the right panel. 
+	The magnet of the \xref{unit cell} site associated to this particular kernel is shown in the centre with a black outline --- its 8 copies lay just outside the kernel.
+	The colour of magnets indicates the magnitude of the magnetostatic interaction between the central and the coloured magnets if they both point `up'.
+	This alignment is preferable for \textcolor{blue}{blue} magnets (low energy) and unstable for \textcolor{red}{red} magnets (high energy).
+}
+\vspace{-1em}
 
 This approach has the advantage that PBC do not impact performance, as they are baked into the kernel, contrary to the alternative of using a \xlabel[nolabel]{circular convolution}.
 However, this method is limited to ASI consisting of an integer number of \xref{unit cells} as systems with truncated unit cells along an edge can not properly be tiled.
@@ -695,17 +707,6 @@ Higher-order PBC --- beyond only the 8 nearest copies --- can not be calculated 
 Due to the rapid $1/r^3$ decline of the \xref{magnetostatic interaction} over distance, the use for such higher-order PBC would be very limited for 2D systems, and they were therefore not implemented.
 % For very small systems, higher-order PBC can be relevant, but it is recommended to instead increase the system size to increase the fidelity of the Monte Carlo simulation.
 % To explain the usage of the magnetostatic kernel, we can possibly refer to ``Real-space observation of emergent magnetic monopoles and associated Dirac strings in artificial kagome spin ice'', which notes that the energy is just a convolution of the interaction potential with the lattice sites at which there are magnets (which, for the Ewald summation, means that in Fourier space it is just a multiplication of the Fourier-transformed versions of those functions), which is pretty much what we are doing during multi-switching.
-
-\xfig[1.0]{2_Hotspice/Kernel_PBC.pdf}{
-	\label{fig:2:Kernel_PBC}
-	\indexlabel{open boundary conditions}
-	Comparison of the \xref{magnetostatic interaction} \link{unit cell kernel}{kernel} $\vc{\mathcal{K}}^\mathrm{(A)}$ for open (left) and periodic (right) boundary conditions, for a $16 \times 16$ pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a}) using the \link{point dipole model}{point dipole approximation}.
-	For this ASI size, the 8 copies for PBC are offset by $\pm 16$ grid cells along each axis, resulting in the 8 repetitions visible in the right panel. 
-	The magnet of the \xref{unit cell} site associated to this particular kernel is shown in the centre with a black outline --- its 8 copies at $\pm 16$ lay just outside the kernel.
-	The colour of other magnets indicates the magnitude of the magnetostatic interaction between the central and the coloured magnets if they both point `up'.
-	This alignment is preferable for \textcolor{blue}{blue} magnets (low energy) and unstable for \textcolor{red}{red} magnets (high energy).
-}
-\vspace{-1em}
 
 \subsubsection{Hard-axis magnetostatic kernel}\label{sec:2:Kernels:Perp}
 If the simulation accounts for the \xref{asymmetric energy barrier}, as detailed in~\cref{sec:2:E_B_asymm}, then two additional kernels are needed for each site in the unit cell. \par
