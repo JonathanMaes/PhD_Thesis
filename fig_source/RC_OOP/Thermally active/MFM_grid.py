@@ -36,10 +36,10 @@ def show_MFM(ax: plt.Axes, MFMfile):
 def plot():
     thesis_utils.init_style('default')
     
-    figsize = (thesis_utils.page_width, 6)
-    fig, axes = plt.subplots(3, 3, figsize=figsize, height_ratios=[1,1,1.5])
+    figsize = (thesis_utils.page_width, 5.4)
+    fig, axes = plt.subplots(4, 3, figsize=figsize, height_ratios=[1,1,0,2])
     ax: plt.Axes
-    fig.subplots_adjust(left=0.06, right=0.99, top=0.95, bottom=0.1, wspace=0.1, hspace=0.3)
+    fig.subplots_adjust(left=0.07, right=0.99, top=0.95, bottom=0.1, wspace=0.1, hspace=0.3)
     
     S_ASI_values = [20, 25, 30]
     col_ors = ["#128110", "#20500F", "#244010"]
@@ -53,11 +53,14 @@ def plot():
         ylabel_kwargs = dict(fontsize=plt.rcParams['axes.titlesize'], labelpad=10)
         
         ## Common commands for all rows
-        for row in range(3):
+        for row in [0, 1, 3]:
             ax: plt.Axes = axes[row,col]
             ax.tick_params(axis="both", labelsize="large")
             color_ax(ax, color)
             if col != 0: ax.set_yticklabels([])
+        for row in [2]: # Spacing rows
+            ax: plt.Axes = axes[row,col]
+            ax.set_axis_off()
 
         ## Row 1: MFM half hour
         ax1: plt.Axes = axes[0,col]
@@ -65,7 +68,7 @@ def plot():
         ax1.set_title(r"$S_\mathrm{ASI} = %.0f\, \mathrm{nm}$" % S_ASI, pad=5, color=color)
         if col == 0:
             ax1.set_ylabel(r"$t = 1000 \, \mathrm{s}$", **ylabel_kwargs)
-            thesis_utils.label_ax(ax1, 0, offset=(-0.6, 0), va="top")
+            thesis_utils.label_ax(ax1, 0, offset=(-0.75, 0), va="top")
 
         ## Row 2: MFM two years
         ax2: plt.Axes = axes[1,col]
@@ -76,7 +79,7 @@ def plot():
                                     edgecolor="yellow", linewidth=0.5, facecolor="none"))
         if col == 0:
             ax2.set_ylabel(r"$t = 7 \times 10^7 \, \mathrm{s}$", **ylabel_kwargs)
-            thesis_utils.label_ax(ax2, 1, offset=(-0.6, -1.1), va='top')
+            thesis_utils.label_ax(ax2, 1, offset=(-0.75, -1.1), va='top')
         
         ## Arrow from row 1 to 2
         center = (ax1.get_position().x0 + ax1.get_position().x1)/2
@@ -85,12 +88,12 @@ def plot():
                                             arrowstyle='-|>', capstyle='butt', mutation_scale=20, linewidth=3))
 
         ## Row 3: fitted relaxation traces
-        ax3: plt.Axes = axes[2,col]
+        ax3: plt.Axes = axes[3,col]
         msr = 170/(170 + S_ASI)
         data = SASI_to_data(S_ASI)
         best_params = data['best_guess']['params']
         EEA, EMC, J = best_params['E_EA'], best_params['E_MC'], best_params['J']
-        traces = compare_exp_sim(get_exp_data(S_ASI), EEA, EMC, J, n_avg=200, magnet_size_ratio=msr, plot=True, ax=ax3)
+        traces = compare_exp_sim(get_exp_data(S_ASI), EEA, EMC, J, n_avg=20, magnet_size_ratio=msr, plot=True, ax=ax3)
         
         def get_weighted_std(param_name, max_as_mean: bool = False):
             param_values = np.asarray([iteration['params'][param_name] for iteration in data['all_iterations']])
@@ -105,13 +108,13 @@ def plot():
         }
         textstr = '\n'.join([r'$%s=(%.1f\!\pm\!%.1f) k_\mathrm{B}T$' % (s,m,std) for s,(m,std) in d.items()])
         for fg in [True, False]: # Draw background (bg: grey box) and foreground (fg: text) separately, such that bg does not obscure data but text does
-            ax3.text(0.97, 0.97, textstr, transform=ax3.transAxes, fontsize="medium", color=color, alpha=int(fg),
+            ax3.text(0.97, 0.97, textstr, transform=ax3.transAxes, fontsize=thesis_utils.fs_small, color=color, alpha=int(fg),
                      va='top', ha='right', bbox=dict(boxstyle='round', pad=.2, facecolor='#F2F2F2', edgecolor='none', alpha=0.7*(1-fg)), zorder=4 if fg else 2)
         ax3.xaxis.set_minor_locator(LogLocator(numticks=999, subs=(.1, .2, .3, .4, .5, .6, .7, .8, .9, .99)))
         plt.setp(ax3.get_xminorticklabels(), visible=False)
 
     fig.supxlabel("Elapsed time [s]", fontsize=thesis_utils.fs_large, x=0.52)
-    y = axes[2,1].get_position().y1
+    y = axes[3,1].get_position().y1
     fig.legend(traces, [l.get_label() for l, f in traces], ncols=4, bbox_to_anchor=(0.5, y), loc="lower center")
 
     hotspice.utils.save_results(figures={"MFM_grid": fig}, timestamped=False, copy_script=False, dpi=200)

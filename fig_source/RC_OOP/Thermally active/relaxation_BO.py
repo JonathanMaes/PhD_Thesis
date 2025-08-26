@@ -133,7 +133,7 @@ def compare_exp_sim(exp_data: dict, E_EA: float = 65, E_MC: float = 10, J: float
             for axis in ['x', 'y']: ax.tick_params(axis=axis, labelsize=fontsize_ticks)
             for axis in ['top','bottom','left','right']: ax.spines[axis].set_linewidth(linewidths)
         ax.tick_params(width=linewidths)
-        ax.set_xlim(xmin=5e-1, xmax=5e11)
+        ax.set_xlim(xmin=1, xmax=5e11)
         ax.set_ylim([0,1])
         ax.set_xticks([1, 1e3, 1e6, 1e9])
         ax.set_yticks([0, .5, 1])
