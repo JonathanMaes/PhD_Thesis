@@ -520,11 +520,13 @@ For a MCMC algorithm to sample the equilibrium state space, it must satisfy two 
 As such, \cref{alg:2:MetropolisHastingsSingle} is guaranteed to reach equilibrium eventually.
 However, the rate of convergence may vary, as noted in~\cref{sec:2:Verification_OOP_Exchange}: end users must take care to perform sufficient Monte Carlo steps to ensure thermalisation. % MH seems to be the most physically accurate from a theoretical point of view, though a point can be made for either of them depending on the physics of the problem~\cite{jang2004stochastic}.
 
-\sidefig{2_Hotspice/RejectionKMC.pdf}{
+\vspace{-1em}
+\sidefig[0.6]{2_Hotspice/RejectionKMC.pdf}{
 	\label{fig:2:RejectionKMC}
-	Acceptance probability used by Metropolis-Hastings and Glauber dynamics, as a function of the \xref{switching energy} $\Delta E$.
-	\newline\newline\newline % Newlines center the caption w.r.t. plot
+	\mbox{Acceptance} probability used by Metro\-polis-Hastings and Glauber dynamics, as a function of the \xref{switching energy} $\Delta E$.
+	\newline\newline % Newlines center the caption w.r.t. plot
 }
+\vspace{-1em}
 
 These two common choices for the acceptance probability, $P_\mathrm{MH}$ and $P_\mathrm{GD}$, are compared in~\cref{fig:2:RejectionKMC}.
 Both $P_\mathrm{MH}$ and $P_\mathrm{GD}$ result in an algorithm that satisfies ergodicity and detailed balance, so they both yield the same statistical values for quantities like the average magnetisation.

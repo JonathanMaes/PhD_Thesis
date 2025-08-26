@@ -14,7 +14,7 @@ def main_plot():
     
     ## Main axes
     thesis_utils.init_style()
-    fig, axes = plt.subplots(1, 1, squeeze=False, figsize=(thesis_utils.page_width*0.5, 1.7))
+    fig, axes = plt.subplots(1, 1, squeeze=False, figsize=(thesis_utils.page_width*0.6, 1.7))
     ax: plt.Axes = axes[0,0]
     ax.plot(delta_E, MH, label="Metropolis-Hastings")
     ax.plot(delta_E, GD, label="Glauber dynamics")
