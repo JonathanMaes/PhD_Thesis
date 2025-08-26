@@ -20,7 +20,7 @@ def draw_neural_network(ax: plt.Axes,
                         hidden_color: str = hidden_color,
                         output_color: str = output_color,
                         edge_color: str = 'gray',
-                        circle_radius: float = 0.03):
+                        circle_radius: float = 0.04):
     """
     Draws a fully-connected neural network diagram on the given Axes.
 
@@ -102,7 +102,7 @@ def draw_recurrent_network(ax: plt.Axes,
                            hidden_color=hidden_color,
                            output_color=output_color,
                            edge_color='gray',
-                           circle_radius=0.03,
+                           circle_radius=0.04,
                            connect_k=2,
                            poisson_rad=None,
                            neighbor_k=3):
@@ -219,6 +219,10 @@ def draw_recurrent_network(ax: plt.Axes,
         hotspice.utils.save_results(timestamped=False, copy_script=False,
                                 data=dict(edges_in_hid=edges_in_hid, edges_hid_out=edges_hid_out, edges_rec=edges_rec, hidden_positions=hidden_positions, rads=rads))
 
+    yscale = 1.2
+    for k, v in hidden_positions.items():
+        hidden_positions[k] = (v[0], v[1]*yscale)
+    
     # Draw edges
     for src, dst in edges_in_hid:
         ax.add_line(Line2D([input_positions[src][0], hidden_positions[dst][0]], [input_positions[src][1], hidden_positions[dst][1]], color=edge_color))
@@ -253,7 +257,7 @@ def draw_reservoir(ax: plt.Axes,
                    input_color: str = input_color,
                    hidden_color: str = hidden_color,
                    output_color: str = output_color,
-                   circle_radius: float = 0.03,
+                   circle_radius: float = 0.04,
                    decorate_r: float = None, # Distance between decorative dots. Default <circle_radius>, don't decorate if False.
     ):
     """
@@ -282,7 +286,7 @@ def draw_reservoir(ax: plt.Axes,
     ax.clear()
 
     # Box coordinates
-    x0, y0, width, height = 0.15, 0.2/aspect, 0.5, 0.6/aspect
+    x0, y0, width, height = 0.15, 0.2/aspect, 0.55, 0.6/aspect
     boxpad = 0.05
     
     # Inputs
@@ -293,7 +297,7 @@ def draw_reservoir(ax: plt.Axes,
                             edgecolor='black', zorder=10))
 
     # Post-layer
-    layer_x = 2*x0 + width + circle_radius
+    layer_x = 1.6*x0 + width + circle_radius
     post_ys = np.linspace(y0, y0+height, post_layer_size)
     # connect box to post-layer
     for y in post_ys:
@@ -397,7 +401,7 @@ def poisson(r, x_min, x_max, y_min, y_max, k=4):
 def plot():
     ## Create plot
     thesis_utils.init_style()
-    figsize = (thesis_utils.page_width, thesis_utils.page_width*0.25)
+    figsize = (thesis_utils.page_width, thesis_utils.page_width*0.3)
     fig = plt.figure(figsize=figsize)
     gs = fig.add_gridspec(1, 3, wspace=0.1, hspace=0)
     fig.subplots_adjust(top=0.9, left=0.01, right=0.99, bottom=0.0)
