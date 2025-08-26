@@ -525,7 +525,7 @@ Hence, an input $0 \leq x \leq 1$ is encoded by a field of magnitude $B_z = B_0 
 \paragraph{Readout method and property gradient}
 \link{reservoir computing}{Reservoir computing} benefits from having multiple simultaneous readout values, as this increases the available information for the \xref{linear readout layer} to train on.
 However, in a normal OOP square-lattice ASI, the relaxation dynamics do not differ much between various areas throughout the ASI --- only the magnets near the edge respond somewhat differently than those in the bulk of the system, as they experience a different total \link{magnetostatic interaction}{MS interaction}.
-Without more significant spatial differences, multiple readouts will not provide a large benefit. \\\par
+Without more significant spatial differences, multiple readouts will provide no large benefit. \par
 %For example, when starting from the uniform state, relaxation will occur faster near the centre of the ASI.
 %Therefore, a readout method should be used where magnets at the edges are included in a different readout node than those at the centre. \par
 To obtain a richer output from the reservoir, a \xlabel{property gradient} can be introduced for greater variation between spatially separated readout nodes. %spread the relaxation over different timescales on opposing sides of the system.
@@ -539,13 +539,16 @@ Averaging over multiple columns or enlarging the system is expected to be benefi
 Since we intend to use the spontaneous relaxation of thermally active OOP ASI for reservoir computing, it is desirable to maximally use the available range of intermediate states, meaning the relaxation process should not span too many timescales.
 Hence, a low \link{magnetostatic coupling}{NN MS coupling} $\EMC=2.5\kBT$ will be used as a baseline, as this is the lowest value that fully avoids the \link{superparamagnetism}{superparamagnetic} regime, though its relaxation already spans $>5$ orders of magnitude.
 As previously seen in~\cref{fig:3:OOP_relaxation}, systems with this level of coupling relax over timescales suitable for computation (i.e., $\mavg \rightarrow 0$ within $\approx \SI{1}{\milli\second}$) when $\EEA \leq 20\kBT$.
-While a further reduction of $\EEA$ would accelerate the relaxation, accurate control over the anisotropy is challenging in practice.
-Therefore, all subsequent simulations of \xref{reservoir computing} in thermally active ASI will use the standard values $\EEA=20\kBT$ and $\EMC=2.5\kBT$ (unless otherwise specified) while varying other parameters to determine the optimal input conditions for such a system.
+While a further reduction of $\EEA$ would accelerate the relaxation, accurate control over the anisotropy is challenging to achieve in practice.
+Therefore, all subsequent simulations of \xref{reservoir computing} in thermally active ASI will use the standard values $\EEA=20\kBT$ and $\EMC=2.5\kBT$ (unless otherwise specified) while varying other parameters to determine the optimal input conditions for such a system. \par
+The main factors influencing the dynamics, beyond those intrinsic to the ASI, are the input frequency $f$ and the magnitude $B$ of the excitation.
+Their effect is illustrated in~\cref{fig:3:OOP_relaxation_input}, where a random scalar input sequence is applied to the ASI.
+More specifically, the upwards-pointing \link{external magnetic field}{external field} $B_z$ that provides the input can take any random magnitude between 0 and $B$, with each value being maintained for a period determined by the input frequency $f$. \par % \\\par
 
 \vspace{-1.5em}
 \xfig{3_RC_OOP/OOP_relaxation_input.pdf}{
 	\label{fig:3:OOP_relaxation_input}
-	Dependence of the system dynamics on the input frequency $f$ and magnitude $B$ in an $11 \times 11$ \link{exchange coupling}{exchange-coupled} OOP square-lattice ASI.
+	Dependence of system dynamics on the input frequency $f$ and magnitude $B$ in an $11 \times 11$ \link{exchange coupling}{exchange-coupled} OOP square-lattice ASI.
 	At any time, the normalised input magnitude is indicated by the grey bars.
 	The nearest-neighbour \xref{magnetostatic coupling} is $\EMC=2.5\kBT$ and the \link{net out-of-plane anisotropy}{net OOP anisotropy} is $\EEA = 40\kBT$.
 	The ASI is initialised in an \link{antiferromagnetic}{AFM} ground state.
@@ -555,9 +558,6 @@ Therefore, all subsequent simulations of \xref{reservoir computing} in thermally
 }
 \vspace{-1em}
 
-The main factors influencing the dynamics, beyond those intrinsic to the ASI, are the input frequency $f$ and the magnitude $B$ of the excitation.
-Their effect is illustrated in~\cref{fig:3:OOP_relaxation_input}, where a random scalar input sequence is applied to the ASI.
-More specifically, the upwards-pointing \link{external magnetic field}{external field} $B_z$ that provides the input can take any random magnitude between 0 and $B$, with each value being maintained for a period determined by the input frequency $f$. \par % \\\par
 Larger input values $v$ drive the system further from its ground state, while smaller values applied for a sufficiently long time allow a gradual \link{logarithmic relaxation}{relaxation} back towards $\mavg \approx 0$.
 The equilibrium magnetisation depends only on the input field magnitude $vB$, resembling the behaviour of a leaky integrator~\cite{jaeger2001echo}.
 When $vB$ is sufficiently small, the equilibrium magnetisation $\mavg$ approaches zero, in which case the system always reaches roughly the same state after one input period, with this state depending on the frequency $f$.
