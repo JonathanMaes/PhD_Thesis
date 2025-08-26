@@ -114,7 +114,7 @@ def plot(data_dir=None):
     thesis_utils.init_style()
     min1, max1, min2, max2 = 0, 6.1, 28.5, 45
     ratio = (max2 - min2)/(max1 - min1)
-    fig, axes = plt.subplots(nrows=1, ncols=2, width_ratios=(1,ratio), sharey=True, facecolor='w', squeeze=True, figsize=(thesis_utils.page_width*0.6, 2.2))
+    fig, axes = plt.subplots(nrows=1, ncols=2, width_ratios=(1,ratio), sharey=True, facecolor='w', squeeze=True, figsize=(thesis_utils.page_width*0.7, 2.3))
     axes: tuple[plt.Axes, plt.Axes]
     (ax1, ax2) = axes
     for ax in (ax1, ax2):
@@ -153,7 +153,7 @@ def plot(data_dir=None):
     inset_ax(ax=ax1, fig=fig, ASI_type=hotspice.ASI.IP_Square)
     inset_ax(ax=ax2, fig=fig, ASI_type=hotspice.ASI.IP_Pinwheel)
     handles, labels = ax.get_legend_handles_labels()
-    fig.legend(handles[::-1], labels[::-1], bbox_to_anchor=(0.13, 0.23), loc="lower left", borderaxespad=0.3, ncol=1, columnspacing=1, handletextpad=0.5, fontsize=9).set_zorder(-1)
+    fig.legend(handles[::-1], labels[::-1], bbox_to_anchor=(0.13, 0.23), loc="lower left", borderaxespad=0.3, ncol=1, columnspacing=1, handletextpad=0.5).set_zorder(-1)
     fig.subplots_adjust(top=0.95, bottom=0.21, left=0.12, right=0.97, wspace=0.05)
     hotspice.utils.save_results(figures={'Pinwheel_angle': fig}, outdir=data_dir, copy_script=False)
 
