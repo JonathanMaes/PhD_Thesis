@@ -196,7 +196,7 @@ def plot_all_iterations(path: str|Path, legend_title: str = r"$S_\mathrm{ASI}$",
     else:
         files_iterations_json = [path] if path.name == 'iterations.json' else []
 
-    min_prob = 1e-10 if path.is_dir() else 1e-20
+    min_prob = 1e-8 if path.is_dir() else 1e-20
     cmap = colormaps['rainbow']
     varnames_readable = {"E_EA": "Net OOP anisotropy\n" + r"$E_\mathrm{EA}$ [$k_\mathrm{B}T$]",
                         "E_MC": "NN MS coupling\n" + r"$E_\mathrm{MC}$ [$k_\mathrm{B}T$]",
@@ -209,7 +209,7 @@ def plot_all_iterations(path: str|Path, legend_title: str = r"$S_\mathrm{ASI}$",
         
         ## SUBPLOT FOR EACH VARIABLE, DIFFERENT OFFSETS ARE DIFFERENT COLORS, EACH SUBPLOT IS MSE AS FUNCTION OF VARIABLE
         if i == 0:
-            fig, axes = plt.subplots(1, len(varnames), figsize=(thesis_utils.page_width, 4))
+            fig, axes = plt.subplots(1, len(varnames), figsize=(thesis_utils.page_width, 2.6))
         for v, ax in enumerate(axes): # v is index of varnames
             ax: plt.Axes
             varname = varnames[v]
@@ -231,19 +231,19 @@ def plot_all_iterations(path: str|Path, legend_title: str = r"$S_\mathrm{ASI}$",
                 ax.set_yscale('log')
                 ax.set_ylim([min_prob, 1])
                 ax.grid(color='gray', linestyle=':', linewidth=1, alpha=0.5)
-                if v == 0: ax.set_ylabel(r"Fit quality $\eta$", fontsize=thesis_utils.fs_large)
+                if v == 0: ax.set_ylabel(r"Fit quality $\eta$", fontsize=thesis_utils.fs_medium, labelpad=0)
                 else: ax.set_yticklabels([])
                 if varname == "J": ax.add_artist(Rectangle((-100, 0), 100, 1, alpha=0.2, color='gray', zorder=1)) # Nonphysical J values
-                ax.set_xlabel(varnames_readable.get(varname, varname), fontsize=thesis_utils.fs_large)
+                ax.set_xlabel(varnames_readable.get(varname, varname), fontsize=thesis_utils.fs_medium)
                 try: # Try to find the file that contains information about the BO bounds
                     with open(file.parent / "params.json") as inFile: ax.set_xlim(json.load(inFile)["variables"][varname])
                 except Exception: pass
 
     fig.tight_layout()
     if path.is_dir():
-        lgd = fig.legend(loc='center right', ncol=1, title=legend_title)
+        lgd = fig.legend(loc='center right', ncol=1, title=legend_title, handletextpad=0.4, handlelength=0.8, scatteryoffsets=[0.6])
         for h in lgd.legend_handles: h._sizes = [30]
-        fig.subplots_adjust(left=0.11, right=0.84, wspace=0.2)
+        fig.subplots_adjust(left=0.12, right=0.84, bottom=0.23, top=0.95, wspace=0.3)
     return fig
 
 
