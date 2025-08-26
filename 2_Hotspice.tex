@@ -648,7 +648,7 @@ Denoting the grid index of the switching $\kappa$-site magnet as $(x,y)$ and usi
 	\label{eq:2:Kernel_update}
 	\Delta \vc{E_\mathrm{MS}} = 2\mu_{xy} s_{xy}\vc{\bigmu} \odot \vc{S} \odot \ab(\vc{\mathcal{K}}^{(\kappa)}_{ab})_{\substack{N_x < a + x \leq 2N_x \\ N_y < a + y \leq 2N_y}} \quad\mathrm{,}
 \end{equation}
-containing the change in magnetostatic energy $\Delta E_\mathrm{MS}$ for each grid point, which can then simply be added to the current values of $E_\mathrm{MS}$. \par
+containing the change in magnetostatic energy $\Delta E_\mathrm{MS}$ for each grid point, which can then simply be added to the current values of $E_\mathrm{MS}$. \newpage
 The kernel is also used to initialise the magnetostatic energy $\left. E_\mathrm{MS} \right|_{t=0}$ of each magnet at the start of the simulation.
 This is done by performing a convolution (denoted by $*$) rather than a pointwise multiplication:
 \begin{equation}
@@ -663,7 +663,10 @@ For example, an IP kernel using the \link{point dipole model}{point dipole appro
 \begin{equation}
 	\label{eq:2:Kernel_detailed}
 	\vc{\mathcal{K}}^{(\kappa)}_{ab} = \frac{\mu_0}{4 \pi} \frac{
-		u_x^{(\kappa)} u_x^{(ab)} \ab(1 - 3 \ab(\Delta x)^2) + u_y^{(\kappa)} u_y^{(ab)} \ab(1 - 3 \ab(\Delta y)^2) - 3\Delta x \Delta y \ab(u_x^{(\kappa)} u_y^{(ab)} + u_x^{(ab)} u_y^{(\kappa)})
+		\begin{multlined}
+			u_x^{(\kappa)} u_x^{(ab)} \ab(1 - 3 \ab(\Delta x)^2) + u_y^{(\kappa)} u_y^{(ab)} \ab(1 - 3 \ab(\Delta y)^2) - {}\\
+			3\Delta x \Delta y \ab(u_x^{(\kappa)} u_y^{(ab)} + u_x^{(ab)} u_y^{(\kappa)})
+		\end{multlined}
 	}{
 		\sqrt{\ab(\ab(\Delta x)^2 + \ab(\Delta y)^2)^5}
 	} \mathrm{,}
