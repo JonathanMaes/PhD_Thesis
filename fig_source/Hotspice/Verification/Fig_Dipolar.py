@@ -58,7 +58,7 @@ def plot(data_dir=None):
     
     ## Plot
     thesis_utils.init_style()
-    fig, axes = plt.subplots(nrows=1, ncols=1, squeeze=False, figsize=(thesis_utils.page_width, 2.5))
+    fig, axes = plt.subplots(nrows=1, ncols=1, squeeze=False, figsize=(thesis_utils.page_width, 2.1))
     ax1: plt.Axes = axes[0,0]
     # Plot the curve
     Sim1_OOP_Exchange_N_values = [10, 100, 1600]
@@ -74,7 +74,7 @@ def plot(data_dir=None):
     # Finish the axes
     for transition in [-1, 0, 0.5]: ax1.axhline(transition, linestyle=':', color='grey')
     plt.gcf().tight_layout()
-    fig.subplots_adjust(top=0.95, bottom=0.2, left=0.1, right=0.97)
+    fig.subplots_adjust(top=0.95, bottom=0.21, left=0.13, right=0.97)
     
     ## Plot the states. #! This must happen after subplots_adjust to get the correct scaling for equal aspect ratio.
     def get_aspect(ax):

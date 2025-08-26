@@ -91,7 +91,7 @@ def plot(data_dirs=None, plot_args: list[dict] = None):
 
     ## Plot
     thesis_utils.init_style()
-    fig, axes = plt.subplots(nrows=1, ncols=2, squeeze=False, figsize=(thesis_utils.page_width, 3))
+    fig, axes = plt.subplots(nrows=1, ncols=2, squeeze=False, figsize=(thesis_utils.page_width, 2.6))
     
     ax1: plt.Axes = axes[0,0]
     ax1.set_xlabel("Temperature $T/T_c$")
@@ -106,7 +106,7 @@ def plot(data_dirs=None, plot_args: list[dict] = None):
     ax2.set_xlim(*T_lim)
     ax2.set_ylim([0.5, 0.9])
     for i, ax in enumerate([ax1, ax2]):
-        thesis_utils.label_ax(ax, i, offset=(-0.24, 0.05))
+        thesis_utils.label_ax(ax, i, offset=(-0.29, 0.05))
     for i, (params, data) in enumerate(zip(l_params, l_data)):
         label = plot_args[i].get('label', r"Hotspice")
         fmt = plot_args[i].get('marker', thesis_utils.marker_cycle[i])
@@ -117,7 +117,7 @@ def plot(data_dirs=None, plot_args: list[dict] = None):
     ax1.plot(T_theory, m_theory, color='black', label=r"Theory", zorder=1000)
     ax2.plot(T_theory, NNcorr_theory, color='black', label=r"Theory", zorder=1000)
     fig.legend(*ax1.get_legend_handles_labels(), loc="upper center", ncol=1+len(l_data), columnspacing=1.5, handletextpad=0.5)
-    fig.subplots_adjust(top=0.78, bottom=1/6, left=0.09, right=0.95, wspace=0.4)
+    fig.subplots_adjust(top=0.75, bottom=1/6, left=0.105, right=0.95, wspace=0.4)
     if len(data_dirs) > 1:
         outdir = os.path.commonpath(data_dirs) + f"/combined_{hotspice.utils.timestamp()}"
     else:
