@@ -278,7 +278,7 @@ The subscript $i$ will be omitted for the remainder of this section; it is impli
 An isolated single-domain nanomagnet often exhibits two stable magnetisation states separated by energy barriers.
 In IP ASI, these states usually arise from \textit{shape anisotropy}, which originates from the \xlabel{demagnetising field} of the magnet itself.
 This imposes an additional energy cost when the \xref{magnetisation} does not point along the preferential \idx{easy axis}, which is usually the longest axis of the magnet's geometry~\cite{PhD_Leliaert}. \par
-Shape anisotropy is quantified by a \xlabel{uniaxial anisotropy} constant $K_\mathrm{u} = \frac{\mu_0}{2} M_\mathrm{sat}^2 \Delta \mathcal{N}$, with $\Delta \mathcal{N}$ the difference between the \xlabel[tosection]{demagnetising factor}s along the IP easy and hard axes of a magnet~\cite{AdvancesASI,VogelFulcherTammannFreezing,andersson2016thermally}. % (when normalised as $\mathcal{N}_x + \mathcal{N}_y + \mathcal{N}_z = 1$)
+This shape anisotropy can be quantified by the \xlabel{uniaxial anisotropy} constant $K_\mathrm{u} = \frac{\mu_0}{2} M_\mathrm{sat}^2 \Delta \mathcal{N}$, with $\Delta \mathcal{N}$ the difference between the \xlabel[tosection]{demagnetising factor}s along the IP easy and hard axes of a magnet~\cite{AdvancesASI,VogelFulcherTammannFreezing,andersson2016thermally}. % (when normalised as $\mathcal{N}_x + \mathcal{N}_y + \mathcal{N}_z = 1$)
 These demagnetising factors can be calculated analytically for simple shapes like ellipsoids~\cite{EllipsoidDemag,EllipseDemag}.
 Assuming that switching occurs by \xlabel{coherent rotation}\footnote{
 	Depending on the magnet's properties, \xlabel{non-coherent magnetisation reversal} such as switching by \xlabel{domain wall nucleation} may be energetically cheaper.
@@ -369,7 +369,7 @@ However, in the general case, this results in a transcendental equation
 	\iff & \EB \sin{2\theta} + \mu B_\mathrm{eff} \sin(\theta - \phi) = 0 \mathrm{,} \numberthis
 \end{align*}
 which would require numerical approximation to solve.
-Since this could significantly impact performance, this is not done in \hotspice. \par
+Since this could significantly impact performance, this is not done in \hotspice. \\\par
 In OOP ASI, however, the high degree of symmetry nonetheless allows an explicit expression to be obtained.
 All relevant vectors ($\vc{B}_\mathrm{eff}$, $\vc{\mu}$ ...) in such systems point along the z-axis, causing the \link{hard-axis interaction energy}{hard-axis energy} to vanish ($E_\perp=0$) such that the equation is no longer transcendental.
 Solving \cref{eq:2:EB_exact_transcendental} and applying the double-angle identities for $\cos(2\theta)$ and $\sin(2\theta)$ instead leads to the quadratic relation % Q: should I derive this from the d/dtheta equations or is this clear enough? (only needs double-angle rules for cos and sin basically)
