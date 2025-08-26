@@ -1,3 +1,4 @@
+import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import numpy as np
 import os
@@ -49,7 +50,7 @@ def plot(download: bool = True, show_yticks: bool = False, log_scale: bool = Fal
 
     # style
     thesis_utils.init_style()
-    fig, ax = plt.subplots(figsize=(thesis_utils.page_width*0.6, thesis_utils.page_width*0.35))
+    fig, ax = plt.subplots(figsize=(thesis_utils.page_width*0.55, thesis_utils.page_width*0.4))
 
     # plot & inline labels
     num = len(ngrams)
@@ -78,6 +79,7 @@ def plot(download: bool = True, show_yticks: bool = False, log_scale: bool = Fal
     if log_scale: ax.set_yscale('log')
     else: ax.set_ylim([0, ax.get_ylim()[1]])
     ax.set_xlim(years[0] if start_year is None else datetime(start_year, 1, 1), years[-1] + timedelta(days=5*365)) # add margin for labels
+    ax.xaxis.set_major_locator(mdates.YearLocator(int((years[-1].year - start_year)//2.5)))
 
     plt.tight_layout(pad=1)
     hotspice.utils.save_results(copy_script=False, figures={"Ngrams": fig}, timestamped=False)

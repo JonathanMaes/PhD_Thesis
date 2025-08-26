@@ -36,14 +36,9 @@ Several factors that contribute to this bottleneck are often quoted in the conte
 \end{itemize}
 These various drawbacks of current implementations have become more noticeable over the past decade, as portrayed in~\cref{fig:1:Ngram}.
 This has led to the advent of \idx{neuromorphic computing} --- a field of research at the intersection of biology, computer science and physics --- which takes inspiration from the brain to develop more efficient hardware for processing complex data in parallel.
-While \xref{artificial neural networks} are indeed inspired by the brain, their implementation on conventional hardware is typically not considered part of neuromorphic computing, though approaches to implement neural networks on more efficient unconventional hardware are. % rather than applying algorithms on existing transistor-based hardware.
-Note that neuromorphic computing does not seek to replace conventional computing: the latter will always find applications in systems that require absolute precision. % think of physical simulations, the transmission of data, or something as common as rendering an image on a screen.
-Neuromorphic computing, on the other hand, does not seek exact solutions; in the words of Alan Turing, ``if a machine is expected to be infallible then it cannot also be intelligent.''
-%This paradigm shift opens the door to innovative approaches for tackling computational challenges, particularly in areas like real-time sensing, pattern recognition, and prediction.
-%Noise can explore a high dimensional landscape related to cost function by escaping local minima.
 
 \vspace{-1.5em}
-\sidefig[0.6]{1_Introduction/Ngrams.pdf}{
+\sidefig[0.55]{1_Introduction/Ngrams.pdf}{
 	\label{fig:1:Ngram}
 	Popularity of various key concepts from the year 2000 onwards.
 	The surge in popularity of alternative brain-inspired and physical computing methods coincides with raising concerns related to the usage of conventional hardware.
@@ -52,16 +47,21 @@ Neuromorphic computing, on the other hand, does not seek exact solutions; in the
 }
 \vspace{-1em}
 
+While \xref{artificial neural networks} are indeed inspired by the brain, their implementation on conventional hardware is typically not considered part of neuromorphic computing, though approaches to implement neural networks on more efficient unconventional hardware are. % rather than applying algorithms on existing transistor-based hardware.
+Note that neuromorphic computing does not seek to replace conventional computing: the latter will always find applications in systems that require absolute precision. % think of physical simulations, the transmission of data, or something as common as rendering an image on a screen.
+Neuromorphic computing, on the other hand, does not seek exact solutions; in the words of Alan Turing, ``if a machine is expected to be infallible then it cannot also be intelligent.'' \par
+%This paradigm shift opens the door to innovative approaches for tackling computational challenges, particularly in areas like real-time sensing, pattern recognition, and prediction.
+%Noise can explore a high dimensional landscape related to cost function by escaping local minima.
 A related concept is \idx{material computation}~\cite{NeglectedPillar}, which goes one step further: its goal is to find ways to exploit the inherent computing power present in physical substrates.
 Whereas classical computing uses a top-down approach where mathematics is imposed onto a physical material --- for instance to construct logic gates --- material computation works in the opposite direction by instead asking what computations a physical object performs naturally~\cite{RC_ASI}.
-By designing materials with specific behaviours, systems can be created that naturally exhibit the desired computational properties, reducing the levels of abstraction that currently exist between physics and computation. \par
+By designing materials with specific behaviours, systems can be created that naturally exhibit the desired computational properties, reducing the levels of abstraction that currently exist between physics and computation. \\\par
 Among the various substrates being explored for material computation, magnetic and \indexlabel[nolabel]{spintronics}spintronic (spin transport electronic~\cite{Spintronics}) hardware are especially appealing~\cite{grollier2020neuromorphic,NeuromorphicSpintronicsProspect,QuantumNeuromorphicOpportunities}.
 \link{single-domain nanomagnet}{Single-domain} \link{ferromagnetism}{ferromagnetic} \link{single-domain nanomagnet}{nanomagnets}, for example, have the ability to store information, respond non-linearly to stimuli~\cite{NeuromorphicSpintronics} and can dissipate very little energy during information processing~\cite{ThermodynamicLimitsComputation,SpintronicsEnergyEfficientComputing}.
 The \link{magnetostatic interaction}{magnetostatic (MS) coupling} within ensembles of nanomagnets provides further advantages, as it can give rise to rich collective behaviour like phase transitions, which the constituent magnets would not exhibit in isolation~\cite{NeuromorphicSpintronicsProspect,RC_ASI}.
 This inspired the European \spinengine project --- within the context of which the work presented in this thesis was performed --- to research how tunable ensembles of nanomagnets could be used for material computation. \par % three types of magnetic reservoirs were considered: magnetic nanorings~\cite{DynamicEmergence_NanomagneticSystem}, in-plane ASI~\cite{RC_ASI}, and perpendicular-anisotropy ASI~\cite{KUR-24}.
 A well-established example of such an ensemble is \xref{artificial spin ice} (ASI): an ordered lattice of bistable $\approx \SI{100}{\nano\metre}$-size nanomagnets where the lattice geometry does not allow all local interactions to be simultaneously satisfied, leading to emergent dynamics~\cite{ASIpyrochlores}.
 The other aforementioned factors have made them a platform of particular interest for scalable and energy-efficient material computation~\cite{PhD_Stromberg}.
-ASI with out-of-plane \xref{magnetisation} offers particularly convenient electrical interfacing for both input and readout, but its computational capability had yet to be demonstrated. \par % In comparison to in-plane ASI, for which the computational capability had already been demonstrated numerically~\cite{ASI_computation,hon2021numerical}
+ASI with out-of-plane \xref{magnetisation} offers particularly convenient electrical interfacing for both input and readout, but its computational capability had yet to be demonstrated. \newpage % In comparison to in-plane ASI, for which the computational capability had already been demonstrated numerically~\cite{ASI_computation,hon2021numerical}
 This provided the main motivation for this thesis, ``\!\emph{\phdtitle}'', where we will evaluate the computational capabilities of out-of-plane ASI.
 A more detailed description of ASI follows in~\cref{sec:1:ASI}; first,~\cref{sec:1:RC} introduces the general principles of \xref{reservoir computing}.
 \cref{sec:1:Modelling} will conclude this introduction by motivating the need for a new ASI simulator.
