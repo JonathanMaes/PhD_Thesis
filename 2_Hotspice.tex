@@ -877,10 +877,16 @@ The performance of the different magnetostatic kernel implementations is compare
 The first table shows the initialisation time, while the second table shows the time it takes to perform 5000 switches using the \xref{first-switch method}, taking into account the \xref{magnetostatic interaction} between all magnets.
 During initialisation, the magnetostatic kernel is constructed, after which the starting energy $E_i$ of all magnets is calculated.
 Only the last 3 rows use the \link{unit cell kernel}{magnetostatic kernel} $\vc{\mathcal{K}}^{(\kappa)}$ from~\cref{sec:2:Kernels:Structure}; the previous rows use the less efficient kernels considered earlier in that section.
-CPU and GPU performance is compared at the start and end of the tables. \\\par
+CPU and GPU performance is compared at the start and end of the tables. \par
+The first two rows \textit{``Pairwise kernel''} in the tables use the na\"ive kernels $\vc{k}^{(i)}$ (or, equivalently, $\vc{K}^{(i)}$) that were described at the start of~\cref{sec:2:Kernels:Structure} and used in \cref{eq:2:Kernel_k}.
+These store the interactions between each magnet $i$ and all other magnets, resulting in many duplicated values.
+All these kernels --- one for each magnet $i$ --- are arranged into a big $N \times N$ matrix $\vc{D}$ storing the \xref{magnetostatic interaction} between each pair of magnets.
+This allows easy calculation of $E_\mathrm{MS}$ for each magnet by a single matrix product $\vc{D}\vc{s}$ with the column vector $\vc{s}=\{s_i\}$.
+However, this is very inefficient: the initialisation time on CPU (first row in~\cref{tab:2:perf_init}) bears witness to the size of this matrix as $t_\mathrm{init} \propto L^4 = N^2$, making it impractical to simulate systems larger than $50 \times 50$ magnets.
+On GPU, parallelisation of the calculation of this matrix $\vc{D}$ approximately reduces this to $\propto L^2 = N$. \par
 
 % Q: should we use L or N=L²? I would prefer L because at some point we talk about 2D indexation, so L makes it clearer that we have a 2D system.
-\vspace{-1em}
+\vspace{-0.2em}
 \xtable[tab:2:perf_init]{
 	\textbf{Initialisation time} for various simulation sizes $L$ (i.e., $L \times L = N$ magnets).
 	`Mem' indicates that the simulation required more memory than available on our benchmark system ($>\SI{8}{\giga\byte}$), while `?' indicates a prohibitively long simulation time ($\gtrsim \SI{1000}{\second}$).
@@ -903,35 +909,28 @@ CPU and GPU performance is compared at the start and end of the tables. \\\par
 	\end{tabular}
 }
 
-\vspace{-1em}
+\vspace{-2.5em}
 \xtable[tab:2:perf_switch]{
-	\textbf{Time for 5000 switches} using the \xref{first-switch method}, for various simulation sizes $L$ (i.e., $L \times L = N$ magnets).
-		`Mem' indicates that the simulation required more memory than available on our benchmark system ($>\SI{8}{\giga\byte}$), while `?' indicates a prohibitively long simulation time ($\gtrsim \SI{1000}{\second}$).
+\textbf{Time for 5000 switches} using the \xref{first-switch method}, for various simulation sizes $L$ (i.e., $L \times L = N$ magnets).
+`Mem' indicates that the simulation required more memory than available on our benchmark system ($>\SI{8}{\giga\byte}$), while `?' indicates a prohibitively long simulation time ($\gtrsim \SI{1000}{\second}$).
 }{
-	\begin{tabular}{r|c|c|c|c|c|c}
-		\multicolumn{1}{r}{Simulation size $L=$} & \multicolumn{1}{c}{50} & \multicolumn{1}{c}{100} & \multicolumn{1}{c}{150} & \multicolumn{1}{c}{200} & \multicolumn{1}{c}{400} & 1000 \\
-		\hline \hline
-		CPU | \makecell{Pairwise kernel} & 9.4$\,$s & 217.6$\,$s & ? & Mem & Mem & Mem \\
-		\hline
-		GPU | \makecell{Pairwise kernel} & 5.0$\,$s & 13.6$\,$s & 51.8$\,$s & Mem & Mem & Mem \\
-		\hline
-		GPU | \makecell{No kernel} & 7.1$\,$s & 7.2$\,$s & 8.2$\,$s & 9.0$\,$s & 13.0$\,$s & ? \\
-		\hline
-		GPU | \makecell{Unit cell kernel} & 7.8$\,$s & 7.9$\,$s & 8.3$\,$s & 8.9$\,$s & 11.8$\,$s & 36.9$\,$s \\
-		\hline \hline
-		GPU $\bigg|$ \makecell{Optimised\\\small{(2D indexation)}} & 6.8$\,$s & 7.0$\,$s & 7.2$\,$s & 7.6$\,$s & 10.2$\,$s & 35.9$\,$s \\
-		\hline
-		CPU $\bigg|$ \makecell{Optimised\\\small{(2D indexation)}} & 0.56$\,$s & 1.3$\,$s & 2.5$\,$s & 4.3$\,$s & 41$\,$s & ? \\
-		\hline
-	\end{tabular}
+\begin{tabular}{r|c|c|c|c|c|c}
+	\multicolumn{1}{r}{Simulation size $L=$} & \multicolumn{1}{c}{50} & \multicolumn{1}{c}{100} & \multicolumn{1}{c}{150} & \multicolumn{1}{c}{200} & \multicolumn{1}{c}{400} & 1000 \\
+	\hline \hline
+	CPU | \makecell{Pairwise kernel} & 9.4$\,$s & 217.6$\,$s & ? & Mem & Mem & Mem \\
+	\hline
+	GPU | \makecell{Pairwise kernel} & 5.0$\,$s & 13.6$\,$s & 51.8$\,$s & Mem & Mem & Mem \\
+	\hline
+	GPU | \makecell{No kernel} & 7.1$\,$s & 7.2$\,$s & 8.2$\,$s & 9.0$\,$s & 13.0$\,$s & ? \\
+	\hline
+	GPU | \makecell{Unit cell kernel} & 7.8$\,$s & 7.9$\,$s & 8.3$\,$s & 8.9$\,$s & 11.8$\,$s & 36.9$\,$s \\
+	\hline \hline
+	GPU $\bigg|$ \makecell{Optimised\\\small{(2D indexation)}} & 6.8$\,$s & 7.0$\,$s & 7.2$\,$s & 7.6$\,$s & 10.2$\,$s & 35.9$\,$s \\
+	\hline
+	CPU $\bigg|$ \makecell{Optimised\\\small{(2D indexation)}} & 0.56$\,$s & 1.3$\,$s & 2.5$\,$s & 4.3$\,$s & 41$\,$s & ? \\
+	\hline
+\end{tabular}
 } % Other options besides "optimised implementation": "current implementation", "production version", "improved version"?
-
-The first two rows \textit{``Pairwise kernel''} in the tables use the na\"ive kernels $\vc{k}^{(i)}$ (or, equivalently, $\vc{K}^{(i)}$) that were described at the start of~\cref{sec:2:Kernels:Structure} and used in \cref{eq:2:Kernel_k}.
-These store the interactions between each magnet $i$ and all other magnets, resulting in many duplicated values.
-All these kernels --- one for each magnet $i$ --- are arranged into a big $N \times N$ matrix $\vc{D}$ storing the \xref{magnetostatic interaction} between each pair of magnets.
-This allows easy calculation of $E_\mathrm{MS}$ for each magnet by a single matrix product $\vc{D}\vc{s}$ with the column vector $\vc{s}=\{s_i\}$.
-However, this is very inefficient: the initialisation time on CPU (first row in~\cref{tab:2:perf_init}) bears witness to the size of this matrix as $t_\mathrm{init} \propto L^4 = N^2$, making it impractical to simulate systems larger than $50 \times 50$ magnets.
-On GPU, parallelisation of the calculation of this matrix $\vc{D}$ approximately reduces this to $\propto L^2 = N$. \par
 However, the limiting factor remains the excessive memory consumption of the unoptimised kernel, which unnecessarily stores $\order{N^2}$ elements. % For periodic lattices, the matrix will contain many identical values, wasting a lot of memory.
 For instance, the pairwise kernel of a $170 \times 170$ system already exceeds the \SI{8}{\giga\byte} limit of our benchmark system, as indicated in the table by ``Mem''.
 While adding memory is an option, a more effective solution is to reduce the kernel's memory usage.
@@ -949,7 +948,7 @@ First, a \xref{unit cell kernel} as described earlier in~\cref{sec:2:Kernels:Str
 This is used in the fourth row \textit{``Unit cell kernel''}, but does not yield a significant improvement on its own aside from enabling simulations of systems larger than $1000 \times 1000$ magnets.
 Secondly, however, this new kernel enables the usage of a convolution to initialise the magnetostatic interaction energy $E_\mathrm{MS}$, rather than the sequential sum used before.
 This is what the final two rows \textit{``Optimised implementation''} use, where we once again compare CPU and GPU as this is the most performant version overall.
-Another minor optimisation was to use 2D indexation (rather than a flat index $i = N_x y + x$ which did not synergise well with the convolution), yielding another \SI{15}{\percent} performance increase. \\\par
+Another minor optimisation was to use 2D indexation (rather than a flat index $i = N_x y + x$ which did not synergise well with the convolution), yielding another \SI{15}{\percent} performance increase. \newpage
 
 In the end, the upper limit for feasible calculation time is $L \approx 1000$ on GPU and $L \approx 400$ on CPU, beyond which the calculation time rises sharply.
 This is a vast improvement over the pairwise kernel, which could barely reach $L \gtrsim 100$.
@@ -974,7 +973,6 @@ The ability to perform \link{multi-switching}{multiple switches} simultaneously 
 	Performance of OOP square ASI as a function of system size, on \textbf{(a)} CPU and \textbf{(b)} GPU.
 	The Metropolis-Hastings algorithm was used with \link{stratified jittered grid}{restricted SJG} \xref{multi-switching} using $Q=0.05$, lattice spacing $a = \SI{1}{\micro\metre}$, magnetic moment $\mu = \SI{0.16}{\femto\ampere\metre\squared}$ and temperature $T = \SI{100}{\kelvin}$.
 }
-\vspace{-0.5em}
 
 The multi-switching algorithm selects a certain number of magnets per second, as depicted by the blue curve: these are candidates for switching.
 Dividing this value by $N$, the number of magnets in the system, gives the number of \xref{Monte Carlo sweeps} per second (MCS/s), depicted by the red curve.
