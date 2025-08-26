@@ -1220,13 +1220,7 @@ The ground state of this system consists of \link{superferromagnetism}{superferr
 This lattice exhibits \idx{hysteresis}: when a strong field drives it towards a uniform state, it will remain in that state after the field is removed since this is a ground state of the system. \par
 Li~\etal~\cite{li2018pinwheel} performed an experimental study to observe the reversal of `diamond'-edge pinwheel ASI (\crefSubFigRef{fig:2:ASIs}{a}) under the influence of an \link{external magnetic field}{external field}.
 Notably, when they applied the field at an oblique angle (\ang{30}) to the ASI edges, the reversal occurred in two distinct steps: the sublattice which was more aligned with the field (\ang{15} to the easy axis) reversed first, followed by the second sublattice (for which the field was at \ang{75}).
-To accurately reproduce the second reversal step in simulation, the \link{asymmetric energy barrier}{asymmetry in the energy barrier} between clockwise and counter-clockwise switching must be accounted for, due to the near-perpendicular field (\ang{75}) that the second sublattice experiences. \par
-We replicated this experiment using \hotspice for a few values of $\rho=\mu_\perp/\mu_\parallel$ to clearly observe the effect of the asymmetric barrier, resulting in the hysteresis loops shown in~\cref{fig:2:Hysteresis_Pinwheel}.
-When possible, simulation parameters were derived from the experimental configuration: an ASI of $25 \times 25$ unit cells with a NN centre-to-centre distance of \SI{420}{\nano\meter} was used, at room temperature (\SI{300}{\kelvin}).
-The \xref{magnetic moment} and \link{shape anisotropy}{energy barrier} of each magnet can be derived from the geometry of the $470\times170\times\SI{10}{\nano\metre}$ stadium-shaped magnets and the \xref{permalloy} \xref{saturation magnetisation} $M_\mathrm{sat}=\SI{800}{\kilo\ampere\per\metre}$.
-This yields a magnetic moment $\mu = M_\mathrm{sat} V = \SI{0.59}{\femto\ampere\metre\squared}$, and a \mumax~\cite{mumax3} simulation reveals that the energy barrier of such magnets is $\approx \SI{60}{\electronvolt}$.
-These values result in a good match with experiment as far as the field magnitude of the first reversal step is concerned.
-The simulations used the \xref{point dipole model}; performing the same simulations with the \xref{dumbbell model} results in a nearly identical hysteresis since changing to the dumbbell model has little effect on pinwheel ASI.
+To accurately reproduce the second reversal step in simulation, the \link{asymmetric energy barrier}{asymmetry in the energy barrier} between clockwise and counter-clockwise switching must be accounted for, due to the near-perpendicular field (\ang{75}) that the second sublattice experiences.
 
 \vspace{-1.6em}
 \xfig{2_Hotspice/Hysteresis_Pinwheel.pdf}{
@@ -1242,6 +1236,13 @@ The simulations used the \xref{point dipole model}; performing the same simulati
 	Snapshots (1,5,9) are taken near the saturated $M_\parallel/M_{\parallel,\mathrm{sat}} \approx \pm 1$ state, (3) and (7) at the zero-average $M_\parallel/M_{\parallel,\mathrm{sat}} = 0$, and (2,4,6,8) at $M_\parallel/M_{\parallel,\mathrm{sat}} = \pm\sqrt{3}/3 \approx 0.58$, i.e., the value at the plateau between the two steps for $\rho=0$ and $\rho=0.4$.
 }
 \vspace{-1.25em}
+
+We replicated this experiment using \hotspice for a few values of $\rho=\mu_\perp/\mu_\parallel$ to clearly observe the effect of the asymmetric barrier, resulting in the hysteresis loops shown in~\cref{fig:2:Hysteresis_Pinwheel}.
+When possible, simulation parameters were derived from the experimental configuration: an ASI of $25 \times 25$ unit cells with a NN centre-to-centre distance of \SI{420}{\nano\meter} was used, at room temperature (\SI{300}{\kelvin}).
+The \xref{magnetic moment} and \link{shape anisotropy}{energy barrier} of each magnet can be derived from the geometry of the $470\times170\times\SI{10}{\nano\metre}$ stadium-shaped magnets and the \xref{permalloy} \xref{saturation magnetisation} $M_\mathrm{sat}=\SI{800}{\kilo\ampere\per\metre}$.
+This yields a magnetic moment $\mu = M_\mathrm{sat} V = \SI{0.59}{\femto\ampere\metre\squared}$, and a \mumax~\cite{mumax3} simulation reveals that the energy barrier of such magnets is $\approx \SI{60}{\electronvolt}$.
+These values result in a good match with experiment as far as the field magnitude of the first reversal step is concerned.
+The simulations used the \xref{point dipole model}; performing the same simulations with the \xref{dumbbell model} results in a nearly identical hysteresis since changing to the dumbbell model has little effect on pinwheel ASI. \\\par
 
 In the experiment, the two reversal steps occurred gradually over a range of fields, resembling more of an S-curve rather than a sharp step.
 This is due to a random spread on the \xlabel[nolabel]{coercive field} of each nanomagnet due to imperfections in lithography~\cite{fraleigh2017characterization}. % REF: 'fraleigh2017characterization' examines this spread in OOP square: they infer the coercive field distribution of the magnets in their system from the width of the hysteresis loop.
@@ -1265,19 +1266,18 @@ We therefore expect the dumbbell model to provide a more accurate simulation of 
 To illustrate this, we used \hotspice to reproduce the reversal process of kagome ASI as observed by Mengotti~\etal~\cite{mengotti2011kagome}.
 They studied the hysteresis loop using \indexlabel[nolabel]{X-ray magnetic circular dichroism}\link{X-ray magnetic circular dichroism}{XMCD} to image the evolution of the system's microstate during a gradual increase of the \link{external magnetic field}{external field}.
 We simulated a kagome ASI consisting of 173 magnets whose \link{shape anisotropy}{energy barrier} $\EB = \SI{120}{\electronvolt} \pm \SI{5}{\percent}$.
-Kagome ASI contains 3 sublattices of magnets with different orientations: an increasing magnetic field $\vc{B}_\mathrm{ext}$ was parallel to the \xref{easy axis} of one of them, with a slight \ang{-3.6} offset to break the symmetry between the two other sublattices that are slanted with respect to the field.
+Kagome ASI contains 3 sublattices of differently oriented magnets: an increasing magnetic field $\vc{B}_\mathrm{ext}$ was parallel to the \xref{easy axis} of one of them, with a \ang{-3.6} offset to break the symmetry between the two other sublattices that are slanted with respect to the field.
 This results in the creation of \idx{Dirac strings} of switched magnets. \par
 As the field strength increases, the \xref{Zeeman energy} of all magnets rises.
 This increase is fastest for those mostly parallel to the field, but their total \link{magnetostatic interaction}{magnetostatic energy} in the initial state is lower than for the other two sublattices.
 The balance between these two contributions results in a \xlabel{critical energy barrier} $E_\mathrm{B}^\mathrm{c}$: when the energy barrier $E_\mathrm{B}$ is lower (higher) than this value, a slanted (parallel) magnet will flip first, as illustrated in~\cref{fig:2:kagome_reversal_EBc}.
-Therefore, the dynamics may depend on the simulation method, as the dumbbell model increases the magnetostatic interaction energy between nearest neighbours.
+Therefore, the dynamics may depend on the simulation method, as the dumbbell model increases the magnetostatic interaction energy between nearest neighbours. \par
 
-\sidefig[0.45]{2_Hotspice/Hysteresis_Kagome_EBc.pdf}{
+\xfig[0.62]{2_Hotspice/Hysteresis_Kagome_EBc.pdf}{
 	\label{fig:2:kagome_reversal_EBc}
 	The effect of an \xref{external magnetic field} on magnets in kagome ASI that are aligned with the field ($\,\boldsymbol{|}\,$) and slanted with respect to the field (\rotatebox[origin=c]{120}{$\boldsymbol{|}$}), for different values of the energy barrier.
 	$E_\mathrm{MS}$ is the same for each $E_\mathrm{B}$, however it is higher for the slanted magnets compared to those parallel to the field.
 	When $E_\mathrm{B}<E_\mathrm{B}^c$ ($E_\mathrm{B}>E_\mathrm{B}^c$), the slanted (parallel) magnet will flip first since the Zeeman energy $E_\mathrm{Z}$ increases faster for the parallel magnets.
-	\newline
 }
 \vspace{-.75em}
 
