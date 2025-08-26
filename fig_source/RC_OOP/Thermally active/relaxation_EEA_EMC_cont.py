@@ -95,14 +95,14 @@ def plot(data_dir=None):
         ax.yaxis.set_minor_locator(MultipleLocator(10))
         for i, marker in enumerate(markers):
             ax.annotate(marker_labels[i], marker, color=marker_colors[i][a], va='center_baseline', ha='center',
-                        weight='bold', fontproperties='serif', fontsize=16, annotation_clip=False)
+                        weight='bold', fontproperties='serif', fontsize=14, annotation_clip=False)
 
         # Fitted MFM parameter markers
         fit_E_EA = [58.7, 66.5, 63.1]
         fit_E_MC = [21.0, 9.8, 9.6]
         fit_symbols = ['o', 'x', '^']
         for EEA, EMC, symbol in zip(fit_E_EA, fit_E_MC, fit_symbols):
-            ax.scatter(EMC, EEA, s=50, marker=symbol, facecolor='white', edgecolor='black', linewidth=1, zorder=100)
+            ax.scatter(EMC, EEA, s=40, marker=symbol, facecolor='white', edgecolor='black', linewidth=1, zorder=100)
         
         # 9 panels markers
         E_MC_ratios = [1.25, 2.5, 10]
@@ -111,7 +111,7 @@ def plot(data_dir=None):
             dEMC = [-.5,.7,0][i]
             for j, EEA in enumerate(E_EA_ratios):
                 scatter_kwargs = dict(facecolor='grey', zorder=100)
-                ax.scatter(EMC+dEMC, EEA+3, s=30, marker=f"${1 + i + j*len(E_EA_ratios):d}$", linewidth=0.8, **scatter_kwargs)
+                ax.scatter(EMC+dEMC, EEA+4, s=30, marker=f"${1 + i + j*len(E_EA_ratios):d}$", linewidth=0.8, **scatter_kwargs)
                 ax.scatter(EMC, EEA, s=20, marker="+", linewidth=1.414, **scatter_kwargs)
 
     fs_labels = 11
