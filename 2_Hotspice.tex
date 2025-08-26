@@ -838,11 +838,12 @@ this finally gives
 \begin{equation}
 	r_{12} \geq \sqrt[3]{\frac{2 \mu_0 \max(\mu^2)}{\pi Q k_B T}} = \rmin \mathrm{.}
 \end{equation}
+\\\par
 Recall that we are using the Metropolis-Hastings acceptance probability in \hotspice's rejection-based \xref{kinetic Monte Carlo} algorithm (\cref{sec:2:Dynamics_MH}) rather than the \xref{Glauber dynamics} acceptance probability $P_\mathrm{GD}(\Delta E, T) = \frac{\exp(-\Delta E/k_B T)}{1+\exp(-\Delta E/k_B T)}$, because they both satisfy \xref{ergodicity} and \xref{detailed balance} but the Glauber acceptance probability is always more likely to reject a switch~\cite{bit-player_MCvsGlauber}.
 However, we can now see that the Glauber acceptance probability is not all bad when \xref{multi-switching} is used, as the extremum of its derivative is 4 times smaller than for the Metropolis-Hastings acceptance probability.
 Hence, \cref{eq:2:MultiSwitch_inequality} tells us that the minimal distance between samples with Glauber dynamics can be a factor $\sqrt[3]{1/4} \approx 0.63$ smaller than with Metropolis-Hastings.
 Consequently, $\sqrt[3]{16} \approx 2.52$ times more magnets can safely switch at once.
-Therefore, Glauber dynamics can ultimately result in a greater number of switches overall, given that the Metropolis-Hastings acceptance probability is at most twice that of Glauber dynamics. Still, the optimal acceptance probability depends on the specifics of a simulation, as a large $\rmin$ will yield very few switches, which benefits Metropolis-Hastings. \\\par
+Therefore, Glauber dynamics can ultimately result in a greater number of switches overall, given that the Metropolis-Hastings acceptance probability is at most twice that of Glauber dynamics. Still, the optimal acceptance probability depends on the specifics of a simulation, as a large $\rmin$ will yield very few switches, which benefits Metropolis-Hastings. \par
 One ingredient remains in order to perform Metropolis-Hastings multi-sampling: an efficient sampling algorithm that obeys this minimal distance requirement.
 \hotspice provides three such algorithms: Poisson disc sampling, restricted stratified jittered grid sampling, and a hybrid approach between these two.
 By default, the jittered grid algorithm is used to optimise performance.
