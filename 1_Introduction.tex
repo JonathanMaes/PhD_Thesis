@@ -34,11 +34,9 @@ Several factors that contribute to this bottleneck are often quoted in the conte
 	Most advancements arise from improving their algorithms, but these have to be run on a particular (e.g., von Neumann) computer architecture made up of circuits that handle information encoded by physical devices like transistors~\cite{RC_SuperconductingElectronics}.
 	These many layers of abstraction render this approach inherently inefficient, as it does not directly exploit the physical properties of the constituent materials for computation~\cite{RC_ASI}.
 \end{itemize}
-These various drawbacks of current implementations have become more noticeable over the past decade, as portrayed in~\cref{fig:1:Ngram}.
-This has led to the advent of \idx{neuromorphic computing} --- a field of research at the intersection of biology, computer science and physics --- which takes inspiration from the brain to develop more efficient hardware for processing complex data in parallel.
 
 \vspace{-1.5em}
-\sidefig[0.55]{1_Introduction/Ngrams.pdf}{
+\sidefig[0.54]{1_Introduction/Ngrams.pdf}{
 	\label{fig:1:Ngram}
 	Popularity of various key concepts from the year 2000 onwards.
 	The surge in popularity of alternative brain-inspired and physical computing methods coincides with raising concerns related to the usage of conventional hardware.
@@ -47,6 +45,8 @@ This has led to the advent of \idx{neuromorphic computing} --- a field of resear
 }
 \vspace{-1em}
 
+These various drawbacks of current implementations have become more noticeable over the past decade, as portrayed in~\cref{fig:1:Ngram}.
+This has led to the advent of \idx{neuromorphic computing} --- a field of research at the intersection of biology, computer science and physics --- which takes inspiration from the brain to develop more efficient hardware for processing complex data in parallel.
 While \xref{artificial neural networks} are indeed inspired by the brain, their implementation on conventional hardware is typically not considered part of neuromorphic computing, though approaches to implement neural networks on more efficient unconventional hardware are. % rather than applying algorithms on existing transistor-based hardware.
 Note that neuromorphic computing does not seek to replace conventional computing: the latter will always find applications in systems that require absolute precision. % think of physical simulations, the transmission of data, or something as common as rendering an image on a screen.
 Neuromorphic computing, on the other hand, does not seek exact solutions; in the words of Alan Turing, ``if a machine is expected to be infallible then it cannot also be intelligent.'' \par
