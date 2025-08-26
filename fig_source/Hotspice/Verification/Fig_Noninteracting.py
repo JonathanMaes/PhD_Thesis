@@ -50,7 +50,7 @@ def plot(data_dir=None, use_inset: bool = True):
         
     ## Main axes
     thesis_utils.init_style()
-    fig, axes = plt.subplots(nrows=1, ncols=1, squeeze=False, figsize=(thesis_utils.page_width*0.5, 1.7))
+    fig, axes = plt.subplots(nrows=1, ncols=1, squeeze=False, figsize=(thesis_utils.page_width*0.5, 1.4))
     ax: plt.Axes = axes[0,0]
 
     ax.scatter(data["alpha"], data["M_avg"], label="Hotspice", zorder=2)
@@ -65,7 +65,7 @@ def plot(data_dir=None, use_inset: bool = True):
 
     ## Finish plot
     ax.legend(ncol=1, loc="lower right", fontsize=9, borderaxespad=0.3)
-    fig.subplots_adjust(top=.95, bottom=0.3, left=0.15, right=0.95)
+    fig.subplots_adjust(top=.95, bottom=0.33, left=0.18, right=0.98)
     hotspice.utils.save_results(figures={'Noninteracting_IP': fig}, outdir=data_dir, copy_script=False)
 
 
