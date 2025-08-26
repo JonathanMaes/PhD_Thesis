@@ -1,4 +1,4 @@
-\documentclass[11pt,a4paper,oneside]{book}
+\documentclass[11pt,twoside]{book}
 
 %%%% PACKAGES WITH OPTIONS
 \usepackage[english]{babel} % Language-specific hyphenation/splitting
@@ -62,9 +62,9 @@
 %%%% SET PAGE MARGINS
 \makeatletter
 \if@twoside%
-	\geometry{text=6.125in,inner=3.5cm,vmargin=2.62cm,includeheadfoot}%
+	\geometry{paperheight=24cm,paperwidth=17cm,text=13cm,outer=1.5cm,tmargin=2.5cm,bmargin=2.62cm}%
 \else%
-	\geometry{text=6.125in,centering,vmargin=2.62cm,includeheadfoot}%
+	\geometry{paperheight=24cm,paperwidth=17cm,text=13cm,centering,tmargin=2.2cm,bmargin=2.62cm}%
 \fi%
 \makeatother
 
