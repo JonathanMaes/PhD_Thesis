@@ -104,6 +104,7 @@ In the context of \xref{reservoir computing}, such a readout approach with multi
 %In sufficiently small systems ($\lesssim 10 \times 10$), all magnets will have a noticeable effect
 %In larger systems, probing a pair of electrodes still provides local information about the average magnetisation of one column or a set of nearby columns, which is what we will use as our readout in simulation.
 
+\newpage
 \section{Thermally active out-of-plane ASI}
 \subsection{Energy contributions}\label{sec:3:E_contributions}
 Thermally active OOP ASI is hard to manufacture, because it must strike a delicate balance between several strong energy contributions to end up in an OOP state with a net energy barrier of only several tens of $\kBT$ at most.
@@ -129,10 +130,7 @@ As we will see in~\cref{sec:3:relaxation}, achieving spontaneous thermal orderin
 
 \paragraph{Magnet geometry}\label{sec:3:OOP_geometry}
 The magnets considered here are cylindrical with a diameter $D_\mathrm{NM}$ and consist of $n_{\ce{Co}}$ layers of \ce{Co} with a thickness $t_{\ce{Co}}$, separated and surrounded by \ce{Pt} layers of thickness $t_{\ce{Pt}}$.
-They are placed in an ASI where the lateral spacing between magnets is $S_\mathrm{ASI}$ --- resulting in a lattice parameter $a=D_\mathrm{NM}+S_\mathrm{ASI}$ in a square lattice. \par
-These five geometrical parameters have a profound effect on the balance between the aforementioned energy contributions, as summarised in~\cref{tab:3:interactions_geometry}.
-The polynomial dependence of some of these relations makes the system quite hard to control: a slight manufacturing difference can yield a vastly different net OOP anisotropy, possibly inhibiting the spontaneous formation of a checkerboard ground state.
-Note that the \xref{magnetostatic interactions} depend on the square of the ferromagnetic volume $V \propto n_{\ce{Co}} t_{\ce{Co}} D_\mathrm{NM}^2$.
+They are placed in an ASI where the lateral spacing between magnets is $S_\mathrm{ASI}$ --- resulting in a lattice parameter $a=D_\mathrm{NM}+S_\mathrm{ASI}$ in a square lattice.
 
 \xtable[tab:3:interactions_geometry]{
 	Dependence of the energy components present in OOP ASI on the geometrical parameters.
@@ -157,6 +155,10 @@ Note that the \xref{magnetostatic interactions} depend on the square of the ferr
 	\end{tabular}
 }
 \vspace{-1em}
+
+These five geometrical parameters have a profound effect on the balance between the aforementioned energy contributions, as summarised in~\cref{tab:3:interactions_geometry}.
+The polynomial dependence of some of these relations makes the system quite hard to control: a slight manufacturing difference can yield a vastly different net OOP anisotropy, possibly inhibiting the spontaneous formation of a checkerboard ground state.
+Note that the \xref{magnetostatic interactions} depend on the square of the ferromagnetic volume $V \propto n_{\ce{Co}} t_{\ce{Co}} D_\mathrm{NM}^2$. \\\par
 
 These five geometrical parameters are bounded by several physical and practical constraints.
 Note that the numerical values of the limits given below are only indicative and may depend on the exact values of the other geometrical parameters.
@@ -218,26 +220,12 @@ with $\sampi$ a random value from a standard normal distribution and $D_{ij}$ a 
 The relaxation process can be tracked by the normalised average magnetisation $\mavg = \abs{\llangle s \rrangle}$ and the \indexlabel{local antiferromagnetic parameter}local \xref{antiferromagnetic} parameter $\qNN = (1 - \langle s_i s_{i+1} \rangle)/2$.
 In the uniform state --- where all magnetic moments point `up' --- their values are $\mavg=1$ and $\qNN=0$.
 During relaxation, they transition to $\mavg=0$ and $\qNN=1$, corresponding to a checkerboard ground state.
-Note that, while for a random state $\qNN \approx 0.5$, a value of $\qNN=0.5$ does not necessarily imply a random state. \par
+Note that, while for a random state $\qNN \approx 0.5$, a value of $\qNN=0.5$ does not necessarily imply a random state. \newpage
 
 \cref{fig:3:OOP_relaxation} shows relaxation profiles for a few combinations of $\EEA$ and $\EMC$, providing some insight into the relaxation process.
 Each panel shows the mean, standard deviation and 1st/99th percentile of $\mavg$ and $\qNN$ over 200 relaxations --- this variability is both due to the randomness of \xref{N\'eel-Arrhenius} switching and because each relaxation used unique randomly sampled $\EEA$ for individual magnets, in accordance with the $\sigma(\EEA)/\EEA = \SI{5}{\percent}$ variation.
 While the mean relaxation profile is essentially unaffected by the number of magnets $N$ in the system, the variability between relaxations (indicated by the shaded regions in the figure) decreases for larger systems as $\approx 1/\sqrt{N}$, in accordance with the \xlabel{central limit theorem}.
 Each relaxation consisted of at most $40N$ switches using the \xref{first-switch method}, as this is sufficient for the system to achieve equilibrium.
-
-\xfig{3_RC_OOP/OOP_relaxation.pdf}{
-	\label{fig:3:OOP_relaxation}
-	Dependence of the ordering timescale on the energy balance between \link{net out-of-plane anisotropy}{net OOP anisotropy} $\EEA$ and nearest-neighbour \xref{magnetostatic coupling} $\EMC$ in an $11 \times 11$ OOP square-lattice ASI.
-	This system size was chosen because it matched the size of our fabricated systems discussed later.
-	The ASI is initialised in a uniform magnetic state with all spins pointing `up' and is released at $t = 0$, after which the ASI relaxes to lower energies.
-	Blue traces show the absolute value of the normalised average magnetisation $\mavg$ while orange traces represent the local antiferromagnetic parameter $\qNN$.
-	Each trace shows the mean (central line), standard deviation (central shaded area), and 1st/99th percentile (outer shaded area) of 200 repeated relaxations with randomly sampled $\EEA$ profiles.
-	At most $40N$ switches are simulated for each relaxation.
-	The hatched ($\times$) region highlights the frozen timescales, while the white and green shaded region highlight stage~$\circled{1}$~and~$\circled{2}$ of ordering, respectively.
-	The simulations are either stopped after \SI{e4}{} seconds or $40N$ switches --- whichever is reached first.
-	\textbf{The insets} show the resulting final magnetic states, where white (black) indicates up (down) spins.
-}
-\vspace{-1em}
 
 \subsubsection{Logarithmic relaxation}
 Most strikingly, by using a logarithmic scale for the time axis, both $\mavg$ and (to a lesser extent) $\qNN$ trace a straight line during relaxation.
@@ -253,6 +241,21 @@ After a certain amount of time, a first magnet will switch, thereby slightly sta
 Whichever magnet randomly switches next will therefore experience a slightly higher \xref{effective energy barrier} $\EBeff$ than before.
 On average, this means that the effective barrier $\max(\EBeff)$ of the most unstable magnets in the system --- those most eager to switch next --- will increase linearly with the amount of switched magnets.
 The \indexlabel[nolabel]{N\'eel-Arrhenius}\xref{N\'eel-Arrhenius} equation~\eqref{eq:2:Néel} translates this to an exponentially increasing switching time. \\\par
+
+
+\xfig{3_RC_OOP/OOP_relaxation.pdf}{
+	\label{fig:3:OOP_relaxation}
+	Dependence of the ordering timescale on the energy balance between \link{net out-of-plane anisotropy}{net OOP anisotropy} $\EEA$ and nearest-neighbour \xref{magnetostatic coupling} $\EMC$ in an $11 \times 11$ OOP square-lattice ASI.
+	This system size was chosen because it matched the size of our fabricated systems discussed later.
+	The ASI is initialised in a uniform magnetic state with all spins pointing `up' and is released at $t = 0$, after which the ASI relaxes to lower energies.
+	Blue traces show the absolute value of the normalised average magnetisation $\mavg$ while orange traces represent the local antiferromagnetic parameter $\qNN$.
+	Each trace shows the mean (central line), standard deviation (central shaded area), and 1st/99th percentile (outer shaded area) of 200 repeated relaxations with randomly sampled $\EEA$ profiles.
+	At most $40N$ switches are simulated for each relaxation.
+	The hatched ($\times$) region highlights the frozen timescales, while the white and green shaded region highlight stage~$\circled{1}$~and~$\circled{2}$ of ordering, respectively.
+	The simulations are either stopped after \SI{e4}{} seconds or $40N$ switches --- whichever is reached first.
+	\textbf{The insets} show the resulting final magnetic states, where white (black) indicates up (down) spins.
+}
+\vspace{-1em}
 
 \cref{fig:3:OOP_relaxation} also shows that the slope generally becomes less steep for higher coupling $\EMC$.
 Following the previous discussion, we now understand that high \link{magnetostatic coupling}{coupling} results in a greater decrease of $\EBeff$ per switch, and consequently a larger exponential increase in the switching time.
@@ -301,7 +304,7 @@ This is because $\EMC$ is the only factor responsible for order in the system: l
 \subsubsection{Phase diagram}
 A stronger \link{magnetostatic coupling}{coupling} $\EMC$ causes faster decay of $\mavg \rightarrow 0$: in panels 4--6 of~\cref{fig:3:OOP_relaxation}, the time to reach $\mavg \sim 0$ decreases from $\approx \SIrange{e3}{10}{\second}$.
 However, strong coupling does not necessarily result in faster ordering $\qNN \rightarrow 1$ --- as panels 8 and 9 clearly illustrate --- because \xref{domain wall} magnets typically have 3 oppositely magnetised nearest neighbours, resulting in a net stabilising effect proportional to $\EMC$ (and $\EEA$).
-Therefore, for a system to reach the checkerboard state on a given timescale, a sufficiently low $\EMC$ and $\EEA$ are required. \par
+Therefore, for a system to reach the checkerboard state on a given timescale, a sufficiently low $\EMC$ and $\EEA$ are required. \\\par
 This is most clearly seen in phase diagrams like~\cref{fig:3:OOP_relaxation_continuous}, which summarise the values of $\mavg$ and $\qNN$ at $t = \SI{e4}{\second}$ (i.e., the maximum time in \cref{fig:3:OOP_relaxation}) over a wide range of $\EEA$ and $\EMC$.
 This encompasses the nine $(\EMC,\EEA)$ combinations of the various panels in~\cref{fig:3:OOP_relaxation}, as indicated by grey numbered crosses in~\cref{fig:3:OOP_relaxation_continuous}. \par
 Five distinct regions can be distinguished in this $\EMC \times \EEA$ phase space.
@@ -309,14 +312,9 @@ In region~$\mathrm{I}$ (panel 1), weak coupling and high anisotropy result in a 
 Increasing the $\EMC/\EEA$ ratio shifts the system through the transient region~$\mathrm{II}$ (panel 2), characterised by decreasing $\mavg$ and increased ordering.
 Further increase of $\EMC/\EEA$ shifts the system to region~$\mathrm{III}$ (panel 6) with $\mavg \approx 0$ but $\qNN \neq 1$, characteristic of stage~$\circled{2}$.
 Systems in this region exhibit local domains, but their \xref{domain walls} remain immobile.
-Any further increase of $\EMC/\EEA$ does not affect the average magnetisation or ordering at $t = \SI{e4}{\second}$ --- unless both $\EEA$ and $\EMC$ are sufficiently small, as in regions~$\mathrm{IV}$ and~$\mathrm{V}$. \par
-Region~$\mathrm{IV}$ (panel~9) is the only region where the system spontaneously achieves the checkerboard ground state.
-In~\cref{fig:3:OOP_relaxation_continuous}, it is delineated by the dotted black line that envelops a region with $\qNN \geq 0.95$.
-Reducing $\EMC$ too much puts the system in region~$\mathrm{V}$ (panel 7), where the system is \indexlabel{superparamagnetism}superparamagnetic at this timescale.
-For a magnet to have a mean switching time $t = \SI{e4}{\second}$, the \xref{N\'eel-Arrhenius} switching law states that it must have an anisotropy $\EEA/\kBT = \ln(t \nu_0) \approx 32$: this is the reason why region~$\mathrm{V}$ extends upwards to $\EEA \lesssim 32 \kBT$.
-The main region of interest --- region~$\mathrm{IV}$ with $\qNN \approx 1$ --- is therefore constrained from the left by the superparamagnetic regime, from the top by the transient/frozen regime, and from the right by states in which domain walls are immobile at the observed timescale.
+Any further increase of $\EMC/\EEA$ does not affect the average magnetisation or ordering at $t = \SI{e4}{\second}$ --- unless both $\EEA$ and $\EMC$ are sufficiently small, as in regions~$\mathrm{IV}$ and~$\mathrm{V}$.
 
-\vspace{-1.5em}
+\vspace{-1em}
 \xfig{3_RC_OOP/OOP_relaxation_continuous.pdf}{
 	\label{fig:3:OOP_relaxation_continuous}
 	Phase diagrams at $t=\SI{e4}{\second}$, of the normalised average magnetisation $\mavg$ and the local antiferromagnetic parameter $\qNN$, as a function of \xref{net out-of-plane anisotropy} $\EEA$ and nearest-neighbour magnetostatic coupling $\EMC$ for an $11 \times 11$ lattice.
@@ -325,8 +323,12 @@ The main region of interest --- region~$\mathrm{IV}$ with $\qNN \approx 1$ --- i
 	The nine panels of~\cref{fig:3:OOP_relaxation} are indicated by grey crosses.
 	The three symbols ($\raisebox{0.1pt}{\ensuremath{\boldsymbol{\ocircle}}}, \raisebox{-1pt}{\ensuremath{\boldsymbol{\triangle}}}, \boldsymbol{\times}$) correspond to the experimental lattices shown in~\cref{fig:3:MFM_grid} with nanomagnet diameter $D_\mathrm{NM} = \SI{170}{\nano\metre}$, \ce{Co} thickness $t_{\ce{Co}} = \SI{1.45}{\nano\metre}$ and nanomagnet separations $S_\mathrm{ASI} = \SI{20}{\nano\metre}$ (circle), $S_\mathrm{ASI} = \SI{25}{\nano\metre}$ (triangle), $S_\mathrm{ASI} = \SI{30}{\nano\metre}$ (cross).
 }
-\vspace{-1em}
 
+Region~$\mathrm{IV}$ (panel~9) is the only region where the system spontaneously achieves the checkerboard ground state.
+In~\cref{fig:3:OOP_relaxation_continuous}, it is delineated by the dotted black line that envelops a region with $\qNN \geq 0.95$.
+Reducing $\EMC$ too much puts the system in region~$\mathrm{V}$ (panel 7), where the system is \indexlabel{superparamagnetism}superparamagnetic at this timescale.
+For a magnet to have a mean switching time $t = \SI{e4}{\second}$, the \xref{N\'eel-Arrhenius} switching law states that it must have an anisotropy $\EEA/\kBT = \ln(t \nu_0) \approx 32$: this is the reason why region~$\mathrm{V}$ extends upwards to $\EEA \lesssim 32 \kBT$.
+The main region of interest --- region~$\mathrm{IV}$ with $\qNN \approx 1$ --- is therefore constrained from the left by the superparamagnetic regime, from the top by the transient/frozen regime, and from the right by states in which domain walls are immobile at the observed timescale. \par
 The phase diagrams in~\cref{fig:3:OOP_relaxation_continuous} are snapshots at $t = \SI{e4}{\second}$.
 As time goes on, region~$\mathrm{IV}$ will expand and the boundaries between the regions will shift upwards.
 Therefore, for a longer observation time, a system initially located in the frozen region at $t = \SI{e4}{\second}$ may eventually find itself in the more ordered regions~$\mathrm{II}$, $\mathrm{III}$ or~$\mathrm{IV}$.
@@ -335,7 +337,15 @@ On a similar note, since the size of the ASI only affects the standard deviation
 
 \subsubsection{Exchange-coupled system}\indexlabel[nolabel]{exchange coupling}
 The presence of \xref{exchange coupling} in a system affects the relaxation behaviour, resulting in deviations from the usual \link{logarithmic relaxation}{logarithmic ordering} during stage $\circled{1}$.
-This is depicted in~\cref{fig:3:OOP_relaxation_exchange} for a negative (AFM) exchange coupling $J=-8\kBT$ and a \link{net out-of-plane anisotropy}{net OOP anisotropy} $\EEA = 40\kBT$.
+This is depicted in~\cref{fig:3:OOP_relaxation_exchange} for a negative (AFM) exchange coupling $J=-8\kBT$ and a \link{net out-of-plane anisotropy}{net OOP anisotropy} $\EEA = 40\kBT$. \par
+Since a negative \xref{exchange coupling} further stabilises the checkerboard state, the relaxation generally occurs faster than in a system without exchange coupling (compare, for instance, panels 2--3 of \cref{fig:3:OOP_relaxation_exchange} with panels 1--2 of \cref{fig:3:OOP_relaxation}).
+Most strikingly, the relaxation of an exchange-coupled system is clearly separated into plateaus, with stairs appearing at timescales where the relaxation occurs faster.
+This is in stark contrast with the near-perfect \xref{logarithmic relaxation} previously observed in systems without exchange coupling.
+The reason for this is that, contrary to the \link{magnetostatic interaction}{MS interaction}, the exchange coupling only depends on the local configuration of the nearest neighbours of each magnet.
+The amount of local configurations is limited, as each magnet can only have between 0 and 4 parallel or antiparallel NN.
+Each of these five local configurations corresponds to a certain timescale at which switching is most probable, resulting in only a select few dominant switching timescales.
+Hence, each stair is caused by magnets which all have a similar mean switching time, so the relaxation at each stair occurs exponentially rather than logarithmically.
+Still, the overarching logarithmic relaxation remains present: the stairs are separated by many orders of magnitude in time, similar to the logarithmic relaxation of a magnetostatically-coupled system. \par
 
 \xfig{3_RC_OOP/OOP_relaxation_exchange.pdf}{
 	\label{fig:3:OOP_relaxation_exchange}
@@ -349,23 +359,15 @@ This is depicted in~\cref{fig:3:OOP_relaxation_exchange} for a negative (AFM) ex
 }
 \vspace{-1em}
 
-Since a negative \xref{exchange coupling} further stabilises the checkerboard state, the relaxation generally occurs faster than in a system without exchange coupling (compare, for instance, panels 2--3 of \cref{fig:3:OOP_relaxation_exchange} with panels 1--2 of \cref{fig:3:OOP_relaxation}).
-Most strikingly, the relaxation of an exchange-coupled system is clearly separated into plateaus, with stairs appearing at timescales where the relaxation occurs faster.
-This is in stark contrast with the near-perfect \xref{logarithmic relaxation} previously observed in systems without exchange coupling.
-The reason for this is that, contrary to the \link{magnetostatic interaction}{MS interaction}, the exchange coupling only depends on the local configuration of the nearest neighbours of each magnet.
-The amount of local configurations is limited, as each magnet can only have between 0 and 4 parallel or antiparallel NN.
-Each of these five local configurations corresponds to a certain timescale at which switching is most probable, resulting in only a select few dominant switching timescales.
-Hence, each stair is caused by magnets which all have a similar mean switching time, so the relaxation at each stair occurs exponentially rather than logarithmically.
-Still, the overarching logarithmic relaxation remains present: the stairs are separated by many orders of magnitude in time, similar to the logarithmic relaxation of a magnetostatically-coupled system. \par
 In all panels of~\cref{fig:3:OOP_relaxation_exchange}, the ASI starts in the uniform state where all magnets in the bulk have 4 parallel NN.
 Hence, they all have an equal exchange energy $E_{\mathrm{exch},i} = 4J, \forall i$, leading to similar mean switching times.
 At the first stair (e.g., $t < \SI{e-6}{\second}$ in panel 1 of~\cref{fig:3:OOP_relaxation_exchange}), these magnets will randomly switch, thereby nucleating checkerboard domains.
 When little to no magnets with 4 parallel NN remain, the relaxation rate temporarily slows down until the local magnetic configuration with the second-highest energy becomes thermally active. \par
-The second stair (e.g., $t < \SI{e-2}{\second}$ in panel 1 of~\cref{fig:3:OOP_relaxation_exchange}) is caused by magnets at the boundary of the ASI.
-Their available energy levels are distinct from those of bulk magnets, since magnets at the boundary only have 3 NN: for them, $E_\mathrm{exch} \in \{\pm 3J, \pm J\}$, as compared to $E_\mathrm{exch} \in \{\pm 4J, \pm 2J, 0\}$ for bulk magnets.
+The second stair (e.g., $t < \SI{e-2}{\second}$ in panel 1 of~\cref{fig:3:OOP_relaxation_exchange}) is caused by magnets at the edge of the ASI.
+Their available energy levels are distinct from those of bulk magnets, since magnets at the edge only have 3 NN: for them, $E_\mathrm{exch} \in \{\pm 3J, \pm J\}$, as compared to $E_\mathrm{exch} \in \{\pm 4J, \pm 2J, 0\}$ for bulk magnets.
 Therefore, they are the next magnets to switch, as they initially only have 3 parallel NN but no stabilising antiparallel NN, so $E_\mathrm{exch} = 3J$.
 This is then followed by the bulk magnets with 3 parallel but 1 antiparallel NN ($E_\mathrm{exch} = 2J$), until all magnets have at most 2 parallel NN at the end of the third stair (e.g., $t < \SI{10}{\second}$ in panel 1 of~\cref{fig:3:OOP_relaxation_exchange}).
-As the system size increases, the height of the second stair --- which is caused by the switching of boundary magnets --- shrinks and becomes increasingly obscured by the surrounding stairs. \par
+As the system size increases, the height of the second stair --- which is caused by the switching of magnets at the edge --- shrinks and becomes increasingly obscured by the surrounding stairs. \par
 From then on, further relaxation towards the perfect checkerboard state can only be achieved in the same way as for systems without \xref{exchange coupling}: domain walls must perform a random walk to move out of the ASI.
 The only difference in an exchange-coupled ASI is that this random walk will occur more slowly, because the exchange coupling further stabilises domain wall magnets (by $\Delta \EBeff = 2J$) since they have 3 antiparallel and 1 parallel NN. \par
 When the absolute value of the exchange coupling is small, as in \cref{fig:3:OOP_relaxation_exchange} with $J=-8\kBT$, separate stairs will blend together to some extent as the tails of their \xlabel{exponential relaxation} overlap.
@@ -440,7 +442,19 @@ Only switches from the initial `up' (black) to the `down' (white) state were obs
 From each of these MFM images, $\mavg$, $\qNN$, $\qNN[2]$ and $\qNN[3]$ were determined.
 Their values are indicated by the dots at $t=\SI{e3}{\second}$ and \SI{7e7}{\second} in~\crefSubFigRef{fig:3:MFM_grid}{b}.
 This figure shows the optimal fits through these points --- based on $\gtrsim 1000$ iterations of \xref{Bayesian optimisation} --- with the corresponding values of $\EEA$, $\EMC$ and $J$ listed in the top right corner of each panel.
-These combinations of $\EEA$ and $\EMC$ have also been indicated in~\cref{fig:3:OOP_relaxation_continuous} as circles ($S_\mathrm{ASI}=\SI{20}{\nano\metre}$), triangles ($S_\mathrm{ASI}=\SI{25}{\nano\metre}$) and crosses ($S_\mathrm{ASI}=\SI{30}{\nano\metre}$).
+These combinations of $\EEA$ and $\EMC$ have also been indicated in~\cref{fig:3:OOP_relaxation_continuous} as circles ($S_\mathrm{ASI}=\SI{20}{\nano\metre}$), triangles ($S_\mathrm{ASI}=\SI{25}{\nano\metre}$) and crosses ($S_\mathrm{ASI}=\SI{30}{\nano\metre}$). \\\par
+
+However, one should not blindly trust the optimal parameter combination that BO provides: it is possible that a fit of similar quality could be obtained for different $\EEA$, $\EMC$ or $J$.
+For this reason, \cref{fig:3:MFM_fitquality} is also provided, which shows the \xref{fit quality} $\eta$ for all guesses made by the optimiser, as a function of these three parameters.
+This provides more insight on whether a high fit quality can only be obtained in a narrow parameter range. \par
+Besides the aforementioned $S_\mathrm{ASL} = \SI{20}{\nano\metre}$, \SI{25}{\nano\metre} and \SI{30}{\nano\metre} samples, \cref{fig:3:MFM_fitquality} also shows results for a \SI{40}{\nano\metre} system (red crosses).
+In contrast to $S_\mathrm{ASI} = \SIrange{20}{30}{\nano\metre}$ --- for which the best fits are concentrated in a narrow range of $\EEA$, $\EMC$ and $J$ --- the $S_\mathrm{ASI} = \SI{40}{\nano\metre}$ system yielded inconclusive fits, with the fit quality $\eta$ being quite independent of the system parameters.
+For this reason, no conclusive estimates of $\EEA$, $\EMC$ and $J$ can be given for this system.
+The reason for this is unclear; see Supp. 5 of our paper~\cite{KUR-24} for a further discussion of the $S_\mathrm{ASI} = \SI{40}{\nano\metre}$ and similarly inconclusive $\SI{35}{\nano\metre}$ samples. \\\par
+
+The three other systems (20, 25 and \SI{30}{\nano\metre}) all end up with a similar estimate of the \link{net out-of-plane anisotropy}{net OOP anisotropy} $\EEA \approx 60 \kBT$.
+Such similarity is not unexpected since they were all deposited in the same manner, but these values are far lower than the analytically predicted $\EEA \gg 100 \kBT$, as calculated under the assumption of \link{coherent rotation}{coherent reversal} in a sinusoidal energy landscape formed by the various energy contributions outlined in~\cref{sec:3:E_contributions}~\cite[Supp. 4]{KUR-24}.
+Hence, it is likely that \link{non-coherent magnetisation reversal}{non-coherent reversal} occurs, leading to a far smaller energy barrier than predicted. %This indicates that the anisotropy might be easier to control than initially thought, or is at least reproducible for identically processed samples.
 
 \vspace{-1em}
 \xfig{3_RC_OOP/MFM_grid.pdf}{
@@ -456,23 +470,22 @@ These combinations of $\EEA$ and $\EMC$ have also been indicated in~\cref{fig:3:
 }
 \vspace{-0.5em}
 
-However, one should not blindly trust the optimal parameter combination that BO provides: it is possible that a fit of similar quality could be obtained for different $\EEA$, $\EMC$ or $J$.
-For this reason, \cref{fig:3:MFM_fitquality} is also provided, which shows the \xref{fit quality} $\eta$ for all guesses made by the optimiser, as a function of these three parameters.
-This provides more insight on whether a high fit quality can only be obtained in a narrow parameter range. \par
-Besides the aforementioned $S_\mathrm{ASL} = \SI{20}{\nano\metre}$, \SI{25}{\nano\metre} and \SI{30}{\nano\metre} samples, \cref{fig:3:MFM_fitquality} also shows results for a \SI{40}{\nano\metre} system (red crosses).
-In contrast to $S_\mathrm{ASI} = \SIrange{20}{30}{\nano\metre}$ --- for which the best fits are concentrated in a narrow range of $\EEA$, $\EMC$ and $J$ --- the $S_\mathrm{ASI} = \SI{40}{\nano\metre}$ system yielded inconclusive fits, with the fit quality $\eta$ being quite independent of the system parameters.
-For this reason, no conclusive estimates of $\EEA$, $\EMC$ and $J$ can be given for this system.
-The reason for this is unclear; see Supp. 5 of our paper~\cite{KUR-24} for a further discussion of the $S_\mathrm{ASI} = \SI{40}{\nano\metre}$ and similarly inconclusive $\SI{35}{\nano\metre}$ samples. \\\par
-
-The three other systems (20, 25 and \SI{30}{\nano\metre}) all end up with a similar estimate of the \link{net out-of-plane anisotropy}{net OOP anisotropy} $\EEA \approx 60 \kBT$.
-Such similarity is not unexpected since they were all deposited in the same manner, but these values are far lower than the analytically predicted $\EEA \gg 100 \kBT$, as calculated under the assumption of \link{coherent rotation}{coherent reversal} in a sinusoidal energy landscape formed by the various energy contributions outlined in~\cref{sec:3:E_contributions}~\cite[Supp. 4]{KUR-24}.
-Hence, it is likely that \link{non-coherent magnetisation reversal}{non-coherent reversal} occurs, leading to a far smaller energy barrier than predicted. \\\par %This indicates that the anisotropy might be easier to control than initially thought, or is at least reproducible for identically processed samples.
-
 The reason for allowing the optimiser to adjust the \xref{exchange coupling} $J$ is now also clear: for $S_\mathrm{ASI} = \SI{20}{\nano\metre}$, the optimal fit yields a clear non-zero $J = 6.5 \kBT$.
 High-$\eta$ guesses are also limited to a very narrow $J$-range (\cref{fig:3:MFM_fitquality}), lending further credibility to the existence of exchange coupling in this system.
 For systems with larger spacing, a near-zero \xlabel[nolabel]{exchange coupling} is found.
 This may indicate that manufacturing defects caused incomplete separation of neighbouring nanomagnets in the bottom \ce{Co} layer for the smallest $S_\mathrm{ASI}$, while complete separation was achieved for $S_\mathrm{ASI} \geq \SI{25}{\nano\metre}$.
-Such defects could explain why a better \xref{fit quality} $\eta$ could be achieved for $S_\mathrm{ASI} = \SI{25}{\nano\metre}$ and \SI{30}{\nano\metre} than for $S_\mathrm{ASI} = \SI{20}{\nano\metre}$. \par
+Such defects could explain why a better \xref{fit quality} $\eta$ could be achieved for $S_\mathrm{ASI} = \SI{25}{\nano\metre}$ and \SI{30}{\nano\metre} than for $S_\mathrm{ASI} = \SI{20}{\nano\metre}$.
+
+\vspace{-1.5em}
+\xfig{3_RC_OOP/MFM_fitquality.pdf}{
+	\label{fig:3:MFM_fitquality}
+	Fitting simulated relaxations to the experimental data, accounting for non-zero \xref{exchange coupling} $J$ and \link{finite dipole model}{finite magnet size} using the \xref{mean-barrier model}.
+	Each dot represents one guess by the \link{Bayesian optimisation}{Bayesian optimiser}.
+	The \xref{fit quality} $\eta$ indicates how well the Monte Carlo simulation fits the experimental data at a given $\EEA$, $\EMC$ and $J$ value: brighter dots represent better guesses.
+	The greyed-out area in the right panel represents \xref{antiferromagnetic} coupling ($J<0$), which is considered non-physical in this system.
+}
+\vspace{-1em}
+
 Both $S_\mathrm{ASI} = \SI{25}{\nano\metre}$ and $\SI{30}{\nano\metre}$ are estimated to have very similar $\EMC \approx 10 \kBT$, which is in line with expectations since the difference between these two spacings is small compared to the magnet diameter $D_\mathrm{NM} = \SI{170}{\nano\metre}$.
 For the interconnected system ($S_\mathrm{ASI} = \SI{20}{\nano\metre}$), the fitted \link{magnetostatic coupling}{MS coupling} $\EMC$ is also much larger, because it is hard to distinguish between exchange coupling and MS coupling.
 The only difference between these couplings is that the MS coupling extends further out, but since its strength decreases rapidly with distance its main effect is similar to that of the exchange coupling.
@@ -484,24 +497,16 @@ One cluster is concentrated near $J=0$ with high MS coupling, while a second clu
 The second cluster also corresponds to slightly higher $\EEA$, because an exchange-coupled system will relax slightly faster and the optimiser compensates for this by increasing $\EEA$ to maintain a decent fit to the experimental data.
 The higher fit quality $\eta$ and $J \approx 0$ lend more credibility to the first cluster. \\\par
 
-\xfig{3_RC_OOP/MFM_fitquality.pdf}{
-	\label{fig:3:MFM_fitquality}
-	Fitting simulated relaxations to the experimental data, accounting for non-zero \xref{exchange coupling} $J$ and \link{finite dipole model}{finite magnet size} using the \xref{mean-barrier model}.
-	Each dot represents one guess by the \link{Bayesian optimisation}{Bayesian optimiser}.
-	The \xref{fit quality} $\eta$ indicates how well the Monte Carlo simulation fits the experimental data at a given $\EEA$, $\EMC$ and $J$ value: brighter dots represent better guesses.
-	The greyed-out area in the right panel represents \xref{antiferromagnetic} coupling ($J<0$), which is considered non-physical in this system. 
-}
-
 The obtained values of $\EEA$ and $\EMC$ can be compared to the phase diagrams of~\cref{fig:3:OOP_relaxation_continuous}, where they are indicated by circles, triangles and crosses for $S_\mathrm{ASI} = \SI{20}{\nano\metre}$, \SI{25}{\nano\metre} and \SI{30}{\nano\metre}, respectively.
 We find that $\EMC \approx 10 \kBT$ is of an acceptable magnitude, but perfect ordering is inhibited by the high value of $\EEA \approx 60 \kBT$.
-While $\EEA$ is already far smaller than predicted by analytical models, further control of the total energy barrier is needed to achieve a system that spontaneously reaches the checkerboard ground state in a reasonable timeframe. \\\par
+While $\EEA$ is already far smaller than analytical models predict, further control of the total energy barrier is needed to achieve a system that spontaneously reaches the checkerboard ground state in a reasonable timeframe. \\\par
 
 The fits shown in these figures used \hotspice simulations with \link{finite dipole model}{finite magnets} and the \xref{mean-barrier model}.
-We also attempted fits with simulations that used the exact barrier $\EBeff$ of~\cref{eq:2:EB_exact}, but these yielded less conclusive results.
+Fits using the exact barrier $\EBeff$ of~\cref{eq:2:EB_exact} were also attempted, but these yielded less conclusive results.
 They still more or less agreed on the approximate values of $\EEA$, $\EMC$ and the requirement of a non-zero \xref{exchange coupling} for $S_\mathrm{ASI} = \SI{20}{\nano\metre}$.
 However, fits using the exact barrier were more inclined to assign $J < 0$ and did not yield a clear high-$\eta$ peak as in~\cref{fig:3:MFM_fitquality}.
 Because of this, we may conclude that the exact barrier is less accurate than the \xref{mean-barrier model} in this case, possibly indicating that reversal occurs through a \link{non-coherent magnetisation reversal}{non-coherent} process.
-This would also explain why the \link{net out-of-plane anisotropy}{effective anisotropy} is on the order of $60 \kBT$, rather than the $\approx 1000 \kBT$ predicted by analytical calculations that also assume a \link{coherent rotation}{coherent reversal}~\cite[Supp.4]{KUR-24}.
+This would also explain why $\EEA$ is on the order of $60 \kBT$, rather than the $\approx 1000 \kBT$ predicted by analytical calculations that also assume a \link{coherent rotation}{coherent reversal}~\cite[Supp.4]{KUR-24}.
 
 \newpage
 \section{Reservoir computing in thermally active out-of-plane ASI}
