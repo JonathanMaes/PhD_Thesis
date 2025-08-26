@@ -391,7 +391,7 @@ Since the magnetisation of any magnet in the ASI may spontaneously switch due to
 In particular, \hotspice uses \idx{kinetic Monte Carlo} (KMC) algorithms\footnote{Sometimes also referred to as dynamic Monte Carlo.}.
 Generally speaking, these can be divided into two distinct classes: rejection-free and rejection KMC.
 \hotspice implements algorithms of both types.
-These techniques go by many names --- here, we shall refer to them as the \emph{\link{first-switch method}{``first-switch'' method}} and \emph{\xref{Metropolis-Hastings sampling}}, respectively~\cite{gillespie1976general,PhysicalTimeKMC}.
+These techniques go by many names --- here, we shall refer to them as the \emph{\xref{first-switch method}} and \emph{\xref{Metropolis-Hastings sampling}}, respectively~\cite{gillespie1976general,PhysicalTimeKMC}.
 The former is more suitable for simulating the temporal evolution of the system, while the latter can be used to sample the equilibrium distribution of the state space.
 
 \subsection{First-switch method: temporal evolution}
@@ -426,6 +426,9 @@ In such cases, $\nu_0$ can also exhibit a significant dependence on other factor
 Knowledge of the \xref{switching rate} $\nu$ can be used to construct a rejection-free kinetic Monte Carlo method, first presented by \textit{Gillespie}~\cite{gillespie1976general}, referred to as the ``first-switch'' method.
 Each iteration, as presented in~\cref{alg:2:FirstSwitchSingle}, will increment the elapsed time by a certain duration $t \leq t_\mathrm{max}$, where the maximum time $t_\mathrm{max}$ can be set by the user to prevent excessively long switching times.
 These iterations are then repeated until the desired elapsed time is reached. \par
+The maximum time $t_\mathrm{max}$ (default value of one second) prevents the simulation from advancing too far into the future.
+For example, it is needed when a time-dependent \xref{external magnetic field} is applied to the lattice: for a sinusoidal signal of frequency $f$, using $t_{\mathrm{max}}=20/f$ will ensure that the waveform is captured in sufficient detail.
+Furthermore, it prevents unrealistic timescales, as the exponential character of the \xref{N\'eel-Arrhenius} law can cause switching times to become much longer than what could ever be observed experimentally. \par
 \begin{algorithm}[Single iteration of the ``first-switch'' method\indexlabel{first-switch method}]
 	\label{alg:2:FirstSwitchSingle}
 	\begin{enumerate}[rightmargin=15pt]
@@ -441,9 +444,6 @@ These iterations are then repeated until the desired elapsed time is reached. \p
 	\end{enumerate} % NOTE: this is different from the BKL algorithm, yet still gives the exact same result.
 \end{algorithm}
 % Note that this algorithm still gives the correct switching rate $\nu$, even though the switching time $t_i$ is sampled randomly multiple times before magnet $i$ typically switches. This is because, the more magnets there are, the harder it gets for an arbitrary magnet $i$ to have the shortest randomly sampled time (and thus to switch), but the elapsed time increment after each switch will be smaller as well, and these two effects cancel perfectly to end up with the same switching rate as if the magnet would be the only one switching.
-The maximum time $t_\mathrm{max}$ (default value of one second) prevents the simulation from advancing too far into the future.
-For example, it is needed when a time-dependent \xref{external magnetic field} is applied to the lattice: for a sinusoidal signal of frequency $f$, using $t_{\mathrm{max}}=20/f$ will ensure that the waveform is captured in sufficient detail.
-Furthermore, it prevents unrealistic timescales, as the exponential character of the \xref{N\'eel-Arrhenius} law can cause switching times to become much longer than what could ever be observed experimentally. \par
 A situation can occur where $\EBeff < 0$, in which case real magnets would switch deterministically.
 In \hotspice, we choose to apply~\cref{eq:2:Néel_2} regardless, even though this likely yields non-physical random switching times $\Delta t_i \ll 1/\nu_0$.
 Therefore, we must interpret the elapsed time $t$ as being ``instantaneous'' if $t < 1/\nu_0$.
@@ -458,8 +458,9 @@ Hence, in contrast to the \xref{first-switch method}, Metropolis-Hastings sampli
 Instead, it is more suitable for examining equilibrium statistical properties of ASI, e.g., the average magnetisation, heat capacity, correlations...~\cite{ApparentFMpinwheel} \par
 
 \paragraph{Algorithm}
-A rejection-based KMC method works by selecting magnets at random and subsequently deciding, with a certain probability $P$, whether or not to switch them.
+A rejection-based KMC method works by selecting magnets at random and then deciding, with a certain probability $P$, whether to switch them.
 In particular, the Metropolis-Hastings algorithm repeats the steps outlined in~\cref{alg:2:MetropolisHastingsSingle}.
+\vspace{-1em}
 \begin{algorithm}[Single iteration of Metropolis-Hastings sampling]
 	\label{alg:2:MetropolisHastingsSingle}
 	\begin{enumerate}
