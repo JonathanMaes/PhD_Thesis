@@ -130,9 +130,9 @@ def plot(data_dir=None):
     C1_dark[-1] *= .85
     C0_dark, C1_dark = colors.to_hex(colors.hsv_to_rgb(C0_dark)), colors.to_hex(colors.hsv_to_rgb(C1_dark))
     # Setup figure
-    figsize = (thesis_utils.page_width, thesis_utils.page_width*.32)
+    figsize = (thesis_utils.page_width, thesis_utils.page_width*.38)
     fig, axes = plt.subplots(vary_values.size, varx_values.size, figsize=figsize, sharex=SAME_XAXIS_RANGE, sharey=True)
-    fig.subplots_adjust(left=0.16, top=0.75, bottom=0.2, wspace=0.12, hspace=0.2) #! Already here, because insets require knowledge of final aspect ratio
+    fig.subplots_adjust(left=0.19, top=0.75, bottom=0.2, right=0.89, wspace=0.12, hspace=0.2) #! Already here, because insets require knowledge of final aspect ratio
     fig.suptitle(varx_text(0).split("\n")[0] if len(varx_text(0).split("\n")) > 1 else "", fontsize=fontsize_headers, x=0.53) # 0.03 to the right to be centered on the subplots
     fig.supylabel(vary_text(0).split("\n")[0] if len(vary_text(0).split("\n")) > 1 else "", fontsize=fontsize_headers, x=0.005, y=0.47) # 0.005 to not be right at the edge but not too far to the right either
     fig.supxlabel("Elapsed time [s]", fontsize=fontsize_labels, x=0.53)
