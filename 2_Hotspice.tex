@@ -1309,11 +1309,11 @@ In OOP systems, it was found that more realistic values for the magnetostatic en
 The influence of these corrections can result in qualitatively different dynamics as compared to a \xref{point dipole model}, as was for instance observed in the kagome lattice.
 A second improvement concerns the calculation of the \xref{effective energy barrier}.
 There, accounting for \link{asymmetric energy barrier}{asymmetric switching channels} proved key to, e.g., correctly reproduce \xref{coercive fields} in pinwheel ASI, provided that the reduced magnetisation during \link{non-coherent magnetisation reversal}{non-coherent reversal processes} was also accounted for.
-While it is possible to obtain an exact solution for the energy barrier in OOP magnets, the assumption of a sinusoidal \xref{energy landscape} is likely inaccurate due to non-coherent reversal in real OOP nanomagnets. \par
+While it is possible to obtain an exact solution for the energy barrier in OOP magnets, the assumption of a sinusoidal \xref{energy landscape} is likely inaccurate due to non-coherent reversal in real OOP nanomagnets. \\\par
 Furthermore, two distinct algorithms have been implemented to handle switching events: the \xref{first-switch method} and \xref{Metropolis-Hastings sampling}.
 They are both useful in different circumstances, as the former is best suited to simulate temporal (out-of-equilibrium) dynamics, while the latter can more efficiently explore equilibrium configurations.
 In particular, the MH algorithm can benefit from \link{multi-switching}{multiple simultaneous switching events}, which is justifiable if these switching magnets are all sufficiently distant.
-It was verified that this yields correct results for a set of test cases on various lattices, and the accuracy of the first-switch method was later assessed in pinwheel and kagome ASI through comparison with experimental results. \par
+It was verified that this yields correct results for a set of test cases on various lattices, and the accuracy of the first-switch method was later assessed in pinwheel and kagome ASI through comparison with experimental results. \\\par
 The usage of a grid to represent ASI brought with it several advantages, at the cost of some geometrical restrictions.
 In particular, the grid enables the efficient calculation of the \xref{magnetostatic interaction} between all magnets in the system, whereas other codes typically implement a \link{truncated kernel}{truncation distance} to improve performance.
 However, we found that truncation, even at a distance as far as 20 grid cells, incurs a \SIrange{5}{10}{\percent} error on the total magnetostatic interaction energy of a magnet.
