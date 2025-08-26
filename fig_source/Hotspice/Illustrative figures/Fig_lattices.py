@@ -111,15 +111,15 @@ def show_all_lattices():
     
     ## Combine all plots
     fig, axes = plt.subplots(nrows=3, ncols=4, figsize=(4*FIGSIZE, 3*FIGSIZE))
-    fig.subplots_adjust(left=0.06, bottom=0, right=1, top=0.93, wspace=0.05, hspace=0.15)
+    fig.subplots_adjust(left=0.07, bottom=0, right=1, top=0.925, wspace=0.05, hspace=0.15)
     for i, (ASI, kwargs) in enumerate(ASIs.items()):
         ax: plt.Axes = axes.flat[i]
         get_lattice_fig(ASI, ax=ax, **kwargs)
         name = kwargs.get('name', ' '.join(ASI.__name__.split('_')[1:]).lower().capitalize())
-        ax.set_title(name, fontdict={'fontsize': 32})
-        thesis_utils.label_ax(ax, i, form="(%s)" + ("\n" if i < 4 else ""), fontsize=32)
+        ax.set_title(name, fontdict={'fontsize': 36})
+        thesis_utils.label_ax(ax, i, form="(%s)" + ("\n" if i < 4 else ""), fontsize=36, offset=(-0.05,0))
     # Add in-plane and out-of-plane titles
-    linekwargs = dict(color='k', linestyle="-", linewidth=5, markeredgewidth=5, marker="_", markersize=32, solid_capstyle='butt')
+    linekwargs = dict(color='k', linestyle="-", linewidth=5, markeredgewidth=5, marker="_", markersize=36, solid_capstyle='butt')
     cutoff, x, margin = 0.32, 0.02, 0.004
     fig.text(x, (1 + cutoff + 0.01 - margin)/2, "In-plane", fontsize=48, rotation='vertical', horizontalalignment="center", verticalalignment="center")
     fig.add_artist(lines.Line2D([0.045, 0.045], [cutoff + 0.01 - margin, 1-margin], **linekwargs))
