@@ -12,7 +12,7 @@ def main_plot():
     thesis_utils.init_style()
     
     ## Create a figure that we can draw on everywhere
-    figsize = (thesis_utils.page_width/2, 2)
+    figsize = (thesis_utils.page_width/2, 2.5)
     fig = plt.figure(figsize=figsize)
     ax: plt.Axes = fig.add_axes([0, 0, 1, 1])
     ax.set_xlim([0, 1])  # Set x-axis limits
@@ -25,7 +25,7 @@ def main_plot():
     ax.patch.set_alpha(0)  # Transparent background
     
     w = 0.9
-    nx, ny = 21, 7
+    nx, ny = 21, 11
     plot_ASI(ax, x_max/2, y_max/2, w, nx=nx, ny=ny, magnet_enlargement=2, ASI_type=hotspice.ASI.IP_Kagome, lw=1, colors=["C0", "C1", "C2", "C1", "C0", "C2"])
         
     ## Save the result
