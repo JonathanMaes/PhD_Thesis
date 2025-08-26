@@ -4,6 +4,8 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 
+from matplotlib.ticker import LogLocator
+
 import os
 os.environ["HOTSPICE_USE_GPU"] = "true"
 import hotspice
@@ -75,17 +77,19 @@ def plot(data_dir=None):
     
     ## We need two axes, because Matplotlib does not natively support broken axes.
     thesis_utils.init_style()
-    fig = plt.figure(figsize=(thesis_utils.page_width/2, 3.1))
+    fig = plt.figure(figsize=(thesis_utils.page_width/2, 2.7))
     ax1 = fig.add_subplot(111)
     ax2 = ax1.twiny()
     ax1.plot(N, data['attempts/s'], label="Samples / sec")
     ax1.plot(N, data['MCsteps/s'], label="MC sweeps / sec")
     # ax1.plot(N, data['switches/s'], label="Switches / sec")
     ax1.set_title(PU, pad=10)
-    thesis_utils.label_ax(ax1, int(GPU), offset=(-0.15, 0.225))
+    thesis_utils.label_ax(ax1, int(GPU), offset=(-0.15, 0.3))
     ax1.set_xlim([N.min(), N.max()])
     ax1.set_xscale('log')
     ax1.set_yscale('log')
+    ax1.xaxis.set_minor_locator(LogLocator(base=10.0, subs=np.arange(1.0, 10.0)*0.1, numticks=10))
+    ax1.yaxis.set_minor_locator(LogLocator(base=10.0, subs=np.arange(1.0, 10.0)*0.1, numticks=10))
     ax1.set_xlabel("Number of magnets")
     if not GPU: ax1.set_ylabel("Throughput [$s^{-1}$]")
 
@@ -96,9 +100,9 @@ def plot(data_dir=None):
     ax2.xaxis.grid(linestyle=':', zorder=1)
     ax2.set_xlabel("Cells in x- and y-direction")
     
-    if not GPU: ax2.legend(*ax1.get_legend_handles_labels(), loc="lower left")
-    fig.tight_layout()
-    fig.subplots_adjust(top=0.78, bottom=0.15)
+    if not GPU: ax2.legend(*ax1.get_legend_handles_labels(), loc="lower left", fontsize=thesis_utils.fs_small)
+    fig.tight_layout(pad=0.1)
+    fig.subplots_adjust(top=0.74, bottom=0.17)
     hotspice.utils.save_results(figures={f'Performance_{PU}': fig}, outdir=data_dir, copy_script=False)
 
 
