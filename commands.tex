@@ -150,7 +150,7 @@
 	\jonathanskip\vspace{1em}
 	\begin{tikzpicture}
 		\node[rounded corners=10pt, fill=figcolor, inner sep=10pt] (figbox) {
-			\begin{minipage}{0.955\linewidth}
+			\begin{minipage}{0.935\linewidth}
 		  		\centering
 		  		\textsf{\tabcaption{#2\label{#1}}}
 		  		{\sf
@@ -170,7 +170,7 @@
 		\centering
 		\begin{tikzpicture}
 			\node[rounded corners=10pt, fill=figcolor, inner sep=10pt] (figbox) {
-				\begin{minipage}{0.955\linewidth}
+				\begin{minipage}{0.945\linewidth}
 					\centering
 					\includegraphics[width=#1\textwidth]{#2}
 					\textsf{\caption{#3\label{#2}}}
@@ -189,7 +189,7 @@
 		\centering
 		\begin{tikzpicture}
 			\node[rounded corners=10pt, fill=figcolor, inner sep=10pt] (figbox) {
-				\begin{minipage}{0.955\linewidth}
+				\begin{minipage}{0.945\linewidth}
 					\centering
 					\begin{tabular}{cc}
 						\small\parbox[c]{0.47\linewidth}{\centering\textsf{\textbf{(a)} #3}} & 
@@ -213,7 +213,7 @@
 		\centering
 		\begin{tikzpicture}
 			\node[rounded corners=10pt, fill=figcolor, inner sep=10pt] (figbox) {
-				\begin{minipage}{0.955\linewidth}
+				\begin{minipage}{0.945\linewidth}
 					\centering
 					\begin{tabular}{cc}
 						\includegraphics[width=#1\linewidth]{#2} & 
@@ -280,7 +280,7 @@
 		\centering
 		\begin{tikzpicture}
 			\node[rounded corners=10pt, fill=figcolor, inner sep=10pt] (figbox) {
-				\begin{minipage}{0.955\linewidth}
+				\begin{minipage}{0.945\linewidth}
 					\centering
 					#1
 					\textsf{\caption{#2}} % Ensure compatibility with hypcap
@@ -324,7 +324,7 @@
 \newcommand{\xfigssmallbig}[6][unused]{
 	\jonathanskip
 \colorbox{figcolor}{
-	\begin{minipage}{0.955\linewidth}
+	\begin{minipage}{0.945\linewidth}
   		\centering
 		\begin{tabular}{cc}
 		\small\parbox[c]{0.32\linewidth}{\textsf{\textbf{(a)} #3}} & \small\parbox[c]{0.62\linewidth}{\textsf{\textbf{(b)} #5}}\normalsize\\
@@ -339,7 +339,7 @@
 \newcommand{\xfigssize}[8][unused]{
 	\jonathanskip
 \colorbox{figcolor}{
-	\begin{minipage}{0.955\linewidth}
+	\begin{minipage}{0.945\linewidth}
   		\centering
 		\begin{tabular}{cc}
 		\small\parbox[c]{#7\linewidth}{\textsf{\textbf{(a)} #3}} & \small\parbox[c]{#8\linewidth}{\textsf{\textbf{(b)} #5}}\normalsize\\
