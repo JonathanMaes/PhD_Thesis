@@ -9,7 +9,7 @@ However, implementing these kinds of modern machine learning systems on conventi
 Upcoming bottlenecks posed by transistor scaling and data transfer between memory and processing units in traditional von Neumann architectures have attracted significant interest to alternative computing concepts.
 One such concept is neuromorphic computing, which aims to address this inefficiency and data transfer bottleneck by mimicking the synaptic interconnectivity of a biological brain, where memory and processing coincide.
 A particularly interesting avenue in this regard is in-materia computing, which asks the question of which computations a physical material executes naturally.
-Hence, rather than imposing mathematical operations onto a physical object, like a circuit of transistors does, far more efficient systems can be envisioned by reducing the layers of abstraction present in current systems. \\ %intrinsic device nonlinearity and history dependence for free [arXiv]
+Hence, rather than imposing mathematical operations onto a physical object, like a circuit of transistors does, far more efficient systems can be envisioned by reducing the layers of abstraction present in current systems. \newpage %intrinsic device nonlinearity and history dependence for free [arXiv]
 
 At the intersection of neuromorphic computing and in-materia computing lies the paradigm of reservoir computing (RC).
 At the core of RC lies a non-linear dynamical system with fading memory --- the ``reservoir'' --- which is treated as a black box.
@@ -26,7 +26,7 @@ All the aforementioned concepts are introduced in more detail throughout the int
 \cref{ch:Hotspice} presents the open-source \hotspice Monte Carlo simulator for ASI, developed with the intent to evaluate reservoir computing strategies and to determine optimal system parameters.
 It uses an Ising-like model: each magnet in the ASI is represented by a point dipole that can switch between two stable states.
 Several model improvements are presented, whose accuracy in simulating the behaviour of ASI is then compared and discussed.
-These focus on three key aspects of the simulation:
+These focus on three key aspects of the simulation:\\
 \begin{itemize}[noitemsep,nolistsep] % With enumitem package
 	\item how the finite size of magnets is accounted for when computing magnetostatic interactions,
 	\item how the effective energy barrier between the stable states of a nanomagnet is estimated,
