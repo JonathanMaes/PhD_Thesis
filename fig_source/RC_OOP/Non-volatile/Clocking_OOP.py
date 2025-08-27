@@ -223,7 +223,7 @@ def annotate_connection(ax: plt.Axes, text, x1, y1, x2, y2, color='k', opposite_
     ha = ["right", "center", "left"][::(-1 if opposite_side else 1)][ln_slope]
     va = "baseline" if opposite_side else "top"
     if x1 == x2: ha, va = "left" if opposite_side else "right", "center_baseline" # Special case: vertical line
-    offset_x = [text_pad, 0, -text_pad][::(-1 if opposite_side else 1)][ln_slope] if x1 != x2 else text_pad*(1 if opposite_side else -1)
+    offset_x = [text_pad, 0.6, -text_pad][::(-1 if opposite_side else 1)][ln_slope] if x1 != x2 else text_pad*(1 if opposite_side else -1)
     offset_y = text_pad*(1 if opposite_side else -1)*(va != "center_baseline")
     text_offset = transforms.offset_copy(ax.transData, x=offset_x, y=offset_y, units="points", fig=ax.get_figure())
     ax.text(x=np.mean((x1, x2)), y=np.mean((y1, y2)), s=text, color=color, ha=ha, va=va, transform=text_offset, fontdict=dict(size=text_size))
