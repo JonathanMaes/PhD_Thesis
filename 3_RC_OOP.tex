@@ -753,6 +753,7 @@ Only the weights $\vc{w}$ of the \link{linear readout layer}{readout layer} have
 For example,~\cref{fig:3:Transformation_freq-magn_SINESQ} shows results for a double-frequency sine wave as target function.
 For this transformation, the best fit attainable with a linear scaling of the input signal --- the red line in the bottom panel of~\cref{fig:3:Transformation_freq-magn_SINESQ} --- is simply a constant.
 
+\vspace{-1.5em}
 \sidefigs[0.53]{3_RC_OOP/Thermally active/Transformation/freq-magn/target_SINESQ/Sweep20231023131601.pdf}{3_RC_OOP/Thermally active/Transformation/freq-magn/target_SINESQ/details.pdf}{
 	\label{fig:3:Transformation_freq-magn_SINESQ}
 	Transformation of a sine wave input signal into a double-period sine wave by an $11 \times 11$ OOP square-lattice ASI \link{reservoir computing}{reservoir}.
@@ -761,6 +762,7 @@ For this transformation, the best fit attainable with a linear scaling of the in
 	The black contours indicate $1/\MSE \sim 8$, encompassing regions where the reservoir outperforms a linear transformation of the original input signal.
 	The panel at the bottom provides a temporal view of the transformation for $f=\SI{0.5}{\hertz}$ and $B_1=\SI{0.25}{\milli\tesla}$, showing the input sine-wave signal (black dotted curve) and target double-frequency sine (black dashed line) alongside the prediction with and without the reservoir (blue and red curve, respectively).
 }
+\vspace{-1em}
 
 For this ASI \link{reservoir computing}{reservoir} to accurately produce a double-frequency sine, the input frequency must not exceed a threshold frequency $f_\mathrm{c} \approx \SI{10}{\hertz}$.
 The quality of the double-period sine quickly deteriorates above $f_c$, as the system dynamics can no longer keep up to accurately produce a sine of double that frequency.

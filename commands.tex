@@ -241,7 +241,7 @@
 				\end{minipage}
 				\hspace{0.01\textwidth}
 				\begin{minipage}[c]{\fpeval{1 - 0.083 - #1}\textwidth}
-					\centering
+					\centering\vspace{-1.5em}
 					\textsf{\caption{\justifying #3\label{#2}}} % Ensure compatibility with hypcap
 				\end{minipage}
 			};
@@ -260,11 +260,11 @@
 			\node[rounded corners=10pt, fill=figcolor, inner sep=10pt] (figbox) {
 				\begin{minipage}[c]{#1\textwidth}
 					\centering
-					\includegraphics[width=\textwidth]{#2}\\
+					\includegraphics[width=\textwidth]{#2}\\[1.5em]
 					\includegraphics[width=\textwidth]{#3}
 				\end{minipage}
 				\begin{minipage}[c]{\fpeval{1 - 0.055 - #1}\textwidth}
-					\centering
+					\centering\vspace{-1.5em}
 					\textsf{\caption{\justifying #4\label{#2}}} % Ensure compatibility with hypcap
 				\end{minipage}
 			};
