@@ -125,8 +125,8 @@ if __name__ == "__main__":
 
 
     if args.iteration is None: # This gets run if the file is called without command line arguments
-        plot_kwargs = {"param_x": "a", "unit_x": "nm", "transform_x": lambda x: x*1e9,
+        plot_kwargs = {"param_x": "a", "unit_x": "nm", "transform_x": lambda x: x*1e9, "n_xticks": 3,
                        "param_y": "ext_field", "unit_y": "mT", "transform_y": lambda y: y*1e3,
                        "fig_width": thesis_utils.page_width, "fig_height": thesis_utils.page_width/2.4,
-                       "colormap": "magma"}
+                       "colormap": "magma", "pad": 0, "subplots_adjust_kwargs": dict(wspace=0.25)}
         sweep.plot(os.path.join(os.path.splitext(__file__)[0], "Sweep20230208082817.json"), plot=False, **plot_kwargs)
