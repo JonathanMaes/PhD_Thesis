@@ -972,7 +972,8 @@ In our case, using the domain types for computation requires a readout method th
 This precludes the usage of a local $\mavg$ readout, as used for the thermally active system, nor can the order parameters $\qNN$ be used.
 Instead, the domain type of each magnet will henceforth be used as the readout quantity, by mapping the two equivalent domain types to the values $\pm 1$.
 Recall that it is theoretically possible to determine the state of all magnets in a small ASI from \link{anomalous Hall effect}{AHE} measurements~\cite[Supp. 7]{KUR-24}.
-Hence, such an AFM readout is practically achievable since it only requires a multiplication of the state of each magnet by $\pm 1$, depending on their location in the ASI. \par
+Hence, such an AFM readout is practically achievable since it only requires a multiplication of the state of each magnet by $\pm 1$, depending on their location in the ASI. \\\par
+
 To turn these individual magnetic states into a robust output vector, we will once again use averaging to avoid \xref{overfitting}.
 Since the $x$- and $y$-axes are equivalent, this is done via ``\xlabel{squinting}'' --- effectively dividing the ASI into a coarser square lattice and averaging the states of $k \times k$ magnets for each \link{linear readout layer}{readout} value.
 Hence, absolute values $<1$ indicate the presence of a \xref{domain wall} and it is even possible to distinguish between straight domain walls, corners and other features based on these averaged readout values.
@@ -1024,7 +1025,7 @@ Note also that, during the $B$-cycles in~\cref{fig:3:Clocking_clearly_EBstd0}, t
 } it previously had during the $A$-cycles.
 Instead, it appears to preferably grow in such a way that it ends up with mostly horizontal and vertical edges, rather than diagonal ones.
 This is part of the general phenomenon that, in the \xref{AFM clocking protocol}, domain growth preferentially occurs at the corners of a domain. \par
-To more clearly illustrate this phenomenon,~\cref{fig:3:Clocking_massive_seeded} shows a far larger ASI which was initialised in one ground state, apart from one ``seed'' magnet at the centre which is of the opposite domain type as compared to all other magnets in the system.
+To more clearly illustrate this phenomenon,~\cref{fig:3:Clocking_massive_seeded} shows a far larger ASI which was initialised in one ground state, apart from one ``seed'' magnet at the centre which is of the opposite domain type as compared to all other magnets.
 
 \vspace{-1.5em}
 \makeshiftfig{
@@ -1045,7 +1046,8 @@ During the first clocking cycle, one neighbour of the seed magnet will switch fi
 Magnets to the side of this elongated domain can also randomly switch, resulting in its gradual widening.
 If this occurs at one of the domain's spearheads, whose tip is normally only 1 magnet thick, a small edge will be created that is 2 magnets long.
 This is sufficient for the domain to fork into two diagonal directions since growth occurs preferentially at the corners of a domain.
-This is a stochastic process: while the left side of the central domain in~\cref{fig:3:Clocking_massive_seeded} randomly forks between the second and third panels, the right half does not during this particular run. \par % During this particular run
+This is a stochastic process: while the left side of the central domain in~\cref{fig:3:Clocking_massive_seeded} randomly forks between the second and third panels, the right half does not during this particular run. \\\par
+
 Note that, during the $B$-cycles in~\cref{fig:3:Clocking_massive_seeded}, white-coloured domains nucleate at the edges while the central white domain re-grows.
 The white domains remain separated for about half as many $B$-cycles (18) as $A$-cycles were applied (36), at which time they reconnect and the rhombic black domain disappears.
 Due to this imbalance, it is hard for domains to propagate far towards the centre when the input sequence contains equal amounts of each input bit.
@@ -1060,6 +1062,7 @@ This often makes it impossible to find an input magnitude for which \xref{domain
 Therefore, ``\xlabel{leaking}'' can occur through low-barrier unstimulated magnets, which can spontaneously respond to the changing state of their neighbours even when they themselves are not stimulated~\cite{DisorderGroundStateASI}. % DisorderGroundStateASI says: "As expected, disorder allows dynamics to start inside the array at sites where ``loose'' spins with smaller switching fields are located."
 This can be observed in~\cref{fig:3:Clocking_clearly_EBstd5} for an example with $\sigma(\EEA)/\EEA = \SI{5}{\percent}$ and high \link{magnetostatic coupling}{MS coupling} $\EMC = 200 \kBT$ compared to the anisotropy $\EEA = 100 \kBT$ to highlight leaking.
 
+\vspace{-0.5em}
 \makeshiftfig{
 	\includegraphics[width=\linewidth]{3_RC_OOP/Nonvolatile/Clocking_clearly_EBstd5_domains.pdf}
 	\vspace{-1.5em} % Looks more natural for this figure
@@ -1137,7 +1140,11 @@ Therefore, while the optimal field magnitude is predictable to some extent, it i
 Three \xref{matrix rank-based metrics} can be calculated (\cref{sec:1:RC_metrics_KQ}): the \indexlabel[nolabel]{kernel-quality}\xref{kernel-quality} $K$, \indexlabel[nolabel]{generalisation-capability}\xref{generalisation-capability} $G$ and \indexlabel[nolabel]{computing capacity}\xref{computing capacity} $C=K-G$.
 The latter provides a general indication of how suitable a particular system is for reservoir computing.
 \cref{fig:3:Clocking_Sweeps_binary_KQ} shows these metrics for the baseline system over a range of lattice spacings $a$ and field magnitudes $B$.
-Recall that the maximum value of $K$, $G$ and $C$ is the number of \link{linear readout layer}{readout nodes}; here, a $20 \times 20$ ASI with $10 \times 10$ readout nodes --- each representing the average domain type of a $2 \times 2$ magnet cluster --- yields a maximum value of 100 for all three metrics.
+Recall that the maximum value of $K$, $G$ and $C$ is the number of \link{linear readout layer}{readout nodes}; here, a $20 \times 20$ ASI with $10 \times 10$ readout nodes --- each representing the average domain type of a $2 \times 2$ magnet cluster --- yields a maximum value of 100 for all three metrics. \\\par
+Some noise is visible in the figure due to the random distribution of $\EEA$; for each set of parameters, a new randomly sampled value of $\EEA$ was assigned to each magnet.
+The local noise level therefore reflects how impactful a $\sigma(\EEA)/\EEA = \SI{5}{\percent}$ disorder is on the clocking dynamics and, by extension, on RC performance.
+For example, near the maximum of the metric map in~\cref{fig:3:Clocking_Sweeps_binary_KQ}, the computing capacity $C$ may vary between approximately 50 and 80.
+This suggests that, unless such defects can be reproducibly incorporated into the system, performance can vary significantly between various manufactured ASI samples, though this effect will diminish in larger lattices. \par
 
 \vspace{-1em}
 \xfig{3_RC_OOP/Nonvolatile/Sweeps/Sweep20230208082817.pdf}{
@@ -1148,11 +1155,8 @@ Recall that the maximum value of $K$, $G$ and $C$ is the number of \link{linear 
 	As readout, the average domain type of each $2 \times 2$ set of magnets is used, totalling 100 readout values.
 	Hence, the highest possible value of $K$, $G$ and $C$ is 100.
 }
+\vspace{-0.5em}
 
-Some noise is visible in the figure due to the random distribution of $\EEA$; for each set of parameters, a new randomly sampled value of $\EEA$ was assigned to each magnet.
-The local noise level therefore reflects how impactful a $\sigma(\EEA)/\EEA = \SI{5}{\percent}$ disorder is on the clocking dynamics and, by extension, on RC performance.
-For example, near the maximum of the metric map in~\cref{fig:3:Clocking_Sweeps_binary_KQ}, the computing capacity $C$ may vary between approximately 50 and 80.
-This suggests that, unless such defects can be reproducibly incorporated into the system, performance can vary significantly between various manufactured ASI samples, though this effect will diminish in larger lattices. \par
 The generalisation-capability $G$ is very low for any combination of $a$ and $B$, apart from a few outliers where the randomly sampled defect distribution results in uncharacteristically high values of $G$.
 Because $C=K-G$ provides an indication of RC performance, a low $G$ is advantageous: it indicates that recent inputs have a far greater impact on the current state of the system than older input cycles.
 In this baseline system, this low generalisation-capability allows the computing capacity $C$ to reach values as high as 80 out of 100.
@@ -1170,6 +1174,7 @@ Note that the non-linearity metric will naturally be lower for binary input than
 The reason for this is that binary input offers only two possible values, making it generally easier to fit a linear model to the input-output relationship.
 Therefore, the \indexlabel[nolabel]{parity check}\xref{parity check} metric is also shown, as it was specifically designed for binary input. % See ppt 20230207
 
+\vspace{-1.5em}
 \xfig{3_RC_OOP/Nonvolatile/Sweeps/Clocking_binary_TA_averaged.pdf}{
 	\label{fig:3:Clocking_Sweeps_binary_TA}
 	\link{linear estimator-based metrics}{Linear estimator-based metrics} for the same input, readout and system parameters as in~\cref{fig:3:Clocking_Sweeps_binary_KQ} ($20 \times 20$ OOP square-lattice ASI with $10 \times 10 = 100$ \link{linear readout layer}{readout nodes}, $\EEA = \SI{110}{\electronvolt} \pm \SI{5}{\percent}$, $\mu = \SI{0.25}{\femto\ampere\metre\squared}$), over the same range of lattice spacings $a$ and input magnitudes $B$.
@@ -1191,7 +1196,7 @@ The reason for this is that different initial states require different minimal i
 This is further complicated by defects, which may impede \xref{domain wall} motion.
 For example, when starting from the AFM ground state, domain walls must be injected from the edges and propagate throughout the system, whereas an initially uniform state will enable initial switches (i.e., \xref{domain nucleation}) to occur throughout the bulk of the system.
 Therefore, a field range exists where an ASI in the uniform state will respond to the input, while it would not if it were in the AFM ground state.
-This range is broader for more strongly-coupled and disordered systems. \par
+This range is broader for more strongly-coupled and disordered systems. \\\par
 This effect is an example of how metric maps can be affected by other factors than just system parameters.
 Therefore, to ensure consistency between the RC metric maps presented in this section, all simulations start from the AFM ground state\footnote{
 	While the high \link{net out-of-plane anisotropy}{anisotropy} $\EEA$ prevents the system from spontaneously reaching the ground state, it can be forced to the ground state by applying a single clocking cycle with a stronger stimulus than used during computation.
@@ -1203,20 +1208,23 @@ Now, RC metrics can be used to verify this claim: the \xref{linear estimator-bas
 While the \xref{memory capacity} and \xref{parity check} are still definitively non-zero, they are at least $\approx \SI{40}{\percent}$ lower than for a system with $\sigma(\EEA)/\EEA = \SI{5}{\percent}$ defects.
 Furthermore, while a region with near-unity \xref{non-linearity} now exists, the overlap between parameter combinations that yield decent non-linearity and those that yield decent memory capacity remains rather limited.
 
+\vspace{-1.5em}
 \xfig{3_RC_OOP/Nonvolatile/Sweeps/Sweep20230124100320.pdf}{
 	\label{fig:3:Clocking_Sweeps_binary_TA_EBstd0}
 	\link{linear estimator-based metrics}{Linear estimator-based metrics} for a defect-free system ($\sigma(\EEA) = 0$) with otherwise the same input, readout and system parameters as in~\cref{fig:3:Clocking_Sweeps_binary_TA} ($20 \times 20$ OOP square-lattice ASI with $10 \times 10 = 100$ readout nodes, $\EEA = \SI{110}{\electronvolt}$, $\mu = \SI{0.25}{\femto\ampere\metre\squared}$), over the same range of lattice spacings $a$ and input magnitudes $B$.
 	The \xref{non-linearity} is bounded in the range $[0,1]$, while the \xref{memory capacity} and \xref{parity check} have no upper limit.
 }
 
-While this shows that defects improve the \xref{memory capacity} of the system, it does not prove that a defect rate $\sigma(\EEA)/\EEA = \SI{5}{\percent}$ would be optimal.
-To assess this,~\cref{fig:3:Clocking_Sweeps_binary_TA_EBstd} shows \xref{linear estimator-based metrics} for a range of defect rates $\sigma(\EEA)/\EEA$ and input \link{external magnetic field}{field} magnitudes $B$ while the lattice spacing was kept constant.
+While this shows that defects improve the \xref{memory capacity} of the system, it does not mean a defect rate of \SI{5}{\percent} would be optimal.
+To assess this, \cref{fig:3:Clocking_Sweeps_binary_TA_EBstd} shows \xref{linear estimator-based metrics} for a range of defect rates $\sigma(\EEA)/\EEA$ and input \link{external magnetic field}{field} magnitudes $B$ while the lattice spacing was kept constant.
 
+\vspace{-1em}
 \xfig{3_RC_OOP/Nonvolatile/Sweeps/Sweep20250327111551.pdf}{
 	\label{fig:3:Clocking_Sweeps_binary_TA_EBstd}
 	\link{linear estimator-based metrics}{Linear estimator-based metrics} as a function of disorder $\sigma(\EEA)/\EEA$ with otherwise the same input, readout and system parameters as in~\cref{fig:3:Clocking_Sweeps_binary_TA} ($20 \times 20$ OOP square-lattice ASI with $10 \times 10 = 100$ \link{linear readout layer}{readout nodes}, $\EEA = \SI{110}{\electronvolt}$, $\mu = \SI{0.25}{\femto\ampere\metre\squared}$), over the same range of input magnitudes $B$, with $a=\SI{230}{\nano\metre}$ kept constant.
 	The \xref{non-linearity} is bounded in the range $[0,1]$, while the \xref{memory capacity} and \xref{parity check} have no upper limit.
 }
+\vspace{-0.5em}
 
 The trade-off between \xref{non-linearity} and \xref{memory capacity}, which has been extensively discussed~\cite{dambre2012information,MemoryNonlinearityReservoirs,RC_BeyondMemoryNonlinearity,RC_unification} and reported in various systems~\cite{DynamicEmergence_NanomagneticSystem,RC_TaskAgnosticMetrics_v2,TaskAdaptivePRC}, is striking in this figure as well.
 The non-linearity quickly drops as the disorder increases; only systems with rather low disorder ($< \SI{10}{\percent}$) display an appreciable non-linearity, and only do so over a limited field range.
