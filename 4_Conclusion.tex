@@ -5,14 +5,13 @@ Throughout this thesis, we have investigated the use of \xref{artificial spin ic
 Our interest in OOP ASI for \xref{reservoir computing} was motivated by its well-established input (\link{spin--orbit torque}{SOT}) and readout (\link{anomalous Hall effect}{AHE}) methods, but its RC potential had yet to be quantified.
 To support this work, we developed \hotspice, a flexible Monte Carlo simulator that captures the collective behaviour of large ASI arrays.
 Altogether, we have covered three main topics.
-\begin{itemize}
+\begin{itemize}[itemsep=-3pt]
 	\item The development of \textbf{\hotspice}, with a focus on several improvements that increase the physical accuracy and algorithmic performance of the underlying model.
 	\item The demonstration that \textbf{thermally active} OOP ASI can serve as an analog-input reservoir by harnessing its \link{logarithmic relaxation}{spontaneous relaxation}, as confirmed through non-linear signal transformation and prediction.
 	\item The design and numerical validation of a \link{AFM clocking protocol}{clocking protocol} for \textbf{non-volatile} OOP ASI that provides \link{stepwise domain wall motion}{controlled domain wall motion}, enabling it to be used as a binary-input reservoir.
 \end{itemize}
 The key conclusions are summarised below, followed by an outline of promising avenues for future research.
 
-\newpage
 \section{Summary of main results}
 The \link{point dipole model}{Ising-like model} used by \textbf{\hotspice} to represent \xref{single-domain nanomagnets} in an ASI allows it to strike a practical balance between physical accuracy and computational efficiency.
 Two distinct switching algorithms were implemented: the \xref{first-switch method} is best used to simulate temporal dynamics, while \link{Metropolis-Hastings sampling}{Metropolis-Hastings (MH) sampling} efficiently explores the equilibrium state space.
@@ -35,7 +34,6 @@ In general, we can say that controlled domain wall motion in any ASI requires, a
 In summary, we have established that OOP ASI can indeed function as a versatile \link{physical reservoir computing}{physical reservoir}: in its thermally active form, it responds to analog input akin to a \xref{leaky integrator}, while its non-volatile counterpart supports binary input through the \link{AFM clocking protocol}{clocking protocol}.
 Meanwhile, \hotspice has proven its worth as a flexible and efficient simulator, usable for both the exploration of ASI physics and their optimisation in \link{neuromorphic computing}{unconventional computing} architectures.
 
-\newpage
 \section{Outlook and future directions}
 Looking ahead, several avenues can strengthen both the \hotspice simulation toolkit and the proposed \link{physical reservoir computing}{physical reservoir} concepts.
 
@@ -66,8 +64,7 @@ While the presented approaches complement each other in some ways, they both hav
 Generally, OOP ASI presents less design freedom than IP ASI, as the \xref{easy axis} of each \link{single-domain nanomagnet}{magnet} is always vertical.
 We therefore only considered the square lattice, as an example of a lattice without nearest-neighbour \xref{frustration}.
 It can be interesting to consider whether frustrated OOP lattices (e.g., triangle, Cairo\dots) might exhibit more chaotic dynamics --- though the reservoir protocols used here would likely yield very similar results regardless of the precise lattice used because all OOP lattices have a more or less \link{antiferromagnetic}{AFM} ground state.
-As such, it may be more worthwhile to explore other approaches that introduce spatial variations, akin to the \xref{property gradient}, like uneven current distributions or local input. \\\par
-
+As such, it may be more worthwhile to explore other approaches that introduce spatial variations, akin to the \xref{property gradient}, like uneven current distributions or local input. \par
 While a \link{AFM clocking protocol}{clocking scheme} in non-volatile ASI enables \link{stepwise domain wall motion}{controlled dynamics}, it is limited to discrete input and requires intricate manufacturing of conduction pathways.
 However, analog data is more prevalent in nature and allows a higher information density, so it is likely desirable to use the full potential of analog input whenever possible.
 A few approaches were proposed to combine the clocking scheme with analog input, but were ultimately dismissed for not yielding the rich dynamics we require.
@@ -94,8 +91,9 @@ It is also possible to enhance performance by embedding the reservoir into highe
 I believe the recent review by Yan~\etal{}~\cite{ChallengesFutureRC} paints a realistic picture of the future role of PRC.
 Physical reservoirs will not replace conventional computers, nor should they.
 Instead, both systems can complement one another, with PRC being employed at the edge to provide early low-power processing of incoming data inside a larger architecture.
-PRC is part of the more general idea to use the inherent processing power of physical systems when possible --- a concept which certainly has its merit but can be hard to reconcile with current computing architectures. \\\par
+PRC is part of the more general idea to use the inherent processing power of physical systems when possible --- a concept which certainly has its merit but can be hard to reconcile with current computing architectures.
 
+\newpage
 In conclusion, while OOP ASI is alluring for its ease of electrical interfacing, the aforementioned factors complicate its usage as a \link{physical reservoir computing}{physical reservoir}.
 Nonetheless, we succeeded in using it as such, with a performance on par with other types of reservoirs described in literature.
 Following this numerical exploration of the RC potential of OOP ASI, a lithographic experimental realisation of the \link{AFM clocking protocol}{clocking protocol} would be desirable, to achieve a better understanding of its performance, feasibility and efficiency in a real environment.
