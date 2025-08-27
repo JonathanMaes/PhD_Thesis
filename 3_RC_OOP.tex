@@ -596,7 +596,7 @@ The performance is then quantified by the \xlabel{mean squared error} ($\MSE$) o
 Since all signals considered here will be normalised to the unit interval $[0,1]$, no additional normalisation is necessary. \par
 To interpret this value, the mean squared error of two estimators will be compared: one that is trained on the \link{reservoir computing}{reservoir} output $\vc{x}(t)$ as described before, and one that is trained only on the raw 1D input signal $s(t)$ (augmented with a constant\footnote{
 	Training an \link{ordinary least-squares}{OLS estimator} on a 1D signal is equivalent to an optimal scaling to fit the signal to the target function.
-	The inclusion of a constant factor enables a vertical offset of the input signal for a better fit (yielding up to $10 \times$ lower baseline MSE).
+	Including a constant factor enables a vertical offset of the input signal for a better fit (yielding up to $10 \times$ lower baseline MSE).
 	Some studies do not use such a constant factor~\cite{gartside2022reconfigurable}, thereby lowering the quality of the raw-input baseline and elevating the relative performance of the \link{reservoir computing}{reservoir}.
 	Including the constant offset enables a fair comparison, as high-anisotropy magnets may also provide access to a near-constant bias for the reservoir.
 	% Note that the estimator should not be able to offset the input signal in time: this would make the baseline irrelevant in cases where the target is simply a time-offset version of the input, like a Mackey-Glass prediction.
@@ -640,16 +640,16 @@ Since the $\MSE$ metric considers a square wave a better fit to a sawtooth than 
 \vspace{-1em}
 \makeshiftfig{
 	\includegraphics[width=\linewidth]{3_RC_OOP/Thermally active/Transformation/freq-magn/baseline/averaged.pdf}\\
-	\vspace{-1em}
+	\vspace{0em}
 	\includegraphics[width=\linewidth]{3_RC_OOP/Thermally active/Transformation/freq-magn/baseline/details.pdf}
-	\vspace{-2.5em} % Looks more natural for this figure
+	\vspace{-2em} % Looks more natural for this figure
 }{
 	\label{fig:3:Transformation_freq-magn_baseline}
 	Monte Carlo simulations of a sine-to-sawtooth signal transformation performed by a thermally active $11 \times 11$ OOP square-lattice ASI \link{reservoir computing}{reservoir}.
 	The top panel shows the inverse \xref{mean squared error} $1/\MSE$ as a function of the input \link{external magnetic field}{magnetic field} frequency $f$ and amplitude $B_1$, with constant $B_0 = \SI{-0.35}{\milli\tesla}$ (as derived from~\cref{fig:3:Transformation_magn-magnmin}), averaged over 5 runs with random $\sigma(\EEA)/\EEA=\SI{5}{\percent}$ defects.
 	Higher (lower) values in yellow (purple) indicate better (worse) performance.
 	The black contours indicate $1/\MSE \sim 30$, encompassing regions where the reservoir outperforms a linear transformation of the original input signal.
-	In the top panel, several points are indicated with Roman numerals, corresponding to the bottom panels which show a temporal view of the transformation.
+	Roman numerals in the top panel indicate the points corresponding to the bottom panels, which show a temporal view of the transformation.
 	There, the input sine-wave signal (grey dotted curve) and target sawtooth signal (black dashed line) are shown, alongside the prediction with and without the reservoir (blue and red curve, respectively).
 }
 \vspace{-1em}
@@ -668,22 +668,23 @@ Instead, while there is still some periodic structure visible in the waveform ge
 The minimal \link{external magnetic field}{field} magnitude $B_0$ for this system without \link{property gradient}{gradient} was set to \SI{-0.35}{\milli\tesla}.
 This was determined through a similar parameter sweep as in~\cref{fig:3:Transformation_freq-magn_baseline}, but sweeping over $B_0$ and $B_1$ instead.
 A constant frequency $f=\SI{100}{\hertz}$ was chosen, corresponding to the timescale at which this system reaches $\mavg \approx 0$ (\cref{fig:3:OOP_relaxation}, panel 8).
-The results of this parameter sweep are presented in~\cref{fig:3:Transformation_magn-magnmin}, from which the optimal value of $B_0=\SI{-0.35}{\milli\tesla}$ was deduced.
-
-\vspace{-1em}
-\sidefig[0.53]{3_RC_OOP/Thermally active/Transformation/magn-magnmin/averaged.pdf}{
-	\label{fig:3:Transformation_magn-magnmin}
-	Inverse \xref{mean squared error} $1/\MSE$ of a sine-to-sawtooth signal transformation using a thermally active $11 \times 11$ OOP square-lattice ASI, as a function of the input \link{external magnetic field}{magnetic field} range $B_0 \rightarrow B_1$ at a constant input frequency $f=\SI{100}{\hertz}$.
-	Averaged results are shown over 5 runs with random $\sigma(\EEA)/\EEA=\SI{5}{\percent}$ defects.
-	Higher (lower) values in yellow (purple) indicate better (worse) performance.
-	The black contours indicate $1/\MSE \sim 30$, encompassing regions where the \link{reservoir computing}{reservoir} outperforms a linear transformation of the original input signal.
-}
+The results of this parameter sweep are presented in~\cref{fig:3:Transformation_magn-magnmin}, from which the optimal value of $B_0=\SI{-0.35}{\milli\tesla}$ was deduced. \par
 
 A point symmetry is visible about the origin of~\cref{fig:3:Transformation_magn-magnmin}: $\MSE(B_0, B_1) = \MSE(-B_0, -B_1)$.
 The reason for this is that the ASI is symmetrical under a reversal of the magnetic state.
 While the optimal input frequency often remains of a similar order of magnitude regardless of the transformation --- since the frequency is mostly dictated by the relaxation dynamics --- the optimal range of input \link{external magnetic field}{field} magnitudes is highly dependent on the desired transformation.
 For example, performance is somewhat reduced along the $B_0 = -B_1$ diagonal for the sine-to-sawtooth transformation considered here because this choice of input puts the sharp drop of the sawtooth at the moment when the input field is zero.
 Other transformations can behave very differently: this kind of $\MSE(B_0, B_1)$-map can be used to identify their optimal input field range at a given frequency.
+
+\vspace{-1em}
+\sidefig[0.53]{3_RC_OOP/Thermally active/Transformation/magn-magnmin/averaged.pdf}{
+	\label{fig:3:Transformation_magn-magnmin}
+	Inverse \xref{mean squared error} $1/\MSE$ of a \SI{100}{\hertz} sine-to-sawtooth signal transformation using a thermally active $11 \times 11$ OOP square-lattice ASI, as a function of the input \link{external magnetic field}{magnetic field} range $B_0 \rightarrow B_1$.
+	Averaged results are shown over 5 runs with random $\sigma(\EEA)/\EEA=\SI{5}{\percent}$ defects.
+	Higher (lower) values in yellow (purple) indicate better (worse) performance.
+	The black contours indicate $1/\MSE \sim 30$, encompassing regions where the \link{reservoir computing}{reservoir} outperforms a linear transformation of the original input signal.
+}
+\vspace{-1.5em}
 
 \paragraph{Gradient}
 The previous discussion on input frequencies and magnitudes used a system without a \xref{property gradient}.
@@ -694,16 +695,16 @@ The varying magnetic moment $\mu$ also affects the \link{magnetostatic coupling}
 \vspace{-1em}
 \sidefigs[0.53]{3_RC_OOP/Thermally active/Transformation/grad-magn/freq1/averaged.pdf}{3_RC_OOP/Thermally active/Transformation/grad-magn/freq1/details.pdf}{
 	\label{fig:3:Transformation_grad-magn_freq1}
-	Impact of the \xref{property gradient} $\Gamma$ on the performance of a \SI{1}{\hertz} sine-to-sawtooth signal transformation by an $11 \times 11$ OOP square-lattice ASI \link{reservoir computing}{reservoir}.
+	Impact of the \xref{property gradient} $\Gamma$ on the performance of a \SI{1}{\hertz} sine-to-sawtooth signal transformation by an $11 \times 11$ OOP square-lattice ASI.
 	The top panel shows the inverse \xref{mean squared error} $1/\MSE$ as a function of the gradient $\Gamma$ and amplitude $B_1$, with constant $B_0 = \SI{0}{\milli\tesla}$, averaged over 5 runs with random $\sigma(\EEA)/\EEA=\SI{5}{\percent}$ defects.
 	Higher (lower) values in yellow (purple) indicate better (worse) performance.
 	The black contours indicate $1/\MSE \sim 30$, encompassing regions where the reservoir outperforms a linear transformation of the original input signal.
-	The panel at the bottom provides a temporal view of the transformation for a gradient $\Gamma = \SI{52}{\percent}$ and $B_1=\SI{0.45}{\milli\tesla}$, showing the input sine-wave signal (black dotted curve) and target sawtooth signal (black dashed line) alongside the prediction with and without the reservoir (blue and red curve, respectively).
+	The bottom panel provides a temporal view of the transformation for $\Gamma = \SI{52}{\percent}$ and $B_1=\SI{0.45}{\milli\tesla}$, showing the input (grey dotted sine) and target (black dashed sawtooth) alongside the prediction with (blue) and without (red) the reservoir.
 }
 \vspace{-0.5em}
 
 The impact of the \link{property gradient}{gradient} is illustrated in~\cref{fig:3:Transformation_grad-magn_freq1} as a function of the input magnitude $B_1$\footnote{
-	$B_0 = \SI{0}{\milli\tesla}$ was chosen to show it can be deduced from the figure by a very low $1/\MSE$ at $B_1 = B_0$.
+	$B_0 = \SI{0}{\milli\tesla}$ was chosen to show it can be deduced from the figure by a constant very low $1/\MSE$ at $B_1 = B_0$.
 }.
 A low input frequency of $f=\SI{1}{\hertz}$ is used to assess whether the introduction of a gradient can improve upon the square-wave output that was generated at low frequencies in~\cref{fig:3:Transformation_freq-magn_baseline}.
 Indeed, with the optimal gradient for this particular system, $\Gamma \approx \SI{50}{\percent}$, the transformation no longer resembles a square wave despite the low frequency.
@@ -728,14 +729,13 @@ However, as $p$ increases, the training performance improves more rapidly than t
 This is a clear indication of \xref{overfitting}. \par
 Overfitting can be avoided by limiting the amount of readout nodes: in this system, for example, multiple columns can be averaged together.
 The performance with a total of $p=11$ such readout nodes is presented in~\crefSubFigRef{fig:3:Transformation_size-magn}{b} as a function of system size $N_x = N_y$ and the input magnitude $B_1$.
-Contrary to the single-column readout, the performance is now equal between the training and test sets, reaching a maximum of $1/\MSE \approx 60$ for $N_x=N_y=30$, beyond which enlarging the system no longer significantly affects the performance.
+Contrary to the single-column readout, the performance is now equal between the training and test sets, reaching a maximum of $1/\MSE \approx 60$ for $N_x=N_y=30$, beyond which enlarging the system no longer significantly affects the performance. \par
 
-\vspace{-1em}
 \makeshiftfig{
 	\includegraphics[width=\linewidth]{3_RC_OOP/Thermally active/Transformation/size-magn/resx==size/averaged.pdf}\\
-	%\vspace{-1em}
+	\vspace{2em}
 	\includegraphics[width=\linewidth]{3_RC_OOP/Thermally active/Transformation/size-magn/resx=11/averaged.pdf}
-	\vspace{-2.5em} % Looks more natural for this figure
+	\vspace{-1em} % Looks more natural for this figure
 }{
 	\label{fig:3:Transformation_size-magn}
 	Impact of system size on a sine-to-sawtooth signal transformation by an OOP ASI \link{reservoir computing}{reservoir} as measured by the inverse \xref{mean squared error} $1/\MSE$ as a function of the input \link{external magnetic field}{magnetic field} magnitude $B_1$, averaged over 5 runs with random $\sigma(\EEA)/\EEA=\SI{5}{\percent}$ defects.
@@ -760,7 +760,7 @@ For this transformation, the best fit attainable with a linear scaling of the in
 	The top panel shows the inverse \xref{mean squared error} $1/\MSE$ as a function of the input frequency and amplitude $B_1$, with constant $B_0 = \SI{0}{\milli\tesla}$.
 	Higher (lower) values in yellow (purple) indicate better (worse) performance.
 	The black contours indicate $1/\MSE \sim 8$, encompassing regions where the reservoir outperforms a linear transformation of the original input signal.
-	The panel at the bottom provides a temporal view of the transformation for $f=\SI{0.5}{\hertz}$ and $B_1=\SI{0.25}{\milli\tesla}$, showing the input sine-wave signal (black dotted curve) and target double-frequency sine (black dashed line) alongside the prediction with and without the reservoir (blue and red curve, respectively).
+	The panel at the bottom provides a temporal view of the transformation for $f=\SI{0.5}{\hertz}$ and $B_1=\SI{0.25}{\milli\tesla}$, showing the input sine-wave signal (grey dotted curve) and target double-frequency sine (black dashed line) alongside the prediction with and without the reservoir (blue and red curve, respectively).
 }
 \vspace{-1em}
 
@@ -795,7 +795,8 @@ This also provides the definition of the ``offset'' $h$, a dimensionless measure
 The previous discussion regarding the signal transformation task demonstrated that many system parameters affect the transformation quality --- including the input frequency $f$, the input magnitudes $B_0$ and $B_1$, the size $N_x \times N_y$ of the ASI, the \xref{property gradient} $\Gamma$, the number of \link{linear readout layer}{readout nodes} $p$ \dots\,
 Since the absolute values of $f$, $B_0$ and $B_1$ provide limited additional insight and are unrelated to the ASI itself, we will henceforth use \xref{Bayesian optimisation}\indexlabel[nolabel]{Bayesian optimisation}~\cite{BayesOpt_Mockus1975} over the $f \times B_0 \times B_1$-space to identify the optimal input characteristics for a given set of ASI parameters. \par % This was not done for the figures relating to the signal transformation task, as it would be prohibitively expensive to compute the optimal system parameters for each pixel in those figures.
 This allows us to concentrate on the most critical variable for a prediction task: the offset $h$, whose impact is illustrated in~\crefSubFigRef{fig:3:Prediction_MG}{a} for three particular systems with a different size and \xref{property gradient}.
-For the systems with a gradient, $\Gamma$ was also optimised during the Bayesian optimisation procedure, which typically yields $\Gamma \approx \SIrange{25}{30}{\percent}$, though less severe gradients also perform decently. \par
+For the systems with a gradient, $\Gamma$ was also optimised during the Bayesian optimisation procedure, typically yielding $\Gamma \approx \SIrange{25}{30}{\percent}$, though smaller gradients also perform decently. \\\par
+
 Most strikingly, the optimum MSE\footnote{
 	\crefSubFigRef{fig:3:Prediction_MG}{a} uses $\MSE$ rather than $1/\MSE$, as $1/\MSE$ for $h=0$ is much larger than for other $h > 0$.
 	Furthermore, it is most common in literature to use $\MSE$ when reported as a function of the offset $h$.
@@ -804,7 +805,13 @@ The resulting wave-like appearance of $\MSE(h)$ --- typical for this kind of inp
 The characteristic delay $\tau$ makes it easier to predict $\mathrm{MG}(t + \tau)$ --- a delay $\tau$ corresponds to $h=1$, which closely aligns with the observed minimum of $\MSE(h)$.
 For larger offsets $h$, more such minima will appear near $h \in \mathbb{N}$, though they quickly become less pronounced since the oscillator is not strictly periodic over $\tau$.
 The performance at $h=0$ presents the limit of what the thermally active ASI \link{reservoir computing}{reservoir} can achieve, due to the stochastic nature of the \link{logarithmic relaxation}{relaxation process} it employs.
-Unsurprisingly, this limit improves by adding a \link{property gradient}{gradient} and increasing the system size.
+Unsurprisingly, this limit improves by adding a \link{property gradient}{gradient} and increasing the system size. \par
+The $11 \times 11$ ASI reservoir without gradient (blue) only outperforms a linear scaling of the input (red) for $h > 0.4$.
+Including a \link{property gradient}{gradient} and enlarging the system improves the $\MSE$, though the gradient appears more impactful than the subsequent enlargement.
+More importantly than just the $\MSE$, the resulting waveform is also of better quality, as~\crefSubFigRef{fig:3:Prediction_MG}{b} shows for $h=1.4$.
+The smaller ASI without gradient struggles to reproduce the peaks of the target waveform, as its magnets only respond to a narrow \link{external magnetic field}{field} range.
+On the other hand, the larger ASI with an appreciable gradient $\Gamma \approx \SI{25}{\percent}$ contains magnets with various \xref{coercive fields}, enabling it to capture both the peaks and valleys, as these are likely to respectively coincide with low and high input fields.
+%Besides the peaks and valleys, also the relatively constant $y(t)$ from $t=\SIrange{0.732}{0.736}{\second}$ is captured decently by the reservoir.
 
 \vspace{-1em}
 \xfig{3_RC_OOP/Thermally active/Prediction/MG.pdf}{
@@ -815,30 +822,24 @@ Unsurprisingly, this limit improves by adding a \link{property gradient}{gradien
 	The ultimate performance limit of each reservoir, $\MSE(h=0)$, is indicated by the horizontal grey dotted line.
 	\textbf{(b)} Comparison of waveforms generated by an $11 \times 11$ ASI without a gradient (left) and a $20 \times 20$ ASI with a gradient $\Gamma = \SI{10}{\percent}$ (right), both for an offset $h=1.4$.
 }
-\vspace{-0.5em}
-
-The $11 \times 11$ ASI reservoir without gradient (blue) only outperforms a linear scaling of the input (red) for $h > 0.4$.
-Including a \link{property gradient}{gradient} and enlarging the system improves the $\MSE$, though the gradient appears more impactful than the subsequent enlargement.
-More importantly than just the $\MSE$, the resulting waveform is also of better quality, as~\crefSubFigRef{fig:3:Prediction_MG}{b} shows for $h=1.4$.
-The smaller ASI without gradient struggles to reproduce the peaks of the desired waveform, as its magnets only respond to a narrow \link{external magnetic field}{field} range.
-On the other hand, the larger ASI with an appreciable gradient $\Gamma \approx \SI{25}{\percent}$ contains magnets with various \xref{coercive fields}, enabling it to capture both the peaks and valleys, since these are likely to respectively coincide with low and high input fields.
-%Besides the peaks and valleys, also the relatively constant $y(t)$ from $t=\SIrange{0.732}{0.736}{\second}$ is captured decently by the reservoir.
+\vspace{-2em}
 
 \subsection{Comparison with other reservoirs}
 Generally speaking, our thermally active OOP ASI achieves an $\MSE$ of roughly 0.015 on both the sine-to-sawtooth transformation and the \link{Mackey-Glass oscillator}{Mackey-Glass} prediction task.
 This performance is on par with several other magnetic reservoirs.
 For instance, with a network of magnetic nanorings, an MSE of $\approx 0.014$ has been reported for the same transformation~\cite{Vidamour2023}.
 Comparable results have been obtained with an artificial spin-vortex ice, which achieves $\MSE \approx 0.019$ for a sine-to-sawtooth transformation and $\MSE \approx 0.01$ for a Mackey-Glass prediction at an offset $k \approx 1.4$~\cite{gartside2022reconfigurable}.
-Furthermore, combining multiple in-plane square and pinwheel ASI reservoirs in parallel or in series has been shown to yield $\MSE \approx 0.011$ for Mackey-Glass with $k \approx 0.8$~\cite{NeuromorphicFewShot} and $\MSE \approx 0.01$ on a sine-to-sawtooth transformation~\cite{AdaptiveProgrammableRC}. \par
+Furthermore, combining multiple in-plane square and pinwheel ASI reservoirs in parallel or in series has been shown to yield $\MSE \approx 0.011$ for Mackey-Glass with $k \approx 0.8$~\cite{NeuromorphicFewShot} and $\MSE \approx 0.01$ on a sine-to-sawtooth transformation~\cite{AdaptiveProgrammableRC}. \\\par
 Reconfigurable reservoirs can achieve better results as they are able to adapt to the task at hand.
 One example of these is a skyrmion/conical reservoir~\cite{TaskAdaptivePRC}, which obtains a better sine-to-sawtooth transformation ($\MSE \approx \SIrange{e-4}{3e-7}{}$) and Mackey-Glass signal prediction ($\MSE \approx 0.0037$), though only at very low temperature $T = \SI{4}{\kelvin}$.
-Above room temperature, $\MSE \approx 0.018$ was reported for an offset $k \approx 0.25$, closely matching the performance of our ASI reservoir. \par
+Above room temperature, $\MSE \approx 0.018$ was reported for an offset $k \approx 0.25$, closely matching the performance of our ASI reservoir. \\\par
 Various non-magnetic physical reservoirs have also been benchmarked using these same tasks.
 A carbon nanotube reservoir, for example, has been used to get $\MSE \approx 0.008$ on a sine-to-sawtooth transformation~\cite{CarbonNanotubeRC}.
 Nanowire networks~\cite{NanoarchitectonicAtomicSwitch,RC_NNN} appear to achieve similar performance, as does the use of molecular vibration dynamics for reservoir computing~\cite{FewMoleculeReservoir}.
 Chemical dynamics can also be utilised as a reservoir; for example, the use of electrochemical currents in a solution has yielded an $\MSE$ of $\approx 0.002$ for the sawtooth transformation task~\cite{ElectrochemicalPRC}. % 0.002 for polyoxometalate. For water, $\MSE \approx 0.04$.
 Abstract echo state networks do outperform our system, as they have reportedly achieved $\MSE \approx 0.006$ for a very far future prediction of $k \approx 5$~\cite{Moon_2021}. % They gets NRMSE of 0.045 for their single-reservoir ESN, which corresponds to MSE 0.002, but their definition divides the normal MSE by the average square deviation, which is never more than 0.25. So the correspondence is quite vague.
 
+\newpage
 \subsection{Summary}
 By harnessing the spontaneous \link{logarithmic relaxation}{relaxation dynamics} of thermally active OOP ASI, this type of system can be used as a \link{reservoir computing}{reservoir} thanks to its gradual response to external stimuli.
 While this working principle inevitably suffers from thermal noise, which imposes a limit to the achievable performance, the extent of this noise can be greatly reduced by enlarging the system.
