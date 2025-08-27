@@ -26,9 +26,9 @@
 \newcommand{\idx}[2][]{\emph{#2}\indexlabel[#1]{#2}} %no xspace
 \newcommand{\xlabel}[2][]{#2\indexlabel[#1]{#2}}
 %% Index references.
-\newcommand{\xref}[1]{\hyperref[#1]{#1}\xspace}
-\newcommand{\xrefs}[2]{\hyperref[#2]{#1#2}\xspace} %% meervoud etc, add {s}
-\newcommand{\link}[2]{\hyperref[#1]{#2}\xspace}
+\newcommand{\xref}[1]{#1\xspace}
+\newcommand{\xrefs}[2]{#1#2\xspace} %% meervoud etc, add {s}
+\newcommand{\link}[2]{#2\xspace}
 
 \newcommand{\jonathanskip}{\smallskip}
 \newcommand{\numberthis}{\addtocounter{equation}{1}\tag{\theequation}} % Numbers a single line in a no-numbering multiline equation* or align*
