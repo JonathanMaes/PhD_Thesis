@@ -36,7 +36,7 @@ class Sweep_SignalTf_ThermalOOPSquare(hotspice.experiments.Sweep):
             } | kwargs # Dict with all parameter values as tuples of length 1 or greater
         names = {
             'DD_ratio': "NN DD interaction", 'E_B_ratio': "Energy barrier", 'E_B_std': "Energy barrier standard deviation", 'gradient': r"Property gradient $\Gamma$",
-            'size': "# magnets along each axis $N_x = N_y$", 'DD_exponent': "Exponent of DD interaction", 'T_factor': "Temperature",
+            'size': "# magnets along axes $N_x = N_y$", 'DD_exponent': "Exponent of DD interaction", 'T_factor': "Temperature",
             'signal': "Input signal", 'target': "Target signal", 'offset': "Input offset w.r.t. target",
             'frequency': "Input frequency $f$", 'magnitude': "Input 1 field magnitude $B_1$", 'magnitude_min_frac': "Input 0/1 field magnitude fraction", 'magnitude_min': "Input 0 field magnitude $B_0$",
             'res_x': "# readout nodes along x-axis", 'res_y': "# readout nodes along y-axis", 'use_constant': "Constant included in OLS"
@@ -195,6 +195,7 @@ class Sweep_SignalTf_ThermalOOPSquare(hotspice.experiments.Sweep):
             names_z = names_z + [None]*(n - len(names_z))
         if is_2D:
             label_y = name_y if unit_y is None else f"{name_y} [{unit_y}]"
+            label_y += "  "
             X, Y = np.meshgrid(x_lims, y_lims)
             for i, (metric_key, params) in enumerate(metrics_dict.items()):
                 Z = np.transpose(all_metrics[i])
@@ -253,12 +254,14 @@ class Sweep_SignalTf_ThermalOOPSquare(hotspice.experiments.Sweep):
 
         if title is not None: plt.suptitle(title)
         multi = widgets.MultiCursor(fig.canvas, list(axes.flat), color='black', lw=1, linestyle='dotted', horizOn=True, vertOn=True) # Assign to variable to prevent garbage collection
-        fig.tight_layout()
+        fig.tight_layout(pad=0)
         if "bbox_inches" in savefig_kwargs.keys(): fig.subplots_adjust(wspace=0.3)
         for i, ax in enumerate(axes.flat):
             if label_axes is not None:
                 if label_axes[i] is not None:
-                    thesis_utils.label_ax(ax, label_axes[i], offset=(-0.2 if i == 0 else 0, 0.1), va="baseline", ha="right")
+                    thesis_utils.label_ax(ax, label_axes[i], offset=(-0.35 if i == 0 else 0, 0.05), va="baseline", ha="right")
+                    # ax.set_ylabel(ax.get_ylabel() + "       ")
+                    fig.subplots_adjust(left=ax.get_position().x0+0.3/fig_width)
 
         if save:
             if len(summary_files) > 1:
@@ -317,10 +320,11 @@ class Sweep_SignalTf_ThermalOOPSquare(hotspice.experiments.Sweep):
             t_rescaled, t_unit = hotspice.utils.appropriate_SIprefix(exp.t)
             t_scale = 10**hotspice.utils.SIprefix_to_magnitude[t_unit]
             
+            legend_kwargs = dict(title=r"1/MSE", fontsize=fontsize_legend, loc='lower right', ncol=1, title_fontproperties={'weight':'bold', 'size': fontsize_legend-2}, borderpad=0.3, borderaxespad=0.2, handlelength=0.7, handletextpad=0.4)
+            
             ax1: plt.Axes = axes[row, 0]
-            thesis_utils.label_ax(ax1, row+1, roman=True, offset=(-0.14, 0), ha="right", va="top")
+            thesis_utils.label_ax(ax1, row+1, roman=True, offset=(-0.1, 0), ha="right", va="top")
             if row == 0 and show_train: ax1.set_title(f"Test set", fontsize=fontsize_header)
-            ax1.set_xlabel(f"Time ({t_unit}s)", fontsize=fontsize_axes, labelpad=-0.06)
             ax1.set_ylim([-0.1, 1.1])
             t = exp.get_test(t_rescaled)
             if N_cycles is not None:
@@ -331,13 +335,13 @@ class Sweep_SignalTf_ThermalOOPSquare(hotspice.experiments.Sweep):
             if row == 0: line_input_pred.set_label(f"{1/exp.MSE_rawinput:.2f}")
             line_reservoir, = ax1.plot(t, exp.prediction_reservoir, "dodgerblue", label=f"{1/exp.MSE_reservoir:.2f}")
             if show_signal: line_input, = ax1.plot(t, exp.signal_test, "k:", alpha=alpha_signal)
-            ax1.legend(title=r"1/MSE", fontsize=fontsize_legend, loc='lower right', ncol=1, title_fontproperties={'weight':'bold', 'size': fontsize_legend-2}, handlelength=1, handletextpad=0.4)
+            ax1.legend(**legend_kwargs)
             ax1.tick_params(axis='both', labelsize=fontsize_axes)
-            ax1.xaxis.set_major_locator(plt.MaxNLocator(5))
+            ax1.xaxis.set_major_formatter(lambda x, _, unit=t_unit: f"{x:.3g} {unit}s")
+            ax1.xaxis.set_major_locator(plt.MaxNLocator(4))
             
             ax2: plt.Axes = axes[row, 1]
             if row == 0 and show_train: ax2.set_title(f"Training set", fontsize=fontsize_header)
-            ax2.set_xlabel(f"Time ({t_unit}s)", fontsize=fontsize_axes, labelpad=-0.06)
             t = exp.get_train(t_rescaled)
             if N_cycles is not None:
                 ax2.set_xlim(exp.t[train_slice[0]]/t_scale, exp.t[train_slice[1]]/t_scale)
@@ -347,20 +351,21 @@ class Sweep_SignalTf_ThermalOOPSquare(hotspice.experiments.Sweep):
             ax2.plot(t, exp.fit_rawinput, "r", alpha=0.5)#, label=f"{1/exp.MSE(exp.fit_rawinput, exp.target_train):.2f}")
             ax2.plot(t, exp.fit_reservoir, "dodgerblue", label=f"{1/exp.MSE(exp.fit_reservoir, exp.target_train):.2f}")
             if show_signal: ax2.plot(t, exp.signal_train, "k:", alpha=alpha_signal)
-            ax2.legend(title=r"1/MSE", fontsize=fontsize_legend, loc='lower right', ncol=1, title_fontproperties={'weight':'bold', 'size': fontsize_legend-2}, handlelength=1, handletextpad=0.4)
+            ax2.legend(**legend_kwargs)
             ax2.tick_params(axis='both', labelsize=fontsize_axes)
-            ax2.xaxis.set_major_locator(plt.MaxNLocator(5))
+            ax2.xaxis.set_major_formatter(lambda x, _, unit=t_unit: f"{x:.3g} {unit}s")
+            ax2.xaxis.set_major_locator(plt.MaxNLocator(4))
         
         legend = fig.legend(handles=[line_input, line_target, line_input_pred, line_reservoir], labels=["Input signal", "Target", "Optimal input scaling", "ASI reservoir prediction"],
-                   loc='upper center', ncol=4 if show_train else 2, fontsize=fontsize_legend)
+                   loc='upper center', ncol=4 if show_train else 2, fontsize=fontsize_legend, handlelength=1.5, handletextpad=0.4, columnspacing=1)
         fig.tight_layout()
         fig.canvas.draw() # Force a draw so the legend position is updated
 
         legendpad = 0.25 if show_train else 0.1
         top = (legend.get_window_extent().transformed(fig.dpi_scale_trans.inverted()).y0 - legendpad) / fig.get_size_inches()[1]
-        bottom = 0.4 / fig.get_size_inches()[1]
+        bottom = 0.25 / fig.get_size_inches()[1]
 
-        fig.subplots_adjust(top=top, bottom=bottom, left=0.1, hspace=0.55, wspace=0.2)
+        fig.subplots_adjust(top=top, bottom=bottom, left=0.095, right=0.97, hspace=0.45, wspace=0.12)
         # fig.subplots_adjust(left=0.1, right=0.99)
         bbox_inches = None if show_train else Bbox(points=[[0, 0], [thesis_utils.page_width*NO_TRAIN_FIG_FRAC, fig_height]])
         hotspice.utils.save_results(figures={"details": fig}, outdir=outdir, copy_script=False, bbox_inches=bbox_inches)
@@ -633,24 +638,24 @@ if __name__ == "__main__":
             "details": [236],
             "show_train": False
         })
-        all_sweeps.append({
-            "directory": "freq-magn/target_SQUARE",
-            "plot_kwargs": {
-                "param_x": "frequency",
-                "param_y": "magnitude", "unit_y": "mT", "transform_y": lambda y: y*1e3, "name_y": "Input 1 field magnitude $B_1$",
-                "logarithmic_vars": ["frequency"]
-            },
-            "sweep_kwargs": {
-                "frequency": np.logspace(-4, 5, 28),
-                "magnitude": np.linspace(0e-4, 10e-4, 21),
-                "signal": Signals.SINE, "target": Signals.SQUARE, "offset": 0,
-                'DD_ratio': 2.5, 'E_B_std': 0.05,
-                'gradient': 0, 'size': 11, 'DD_exponent': -3,
-                'res_x': 11, 'res_y': 1, 'use_constant': True
-            },
-            "details": [113],
-            "show_train": False
-        })
+        # all_sweeps.append({
+        #     "directory": "freq-magn/target_SQUARE",
+        #     "plot_kwargs": {
+        #         "param_x": "frequency",
+        #         "param_y": "magnitude", "unit_y": "mT", "transform_y": lambda y: y*1e3, "name_y": "Input 1 field magnitude $B_1$",
+        #         "logarithmic_vars": ["frequency"]
+        #     },
+        #     "sweep_kwargs": {
+        #         "frequency": np.logspace(-4, 5, 28),
+        #         "magnitude": np.linspace(0e-4, 10e-4, 21),
+        #         "signal": Signals.SINE, "target": Signals.SQUARE, "offset": 0,
+        #         'DD_ratio': 2.5, 'E_B_std': 0.05,
+        #         'gradient': 0, 'size': 11, 'DD_exponent': -3,
+        #         'res_x': 11, 'res_y': 1, 'use_constant': True
+        #     },
+        #     "details": [113],
+        #     "show_train": False
+        # })
 
         ## GO THROUGH ALL THOSE DIRECTORIES
         plot_kwargs_all = { # Individual plot_kwargs get added to these
