@@ -13,7 +13,7 @@ def main_plot():
     thesis_utils.init_style()
     
     ## Create a figure that we can draw on everywhere
-    figsize = (thesis_utils.page_width, 2.4)
+    figsize = (thesis_utils.page_width, 2)
     fig = plt.figure(figsize=figsize)
     ax: plt.Axes = fig.add_axes([0, 0, 1, 1])
     ax.set_xlim([0, 1])  # Set x-axis limits
