@@ -181,7 +181,7 @@ def plot_MSE_offset(ax: plt.Axes, params: list, data: list, legend_cols: int = 0
         line_train = Line2D([], [], color='k', linestyle=':', alpha=0.5, label='Train set')
         # line_test = ax.errorbar([], [], yerr=[], color='k', linestyle='-', label='Test set')
         # line_train = ax.errorbar([], [], yerr=[], color='k', linestyle=':', label='Train set')
-        ax.legend(handles=[line_input, line_reservoir, line_test, line_train], ncol=legend_cols, loc='lower center', bbox_to_anchor=(0.5, 1.2), fontsize=fontsize_legend)
+        ax.legend(handles=[line_input, line_reservoir, line_test, line_train], ncol=legend_cols, loc='lower center', bbox_to_anchor=(0.5, 1.2), fontsize=fontsize_legend, handletextpad=0.6, columnspacing=1.5)
 
     if fig is not None: # If a figure is passed, compute and return the figure‐coordinate of the rightmost test‐curve point.
         return tuple(fig.transFigure.inverted().transform(ax.transData.transform((offsets[-1], results_avg["MSE_reservoir_test"][-1]))))
@@ -191,6 +191,7 @@ def plot_waveform(exp: SignalTransformationExperiment, ax: plt.Axes, train=False
     ## Plot font sizes
     fontsize_axes = thesis_utils.fs_small
     fontsize_legend = thesis_utils.fs_small
+    legend_kwargs = dict(title=r"1/MSE", fontsize=fontsize_legend, loc='lower right', ncol=1, title_fontproperties={'weight':'bold', 'size': fontsize_legend-2}, borderpad=0.3, borderaxespad=0.2, handlelength=0.7, handletextpad=0.4)
     alpha_signal, alpha_target = 0.5, 1.0
     
     ## Determine the best-looking part of the data to show in the plot
@@ -210,7 +211,7 @@ def plot_waveform(exp: SignalTransformationExperiment, ax: plt.Axes, train=False
     ## Draw the plots
     t_rescaled, t_unit = hotspice.utils.appropriate_SIprefix(exp.t)
     t_scale = 10**hotspice.utils.SIprefix_to_magnitude[t_unit]
-    ax.set_xlabel(f"Time ({t_unit}s)", fontsize=fontsize_axes, labelpad=-0.06)
+    ax.set_xlabel(f"Time ({t_unit}s)", fontsize=fontsize_axes, labelpad=3)
     ax.set_ylim([-0.1, 1.1])
     if not train:
         t = exp.get_test(t_rescaled)
@@ -222,7 +223,7 @@ def plot_waveform(exp: SignalTransformationExperiment, ax: plt.Axes, train=False
         if show_MSE_raw: line_input_pred.set_label(f"{1/exp.MSE_rawinput:.2f}")
         line_reservoir, = ax.plot(t, exp.prediction_reservoir, "dodgerblue", label=f"{1/exp.MSE_reservoir:.2f}")
         if show_signal: line_input, = ax.plot(t, exp.signal_test, "k:", alpha=alpha_signal)
-        ax.legend(title=r"1/MSE", fontsize=fontsize_legend, loc='lower right', ncol=1, title_fontproperties={'weight':'bold', 'size': fontsize_legend-2}, handlelength=1, handletextpad=0.4)
+        ax.legend(**legend_kwargs)
         ax.tick_params(axis='both', labelsize=fontsize_axes)
         ax.xaxis.set_major_locator(plt.MaxNLocator(5))
     else:
@@ -235,7 +236,7 @@ def plot_waveform(exp: SignalTransformationExperiment, ax: plt.Axes, train=False
         if show_MSE_raw: line_input_pred.set_label(f"{1/exp.MSE_rawinput:.2f}")
         line_reservoir, = ax.plot(t, exp.fit_reservoir, "dodgerblue", label=f"{1/exp.MSE(exp.fit_reservoir, exp.target_train):.2f}")
         if show_signal: line_input, = ax.plot(t, exp.signal_train, "k:", alpha=alpha_signal)
-        ax.legend(title=r"1/MSE", fontsize=fontsize_legend, loc='lower right', ncol=1, title_fontproperties={'weight':'bold', 'size': fontsize_legend-2}, handlelength=1, handletextpad=0.4)
+        ax.legend(**legend_kwargs)
         ax.tick_params(axis='both', labelsize=fontsize_axes)
         ax.xaxis.set_major_locator(plt.MaxNLocator(5))
     
@@ -251,20 +252,20 @@ def plot_waveform(exp: SignalTransformationExperiment, ax: plt.Axes, train=False
 def plot():
     folders = ["MG_11x11_noGrad", "MG_11x11", "MG_20x20_resx10"]
     offsets = [0., 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4]
-    fs_title = thesis_utils.fs_large
+    fs_title = thesis_utils.fs_medium+0.5
     arrow_kwargs = dict(arrowstyle='-|>', mutation_scale=14, linewidth=2, shrinkA=5, shrinkB=1, color='k')
     
     dir_base = os.path.splitext(__file__)[0]
     fig = plt.figure(figsize=(thesis_utils.page_width, 4.5))
-    gs = fig.add_gridspec(2, 6, height_ratios=[2,1.5], hspace=0.9, right=0.98, top=0.87, bottom=0.08, left=0.1)
+    gs = fig.add_gridspec(2, 6, height_ratios=[2,1.5], hspace=0.9, right=0.975, top=0.87, bottom=0.09, left=0.11)
     axMSE1 = fig.add_subplot(gs[0,0:2])
     axMSE2 = fig.add_subplot(gs[0,2:4])
     axMSE3 = fig.add_subplot(gs[0,4:6])
     axwave1 = fig.add_subplot(gs[1,0:3])
     axwave2 = fig.add_subplot(gs[1,3:6])
     
-    thesis_utils.label_ax(axMSE1, 0, offset=(-0.2, 0.3), ha="right", va="baseline")
-    thesis_utils.label_ax(axwave1, 1, offset=(-0.2/3*2 + 0.006, 0.3), ha="right", va="baseline")
+    thesis_utils.label_ax(axMSE1, 0, offset=(-0.25, 0.3), ha="right", va="baseline")
+    thesis_utils.label_ax(axwave1, 1, offset=(-0.25/3*2 + 0.006, 0.3), ha="right", va="baseline")
 
     axMSE1.set_title(r"$11 \times 11$ no gradient", fontsize=fs_title)
     params, data = zip(*(hotspice.utils.load_results(f"{dir_base}/{folders[0]}/offset{offset:.1f}") for offset in offsets))
@@ -342,7 +343,7 @@ def plot():
     fontsize_legend = thesis_utils.fs_small
     bottom = axwave1.get_position().y1
     left = axMSE1.get_position().x1
-    fig.legend(handles, labels, loc='lower left', bbox_to_anchor=(left, bottom), ncol=2, fontsize=fontsize_legend)
+    fig.legend(handles, labels, loc='lower left', bbox_to_anchor=(left, bottom), ncol=2, fontsize=fontsize_legend, columnspacing=1, handletextpad=0.6)
 
     hotspice.utils.save_results(figures={"MG": fig}, copy_script=False, timestamped=False, outdir=os.path.splitext(__file__)[0])
 
