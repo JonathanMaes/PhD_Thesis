@@ -4,7 +4,8 @@
 \setlength\whiteline{14pt}
 
 \section*{List of constants}
-\begin{longtable}[l]{p{60pt} p{140pt} p{200pt}}
+\vspace{-0.5em}
+\begin{longtable}[l]{p{50pt} p{140pt} p{140pt}}
 	$e$ & Electron charge & \SI{1.6022e-19}{\coulomb} \\
 	$k_\mathrm{B}$ & Boltzmann constant & \SI{1.3087e-23}{\joule\per\kelvin} \\
 	$\mu_0$ & Vacuum permeability & $4 \pi \times \SI{e-7}{\tesla\metre\per\ampere}$\vspace{\whiteline}\\
@@ -13,7 +14,8 @@
 
 \section*{List of symbols}
 \subsection*{Operators}
-\begin{longtable}[l]{p{60pt} p{350pt}}
+\vspace{-0.5em}
+\begin{longtable}[l]{p{50pt} p{295pt}}
 	$\greybox \odot \greybox$ & Hadamard product (element-wise matrix multiplication) \\
 	$\greybox \hspace{0.15em} * \hspace{0.15em} \greybox$ & Convolution \\
 	$\norm{ \greybox }$ & Euclidean vector norm \\
@@ -29,17 +31,17 @@
 \end{longtable}
 
 \subsection*{Roman symbols}
-\begin{longtable}[l]{p{60pt} p{350pt}}
+\begin{longtable}[l]{p{50pt} p{295pt}}
 	$a$ & Lattice spacing in a regular grid\vspace{\whiteline}\\
 
-	$B_0$ & Magnetic field magnitude corresponding to the lowest input value \\
-	$B_1$ & Magnetic field magnitude corresponding to the highest input value \\
+	$B_0$ & Magnetic field magnitude corresponding to lowest input value \\
+	$B_1$ & Magnetic field magnitude corresponding to highest input value \\
 	$\vc{B}_\mathrm{eff}$ & Effective magnetic field experienced by a magnet \\
 	$\vc{B}_\mathrm{ext}$ & External magnetic field\vspace{\whiteline}\\
 	
 	$C$ & Computing capacity\vspace{\whiteline}\\
 
-	$d$ & Effective distance between the north and south poles of a nanomagnet \\
+	$d$ & Effective distance between north and south poles of a magnet \\
 	$D_\mathrm{NM}$ & Diameter of OOP nanomagnets \\
 	$\vc{D}$ & $N \times N$ matrix storing the magnetostatic interaction between each pair of magnets $(i,j)$ when $s_i=s_j=1$\vspace{\whiteline}\\
 
@@ -50,7 +52,7 @@
 	$\EBeffLeft$ & Effective energy barrier for clockwise coherent reversal \\
 	$\EBeffRight$ & Effective energy barrier for counter-clockwise coherent reversal \\
 	$\EEA$ & Net energy barrier of OOP nanomagnets (effective anisotropy) \\
-	$E_\mathrm{err}$ & Discrepancy of the MS interaction due to the use of a truncated kernel \\
+	$E_\mathrm{err}$ & Discrepancy of the MS interaction due to kernel truncation \\
 	$E_\mathrm{Exch}$ & Exchange energy\\
 	$\EMC$ & Nearest-neighbour magnetostatic coupling energy \\
 	$E_\mathrm{MS}$ & Magnetostatic interaction energy \\
@@ -64,7 +66,7 @@
 
 	$h$ & Time offset for the Mackey-Glass prediction task\vspace{\whiteline}\\
 
-	$\mathcal{I}$ & Geometrical factor in the second-order correction on the MS interaction \\
+	$\mathcal{I}$ & Geometrical factor in the second-order correction on the magnetostatic interaction \\
 	$\vc{I_\kappa}$ & $N_x \times N_y$ matrix containing 1 at sites with unit cell index $\kappa$, otherwise 0\vspace{\whiteline}\\
 
 	$J$ & Exchange coupling constant\vspace{\whiteline}\\
@@ -107,12 +109,12 @@
 	$r_{ij}$ & Distance between magnets $i$ and $j$ \\
 	$\vc{r}_{ij}$ & Distance vector between magnets $i$ and $j$ \\
 	$\rmin$ & Minimal allowed distance between simultaneously sampled magnets \\
-	$\vc{r_N}_i$ & Position of the north monopole of magnet $i$ in the dumbbell model \\
-	$\vc{r_S}_i$ & Position of the south monopole of magnet $i$ in the dumbbell model \\
+	$\vc{r_N}_i$ & Position of north monopole of magnet $i$ in the dumbbell model \\
+	$\vc{r_S}_i$ & Position of south monopole of magnet $i$ in the dumbbell model \\
 	$R_\mathrm{AHE}$ & Anomalous Hall coefficient \\
 	$R_x$ & Number of cells along the $x$-axis in a jittered grid subregion \\
 	$R_y$ & Number of cells along the $y$-axis in a jittered grid subregion \\
-	$\widetilde{R}$ & Radius (number of grid cells) of a truncated magnetostatic kernel \\
+	$\widetilde{R}$ & Radius (number of grid cells) of truncated magnetostatic kernel \\
 	$\mathcal{R}$ & Reservoir\vspace{\whiteline}\\
 
 	$s(t)$ & Input signal applied to a reservoir at time $t$ \\
@@ -148,7 +150,7 @@
 \end{longtable}
 
 \subsection*{Greek symbols}
-\begin{longtable}[l]{p{60pt} p{350pt}}
+\begin{longtable}[l]{p{50pt} p{295pt}}
 	$\alpha$ & Magnet rotation angle between square and pinwheel ASI\vspace{\whiteline}\\
 	
 	$\Gamma$ & Property gradient in thermally active OOP ASI\vspace{\whiteline}\\
